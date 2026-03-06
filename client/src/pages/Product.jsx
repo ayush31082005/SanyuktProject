@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, ShoppingCart, Star, ChevronUp, Trash2 } from 'lucide-react';
+import { Search, ShoppingCart, Star, ChevronUp, Trash2, ShieldCheck, Truck, RotateCcw, Info, Tag, Package } from 'lucide-react';
 import api from '../api';
 import { useCart } from '../context/CartContext';
 import {
@@ -389,91 +389,165 @@ const ProductsPage = () => {
             <Dialog
                 open={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
-                fullScreen={fullScreen}
-                maxWidth="md"
+                fullScreen={useMediaQuery(useTheme().breakpoints.down('md'))}
+                maxWidth="lg"
                 fullWidth
                 TransitionComponent={Fade}
                 PaperProps={{
-                    sx: { borderRadius: fullScreen ? 0 : '16px', overflow: 'hidden' }
+                    sx: {
+                        borderRadius: { xs: 0, md: '28px' },
+                        overflow: 'hidden',
+                        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
+                    }
                 }}
             >
                 {selectedProduct && (
-                    <>
-                        <DialogTitle sx={{ m: 0, p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', bgcolor: '#f8f9fa' }}>
-                            <Typography variant="h6" fontWeight="700" color="#333">Product Details</Typography>
-                            <IconButton onClick={() => setIsModalOpen(false)} sx={{ color: '#666' }}>
-                                <CloseIcon size={20} />
-                            </IconButton>
-                        </DialogTitle>
-                        <DialogContent dividers sx={{ p: { xs: 2, md: 4 } }}>
-                            <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 4 }}>
-                                {/* Image Section */}
-                                <Box sx={{ flex: 1, position: 'relative' }}>
+                    <Box sx={{ position: 'relative', bgcolor: '#fff' }}>
+                        {/* Close Button */}
+                        <IconButton
+                            onClick={() => setIsModalOpen(false)}
+                            sx={{
+                                position: 'absolute',
+                                right: 16,
+                                top: 16,
+                                zIndex: 10,
+                                bgcolor: 'rgba(255,255,255,0.8)',
+                                backdropFilter: 'blur(4px)',
+                                '&:hover': { bgcolor: '#fff', color: '#ef4444' }
+                            }}
+                        >
+                            <CloseIcon size={20} />
+                        </IconButton>
+
+                        <DialogContent sx={{ p: 0 }}>
+                            <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, minHeight: { md: '600px' } }}>
+
+                                {/* Left Column: Media & Visuals */}
+                                <Box sx={{
+                                    flex: 1,
+                                    bgcolor: '#f9fafb',
+                                    p: { xs: 4, md: 8 },
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    position: 'relative',
+                                    borderRight: { md: '1px solid #f3f4f6' }
+                                }}>
                                     <Box sx={{
+                                        position: 'relative',
                                         width: '100%',
-                                        height: { xs: '250px', md: '350px' },
-                                        borderRadius: '12px',
-                                        overflow: 'hidden',
-                                        bgcolor: '#f5f5f5',
-                                        border: '1px solid #eee'
+                                        maxWidth: '450px',
+                                        aspectRatio: '1',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
                                     }}>
                                         <img
                                             src={getImageUrl(selectedProduct.image)}
                                             alt={selectedProduct.name}
-                                            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                                        />
-                                    </Box>
-                                    {calculateDiscount(selectedProduct.price, selectedProduct.oldPrice) && (
-                                        <Chip
-                                            label={`${calculateDiscount(selectedProduct.price, selectedProduct.oldPrice)}% OFF`}
-                                            sx={{
-                                                position: 'absolute',
-                                                top: 12,
-                                                left: 12,
-                                                background: 'linear-gradient(90deg, #F7931E, #FFC107)',
-                                                color: 'white',
-                                                fontWeight: 'bold',
-                                                boxShadow: '0 2px 8px rgba(247,147,30,0.3)',
-                                                border: 'none'
+                                            style={{
+                                                maxWidth: '100%',
+                                                maxHeight: '100%',
+                                                objectFit: 'contain',
+                                                filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.1))'
                                             }}
                                         />
-                                    )}
+
+                                        {calculateDiscount(selectedProduct.price, selectedProduct.oldPrice) && (
+                                            <div className="absolute top-0 left-0 bg-gradient-to-br from-[#f7931e] to-orange-600 text-white px-4 py-2 rounded-2xl font-black text-sm shadow-xl shadow-orange-200 ring-4 ring-white">
+                                                {calculateDiscount(selectedProduct.price, selectedProduct.oldPrice)}% OFF
+                                            </div>
+                                        )}
+                                    </Box>
+
+                                    {/* Quick Trust Indicators */}
+                                    <Box sx={{ mt: 6, display: 'flex', gap: 4, opacity: 0.7 }}>
+                                        <Box sx={{ textAlign: 'center' }}>
+                                            <ShieldCheck className="w-6 h-6 mx-auto mb-1 text-green-600" />
+                                            <Typography variant="caption" fontWeight="700">100% Secure</Typography>
+                                        </Box>
+                                        <Box sx={{ textAlign: 'center' }}>
+                                            <Truck className="w-6 h-6 mx-auto mb-1 text-blue-600" />
+                                            <Typography variant="caption" fontWeight="700">Fast Delivery</Typography>
+                                        </Box>
+                                        <Box sx={{ textAlign: 'center' }}>
+                                            <RotateCcw className="w-6 h-6 mx-auto mb-1 text-orange-600" />
+                                            <Typography variant="caption" fontWeight="700">Easy Returns</Typography>
+                                        </Box>
+                                    </Box>
                                 </Box>
 
-                                {/* details Section */}
-                                <Box sx={{ flex: 1.2, display: 'flex', flexDirection: 'column' }}>
-                                    <Typography variant="h5" fontWeight="800" gutterBottom color="#1a1a1a">
-                                        {selectedProduct.name}
-                                    </Typography>
-
-                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                                        <Typography variant="h4" color="#0A7A2F" fontWeight="800">
-                                            ₹{formatCurrency(selectedProduct.price)}
+                                {/* Right Column: Details & Actions */}
+                                <Box sx={{ flex: 1.2, p: { xs: 4, md: 6 }, display: 'flex', flexDirection: 'column' }}>
+                                    <Box sx={{ mb: 4 }}>
+                                        <Chip
+                                            label={selectedProduct.category || "General"}
+                                            size="small"
+                                            sx={{
+                                                bgcolor: '#f0fdf4',
+                                                color: '#166534',
+                                                fontWeight: 800,
+                                                fontSize: '10px',
+                                                textTransform: 'uppercase',
+                                                letterSpacing: '0.1em',
+                                                mb: 2,
+                                                border: '1px solid #dcfce7'
+                                            }}
+                                        />
+                                        <Typography variant="h4" sx={{ fontWeight: 900, color: '#111827', lineHeight: 1.2, mb: 1, letterSpacing: '-0.02em' }}>
+                                            {selectedProduct.name}
                                         </Typography>
+
+                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                                            <div className="flex text-[#f7931e]">
+                                                {renderRatingStars(selectedProduct.rating || 5)}
+                                            </div>
+                                            <Typography variant="body2" sx={{ color: '#6b7280', fontWeight: 600 }}>
+                                                ({selectedProduct.numReviews || 150}+ Reviews)
+                                            </Typography>
+                                        </Box>
+                                    </Box>
+
+                                    <Box sx={{ mb: 4, p: 3, bgcolor: '#f8fafc', borderRadius: '20px', border: '1px solid #f1f5f9' }}>
+                                        <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 2, mb: 0.5 }}>
+                                            <Typography sx={{ fontSize: '2.5rem', fontWeight: 900, color: '#15803d', letterSpacing: '-0.04em' }}>
+                                                ₹{formatCurrency(selectedProduct.price)}
+                                            </Typography>
+                                            {selectedProduct.oldPrice && (
+                                                <Typography sx={{ textDecoration: 'line-through', color: '#94a3b8', fontSize: '1.25rem', fontWeight: 600 }}>
+                                                    ₹{formatCurrency(selectedProduct.oldPrice)}
+                                                </Typography>
+                                            )}
+                                        </Box>
                                         {selectedProduct.oldPrice && (
-                                            <Typography sx={{ textDecoration: 'line-through', color: '#999', fontSize: '1.1rem' }}>
-                                                ₹{formatCurrency(selectedProduct.oldPrice)}
+                                            <Typography variant="caption" sx={{ color: '#f7931e', fontWeight: 800 }}>
+                                                You save ₹{formatCurrency(selectedProduct.oldPrice - selectedProduct.price)} ({calculateDiscount(selectedProduct.price, selectedProduct.oldPrice)}%)
                                             </Typography>
                                         )}
                                     </Box>
 
-                                    <Divider sx={{ mb: 3 }} />
+                                    <Box sx={{ mb: 6 }}>
+                                        <Typography variant="subtitle2" sx={{ fontWeight: 800, color: '#111827', mb: 1.5, display: 'flex', alignItems: 'center', gap: 1 }}>
+                                            <Info className="w-4 h-4 text-green-600" /> Description
+                                        </Typography>
+                                        <Typography variant="body2" sx={{ color: '#4b5563', lineHeight: 1.8, fontSize: '15px' }}>
+                                            {selectedProduct.description || "Indulge in our premium quality product, crafted with the finest ingredients and rigorous quality checks to ensure your maximum satisfaction and wellness."}
+                                        </Typography>
+                                    </Box>
 
-                                    <Typography variant="body1" color="#555" sx={{ mb: 3, lineHeight: 1.8 }}>
-                                        {selectedProduct.description || "No description available for this product."}
-                                    </Typography>
-
-                                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 4 }}>
-                                        {selectedProduct.bv && (
-                                            <Box sx={{ p: 1.5, px: 2, bgcolor: '#f0f7ff', borderRadius: '8px', border: '1px solid #d0e7ff' }}>
-                                                <Typography variant="caption" color="#555" sx={{ display: 'block' }}>Business Volume</Typography>
-                                                <Typography variant="subtitle2" fontWeight="700" color="#0066cc">BV: {selectedProduct.bv}</Typography>
-                                            </Box>
-                                        )}
-                                        <Box sx={{ p: 1.5, px: 2, bgcolor: selectedProduct.stock > 0 ? '#f6ffed' : '#fff1f0', borderRadius: '8px', border: '1px solid', borderColor: selectedProduct.stock > 0 ? '#b7eb8f' : '#ffa39e' }}>
-                                            <Typography variant="caption" color="#555" sx={{ display: 'block' }}>Availability</Typography>
-                                            <Typography variant="subtitle2" fontWeight="700" color={selectedProduct.stock > 0 ? '#389e0d' : '#cf1322'}>
-                                                {selectedProduct.stock > 0 ? `In Stock (${selectedProduct.stock} units)` : 'Out of Stock'}
+                                    {/* Structured Specs Grid */}
+                                    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 2, mb: 6 }}>
+                                        <Box sx={{ p: 2, bgcolor: '#fff', border: '1px solid #f3f4f6', borderRadius: '16px' }}>
+                                            <Typography variant="caption" sx={{ color: '#9ca3af', fontWeight: 700, display: 'block', mb: 0.5 }}>BUSINESS VOLUME</Typography>
+                                            <Typography variant="body2" sx={{ fontWeight: 800, color: '#111827', display: 'flex', alignItems: 'center', gap: 1 }}>
+                                                <Tag className="w-4 h-4 text-[#f7931e]" /> BV: {selectedProduct.bv || '00'}
+                                            </Typography>
+                                        </Box>
+                                        <Box sx={{ p: 2, bgcolor: '#fff', border: '1px solid #f3f4f6', borderRadius: '16px' }}>
+                                            <Typography variant="caption" sx={{ color: '#9ca3af', fontWeight: 700, display: 'block', mb: 0.5 }}>AVAILABILITY</Typography>
+                                            <Typography variant="body2" sx={{ fontWeight: 800, color: selectedProduct.stock > 0 ? '#16a34a' : '#dc2626', display: 'flex', alignItems: 'center', gap: 1 }}>
+                                                <Package className="w-4 h-4" /> {selectedProduct.stock > 0 ? 'In Stock' : 'Out of Stock'}
                                             </Typography>
                                         </Box>
                                     </Box>
@@ -485,19 +559,19 @@ const ProductsPage = () => {
                                                 fullWidth
                                                 size="large"
                                                 startIcon={<Trash2 className="w-5 h-5" />}
-                                                onClick={() => {
-                                                    handleRemoveFromCart(selectedProduct._id, selectedProduct.name);
-                                                }}
+                                                onClick={() => handleRemoveFromCart(selectedProduct._id, selectedProduct.name)}
                                                 sx={{
-                                                    borderRadius: '10px',
-                                                    py: 1.5,
+                                                    borderRadius: '16px',
+                                                    py: 2,
                                                     borderColor: '#f7931e',
                                                     color: '#f7931e',
-                                                    fontWeight: 700,
-                                                    '&:hover': { borderColor: '#e67e00', bgcolor: '#fffaf0' }
+                                                    fontWeight: 900,
+                                                    fontSize: '15px',
+                                                    '&:hover': { borderColor: '#e67e00', bgcolor: '#fffaf0', transform: 'translateY(-2px)' },
+                                                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
                                                 }}
                                             >
-                                                Remove from Cart
+                                                Remove Item
                                             </Button>
                                         ) : (
                                             <Button
@@ -511,12 +585,14 @@ const ProductsPage = () => {
                                                 }}
                                                 disabled={selectedProduct.stock === 0}
                                                 sx={{
-                                                    borderRadius: '10px',
-                                                    py: 1.5,
-                                                    borderColor: '#0A7A2F',
-                                                    color: '#0A7A2F',
-                                                    fontWeight: 700,
-                                                    '&:hover': { borderColor: '#086325', bgcolor: '#f6ffed' }
+                                                    borderRadius: '16px',
+                                                    py: 2,
+                                                    borderColor: '#059669',
+                                                    color: '#059669',
+                                                    fontWeight: 900,
+                                                    fontSize: '15px',
+                                                    '&:hover': { borderColor: '#047857', bgcolor: '#f0fdf4', transform: 'translateY(-2px)' },
+                                                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
                                                 }}
                                             >
                                                 Add to Cart
@@ -532,11 +608,15 @@ const ProductsPage = () => {
                                             }}
                                             disabled={selectedProduct.stock === 0}
                                             sx={{
-                                                borderRadius: '10px',
-                                                py: 1.5,
-                                                bgcolor: '#0A7A2F',
-                                                fontWeight: 700,
-                                                '&:hover': { bgcolor: '#086325' }
+                                                borderRadius: '16px',
+                                                py: 2,
+                                                bgcolor: '#059669',
+                                                color: '#fff',
+                                                fontWeight: 900,
+                                                fontSize: '15px',
+                                                boxShadow: '0 10px 15px -3px rgba(5, 150, 105, 0.3)',
+                                                '&:hover': { bgcolor: '#047857', transform: 'translateY(-2px)' },
+                                                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
                                             }}
                                         >
                                             Buy Now
@@ -545,7 +625,7 @@ const ProductsPage = () => {
                                 </Box>
                             </Box>
                         </DialogContent>
-                    </>
+                    </Box>
                 )}
             </Dialog>
 

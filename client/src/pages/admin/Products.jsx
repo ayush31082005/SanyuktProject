@@ -7,6 +7,7 @@ const AdminProducts = () => {
     const [loading, setLoading] = useState(false);
     const [showForm, setShowForm] = useState(false);
     const [imagePreview, setImagePreview] = useState(null);
+    const [selectedImage, setSelectedImage] = useState(null); // नया नाम
 
     const [formData, setFormData] = useState({
         name: "",
@@ -19,7 +20,8 @@ const AdminProducts = () => {
         numReviews: "",
     });
 
-    const [image, setImage] = useState(null);
+    // ✅ फोटो दिखाने के लिए बेस URL
+    const BASE_URL = "http://localhost:5001";
 
     const fetchProducts = async () => {
         setLoading(true);
@@ -41,11 +43,13 @@ const AdminProducts = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    // ✅ इमेज चुनने पर
     const handleImageChange = (e) => {
         const file = e.target.files[0];
-        setImage(file);
-
         if (file) {
+            setSelectedImage(file); // फाइल सेव करें
+
+            // प्रीव्यू के लिए
             const reader = new FileReader();
             reader.onloadend = () => {
                 setImagePreview(reader.result);
@@ -65,48 +69,57 @@ const AdminProducts = () => {
             rating: "",
             numReviews: "",
         });
-        setImage(null);
+        setSelectedImage(null);
         setImagePreview(null);
         setEditingId(null);
         setShowForm(false);
     };
 
+    // ✅ फॉर्म सबमिट
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
 
-        const data = new FormData();
+        const formDataToSend = new FormData();
+
+        // सभी फील्ड ऐड करें
         Object.keys(formData).forEach((key) => {
-            data.append(key, formData[key]);
+            if (formData[key] !== "") {
+                formDataToSend.append(key, formData[key]);
+            }
         });
 
-        if (image) {
-            data.append("image", image);
+        // ✅ सिर्फ नई चुनी गई इमेज ही ऐड करें
+        if (selectedImage) {
+            formDataToSend.append("image", selectedImage);
         }
 
         try {
             if (editingId) {
-                await api.put(`/products/${editingId}`, data, {
+                // अपडेट
+                await api.put(`/products/${editingId}`, formDataToSend, {
                     headers: { "Content-Type": "multipart/form-data" },
                 });
                 alert("Product updated successfully!");
             } else {
-                await api.post("/products", data, {
+                // नया प्रोडक्ट
+                await api.post("/products", formDataToSend, {
                     headers: { "Content-Type": "multipart/form-data" },
                 });
                 alert("Product added successfully!");
             }
 
             resetForm();
-            fetchProducts();
+            fetchProducts(); // लिस्ट रिफ्रेश
         } catch (error) {
-            console.log(error.response?.data || error.message);
+            console.error("Error:", error);
             alert(error.response?.data?.message || "Error saving product");
         } finally {
             setLoading(false);
         }
     };
 
+    // ✅ एडिट करते समय
     const handleEdit = (product) => {
         setEditingId(product._id);
         setFormData({
@@ -119,9 +132,15 @@ const AdminProducts = () => {
             rating: product.rating || "",
             numReviews: product.numReviews || "",
         });
+
+        // ✅ प्रीव्यू के लिए पूरा URL
         if (product.image) {
-            setImagePreview(`http://localhost:5000/uploads/${product.image}`);
+            setImagePreview(`${BASE_URL}/uploads/${product.image}`);
         }
+
+        // ✅ IMPORTANT: selectedImage को null रखें
+        setSelectedImage(null);
+
         setShowForm(true);
     };
 
@@ -141,7 +160,7 @@ const AdminProducts = () => {
         }
     };
 
-    // रेटिंग स्टार्स दिखाने के लिए फंक्शन
+    // रेटिंग स्टार्स
     const renderRatingStars = (rating) => {
         const stars = [];
         const roundedRating = Math.round(rating * 2) / 2;
@@ -160,8 +179,8 @@ const AdminProducts = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-green-50 to-white p-4 md:p-8">
-            {/* Header Section */}
-            <div className="bg-white rounded-2xl shadow-lg p-6 mb-8 transform transition-all duration-500 hover:shadow-xl border border-green-100 animate-slide-down">
+            {/* Header */}
+            <div className="bg-white rounded-2xl shadow-lg p-6 mb-8 border border-green-100">
                 <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                     <h1 className="text-3xl md:text-4xl font-bold text-gray-800 flex items-center gap-3">
                         <span className="text-5xl text-green-600">📦</span>
@@ -171,19 +190,19 @@ const AdminProducts = () => {
                     </h1>
                     <button
                         className={`px-6 py-3 rounded-full font-semibold flex items-center gap-2 transform transition-all duration-300 hover:scale-105 shadow-md ${showForm
-                            ? 'bg-red-500 hover:bg-red-600 text-white'
-                            : 'bg-green-600 hover:bg-green-700 text-white'
+                            ? "bg-red-500 hover:bg-red-600 text-white"
+                            : "bg-green-600 hover:bg-green-700 text-white"
                             }`}
                         onClick={() => setShowForm(!showForm)}
                     >
-                        <span className="text-xl">{showForm ? '✕' : '+'}</span>
-                        {showForm ? 'Close Form' : 'Add New Product'}
+                        <span className="text-xl">{showForm ? "✕" : "+"}</span>
+                        {showForm ? "Close Form" : "Add New Product"}
                     </button>
                 </div>
             </div>
 
-            {/* Form Section with Animation */}
-            <div className={`transition-all duration-500 overflow-hidden mb-8 ${showForm ? 'max-h-[2500px] opacity-100' : 'max-h-0 opacity-0'
+            {/* Form Section */}
+            <div className={`transition-all duration-500 overflow-hidden mb-8 ${showForm ? "max-h-[2500px] opacity-100" : "max-h-0 opacity-0"
                 }`}>
                 <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8 border border-green-100">
                     <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
@@ -202,7 +221,7 @@ const AdminProducts = () => {
 
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {/* Name Field */}
+                            {/* Name */}
                             <div className="space-y-2">
                                 <label className="text-sm font-semibold text-gray-700 uppercase tracking-wider">
                                     Product Name <span className="text-green-600">*</span>
@@ -214,11 +233,11 @@ const AdminProducts = () => {
                                     value={formData.name}
                                     onChange={handleChange}
                                     required
-                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-300 bg-white"
+                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-green-500 focus:ring-2 focus:ring-green-200 bg-white"
                                 />
                             </div>
 
-                            {/* Price Field */}
+                            {/* Price */}
                             <div className="space-y-2">
                                 <label className="text-sm font-semibold text-gray-700 uppercase tracking-wider">
                                     Price (₹) <span className="text-green-600">*</span>
@@ -232,11 +251,11 @@ const AdminProducts = () => {
                                     required
                                     min="0"
                                     step="0.01"
-                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-300 bg-white"
+                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-green-500 focus:ring-2 focus:ring-green-200 bg-white"
                                 />
                             </div>
 
-                            {/* Old Price Field */}
+                            {/* Old Price */}
                             <div className="space-y-2">
                                 <label className="text-sm font-semibold text-gray-700 uppercase tracking-wider">
                                     Old Price (₹)
@@ -249,11 +268,11 @@ const AdminProducts = () => {
                                     onChange={handleChange}
                                     min="0"
                                     step="0.01"
-                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-300 bg-white"
+                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-green-500 focus:ring-2 focus:ring-green-200 bg-white"
                                 />
                             </div>
 
-                            {/* BV Field */}
+                            {/* BV */}
                             <div className="space-y-2">
                                 <label className="text-sm font-semibold text-gray-700 uppercase tracking-wider">
                                     BV <span className="text-green-600">*</span>
@@ -267,11 +286,11 @@ const AdminProducts = () => {
                                     required
                                     min="0"
                                     step="0.01"
-                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-300 bg-white"
+                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-green-500 focus:ring-2 focus:ring-green-200 bg-white"
                                 />
                             </div>
 
-                            {/* Stock Field */}
+                            {/* Stock */}
                             <div className="space-y-2">
                                 <label className="text-sm font-semibold text-gray-700 uppercase tracking-wider">
                                     Stock <span className="text-green-600">*</span>
@@ -284,11 +303,11 @@ const AdminProducts = () => {
                                     onChange={handleChange}
                                     required
                                     min="0"
-                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-300 bg-white"
+                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-green-500 focus:ring-2 focus:ring-green-200 bg-white"
                                 />
                             </div>
 
-                            {/* Rating Field */}
+                            {/* Rating */}
                             <div className="space-y-2">
                                 <label className="text-sm font-semibold text-gray-700 uppercase tracking-wider">
                                     Rating (0-5) ⭐
@@ -302,12 +321,11 @@ const AdminProducts = () => {
                                     min="0"
                                     max="5"
                                     step="0.1"
-                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-300 bg-white"
+                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-green-500 focus:ring-2 focus:ring-green-200 bg-white"
                                 />
-                                <p className="text-xs text-gray-500">Rating out of 5 (e.g., 4.5)</p>
                             </div>
 
-                            {/* Number of Reviews Field */}
+                            {/* Num Reviews */}
                             <div className="space-y-2">
                                 <label className="text-sm font-semibold text-gray-700 uppercase tracking-wider">
                                     Number of Reviews 📝
@@ -319,12 +337,12 @@ const AdminProducts = () => {
                                     value={formData.numReviews}
                                     onChange={handleChange}
                                     min="0"
-                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-300 bg-white"
+                                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-green-500 focus:ring-2 focus:ring-green-200 bg-white"
                                 />
                             </div>
                         </div>
 
-                        {/* Description Field */}
+                        {/* Description */}
                         <div className="space-y-2">
                             <label className="text-sm font-semibold text-gray-700 uppercase tracking-wider">
                                 Description <span className="text-green-600">*</span>
@@ -336,16 +354,16 @@ const AdminProducts = () => {
                                 onChange={handleChange}
                                 rows="4"
                                 required
-                                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-300 bg-white resize-none"
+                                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:border-green-500 focus:ring-2 focus:ring-green-200 bg-white resize-none"
                             />
                         </div>
 
-                        {/* Image Upload Field */}
+                        {/* Image Upload */}
                         <div className="space-y-2">
                             <label className="text-sm font-semibold text-gray-700 uppercase tracking-wider">
                                 Product Image
                             </label>
-                            <div className="relative">
+                            <div>
                                 <input
                                     type="file"
                                     id="image-upload"
@@ -355,11 +373,16 @@ const AdminProducts = () => {
                                 />
                                 <label
                                     htmlFor="image-upload"
-                                    className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-xl cursor-pointer hover:bg-green-700 transform transition-all duration-300 shadow-md hover:shadow-lg"
+                                    className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-xl cursor-pointer hover:bg-green-700 shadow-md"
                                 >
                                     <span className="text-xl">📁</span>
-                                    {image ? 'Change Image' : 'Choose Image'}
+                                    {selectedImage ? "Change Image" : "Choose Image"}
                                 </label>
+                                {selectedImage && (
+                                    <p className="text-sm text-gray-600 mt-2">
+                                        Selected: {selectedImage.name}
+                                    </p>
+                                )}
                             </div>
 
                             {/* Image Preview */}
@@ -373,10 +396,11 @@ const AdminProducts = () => {
                                     <button
                                         type="button"
                                         onClick={() => {
-                                            setImage(null);
+                                            setSelectedImage(null);
                                             setImagePreview(null);
+                                            document.getElementById("image-upload").value = "";
                                         }}
-                                        className="absolute -top-2 -right-2 w-8 h-8 bg-red-500 text-white rounded-full hover:bg-red-600 transform hover:scale-110 transition-all duration-300 flex items-center justify-center shadow-md"
+                                        className="absolute -top-2 -right-2 w-8 h-8 bg-red-500 text-white rounded-full hover:bg-red-600 flex items-center justify-center shadow-md"
                                     >
                                         ✕
                                     </button>
@@ -384,12 +408,12 @@ const AdminProducts = () => {
                             )}
                         </div>
 
-                        {/* Form Actions */}
+                        {/* Form Buttons */}
                         <div className="flex gap-4 justify-end">
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className={`px-8 py-3 bg-green-600 text-white rounded-xl font-semibold flex items-center gap-2 transform transition-all duration-300 hover:bg-green-700 hover:shadow-lg ${loading ? 'opacity-70 cursor-not-allowed' : ''
+                                className={`px-8 py-3 bg-green-600 text-white rounded-xl font-semibold flex items-center gap-2 hover:bg-green-700 shadow-lg ${loading ? "opacity-70 cursor-not-allowed" : ""
                                     }`}
                             >
                                 {loading ? (
@@ -399,7 +423,7 @@ const AdminProducts = () => {
                                     </>
                                 ) : (
                                     <>
-                                        {editingId ? '✏️ Update Product' : '➕ Add Product'}
+                                        {editingId ? "✏️ Update Product" : "➕ Add Product"}
                                     </>
                                 )}
                             </button>
@@ -408,7 +432,7 @@ const AdminProducts = () => {
                                 <button
                                     type="button"
                                     onClick={resetForm}
-                                    className="px-8 py-3 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transform transition-all duration-300"
+                                    className="px-8 py-3 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300"
                                 >
                                     Cancel
                                 </button>
@@ -418,7 +442,7 @@ const AdminProducts = () => {
                 </div>
             </div>
 
-            {/* Products Grid */}
+            {/* Products List */}
             <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8 border border-green-100">
                 <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
                     <span className="text-3xl text-green-600">📋</span>
@@ -436,22 +460,22 @@ const AdminProducts = () => {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {products.map((product, index) => (
+                        {products.map((product) => (
                             <div
                                 key={product._id}
-                                className="group bg-white rounded-xl shadow-md hover:shadow-xl transform transition-all duration-500 hover:-translate-y-2 overflow-hidden border border-gray-200"
-                                style={{ animationDelay: `${index * 0.1}s` }}
+                                className="group bg-white rounded-xl shadow-md hover:shadow-xl hover:-translate-y-2 transition-all duration-500 border border-gray-200"
                             >
                                 {/* Product Image */}
                                 <div className="relative h-56 overflow-hidden bg-gradient-to-br from-green-50 to-white">
                                     {product.image ? (
                                         <img
-                                            src={`http://localhost:5000/uploads/${product.image}`}
+                                            // ✅ सही URL बनाएं
+                                            src={`${BASE_URL}/uploads/${product.image}`}
                                             alt={product.name}
                                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                                             onError={(e) => {
                                                 e.target.onerror = null;
-                                                e.target.src = 'https://via.placeholder.com/300x200?text=No+Image';
+                                                e.target.src = "https://via.placeholder.com/300x200?text=No+Image";
                                             }}
                                         />
                                     ) : (
@@ -463,10 +487,10 @@ const AdminProducts = () => {
 
                                     {/* Stock Badge */}
                                     <div className={`absolute top-4 right-4 px-3 py-1 rounded-full text-sm font-semibold shadow-md ${product.stock > 0
-                                        ? 'bg-green-600 text-white'
-                                        : 'bg-red-500 text-white'
+                                        ? "bg-green-600 text-white"
+                                        : "bg-red-500 text-white"
                                         }`}>
-                                        {product.stock > 0 ? 'In Stock' : 'Out of Stock'}
+                                        {product.stock > 0 ? "In Stock" : "Out of Stock"}
                                     </div>
                                 </div>
 
@@ -487,7 +511,7 @@ const AdminProducts = () => {
                                         )}
                                     </div>
 
-                                    {/* Rating and Reviews Section */}
+                                    {/* Rating */}
                                     <div className="flex items-center gap-3 mb-3">
                                         <div className="flex items-center gap-1">
                                             {product.rating ? (
@@ -505,7 +529,7 @@ const AdminProducts = () => {
                                         </div>
                                         {product.numReviews > 0 && (
                                             <span className="text-sm text-gray-500">
-                                                ({product.numReviews} {product.numReviews === 1 ? 'review' : 'reviews'})
+                                                ({product.numReviews} {product.numReviews === 1 ? "review" : "reviews"})
                                             </span>
                                         )}
                                     </div>
@@ -527,17 +551,15 @@ const AdminProducts = () => {
                                     <div className="flex gap-2">
                                         <button
                                             onClick={() => handleEdit(product)}
-                                            className="flex-1 px-3 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transform transition-all duration-300 hover:scale-105 flex items-center justify-center gap-1 shadow-md"
+                                            className="flex-1 px-3 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 hover:scale-105 transition-all flex items-center justify-center gap-1 shadow-md"
                                         >
-                                            <span>✏️</span>
-                                            Edit
+                                            <span>✏️</span> Edit
                                         </button>
                                         <button
                                             onClick={() => handleDelete(product._id)}
-                                            className="flex-1 px-3 py-2 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transform transition-all duration-300 hover:scale-105 flex items-center justify-center gap-1 shadow-md"
+                                            className="flex-1 px-3 py-2 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 hover:scale-105 transition-all flex items-center justify-center gap-1 shadow-md"
                                         >
-                                            <span>🗑️</span>
-                                            Delete
+                                            <span>🗑️</span> Delete
                                         </button>
                                     </div>
                                 </div>
@@ -546,7 +568,6 @@ const AdminProducts = () => {
                     </div>
                 )}
             </div>
-
         </div>
     );
 };

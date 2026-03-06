@@ -1179,10 +1179,10 @@ const HomePage = () => {
                                 <div className="text-white font-bold mb-3">Follow Us</div>
                                 <div className="flex gap-3">
                                     {[
-                                        { icon: Facebook, label: 'Facebook', href: 'https://facebook.com' },
-                                        { icon: Instagram, label: 'Instagram', href: 'https://instagram.com' },
-                                        { icon: Youtube, label: 'YouTube', href: 'https://youtube.com' },
-                                        { icon: Twitter, label: 'Twitter', href: 'https://twitter.com' },
+                                        { icon: Facebook, label: 'Facebook', href: 'https://www.facebook.com/share/1CLin8tmY3/' },
+                                        { icon: Instagram, label: 'Instagram', href: 'https://www.instagram.com/sanyukt_parivaar_rich_life_57?igsh=dDJlMDd0d241amRx' },
+                                        { icon: Youtube, label: 'YouTube', href: 'https://www.youtube.com/@Sanyuktparivaarrichlife' },
+                                        { icon: Twitter, label: 'X', href: 'https://x.com/sprichlife_57' },
                                     ].map(({ icon: Icon, label, href }) => (
                                         <a
                                             key={label}

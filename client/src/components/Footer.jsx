@@ -10,6 +10,7 @@ import { styled } from '@mui/material/styles';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import YouTubeIcon from '@mui/icons-material/YouTube';
+import XIcon from '@mui/icons-material/X';
 
 // 7. FOOTER BACKGROUND & SPACING
 const FooterContainer = styled(Box)({
@@ -220,14 +221,17 @@ const Footer = () => {
                         </CompanyDescription>
 
                         <SocialIconContainer>
-                            <SocialButton href="#" target="_blank" aria-label="Facebook">
+                            <SocialButton href="https://www.facebook.com/share/1CLin8tmY3/" target="_blank" aria-label="Facebook">
                                 <FacebookIcon sx={{ fontSize: '18px' }} />
                             </SocialButton>
-                            <SocialButton href="#" target="_blank" aria-label="Instagram">
+                            <SocialButton href="https://www.instagram.com/sanyukt_parivaar_rich_life_57?igsh=dDJlMDd0d241amRx" target="_blank" aria-label="Instagram">
                                 <InstagramIcon sx={{ fontSize: '18px' }} />
                             </SocialButton>
-                            <SocialButton href="#" target="_blank" aria-label="YouTube">
+                            <SocialButton href="https://www.youtube.com/@Sanyuktparivaarrichlife" target="_blank" aria-label="YouTube">
                                 <YouTubeIcon sx={{ fontSize: '18px' }} />
+                            </SocialButton>
+                            <SocialButton href="https://x.com/sprichlife_57" target="_blank" aria-label="X">
+                                <XIcon sx={{ fontSize: '16px' }} />
                             </SocialButton>
                         </SocialIconContainer>
                     </Grid>

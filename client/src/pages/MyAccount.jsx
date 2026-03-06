@@ -919,7 +919,7 @@ const MyAccount = () => {
                                             <Button
                                                 variant="contained"
                                                 onClick={() => navigate('/products')}
-                                                sx={{ bgcolor: '#7856d6', '&:hover': { bgcolor: '#5e35b1' }, borderRadius: '6px', textTransform: 'none', px: 2.5, py: 1, whiteSpace: 'nowrap', fontWeight: 600, boxShadow: 'none' }}
+                                                sx={{ bgcolor: '#f3791e', '&:hover': { bgcolor: '#e0681a' }, borderRadius: '6px', textTransform: 'none', px: 2.5, py: 1, whiteSpace: 'nowrap', fontWeight: 600, boxShadow: 'none' }}
                                             >
                                                 New sales order
                                             </Button>
@@ -995,13 +995,9 @@ const MyAccount = () => {
                                                                 <TableCell sx={{ color: '#111', fontWeight: 700, fontSize: '13.5px', borderBottom: '1px solid #eee', py: 2 }}>Order ID</TableCell>
                                                                 <TableCell sx={{ color: '#111', fontWeight: 700, fontSize: '13.5px', borderBottom: '1px solid #eee', py: 2 }}>Product / Item</TableCell>
                                                                 <TableCell sx={{ color: '#111', fontWeight: 700, fontSize: '13.5px', borderBottom: '1px solid #eee', py: 2 }}>Status</TableCell>
-                                                                <TableCell sx={{ color: '#111', fontWeight: 700, fontSize: '13.5px', borderBottom: '1px solid #eee', py: 2 }} align="center">Packed</TableCell>
-                                                                <TableCell sx={{ color: '#111', fontWeight: 700, fontSize: '13.5px', borderBottom: '1px solid #eee', py: 2 }} align="center">Fulfilled</TableCell>
-                                                                <TableCell sx={{ color: '#111', fontWeight: 700, fontSize: '13.5px', borderBottom: '1px solid #eee', py: 2 }} align="center">Invoiced</TableCell>
-                                                                <TableCell sx={{ color: '#111', fontWeight: 700, fontSize: '13.5px', borderBottom: '1px solid #eee', py: 2 }} align="center">Paid</TableCell>
                                                                 <TableCell sx={{ color: '#111', fontWeight: 700, fontSize: '13.5px', borderBottom: '1px solid #eee', py: 2 }}>Total</TableCell>
-                                                                <TableCell sx={{ color: '#111', fontWeight: 700, fontSize: '13.5px', borderBottom: '1px solid #eee', py: 2 }}>Created</TableCell>
-                                                                <TableCell sx={{ color: '#111', fontWeight: 700, fontSize: '13.5px', borderBottom: '1px solid #eee', py: 2 }}>Updated</TableCell>
+                                                                <TableCell sx={{ color: '#111', fontWeight: 700, fontSize: '13.5px', borderBottom: '1px solid #eee', py: 2 }}>Date</TableCell>
+                                                                <TableCell sx={{ color: '#111', fontWeight: 700, fontSize: '13.5px', borderBottom: '1px solid #eee', py: 2 }} align="center">Action</TableCell>
                                                             </TableRow>
                                                         </TableHead>
                                                         <TableBody>
@@ -1013,10 +1009,10 @@ const MyAccount = () => {
                                                                     const matchesSearch = orderId.toLowerCase().includes(q) || prodName.toLowerCase().includes(q);
 
                                                                     let matchesTab = true;
-                                                                    const status = (order.status || 'Active').toLowerCase();
-                                                                    if (orderTab === 'Active') matchesTab = ['active', 'pending', 'placed'].includes(status);
-                                                                    if (orderTab === 'To Invoice') matchesTab = status === 'invoiced';
-                                                                    if (orderTab === 'To Ship') matchesTab = ['processing', 'packed'].includes(status);
+                                                                    const status = (order.status || 'pending').toLowerCase();
+                                                                    if (orderTab === 'Active') matchesTab = ['pending', 'processing'].includes(status);
+                                                                    if (orderTab === 'To Invoice') matchesTab = ['processing', 'shipped'].includes(status);
+                                                                    if (orderTab === 'To Ship') matchesTab = ['processing'].includes(status);
                                                                     if (orderTab === 'To Backorder') matchesTab = status === 'backorder';
                                                                     if (orderTab === 'All Orders') matchesTab = true;
 
@@ -1026,20 +1022,28 @@ const MyAccount = () => {
                                                                     const orderNum = `#CR00${String(index + 1).padStart(2, '0')}`;
                                                                     const productName = order.product?.name || order.items?.[0]?.name || order.items?.[0]?.productId?.name || 'Item';
 
-                                                                    const statusMatch = order.status?.toLowerCase() || 'finalized';
+                                                                    const statusMatch = order.status?.toLowerCase() || 'pending';
 
-                                                                    let statusColor = '#f3e5f5';
-                                                                    let statusTextCode = '#7b1fa2';
-                                                                    let statusLabel = 'Finalized';
+                                                                    let statusColor = '#fff3e0';
+                                                                    let statusTextCode = '#e65100';
+                                                                    let statusLabel = 'Pending';
 
-                                                                    if (statusMatch === 'pending' || statusMatch === 'active' || statusMatch === 'placed') {
+                                                                    if (statusMatch === 'processing') {
+                                                                        statusColor = '#e3f2fd';
+                                                                        statusTextCode = '#1565c0';
+                                                                        statusLabel = 'Processing';
+                                                                    } else if (statusMatch === 'shipped') {
+                                                                        statusColor = '#f3e5f5';
+                                                                        statusTextCode = '#7b1fa2';
+                                                                        statusLabel = 'Shipped';
+                                                                    } else if (statusMatch === 'delivered') {
                                                                         statusColor = '#e8f5e9';
-                                                                        statusTextCode = '#0A7A2F';
-                                                                        statusLabel = 'Active';
-                                                                    } else if (order.status) {
-                                                                        statusLabel = order.status.charAt(0).toUpperCase() + order.status.slice(1);
-                                                                        statusColor = '#f5f5f5';
-                                                                        statusTextCode = '#555';
+                                                                        statusTextCode = '#2e7d32';
+                                                                        statusLabel = 'Delivered';
+                                                                    } else if (statusMatch === 'cancelled') {
+                                                                        statusColor = '#ffebee';
+                                                                        statusTextCode = '#c62828';
+                                                                        statusLabel = 'Cancelled';
                                                                     }
 
                                                                     const total = order.totalAmount || order.total || '0';
@@ -1068,13 +1072,45 @@ const MyAccount = () => {
                                                                                     {statusLabel}
                                                                                 </Box>
                                                                             </TableCell>
-                                                                            <TableCell align="center" sx={{ borderBottom: 'none', color: '#0A7A2F', fontWeight: 'bold' }}>✓</TableCell>
-                                                                            <TableCell align="center" sx={{ borderBottom: 'none', color: '#ccc', fontWeight: 600 }}>-</TableCell>
-                                                                            <TableCell align="center" sx={{ borderBottom: 'none', color: '#0A7A2F', fontWeight: 'bold' }}>✓</TableCell>
-                                                                            <TableCell align="center" sx={{ borderBottom: 'none', color: '#ccc', fontWeight: 600 }}>-</TableCell>
                                                                             <TableCell sx={{ fontWeight: 800, color: '#0A7A2F', fontSize: '14px', borderBottom: 'none' }}>₹{parseFloat(total).toFixed(2)}</TableCell>
                                                                             <TableCell sx={{ color: '#666', fontSize: '13px', borderBottom: 'none' }}>{date}</TableCell>
-                                                                            <TableCell sx={{ color: '#666', fontSize: '13px', borderBottom: 'none' }}>{date}</TableCell>
+                                                                            <TableCell align="center" sx={{ borderBottom: 'none' }}>
+                                                                                <Box sx={{ display: 'flex', gap: 1, justifyContent: 'center' }}>
+                                                                                    <Button
+                                                                                        size="small"
+                                                                                        variant="outlined"
+                                                                                        sx={{
+                                                                                            textTransform: 'none',
+                                                                                            borderRadius: '6px',
+                                                                                            borderColor: '#0A7A2F',
+                                                                                            color: '#0A7A2F',
+                                                                                            fontWeight: 600,
+                                                                                            '&:hover': { bgcolor: '#f4faf5', borderColor: '#086325' }
+                                                                                        }}
+                                                                                        onClick={() => navigate(`/checkout/success?orderId=${order._id}`)}
+                                                                                    >
+                                                                                        Details
+                                                                                    </Button>
+                                                                                    {(statusMatch === 'shipped' || statusMatch === 'delivered') && (
+                                                                                        <Button
+                                                                                            size="small"
+                                                                                            variant="contained"
+                                                                                            sx={{
+                                                                                                textTransform: 'none',
+                                                                                                borderRadius: '6px',
+                                                                                                bgcolor: '#f3791e',
+                                                                                                color: 'white',
+                                                                                                fontWeight: 600,
+                                                                                                boxShadow: 'none',
+                                                                                                '&:hover': { bgcolor: '#e0681a', boxShadow: 'none' }
+                                                                                            }}
+                                                                                            onClick={() => window.open(`/api/orders/${order._id}/invoice`, '_blank')}
+                                                                                        >
+                                                                                            Invoice
+                                                                                        </Button>
+                                                                                    )}
+                                                                                </Box>
+                                                                            </TableCell>
                                                                         </TableRow>
                                                                     );
                                                                 })}

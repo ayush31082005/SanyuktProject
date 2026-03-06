@@ -1,5 +1,6 @@
 node_modules/
 .env
+.env.production
 # dist/ removed for Hostinger deployment
 dist-ssr
 *.local

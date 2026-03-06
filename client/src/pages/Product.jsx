@@ -1,23 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';  // 👈 यह इम्पोर्ट करना जरूरी है
-import { Search, ShoppingCart, Star, ChevronUp, Heart } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Search, ShoppingCart, Star, ChevronUp } from 'lucide-react'; // Heart हटाया
 import api from '../api';
 
 const ProductsPage = () => {
-    const navigate = useNavigate();  // 👈 यह डिफाइन करना जरूरी है
+    const navigate = useNavigate();
 
     const [expandedProduct, setExpandedProduct] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [cartItems, setCartItems] = useState([]);
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [wishlist, setWishlist] = useState([]);
+    const [imageErrors, setImageErrors] = useState({});
+
+    // बेस URL
+    const BASE_URL = 'http://localhost:5001';
 
     // Fetch products from API
     const fetchProducts = async () => {
         setLoading(true);
         try {
             const response = await api.get('/products');
+            console.log('Products fetched:', response.data);
             setProducts(response.data);
         } catch (error) {
             console.error('Error fetching products:', error);
@@ -36,12 +40,11 @@ const ProductsPage = () => {
         product.description?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    // Buy Now function - अब सही से काम करेगा
+    // Buy Now function
     const buyNow = (product) => {
         if (product.stock > 0) {
-            // Checkout page par navigate karega
             navigate('/checkout', {
-                state: { product }  // Product ka data checkout page par bhejega
+                state: { product }
             });
         } else {
             alert(`${product.name} is out of stock!`);
@@ -51,15 +54,6 @@ const ProductsPage = () => {
     // Toggle product details
     const toggleDetails = (productId) => {
         setExpandedProduct(expandedProduct === productId ? null : productId);
-    };
-
-    // Toggle wishlist
-    const toggleWishlist = (productId) => {
-        setWishlist(prev =>
-            prev.includes(productId)
-                ? prev.filter(id => id !== productId)
-                : [...prev, productId]
-        );
     };
 
     // Calculate discount percentage
@@ -94,13 +88,26 @@ const ProductsPage = () => {
         }).format(amount || 0);
     };
 
+    // इमेज एरर हैंडल करने के लिए फंक्शन
+    const handleImageError = (productId) => {
+        setImageErrors(prev => ({ ...prev, [productId]: true }));
+        console.log(`Image load failed for product: ${productId}`);
+    };
+
+    // इमेज URL बनाने के लिए फंक्शन
+    const getImageUrl = (imageName) => {
+        if (!imageName) return null;
+        if (imageName.startsWith('http')) return imageName;
+        return `${BASE_URL}/uploads/${imageName}`;
+    };
+
     return (
         <div className="min-h-screen bg-gray-100">
             {/* Header with Cart */}
             <div className="bg-white shadow-sm sticky top-0 z-10">
                 <div className="max-w-7xl mx-auto px-4 py-3">
                     <div className="flex items-center justify-between">
-                        <h1 className="text-2xl font-bold text-[#fffff]">Our Products</h1>
+                        <h1 className="text-2xl font-bold text-gray-800">Our Products</h1>
                         <div className="flex items-center gap-4">
                             {/* Search Bar */}
                             <div className="hidden md:block relative">
@@ -109,7 +116,7 @@ const ProductsPage = () => {
                                     placeholder="Search products..."
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="w-64 pl-8 pr-4 py-1.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-[#0A7A2F]"
+                                    className="w-64 pl-8 pr-4 py-1.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-green-600"
                                 />
                                 <Search className="absolute left-2 top-2 w-4 h-4 text-gray-400" />
                             </div>
@@ -128,23 +135,25 @@ const ProductsPage = () => {
 
                     {/* Mobile Search */}
                     <div className="md:hidden mt-3">
-                        <input
-                            type="text"
-                            placeholder="Search products..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-[#0A7A2F]"
-                        />
+                        <div className="relative">
+                            <input
+                                type="text"
+                                placeholder="Search products..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-green-600"
+                            />
+                            <Search className="absolute left-2 top-2.5 w-4 h-4 text-gray-400" />
+                        </div>
                     </div>
                 </div>
             </div>
 
             {/* Products Grid */}
             <div className="max-w-7xl mx-auto px-4 py-8">
-
                 {loading ? (
                     <div className="text-center py-12">
-                        <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-[#0A7A2F] border-t-transparent"></div>
+                        <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-green-600 border-t-transparent"></div>
                         <p className="mt-4 text-gray-600">Loading products...</p>
                     </div>
                 ) : filteredProducts.length === 0 ? (
@@ -157,6 +166,8 @@ const ProductsPage = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         {filteredProducts.map((product, index) => {
                             const discount = calculateDiscount(product.price, product.oldPrice);
+                            const hasImageError = imageErrors[product._id];
+                            const imageUrl = getImageUrl(product.image);
 
                             return (
                                 <div
@@ -166,19 +177,18 @@ const ProductsPage = () => {
                                 >
                                     {/* Product Image */}
                                     <div className="relative h-48 bg-gray-200 rounded-t-lg overflow-hidden">
-                                        {product.image ? (
+                                        {product.image && !hasImageError ? (
                                             <img
-                                                src={`http://localhost:5000/uploads/${product.image}`}
+                                                src={imageUrl}
                                                 alt={product.name}
                                                 className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
-                                                onError={(e) => {
-                                                    e.target.onerror = null;
-                                                    e.target.src = 'https://via.placeholder.com/300x200?text=No+Image';
-                                                }}
+                                                onError={() => handleImageError(product._id)}
+                                                onLoad={() => console.log('Image loaded:', imageUrl)}
                                             />
                                         ) : (
-                                            <div className="w-full h-full flex items-center justify-center text-gray-400">
-                                                <span className="text-5xl">📷</span>
+                                            <div className="w-full h-full flex flex-col items-center justify-center text-gray-400 bg-gray-100">
+                                                <span className="text-5xl mb-2">📷</span>
+                                                <span className="text-sm">No Image Available</span>
                                             </div>
                                         )}
 
@@ -188,17 +198,6 @@ const ProductsPage = () => {
                                                 {discount}% OFF
                                             </div>
                                         )}
-
-                                        {/* Wishlist Button */}
-                                        <button
-                                            onClick={() => toggleWishlist(product._id)}
-                                            className="absolute top-2 right-2 bg-white p-1.5 rounded-full shadow-md hover:bg-gray-100 transition-all hover:scale-110"
-                                        >
-                                            <Heart className={`w-4 h-4 transition-colors ${wishlist.includes(product._id)
-                                                ? 'fill-red-500 text-red-500'
-                                                : 'text-gray-600'
-                                                }`} />
-                                        </button>
 
                                         {/* Out of Stock Overlay */}
                                         {product.stock === 0 && (
@@ -213,25 +212,27 @@ const ProductsPage = () => {
                                     {/* Product Details */}
                                     <div className="p-4">
                                         {/* Rating */}
-                                        <div className="flex items-center gap-2 mb-2">
-                                            <div className="flex items-center">
-                                                {renderRatingStars(product.rating || 0)}
+                                        {product.rating > 0 && (
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <div className="flex items-center">
+                                                    {renderRatingStars(product.rating)}
+                                                </div>
+                                                {product.numReviews > 0 && (
+                                                    <span className="text-xs text-gray-500">
+                                                        ({product.numReviews})
+                                                    </span>
+                                                )}
                                             </div>
-                                            {product.numReviews > 0 && (
-                                                <span className="text-xs text-gray-500">
-                                                    ({product.numReviews})
-                                                </span>
-                                            )}
-                                        </div>
+                                        )}
 
                                         {/* Product Name */}
-                                        <h3 className="font-medium text-gray-800 text-sm mb-2 line-clamp-2 h-10 hover:text-[#0A7A2F] transition-colors">
+                                        <h3 className="font-medium text-gray-800 text-sm mb-2 line-clamp-2 h-10 hover:text-green-600 transition-colors">
                                             {product.name}
                                         </h3>
 
                                         {/* Price */}
                                         <div className="mb-2">
-                                            <span className="text-lg font-bold text-[#0A7A2F]">
+                                            <span className="text-lg font-bold text-green-600">
                                                 ₹{formatCurrency(product.price)}
                                             </span>
                                             {product.oldPrice && (
@@ -244,7 +245,7 @@ const ProductsPage = () => {
                                         {/* BV */}
                                         {product.bv && (
                                             <div className="text-xs text-gray-500 mb-3">
-                                                BV: <span className="font-medium text-[#F7931E]">{product.bv}</span>
+                                                BV: <span className="font-medium text-orange-500">{product.bv}</span>
                                             </div>
                                         )}
 
@@ -274,7 +275,7 @@ const ProductsPage = () => {
                                                 onClick={() => buyNow(product)}
                                                 disabled={product.stock === 0}
                                                 className={`w-full py-2 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2 ${product.stock > 0
-                                                    ? 'bg-gradient-to-r from-[#0A7A2F] to-[#2F7A32] text-white hover:from-[#0A7A2F] hover:to-[#0A7A2F] hover:shadow-lg'
+                                                    ? 'bg-gradient-to-r from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800 hover:shadow-lg'
                                                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                                                     }`}
                                             >
@@ -284,7 +285,7 @@ const ProductsPage = () => {
 
                                             <button
                                                 onClick={() => toggleDetails(product._id)}
-                                                className="w-full border border-[#0A7A2F] text-[#0A7A2F] py-2 rounded-lg text-sm font-medium hover:bg-[#0A7A2F] hover:text-white transition-all hover:shadow-md"
+                                                className="w-full border border-green-600 text-green-600 py-2 rounded-lg text-sm font-medium hover:bg-green-600 hover:text-white transition-all hover:shadow-md"
                                             >
                                                 View Details
                                             </button>
@@ -316,7 +317,7 @@ const ProductsPage = () => {
 
                                             <button
                                                 onClick={() => toggleDetails(product._id)}
-                                                className="text-[#0A7A2F] text-sm font-medium flex items-center gap-1 hover:underline"
+                                                className="text-green-600 text-sm font-medium flex items-center gap-1 hover:underline"
                                             >
                                                 Show less <ChevronUp className="w-4 h-4" />
                                             </button>
@@ -328,22 +329,6 @@ const ProductsPage = () => {
                     </div>
                 )}
             </div>
-
-            {/* Register | Login Section */}
-            {/* <div className="border-t border-gray-200 bg-white py-6 mt-8">
-                <div className="max-w-7xl mx-auto px-4 text-center">
-                    <div className="space-x-6">
-                        <button className="text-[#0A7A2F] font-medium hover:underline transition-all hover:scale-105">
-                            REGISTER
-                        </button>
-                        <span className="text-gray-300">|</span>
-                        <button className="text-[#0A7A2F] font-medium hover:underline transition-all hover:scale-105">
-                            LOGIN
-                        </button>
-                    </div>
-                </div>
-            </div> */}
-
         </div>
     );
 };

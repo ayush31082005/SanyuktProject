@@ -419,8 +419,8 @@ const ProductsPage = () => {
                             <CloseIcon size={20} />
                         </IconButton>
 
-                        <DialogContent sx={{ p: 0 }}>
-                            <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, minHeight: { md: '600px' } }}>
+                        <DialogContent sx={{ p: 0, overflowY: 'auto', maxHeight: '90vh' }}>
+                            <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, minHeight: { md: '500px' } }}>
 
                                 {/* Left Column: Media & Visuals */}
                                 <Box sx={{
@@ -479,7 +479,14 @@ const ProductsPage = () => {
                                 </Box>
 
                                 {/* Right Column: Details & Actions */}
-                                <Box sx={{ flex: 1.2, p: { xs: 4, md: 6 }, display: 'flex', flexDirection: 'column' }}>
+                                <Box sx={{
+                                    flex: 1.2,
+                                    p: { xs: 4, md: 6 },
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    height: { md: '100%' },
+                                    overflowY: { md: 'visible' } // Let DialogContent handle the main scroll
+                                }}>
                                     <Box sx={{ mb: 4 }}>
                                         <Chip
                                             label={selectedProduct.category || "General"}

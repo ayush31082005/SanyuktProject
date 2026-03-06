@@ -426,9 +426,9 @@ const ProductsPage = () => {
 
                                 {/* Left Column: Media & Visuals */}
                                 <Box sx={{
-                                    flex: 1,
-                                    bgcolor: '#f9fafb',
-                                    p: { xs: 4, md: 8 },
+                                    flex: 0.8, // Reduced flex to give right side more room
+                                    bgcolor: '#ffffff',
+                                    p: { xs: 2, md: 4 }, // Significantly reduced padding
                                     display: 'flex',
                                     flexDirection: 'column',
                                     alignItems: 'center',
@@ -439,11 +439,11 @@ const ProductsPage = () => {
                                     <Box sx={{
                                         position: 'relative',
                                         width: '100%',
-                                        maxWidth: '450px',
-                                        aspectRatio: '1',
+                                        maxWidth: '400px',
                                         display: 'flex',
                                         alignItems: 'center',
-                                        justifyContent: 'center'
+                                        justifyContent: 'center',
+                                        mb: 2
                                     }}>
                                         <img
                                             src={getImageUrl(selectedProduct.image)}

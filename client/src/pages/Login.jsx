@@ -1,6 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Home, ChevronDown, User, Lock, Eye, EyeOff, CheckCircle, ArrowRight } from 'lucide-react';
+import {
+    Link,
+    useNavigate
+} from 'react-router-dom';
+import {
+    Home,
+    ChevronDown,
+    User,
+    Lock,
+    Eye,
+    EyeOff,
+    CheckCircle,
+    Heart,
+    Copy,
+    Check,
+    QrCode,
+    X,
+    Shield,
+    Users,
+    Phone,
+    Mail,
+    Building,
+    Flag,
+    TreePine,
+    MapPin,
+    Search
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import api from '../api';
 
 const UserLogin = () => {
@@ -14,8 +40,20 @@ const UserLogin = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
-    const [successData, setSuccessData] = useState(null); // { email, role }
+    const [successData, setSuccessData] = useState(null);
     const [countdown, setCountdown] = useState(3);
+
+    // Donation related states
+    const [showDonation, setShowDonation] = useState(false);
+    const [copied, setCopied] = useState(false);
+    const [qrVisible, setQrVisible] = useState(false);
+
+    // Donation details - UPDATE THESE WITH YOUR ACTUAL DETAILS
+    const donationUPI = "your-organization@okhdfcbank"; // 🔴 अपनी असली UPI ID डालें
+    const organizationName = "Your Organization Name"; // 🔴 अपना संस्थान का नाम डालें
+
+    // QR Code automatically generate होगा UPI ID से
+    const donationQRCode = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=${donationUPI}&pn=${encodeURIComponent(organizationName)}&cu=INR`;
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -23,8 +61,13 @@ const UserLogin = () => {
             ...prev,
             [name]: value
         }));
-        // Clear error when user starts typing
         setError('');
+    };
+
+    const handleCopyUPI = () => {
+        navigator.clipboard.writeText(donationUPI);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
     };
 
     const handleSubmit = async (e) => {
@@ -65,13 +108,10 @@ const UserLogin = () => {
             console.error('Login error:', error);
 
             if (error.response) {
-                // Server responded with error
                 setError(error.response.data.message || 'Invalid email or password');
             } else if (error.request) {
-                // Request made but no response
                 setError('No response from server. Please try again.');
             } else {
-                // Something else happened
                 setError('An error occurred. Please try again.');
             }
         } finally {
@@ -141,7 +181,6 @@ const UserLogin = () => {
                 </div>
             )}
 
-
             {/* Decorative Background Elements */}
             <div className="absolute inset-0 overflow-hidden">
                 <div className="absolute -top-40 -right-40 w-80 h-80 bg-green-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
@@ -151,8 +190,8 @@ const UserLogin = () => {
 
             <div className="max-w-7xl mx-auto relative z-10">
                 {/* Main Content Grid */}
-                <div className="flex flex-col lg:flex-row gap-8 items-center min-h-[80vh]">
-                    {/* Left Side - Welcome Message */}
+                <div className="flex flex-col lg:flex-row gap-8 items-start min-h-[80vh]">
+                    {/* Left Side - Welcome Message with Stats and Donation */}
                     <div className="flex-1 text-center lg:text-left animate-slide-right">
                         <h1 className="text-3xl md:text-4xl font-bold text-green-700 mb-4">
                             Welcome Back!
@@ -186,10 +225,139 @@ const UserLogin = () => {
                                 <p className="text-sm text-gray-600">Countries</p>
                             </div>
                         </div>
+
+                        {/* Donation Section - Moved below stats */}
+                        <div className="mt-6 max-w-md mx-auto lg:mx-0">
+                            <motion.button
+                                onClick={() => setShowDonation(!showDonation)}
+                                className="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-semibold py-3 px-4 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2"
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                            >
+                                <Heart className={`h-5 w-5 ${showDonation ? 'fill-current' : ''}`} />
+                                Support Our Cause - Make a Donation
+                                <ChevronDown className={`h-5 w-5 transition-transform duration-300 ${showDonation ? 'rotate-180' : ''}`} />
+                            </motion.button>
+
+                            {/* Donation Details */}
+                            <AnimatePresence>
+                                {showDonation && (
+                                    <motion.div
+                                        initial={{ opacity: 0, height: 0 }}
+                                        animate={{ opacity: 1, height: 'auto' }}
+                                        exit={{ opacity: 0, height: 0 }}
+                                        transition={{ duration: 0.3 }}
+                                        className="overflow-hidden mt-3"
+                                    >
+                                        <div className="bg-gradient-to-br from-orange-50 to-amber-50 border border-orange-200 rounded-lg p-4">
+                                            <div className="flex items-start justify-between mb-3">
+                                                <h3 className="font-semibold text-gray-800 flex items-center gap-2">
+                                                    <Heart className="h-4 w-4 text-orange-500" />
+                                                    Donation Details
+                                                    <span className="text-xs bg-orange-200 text-orange-700 px-2 py-0.5 rounded-full flex items-center gap-1">
+                                                        <Shield className="h-3 w-3" />
+                                                        Secure
+                                                    </span>
+                                                </h3>
+                                                <button
+                                                    onClick={() => setShowDonation(false)}
+                                                    className="text-gray-400 hover:text-gray-600 transition-colors"
+                                                >
+                                                    <X className="h-4 w-4" />
+                                                </button>
+                                            </div>
+
+                                            {/* Combined UPI and QR Code */}
+                                            <div className="flex flex-col md:flex-row items-center gap-4">
+                                                {/* UPI ID Section */}
+                                                <div className="flex-1 w-full md:w-auto">
+                                                    <p className="text-xs text-gray-500 mb-1">UPI ID</p>
+                                                    <div className="flex items-center justify-between bg-white rounded-lg p-2 border border-orange-100">
+                                                        <code className="text-sm font-mono bg-orange-50 px-2 py-1 rounded text-orange-700 break-all">
+                                                            {donationUPI}
+                                                        </code>
+                                                        <button
+                                                            onClick={handleCopyUPI}
+                                                            className="p-1.5 hover:bg-orange-50 rounded-lg transition-colors relative group ml-2 flex-shrink-0"
+                                                            title="Copy UPI ID"
+                                                        >
+                                                            {copied ? (
+                                                                <Check className="h-4 w-4 text-green-500" />
+                                                            ) : (
+                                                                <Copy className="h-4 w-4 text-gray-400 group-hover:text-orange-500" />
+                                                            )}
+                                                        </button>
+                                                    </div>
+                                                    {copied && (
+                                                        <p className="text-xs text-green-500 mt-1">Copied!</p>
+                                                    )}
+                                                </div>
+
+                                                {/* Divider */}
+                                                <div className="hidden md:block h-12 w-px bg-orange-200"></div>
+                                                <div className="md:hidden w-full h-px bg-orange-200"></div>
+
+                                                {/* QR Code Section */}
+                                                <div className="flex-1 w-full md:w-auto text-center">
+                                                    <div className="flex items-center justify-center gap-2 mb-2">
+                                                        <p className="text-xs text-gray-500 flex items-center gap-1">
+                                                            <QrCode className="h-3 w-3" />
+                                                            Scan to Donate
+                                                        </p>
+                                                        <button
+                                                            onClick={() => setQrVisible(!qrVisible)}
+                                                            className="p-1 hover:bg-orange-100 rounded-lg transition-colors"
+                                                            title={qrVisible ? "Hide QR Code" : "Show QR Code"}
+                                                        >
+                                                            {qrVisible ? (
+                                                                <EyeOff className="h-3.5 w-3.5 text-gray-400" />
+                                                            ) : (
+                                                                <Eye className="h-3.5 w-3.5 text-gray-400" />
+                                                            )}
+                                                        </button>
+                                                    </div>
+
+                                                    <div className="flex justify-center">
+                                                        {qrVisible ? (
+                                                            <img
+                                                                src={donationQRCode}
+                                                                alt="Donation QR Code"
+                                                                className="w-24 h-24 border-2 border-orange-200 rounded-lg p-1 bg-white"
+                                                                onError={(e) => {
+                                                                    e.target.onerror = null;
+                                                                    e.target.style.display = 'none';
+                                                                    e.target.parentElement.innerHTML += '<p class="text-xs text-red-500 mt-1">QR code load failed. Please use UPI ID.</p>';
+                                                                }}
+                                                            />
+                                                        ) : (
+                                                            <div className="w-24 h-24 border-2 border-orange-200 rounded-lg bg-orange-50 flex flex-col items-center justify-center gap-1 cursor-pointer" onClick={() => setQrVisible(true)}>
+                                                                <Eye className="h-6 w-6 text-orange-300" />
+                                                                <span className="text-xs text-orange-400">Tap to show</span>
+                                                            </div>
+                                                        )}
+                                                    </div>
+
+                                                    {!qrVisible && (
+                                                        <p className="text-xs text-orange-400 mt-1">
+                                                            Click to reveal QR
+                                                        </p>
+                                                    )}
+                                                </div>
+                                            </div>
+
+                                            {/* Thank You Message */}
+                                            <p className="text-xs text-center text-gray-500 mt-4 border-t border-orange-200 pt-3">
+                                                Your contribution helps us serve you better. Thank you for your support! 🙏
+                                            </p>
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
                     </div>
 
                     {/* Right Side - Login Form */}
-                    <div className="flex-1 max-w-md w-full animate-slide-left">
+                    <div className="flex-1 max-w-md w-full">
                         <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-500 hover:shadow-3xl">
                             {/* Header - Solid Green */}
                             <div className="bg-green-700 px-6 md:px-8 py-6 text-center">
@@ -328,6 +496,46 @@ const UserLogin = () => {
                 </div>
             </div>
 
+            {/* Animation Styles */}
+            <style>{`
+                @keyframes slide-right {
+                    0% { opacity: 0; transform: translateX(-30px); }
+                    100% { opacity: 1; transform: translateX(0); }
+                }
+                @keyframes slide-left {
+                    0% { opacity: 0; transform: translateX(30px); }
+                    100% { opacity: 1; transform: translateX(0); }
+                }
+                @keyframes slide-up {
+                    0% { opacity: 0; transform: translateY(20px); }
+                    100% { opacity: 1; transform: translateY(0); }
+                }
+                .animate-slide-right {
+                    animation: slide-right 0.6s ease-out forwards;
+                }
+                .animate-slide-left {
+                    animation: slide-left 0.6s ease-out forwards;
+                }
+                .animate-slide-up {
+                    opacity: 0;
+                    animation: slide-up 0.5s ease-out forwards;
+                }
+                @keyframes blob {
+                    0% { transform: translate(0px, 0px) scale(1); }
+                    33% { transform: translate(30px, -50px) scale(1.1); }
+                    66% { transform: translate(-20px, 20px) scale(0.9); }
+                    100% { transform: translate(0px, 0px) scale(1); }
+                }
+                .animate-blob {
+                    animation: blob 7s infinite;
+                }
+                .animation-delay-2000 {
+                    animation-delay: 2s;
+                }
+                .animation-delay-4000 {
+                    animation-delay: 4s;
+                }
+            `}</style>
         </div>
     );
 };

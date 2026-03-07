@@ -3,6 +3,11 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 
+
+const galleryRoutes = require("./routes/galleryRoutes")
+const eventRoutes = require("./routes/eventRoutes")
+const newsRoutes = require("./routes/newsRoutes")
+
 const app = express();
 
 app.use(cors());
@@ -20,6 +25,9 @@ app.use("/api/grievance", require("./routes/grievanceRoutes"));
 
 app.use("/api/recharge", require("./routes/rechargeRoutes"));
 app.use("/api/orders", require("./routes/orderRoutes"));
+
+app.use("/api/gallery", galleryRoutes)
+app.use("/api/events", eventRoutes)
 
 // Error handling for unknown routes
 app.use((req, res) => {

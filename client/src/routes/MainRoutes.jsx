@@ -11,6 +11,9 @@ import Grievance from '../pages/Grievance.jsx'
 import Product from '../pages/Product.jsx'
 import Recharge from '../pages/Recharge.jsx'
 import MyAccount from '../pages/MyAccount.jsx'
+import Gallery from '../pages/Gallery.jsx'
+import Events from '../pages/Events.jsx'
+import News from '../pages/News.jsx'
 
 import Opportunities from '../pages/Opportunities.jsx'
 import ExchangePolicy from '../footerPages/ExchangePolicy.jsx'
@@ -27,6 +30,7 @@ import VerifyOTP from '../pages/VerifyOTP.jsx'
 import Checkout from '../pages/Checkout.jsx'
 import Cart from '../pages/Cart.jsx'
 import Franchise from '../pages/Franchise.jsx'
+import FranchiseLogin from '../pages/FranchiseLogin.jsx';
 import OrderDetails from '../pages/OrderDetails.jsx'
 
 // ✅ Admin imports
@@ -38,6 +42,9 @@ import AdminFranchise from '../pages/admin/Franchise.jsx'
 import AdminRoute from '../routes/AdminRoutes.jsx'
 import AdminGrievance from '../pages/admin/AdminGrievance.jsx'
 import AdminOrders from '../pages/admin/Orders.jsx'
+import AdminGallery from '../pages/admin/Gallery.jsx'
+import AdminEvents from '../pages/admin/Events.jsx'
+import AdminNews from '../pages/admin/News.jsx'
 
 const MainRoutes = () => {
     return (
@@ -68,6 +75,7 @@ const MainRoutes = () => {
             <Route path='/verify-otp' element={<VerifyOTP />} />
             <Route path='/checkout' element={<Checkout />} />
             <Route path='/franchise/list' element={<Franchise />} />
+            <Route path='/franchise/login' element={<FranchiseLogin />} />
             <Route path='/my-account' element={<MyAccount />} />
             <Route path='/my-account/profile' element={<MyAccount />} />
             <Route path='/my-account/address' element={<MyAccount />} />
@@ -77,6 +85,10 @@ const MainRoutes = () => {
             <Route path='/my-account/kyc' element={<MyAccount />} />
             <Route path='/my-account/cart' element={<MyAccount />} />
             <Route path='/order-details/:id' element={<OrderDetails />} />
+            <Route path='/gallery' element={<Gallery />} />
+            <Route path='/news' element={<News />} />
+            <Route path='/events' element={<Events />} />
+
 
             {/* 🔥 Admin Routes (Nested) */}
             <Route path="/admin" element={
@@ -91,6 +103,11 @@ const MainRoutes = () => {
                 <Route path="franchise" element={<AdminFranchise />} />
                 <Route path="grievance" element={<AdminGrievance />} />
                 <Route path="orders" element={<AdminOrders />} />
+                <Route path="gallery" element={<AdminGallery />} />
+                <Route path="events" element={<AdminEvents />} />
+                <Route path="news" element={<AdminNews />} />
+
+
             </Route>
 
         </Routes>

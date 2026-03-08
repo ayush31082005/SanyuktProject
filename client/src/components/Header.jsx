@@ -24,6 +24,14 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import SearchIcon from '@mui/icons-material/Search';
+import ReceiptIcon from '@mui/icons-material/Receipt';
+import FingerprintIcon from '@mui/icons-material/Fingerprint';
+import PersonIcon from '@mui/icons-material/Person';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import SupportAgentIcon from '@mui/icons-material/SupportAgent';
+import HistoryIcon from '@mui/icons-material/History';
+import InputBase from '@mui/material/InputBase';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 
@@ -38,7 +46,7 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
     top: 0,
     zIndex: 1100,
     [theme.breakpoints.up('md')]: {
-        height: '80px',
+        height: '70px',
     },
 }));
 
@@ -63,10 +71,10 @@ const LogoImage = styled('img')(({ theme }) => ({
     width: 'auto',
     objectFit: 'contain',
     [theme.breakpoints.up('md')]: {
-        height: '45px',
+        height: '40px',
     },
     [theme.breakpoints.up('lg')]: {
-        height: '55px',
+        height: '48px',
     },
 }));
 
@@ -78,11 +86,11 @@ const LogoMain = styled('span')(({ theme }) => ({
     whiteSpace: 'normal',
     lineHeight: 1.2,
     [theme.breakpoints.up('md')]: {
-        fontSize: '0.9rem',
+        fontSize: '0.85rem',
         whiteSpace: 'nowrap',
     },
     [theme.breakpoints.up('lg')]: {
-        fontSize: '1.1rem',
+        fontSize: '1rem',
     },
 }));
 
@@ -104,7 +112,7 @@ const LogoTagline = styled('span')(({ theme }) => ({
 // NavButton with exact styling
 const NavButton = styled(Button)(({ theme }) => ({
     fontFamily: '"Poppins", "Roboto", sans-serif',
-    fontSize: '14px',
+    fontSize: '13px',
     fontWeight: 500,
     color: '#2F7A32',
     textTransform: 'none',
@@ -173,50 +181,50 @@ const LoginButton = styled(Button)(({ theme }) => ({
 // My Account Button (Yellow/Orange theme color)
 const MyAccountButton = styled(Button)(({ theme }) => ({
     fontFamily: '"Poppins", "Roboto", sans-serif',
-    fontSize: '14px',
+    fontSize: '13px',
     fontWeight: 600,
     backgroundColor: '#F7931E',
     color: '#FFFFFF',
-    padding: '6px 16px',
-    borderRadius: '4px',
+    padding: '5px 14px',
+    borderRadius: '8px',
     textTransform: 'none',
     whiteSpace: 'nowrap',
     display: 'flex',
     alignItems: 'center',
-    gap: '8px',
+    gap: '6px',
     '&:hover': {
         backgroundColor: '#e07d0b',
         boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
     },
     transition: 'all 0.2s ease-in-out',
     [theme.breakpoints.up('xl')]: {
-        fontSize: '15px',
-        padding: '8px 20px',
+        fontSize: '14px',
+        padding: '6px 18px',
     },
 }));
 
 // Admin Dashboard Button (Orange/Different color - for admins)
 const AdminDashboardButton = styled(Button)(({ theme }) => ({
     fontFamily: '"Poppins", "Roboto", sans-serif',
-    fontSize: '14px',
+    fontSize: '13px',
     fontWeight: 600,
     backgroundColor: '#F7931E',
     color: '#FFFFFF',
-    padding: '6px 16px',
-    borderRadius: '4px',
+    padding: '5px 14px',
+    borderRadius: '8px',
     textTransform: 'none',
     whiteSpace: 'nowrap',
     display: 'flex',
     alignItems: 'center',
-    gap: '8px',
+    gap: '6px',
     '&:hover': {
         backgroundColor: '#e07d0b',
         boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
     },
     transition: 'all 0.2s ease-in-out',
     [theme.breakpoints.up('xl')]: {
-        fontSize: '15px',
-        padding: '8px 20px',
+        fontSize: '14px',
+        padding: '6px 18px',
     },
 }));
 
@@ -227,6 +235,9 @@ const LogoutMenuItem = styled(MenuItem)({
         backgroundColor: 'rgba(211, 47, 47, 0.08)',
     },
 });
+
+
+
 
 // Regular List item for mobile drawer
 const StyledListItemButton = styled(ListItemButton)({
@@ -247,23 +258,6 @@ const Header = () => {
     const [userData, setUserData] = useState(null);
     const [userRole, setUserRole] = useState(null);
     const [anchorElUser, setAnchorElUser] = useState(null);
-
-    // Check authentication status on component mount and when localStorage changes
-    useEffect(() => {
-        checkAuthStatus();
-
-        // Listen for storage events (in case user logs in/out in another tab)
-        window.addEventListener('storage', checkAuthStatus);
-
-        return () => {
-            window.removeEventListener('storage', checkAuthStatus);
-        };
-    }, []);
-
-    // Also check when component mounts and after any navigation
-    useEffect(() => {
-        checkAuthStatus();
-    }, [navigate]);
 
     const checkAuthStatus = () => {
         console.log("Checking auth status..."); // Debug log
@@ -306,19 +300,33 @@ const Header = () => {
         }
     };
 
+    // Check authentication status on component mount and when localStorage changes
+    useEffect(() => {
+        checkAuthStatus();
+
+        // Listen for storage events (in case user logs in/out in another tab)
+        window.addEventListener('storage', checkAuthStatus);
+
+        return () => {
+            window.removeEventListener('storage', checkAuthStatus);
+        };
+    }, []);
+
+    // Also check when component mounts and after any navigation
+    useEffect(() => {
+        checkAuthStatus();
+    }, [navigate]);
+
     // Franchise Dropdown State (Desktop)
     const [anchorElFranchise, setAnchorElFranchise] = useState(null);
     const openFranchiseMenu = Boolean(anchorElFranchise);
 
-    // Franchise Collapse State (Mobile)
-    const [mobileFranchiseOpen, setMobileFranchiseOpen] = useState(false);
+    // Mobile Submenu State (Accordion: 'company', 'franchise', 'account', or null)
+    const [mobileSubmenu, setMobileSubmenu] = useState(null);
 
     // Company Dropdown State (Desktop)
     const [anchorElCompany, setAnchorElCompany] = useState(null);
     const openCompanyMenu = Boolean(anchorElCompany);
-
-    // Company Collapse State (Mobile)
-    const [mobileCompanyOpen, setMobileCompanyOpen] = useState(false);
 
     // User Menu State
     const openUserMenu = Boolean(anchorElUser);
@@ -348,6 +356,13 @@ const Header = () => {
         { name: 'Franchise Login', path: '/franchise/login' },
     ];
 
+    const accountSubItems = [
+        { name: 'My Profile', path: '/my-account/profile', icon: <PersonIcon fontSize="small" /> },
+        { name: 'My Orders', path: '/my-account/orders', icon: <ReceiptIcon fontSize="small" /> },
+        { name: 'Transactions', path: '/my-account/transactions', icon: <HistoryIcon fontSize="small" /> },
+        { name: 'KYC Status', path: '/my-account/kyc', icon: <FingerprintIcon fontSize="small" /> },
+    ];
+
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
@@ -355,6 +370,7 @@ const Header = () => {
     const handleNavigation = (path) => {
         navigate(path);
         setMobileOpen(false);
+        setMobileSubmenu(null);
     };
 
     const handleLogoError = () => {
@@ -393,6 +409,7 @@ const Header = () => {
         handleNavigation(path);
     };
 
+
     // User Menu Handlers
     const handleUserMenuClick = (event) => {
         setAnchorElUser(event.currentTarget);
@@ -402,10 +419,6 @@ const Header = () => {
         setAnchorElUser(null);
     };
 
-    const handleMyAccountClick = () => {
-        handleUserMenuClose();
-        navigate('/my-account');
-    };
 
     const handleAdminDashboardClick = () => {
         handleUserMenuClose();
@@ -422,13 +435,17 @@ const Header = () => {
         navigate('/');
     };
 
-    // Mobile Collapse Handler
+    // Mobile Collapse Handlers (Accordion Logic)
     const handleMobileFranchiseToggle = () => {
-        setMobileFranchiseOpen(!mobileFranchiseOpen);
+        setMobileSubmenu(mobileSubmenu === 'franchise' ? null : 'franchise');
     };
 
     const handleMobileCompanyToggle = () => {
-        setMobileCompanyOpen(!mobileCompanyOpen);
+        setMobileSubmenu(mobileSubmenu === 'company' ? null : 'company');
+    };
+
+    const handleMobileAccountToggle = () => {
+        setMobileSubmenu(mobileSubmenu === 'account' ? null : 'account');
     };
 
     // Get user initials for avatar
@@ -519,9 +536,9 @@ const Header = () => {
                                 }
                             }}
                         />
-                        {mobileCompanyOpen ? <ExpandLess sx={{ color: '#2F7A32' }} /> : <ExpandMore sx={{ color: '#2F7A32' }} />}
+                        {mobileSubmenu === 'company' ? <ExpandLess sx={{ color: '#2F7A32' }} /> : <ExpandMore sx={{ color: '#2F7A32' }} />}
                     </StyledListItemButton>
-                    <Collapse in={mobileCompanyOpen} timeout="auto" unmountOnExit sx={{ width: '100%' }}>
+                    <Collapse in={mobileSubmenu === 'company'} timeout="auto" unmountOnExit sx={{ width: '100%' }}>
                         <List component="div" disablePadding>
                             {companySubItems.map((subItem) => (
                                 <StyledListItemButton
@@ -579,9 +596,9 @@ const Header = () => {
                                 }
                             }}
                         />
-                        {mobileFranchiseOpen ? <ExpandLess sx={{ color: '#2F7A32' }} /> : <ExpandMore sx={{ color: '#2F7A32' }} />}
+                        {mobileSubmenu === 'franchise' ? <ExpandLess sx={{ color: '#2F7A32' }} /> : <ExpandMore sx={{ color: '#2F7A32' }} />}
                     </StyledListItemButton>
-                    <Collapse in={mobileFranchiseOpen} timeout="auto" unmountOnExit sx={{ width: '100%' }}>
+                    <Collapse in={mobileSubmenu === 'franchise'} timeout="auto" unmountOnExit sx={{ width: '100%' }}>
                         <List component="div" disablePadding>
                             {franchiseSubItems.map((subItem) => (
                                 <StyledListItemButton
@@ -649,16 +666,71 @@ const Header = () => {
                             ) : (
                                 // Regular User View
                                 <>
-                                    <MyAccountButton
-                                        onClick={() => handleNavigation('/my-account')}
-                                        sx={{ ml: 0, width: '100%', justifyContent: 'center' }}
-                                    >
-                                        <AccountCircleIcon sx={{ mr: 1 }} />
-                                        {getDisplayName()}
-                                    </MyAccountButton>
+                                    <ListItem disablePadding sx={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+                                        <StyledListItemButton onClick={handleMobileAccountToggle} sx={{ width: '100%', justifyContent: 'center' }}>
+                                            <AccountCircleIcon sx={{ mr: 1, color: '#2F7A32' }} />
+                                            <ListItemText
+                                                primary={getDisplayName()}
+                                                sx={{
+                                                    '& .MuiTypography-root': {
+                                                        fontFamily: '"Poppins", "Roboto", sans-serif',
+                                                        fontSize: '14px',
+                                                        fontWeight: 600,
+                                                        color: '#2F7A32'
+                                                    }
+                                                }}
+                                            />
+                                            {mobileSubmenu === 'account' ? <ExpandLess sx={{ color: '#2F7A32' }} /> : <ExpandMore sx={{ color: '#2F7A32' }} />}
+                                        </StyledListItemButton>
+                                        <Collapse in={mobileSubmenu === 'account'} timeout="auto" unmountOnExit sx={{ width: '100%' }}>
+                                            <List component="div" disablePadding>
+                                                {accountSubItems.map((subItem) => (
+                                                    <StyledListItemButton
+                                                        key={subItem.name}
+                                                        sx={{ pl: 4 }}
+                                                        onClick={() => handleNavigation(subItem.path)}
+                                                    >
+                                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, color: '#2F7A32' }}>
+                                                            {subItem.icon}
+                                                            <ListItemText
+                                                                primary={subItem.name}
+                                                                sx={{
+                                                                    '& .MuiTypography-root': {
+                                                                        fontFamily: '"Poppins", "Roboto", sans-serif',
+                                                                        fontSize: '13px',
+                                                                        fontWeight: 400,
+                                                                        color: isActive(subItem.path) ? '#F7931E' : '#2F7A32'
+                                                                    }
+                                                                }}
+                                                            />
+                                                        </Box>
+                                                    </StyledListItemButton>
+                                                ))}
+                                                <StyledListItemButton
+                                                    sx={{ pl: 4 }}
+                                                    onClick={() => handleNavigation('/my-account')}
+                                                >
+                                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, color: '#2F7A32' }}>
+                                                        <DashboardIcon fontSize="small" />
+                                                        <ListItemText
+                                                            primary="Dashboard Home"
+                                                            sx={{
+                                                                '& .MuiTypography-root': {
+                                                                    fontFamily: '"Poppins", "Roboto", sans-serif',
+                                                                    fontSize: '13px',
+                                                                    fontWeight: 400,
+                                                                    color: isActive('/my-account') ? '#F7931E' : '#2F7A32'
+                                                                }
+                                                            }}
+                                                        />
+                                                    </Box>
+                                                </StyledListItemButton>
+                                            </List>
+                                        </Collapse>
+                                    </ListItem>
                                     <LoginButton
                                         onClick={handleLogout}
-                                        sx={{ ml: 0, width: '100%', borderColor: '#d32f2f', color: '#d32f2f' }}
+                                        sx={{ ml: 0, width: '100%', borderColor: '#d32f2f', color: '#d32f2f', mt: 1 }}
                                     >
                                         <LogoutIcon sx={{ mr: 1 }} />
                                         Logout
@@ -772,10 +844,10 @@ const Header = () => {
                                     {item.name}
                                 </NavButton>
                             ))}
-
                             {/* Conditional rendering based on login status and role */}
                             {isLoggedIn ? (
                                 <>
+
                                     {isAdmin() ? (
                                         // Admin View
                                         <AdminDashboardButton
@@ -830,7 +902,8 @@ const Header = () => {
                                                     fontWeight: 500,
                                                     color: '#2F7A32',
                                                     borderRadius: '4px',
-                                                    gap: 1,
+                                                    gap: 1.5,
+                                                    py: 1.2,
                                                     '&:hover': {
                                                         backgroundColor: 'rgba(247, 147, 30, 0.08)',
                                                         color: '#F7931E',
@@ -838,28 +911,40 @@ const Header = () => {
                                                 }}
                                             >
                                                 <DashboardIcon fontSize="small" />
-                                                Dashboard
+                                                Admin Dashboard
                                             </MenuItem>
                                         ) : (
                                             // Regular User Menu Items
-                                            <MenuItem
-                                                onClick={handleMyAccountClick}
-                                                sx={{
-                                                    fontFamily: '"Poppins", "Roboto", sans-serif',
-                                                    fontSize: '14px',
-                                                    fontWeight: 500,
-                                                    color: '#2F7A32',
-                                                    borderRadius: '4px',
-                                                    gap: 1,
-                                                    '&:hover': {
-                                                        backgroundColor: 'rgba(247, 147, 30, 0.08)',
-                                                        color: '#F7931E',
-                                                    }
-                                                }}
-                                            >
-                                                <AccountCircleIcon fontSize="small" />
-                                                My Account
-                                            </MenuItem>
+                                            <>
+                                                {[
+                                                    { label: 'Dashboard', icon: <DashboardIcon fontSize="small" />, path: '/my-account' },
+                                                    { label: 'My Orders', icon: <ReceiptIcon fontSize="small" />, path: '/my-account/orders' },
+                                                    { label: 'My Profile', icon: <PersonIcon fontSize="small" />, path: '/my-account/profile' },
+                                                    { label: 'Transactions', icon: <HistoryIcon fontSize="small" />, path: '/my-account/transactions' },
+                                                    { label: 'KYC Status', icon: <FingerprintIcon fontSize="small" />, path: '/my-account/kyc' },
+                                                ].map((item) => (
+                                                    <MenuItem
+                                                        key={item.label}
+                                                        onClick={() => handleNavigation(item.path)}
+                                                        sx={{
+                                                            fontFamily: '"Poppins", "Roboto", sans-serif',
+                                                            fontSize: '13px',
+                                                            fontWeight: 500,
+                                                            color: '#2F7A32',
+                                                            borderRadius: '4px',
+                                                            gap: 1.5,
+                                                            py: 1,
+                                                            '&:hover': {
+                                                                backgroundColor: 'rgba(10, 122, 47, 0.05)',
+                                                                color: '#0A7A2F',
+                                                            }
+                                                        }}
+                                                    >
+                                                        {item.icon}
+                                                        {item.label}
+                                                    </MenuItem>
+                                                ))}
+                                            </>
                                         )}
 
                                         <LogoutMenuItem

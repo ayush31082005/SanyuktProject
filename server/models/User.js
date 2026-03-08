@@ -7,6 +7,11 @@ const userSchema = new mongoose.Schema(
             // required: true,  // 👈 Comment out ya remove
             trim: true,
         },
+        memberId: {
+            type: String,
+            unique: true,
+            trim: true,
+        },
         sponsorName: {
             type: String,
             trim: true,

@@ -193,6 +193,26 @@ const RegistrationForm = () => {
     );
 
     useEffect(() => {
+        const fetchSponsorName = async () => {
+            if (formData.sponsorId.length >= 3) { // Trigger only for reasonable length
+                try {
+                    const res = await api.get(`/sponsor/${formData.sponsorId}`);
+                    if (res.data.name) {
+                        setFormData(prev => ({ ...prev, sponsorName: res.data.name }));
+                    }
+                } catch (err) {
+                    setFormData(prev => ({ ...prev, sponsorName: '' }));
+                }
+            } else {
+                setFormData(prev => ({ ...prev, sponsorName: '' }));
+            }
+        };
+
+        const timeoutId = setTimeout(fetchSponsorName, 500); // Debounce
+        return () => clearTimeout(timeoutId);
+    }, [formData.sponsorId]);
+
+    useEffect(() => {
         const handleClickOutside = (event) => {
             if (stateDropdownRef.current && !stateDropdownRef.current.contains(event.target)) {
                 setIsStateDropdownOpen(false);
@@ -415,7 +435,7 @@ const RegistrationForm = () => {
                                                         name="sponsorName"
                                                         value={formData.sponsorName}
                                                         onChange={handleChange}
-                                                        placeholder="Enter Sponsor Name"
+                                                        placeholder="Sponsor Name"
                                                         className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                                     />
                                                 </div>

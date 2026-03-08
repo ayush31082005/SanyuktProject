@@ -21,8 +21,16 @@ exports.register = async (req, res) => {
         const otp = generateOTP();
 
         if (!user) {
+            // Generate a unique member ID
+            const generateMemberId = () => 'SPRL' + Math.floor(1000 + Math.random() * 9000).toString();
+            let newMemberId = generateMemberId();
+            while (await User.findOne({ memberId: newMemberId })) {
+                newMemberId = generateMemberId();
+            }
+
             user = new User({
                 ...req.body,
+                memberId: newMemberId,
                 password: hashedPassword,
                 otp,
                 otpExpire: Date.now() + 5 * 60 * 1000
@@ -69,7 +77,14 @@ exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        const user = await User.findOne({ email });
+        let user;
+        if (email.match(/^[0-9a-fA-F]{24}$/)) {
+            user = await User.findOne({ $or: [{ email: email }, { _id: email }] });
+        } else if (email.toUpperCase().startsWith('SPRL') || email.toUpperCase().startsWith('SP')) {
+             user = await User.findOne({ memberId: email.toUpperCase() });
+        } else {
+            user = await User.findOne({ email: email });
+        }
 
         if (!user)
             return res.status(400).json({ message: "User not found" });
@@ -200,7 +215,21 @@ exports.createAdmin = async (req, res) => {
 
 // ================= PROFILE =================
 exports.profile = async (req, res) => {
-    res.json(req.user);
+    try {
+        let user = req.user;
+        if (!user.memberId) {
+            const generateMemberId = () => 'SPRL' + Math.floor(1000 + Math.random() * 9000).toString();
+            let newMemberId = generateMemberId();
+            while (await User.findOne({ memberId: newMemberId })) {
+                newMemberId = generateMemberId();
+            }
+            user.memberId = newMemberId;
+            await user.save();
+        }
+        res.json(user);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 };
 
 
@@ -250,6 +279,26 @@ exports.submitKyc = async (req, res) => {
         ).select('-password -otp -otpExpire');
 
         res.json({ message: 'KYC submitted successfully', user });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+// ================= GET SPONSOR NAME =================
+exports.getSponsorName = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const user = await User.findOne({ 
+            $or: [
+                { memberId: id.toUpperCase() },
+                { _id: id.match(/^[0-9a-fA-F]{24}$/) ? id : null }
+            ]
+        }).select("userName");
+
+        if (!user) {
+            return res.status(404).json({ message: "Sponsor not found" });
+        }
+
+        res.json({ name: user.userName });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

@@ -35,6 +35,14 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
+import Drawer from '@mui/material/Drawer';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 import { styled } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
@@ -68,6 +76,8 @@ import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import SearchIcon from '@mui/icons-material/Search';
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
 
 // Styled Components
 const AnimatedCard = styled(Card)(({ theme }) => ({
@@ -80,10 +90,14 @@ const AnimatedCard = styled(Card)(({ theme }) => ({
 }));
 
 const AnimatedPaper = styled(Paper)(({ theme }) => ({
-    transition: 'all 0.3s ease-in-out',
+    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
     width: '100%',
+    borderRadius: '24px',
+    border: '1px solid rgba(255, 255, 255, 0.3)',
+    boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
     '&:hover': {
-        boxShadow: '0 8px 20px rgba(0,0,0,0.1)',
+        boxShadow: '0 12px 40px rgba(0,0,0,0.12)',
+        transform: 'translateY(-2px)',
     },
 }));
 
@@ -100,59 +114,74 @@ const InfoItem = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-    padding: theme.spacing(1),
-    borderRadius: theme.spacing(1),
-    transition: 'all 0.2s ease-in-out',
+    marginBottom: theme.spacing(1.5),
+    padding: theme.spacing(1.5),
+    borderRadius: '16px',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
     width: '100%',
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    border: '1px solid rgba(0,0,0,0.03)',
     '&:hover': {
-        backgroundColor: '#f5f5f5',
-        transform: 'translateX(8px)',
+        backgroundColor: 'rgba(10, 122, 47, 0.08)',
+        transform: 'translateX(10px)',
+        boxShadow: '0 4px 15px rgba(10, 122, 47, 0.1)',
         '& .MuiSvgIcon-root': {
-            transform: 'scale(1.2)',
+            transform: 'scale(1.2) rotate(5deg)',
             color: '#0A7A2F',
         },
     },
 }));
 
 const FullPageContainer = styled(Box)(({ theme }) => ({
-    minHeight: '100vh',
+    height: 'calc(100vh - 60px)', // Fixed height based on viewport
     width: '100%',
     background: 'linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%)',
     position: 'relative',
-    overflow: 'auto',
-    padding: theme.spacing(2),
+    overflow: 'hidden', // Prevent outer scrolling
+    padding: theme.spacing(1),
     [theme.breakpoints.up('sm')]: {
-        padding: theme.spacing(3),
+        padding: theme.spacing(2),
     },
     [theme.breakpoints.up('md')]: {
-        padding: theme.spacing(4),
+        height: 'calc(100vh - 80px)', // Adjust for taller header on desktop
+        padding: theme.spacing(3),
     },
+    display: 'flex',
+    flexDirection: 'column',
 }));
 
 const StatusChip = styled(Chip)(({ status }) => ({
-    fontWeight: 600,
+    fontWeight: 700,
+    borderRadius: '10px',
+    fontSize: '0.75rem',
+    letterSpacing: '0.5px',
+    textTransform: 'uppercase',
+    padding: '4px 2px',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
     ...(status === 'Pending' && {
-        backgroundColor: '#F7931E',
-        color: 'white',
+        backgroundColor: 'rgba(247, 147, 30, 0.15)',
+        color: '#F7931E',
+        border: '1px solid rgba(247, 147, 30, 0.3)',
     }),
     ...(status === 'In Progress' && {
-        backgroundColor: '#0A7A2F',
-        color: 'white',
+        backgroundColor: 'rgba(10, 122, 47, 0.15)',
+        color: '#0A7A2F',
+        border: '1px solid rgba(10, 122, 47, 0.3)',
     }),
     ...(status === 'Resolved' && {
-        backgroundColor: '#4caf50',
-        color: 'white',
+        backgroundColor: 'rgba(76, 175, 80, 0.15)',
+        color: '#4caf50',
+        border: '1px solid rgba(76, 175, 80, 0.3)',
     }),
 }));
 
-const MyAccount = () => {
+const MyAccount = ({ defaultTab }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-    // Determine active tab from URL path
+    // Determine active tab from URL path or prop
     const pathToTab = {
         '/my-account': 0,
         '/my-account/profile': 0,
@@ -163,8 +192,14 @@ const MyAccount = () => {
         '/my-account/kyc': 5,
         '/my-account/cart': -1,
     };
-    const tabValue = pathToTab[location.pathname] ?? 0;
+    const tabValue = defaultTab !== undefined ? defaultTab : (pathToTab[location.pathname] ?? 0);
     const setTabValue = (index) => {
+        if (defaultTab !== undefined) {
+            // When in new Dashboard, we navigate via sidebar but this keeps compatibility
+            const tabPaths = ['/my-account/profile', '/my-account/address', '/my-account/orders', '/my-account/transactions', '/my-account/grievances', '/my-account/kyc'];
+            navigate(tabPaths[index] || '/my-account/profile');
+            return;
+        }
         const tabPaths = ['/my-account/profile', '/my-account/address', '/my-account/orders', '/my-account/transactions', '/my-account/grievances', '/my-account/kyc'];
         navigate(tabPaths[index] || '/my-account/profile');
     };
@@ -179,6 +214,8 @@ const MyAccount = () => {
     const [transactionsLoading, setTransactionsLoading] = useState(false);
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
     const [showContent, setShowContent] = useState(false);
+    const [menuAnchorEl, setMenuAnchorEl] = useState(null);
+    const menuOpen = Boolean(menuAnchorEl);
     const [editMode, setEditMode] = useState(false);
     const [editData, setEditData] = useState({});
     const [saving, setSaving] = useState(false);
@@ -463,28 +500,45 @@ const MyAccount = () => {
 
     return (
         <FullPageContainer>
-            <Container maxWidth="lg" disableGutters sx={{ px: { xs: 1, sm: 2, md: 0 } }}>
+            <Container maxWidth="lg" disableGutters sx={{ px: { xs: 1, sm: 2, md: 0 }, height: '100%', display: 'flex', flexDirection: 'column' }}>
                 {/* Welcome Header */}
                 <Slide direction="down" in={showContent} timeout={800}>
                     <AnimatedPaper sx={{
-                        p: { xs: 2.5, sm: 4 },
-                        mb: 3,
-                        background: 'linear-gradient(135deg, #0A7A2F 0%, #1a8c3a 55%, #0A7A2F 100%)',
+                        p: { xs: 3, sm: 5 },
+                        mb: 4,
+                        background: 'linear-gradient(135deg, #0A7A2F 0%, #1a8c3a 50%, #065a22 100%)',
                         color: 'white',
-                        borderRadius: { xs: '0px', sm: '20px' },
+                        borderRadius: { xs: '0px', sm: '28px' },
                         position: 'relative',
                         overflow: 'hidden',
-                        boxShadow: '0 10px 30px rgba(10,122,47,0.2)',
+                        boxShadow: '0 20px 40px rgba(10,122,47,0.25)',
+                        display: defaultTab !== undefined ? 'none' : 'block',
+                        '&::before': {
+                            content: '""',
+                            position: 'absolute',
+                            top: '-20%',
+                            left: '-10%',
+                            width: '400px',
+                            height: '400px',
+                            background: 'radial-gradient(circle, rgba(247,147,30,0.2) 0%, transparent 70%)',
+                            borderRadius: '50%',
+                            filter: 'blur(40px)',
+                            animation: 'pulse 8s infinite alternate',
+                        },
                         '&::after': {
                             content: '""',
                             position: 'absolute',
-                            top: '-50%',
-                            right: '-10%',
-                            width: '300px',
-                            height: '300px',
-                            background: 'rgba(255,255,255,0.05)',
+                            bottom: '-30%',
+                            right: '-5%',
+                            width: '350px',
+                            height: '350px',
+                            background: 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)',
                             borderRadius: '50%',
                             filter: 'blur(50px)',
+                        },
+                        '@keyframes pulse': {
+                            '0%': { transform: 'scale(1) translate(0, 0)' },
+                            '100%': { transform: 'scale(1.2) translate(20px, 20px)' },
                         }
                     }}>
                         <Box sx={{
@@ -497,7 +551,17 @@ const MyAccount = () => {
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                                 <Avatar
                                     src={profileImage || undefined}
-                                    sx={{ bgcolor: '#F7931E', width: { xs: 48, sm: 56 }, height: { xs: 48, sm: 56 }, fontSize: 22, fontWeight: 700, border: '2px solid rgba(255,255,255,0.3)' }}
+                                    sx={{
+                                        bgcolor: '#F7931E',
+                                        width: { xs: 64, sm: 80 },
+                                        height: { xs: 64, sm: 80 },
+                                        fontSize: 28,
+                                        fontWeight: 800,
+                                        border: '4px solid rgba(255,255,255,0.4)',
+                                        boxShadow: '0 8px 16px rgba(0,0,0,0.15)',
+                                        transition: 'transform 0.3s ease',
+                                        '&:hover': { transform: 'scale(1.1) rotate(5deg)' }
+                                    }}
                                 >
                                     {!profileImage && (userData.userName || 'U')[0].toUpperCase()}
                                 </Avatar>
@@ -537,17 +601,109 @@ const MyAccount = () => {
                     </AnimatedPaper>
                 </Slide>
 
+                {/* Mobile Menu Toggle Button */}
+                {isMobile && defaultTab === undefined && (
+                    <Box sx={{ display: 'flex', mb: 1, px: 1 }}>
+                        <Button
+                            variant="contained"
+                            startIcon={<MenuIcon />}
+                            onClick={(e) => setMenuAnchorEl(e.currentTarget)}
+                            sx={{
+                                bgcolor: '#0A7A2F',
+                                borderRadius: '12px',
+                                textTransform: 'none',
+                                fontWeight: 600,
+                                '&:hover': { bgcolor: '#1a8c3a' }
+                            }}
+                        >
+                            Menu
+                        </Button>
+                    </Box>
+                )}
+
+                {/* Mobile Navigation Menu (Dropdown) */}
+                <Menu
+                    anchorEl={menuAnchorEl}
+                    open={menuOpen}
+                    onClose={() => setMenuAnchorEl(null)}
+                    PaperProps={{
+                        sx: {
+                            width: 220,
+                            mt: 1.5,
+                            borderRadius: '18px',
+                            background: 'rgba(10, 122, 47, 0.9)',
+                            backdropFilter: 'blur(12px)',
+                            border: '1px solid rgba(255, 255, 255, 0.2)',
+                            color: 'white',
+                            boxShadow: '0 10px 40px rgba(0,0,0,0.3)',
+                            '& .MuiList-root': { p: 1.5 }
+                        }
+                    }}
+                    transformOrigin={{ horizontal: 'left', vertical: 'top' }}
+                    anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+                >
+                    {[
+                        { icon: <PersonIcon />, label: 'Profile', index: 0, path: '/my-account/profile' },
+                        { icon: <LocationOnIcon />, label: 'Address', index: 1, path: '/my-account/address' },
+                        { icon: <ShoppingCartIcon />, label: 'My Cart', index: -1, path: '/my-account/cart' },
+                        { icon: <ReceiptIcon />, label: 'Orders', index: 2, path: '/my-account/orders' },
+                        { icon: <ReceiptIcon />, label: 'Transactions', index: 3, path: '/my-account/transactions' },
+                        { icon: <SupportAgentIcon />, label: 'Grievances', index: 4, path: '/my-account/grievances' },
+                        { icon: <FingerprintIcon />, label: 'KYC Verification', index: 5, path: '/my-account/kyc' },
+                    ].map((item) => (
+                        <MenuItem
+                            key={item.index}
+                            onClick={() => {
+                                navigate(item.path);
+                                setMenuAnchorEl(null);
+                            }}
+                            sx={{
+                                borderRadius: '8px',
+                                py: 1,
+                                mb: 0.5,
+                                bgcolor: tabValue === item.index ? 'rgba(255,255,255,0.2)' : 'transparent',
+                                '&:hover': { bgcolor: 'rgba(255,255,255,0.1)' }
+                            }}
+                        >
+                            <ListItemIcon sx={{ color: 'inherit', minWidth: 32 }}>
+                                {React.cloneElement(item.icon, { sx: { fontSize: 18, color: tabValue === item.index ? '#F7931E' : 'rgba(255,255,255,0.8)' } })}
+                            </ListItemIcon>
+                            <ListItemText
+                                primary={item.label}
+                                primaryTypographyProps={{
+                                    sx: {
+                                        fontWeight: tabValue === item.index ? 700 : 500,
+                                        fontSize: '13px'
+                                    }
+                                }}
+                            />
+                        </MenuItem>
+                    ))}
+                </Menu>
+
                 {/* Vertical Sidebar + Content Layout */}
                 <Fade in={showContent} timeout={800}>
-                    <AnimatedPaper sx={{ borderRadius: '16px', overflow: 'hidden', display: 'flex', minHeight: '500px' }}>
-                        {/* Left Sidebar */}
+                    <AnimatedPaper sx={{ 
+                        borderRadius: defaultTab !== undefined ? '0px' : '16px', 
+                        overflow: 'hidden', 
+                        display: 'flex', 
+                        flex: 1, 
+                        minHeight: 0,
+                        boxShadow: defaultTab !== undefined ? 'none' : undefined,
+                        border: defaultTab !== undefined ? 'none' : undefined,
+                        bgcolor: defaultTab !== undefined ? 'transparent' : undefined
+                    }}>
+                        {/* Left Sidebar (Desktop only) */}
                         <Box sx={{
-                            width: { xs: '64px', sm: '220px' },
+                            width: { xs: 0, sm: '220px' },
+                            display: defaultTab !== undefined ? 'none' : { xs: 'none', sm: 'flex' },
                             flexShrink: 0,
                             background: 'linear-gradient(180deg, #0A7A2F 0%, #1a8c3a 60%, #0A7A2F 100%)',
-                            display: 'flex',
                             flexDirection: 'column',
                             py: 3,
+                            overflowY: 'auto',
+                            '&::-webkit-scrollbar': { width: '4px' },
+                            '&::-webkit-scrollbar-thumb': { backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: '10px' }
                         }}>
                             {[
                                 { icon: <PersonIcon />, label: 'Profile', index: 0, path: '/my-account/profile' },
@@ -591,7 +747,14 @@ const MyAccount = () => {
                         </Box>
 
                         {/* Right Content Panel */}
-                        <Box sx={{ flex: 1, p: { xs: 2, sm: 3, md: 4 }, overflow: 'auto', bgcolor: '#fafafa' }}>
+                        <Box sx={{
+                            flex: 1,
+                            p: defaultTab !== undefined ? { xs: 0, sm: 1, md: 2 } : { xs: 1.5, sm: 2, md: 3 },
+                            overflowY: 'auto',
+                            bgcolor: defaultTab !== undefined ? 'transparent' : '#fafafa',
+                            height: '100%', // Fill the parent container
+                            position: 'relative'
+                        }}>
                             {/* Cart Tab (index -1) */}
                             {tabValue === -1 && (
                                 <Box>
@@ -603,9 +766,9 @@ const MyAccount = () => {
                             {tabValue === 0 && (
                                 <Box>
                                     {/* Avatar Hero Card */}
-                                    <Box sx={{ mb: 3, borderRadius: '14px', overflow: 'hidden', border: '1px solid #e8f5e9', boxShadow: '0 2px 12px rgba(10,122,47,0.07)' }}>
-                                        <Box sx={{ height: '5px', background: 'linear-gradient(90deg, #0A7A2F, #F7931E)' }} />
-                                        <Box sx={{ p: { xs: 2, sm: 3 }, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 2.5, bgcolor: 'white', flexWrap: 'wrap' }}>
+                                    <Box sx={{ mb: 3, borderRadius: '18px', overflow: 'hidden', border: '1px solid #e8f5e9', boxShadow: '0 4px 20px rgba(10,122,47,0.1)' }}>
+                                        <Box sx={{ height: '6px', background: 'linear-gradient(90deg, #0A7A2F, #F7931E, #0A7A2F)' }} />
+                                        <Box sx={{ p: { xs: 2, sm: 3, md: 4 }, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 4, bgcolor: 'white', flexWrap: 'wrap' }}>
                                             <Box sx={{ display: 'flex', alignItems: { xs: 'flex-start', sm: 'center' }, gap: 2.5, flexDirection: { xs: 'column', sm: 'row' }, width: { xs: '100%', sm: 'auto' } }}>
                                                 {/* Avatar with Camera Upload Overlay */}
                                                 <Box sx={{ position: 'relative', display: 'inline-flex' }}>
@@ -644,7 +807,8 @@ const MyAccount = () => {
                                                 <Box>
                                                     <Typography sx={{ fontWeight: 800, fontSize: '20px', color: '#111', lineHeight: 1.2 }}>{formatValue(userData.userName)}</Typography>
                                                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.75 }}>
-                                                        <Box sx={{ bgcolor: '#e8f5e9', color: '#0A7A2F', fontWeight: 600, fontSize: '12px', px: 1.5, py: 0.25, borderRadius: '20px' }}>{formatValue(userData.position)}</Box>
+                                                        <Box sx={{ bgcolor: '#e8f5e9', color: '#0A7A2F', fontWeight: 600, fontSize: '11px', px: 1.5, py: 0.25, borderRadius: '20px' }}>ID: {formatValue(userData.memberId)}</Box>
+                                                        <Box sx={{ bgcolor: '#fffbed', color: '#F7931E', fontWeight: 600, fontSize: '11px', px: 1.5, py: 0.25, borderRadius: '20px' }}>{formatValue(userData.position)}</Box>
                                                         <Typography sx={{ color: '#bbb', fontSize: '13px' }}>{[userData.district, userData.state].filter(Boolean).join(', ') || 'India'}</Typography>
                                                     </Box>
                                                     <Typography sx={{ color: '#999', fontSize: '13px', mt: 0.5, wordBreak: 'break-all' }}>{formatValue(userData.email)}</Typography>
@@ -688,14 +852,14 @@ const MyAccount = () => {
                                     </Box>
 
                                     {/* Personal Information Section */}
-                                    <Paper variant="outlined" sx={{ borderRadius: '14px', overflow: 'hidden', mb: 3 }}>
-                                        <Box sx={{ px: 3, py: 2.5, borderBottom: '1px solid #f0f0f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                                            <Typography sx={{ fontWeight: 700, fontSize: '15px', color: '#111' }}>Personal Information</Typography>
+                                    <Paper variant="outlined" sx={{ borderRadius: '18px', overflow: 'hidden', mb: 3, boxShadow: '0 2px 12px rgba(0,0,0,0.02)' }}>
+                                        <Box sx={{ px: 3, py: 2, borderBottom: '1px solid #f0f0f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between', bgcolor: '#fcfdfc' }}>
+                                            <Typography sx={{ fontWeight: 800, fontSize: '16px', color: '#111', letterSpacing: '0.2px' }}>Personal Information</Typography>
                                         </Box>
-                                        <Box sx={{ px: 3, py: 1 }}>
+                                        <Box sx={{ px: 3, py: 1.5 }}>
                                             {editMode ? (
                                                 // Edit mode — TextFields
-                                                <Grid container spacing={2.5} sx={{ py: 2.5 }}>
+                                                <Grid container spacing={1.5} sx={{ py: 1.5 }}>
                                                     {[
                                                         { label: 'User Name', key: 'userName' },
                                                         { label: "Father's Name", key: 'fatherName' },
@@ -747,66 +911,91 @@ const MyAccount = () => {
                                                     </Grid>
                                                 </Grid>
                                             ) : (
-                                                // View mode — rows with icons and better spacing
-                                                [
-                                                    [{ label: 'User Name', value: formatValue(userData.userName), icon: <PersonIcon sx={{ fontSize: 18, color: '#0A7A2F' }} /> }, { label: "Father's Name", value: formatValue(userData.fatherName), icon: <GroupsIcon sx={{ fontSize: 18, color: '#0A7A2F' }} /> }],
-                                                    [{ label: 'Email Address', value: formatValue(userData.email), icon: <EmailIcon sx={{ fontSize: 18, color: '#0A7A2F' }} /> }, { label: 'Phone', value: formatValue(userData.mobile), icon: <PhoneIcon sx={{ fontSize: 18, color: '#0A7A2F' }} /> }],
-                                                    [{ label: 'Gender', value: formatValue(userData.gender), icon: <WcIcon sx={{ fontSize: 18, color: '#0A7A2F' }} /> }, { label: 'Position', value: formatValue(userData.position), icon: <BadgeIcon sx={{ fontSize: 18, color: '#0A7A2F' }} /> }],
-                                                ].map((row, ri) => (
-                                                    <Box key={ri}>
-                                                        <Grid container spacing={2} sx={{ py: 2.5 }}>
-                                                            {row.map((field, fi) => (
-                                                                <Grid item xs={12} sm={6} key={fi}>
-                                                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                                                                        <Box sx={{ bgcolor: '#f0f9f1', p: 1, borderRadius: '8px', display: 'flex' }}>
-                                                                            {field.icon}
-                                                                        </Box>
-                                                                        <Box>
-                                                                            <Typography sx={{ color: '#999', fontSize: '12px', fontWeight: 500, mb: 0.25 }}>{field.label}</Typography>
-                                                                            <Typography sx={{ color: '#111', fontSize: '15px', fontWeight: 700 }}>{field.value}</Typography>
-                                                                        </Box>
-                                                                    </Box>
-                                                                </Grid>
-                                                            ))}
+                                                // View mode — 3-column grid with card-style items
+                                                <Grid container spacing={2.5} sx={{ py: 2 }}>
+                                                    {[
+                                                        { label: 'User Name', value: formatValue(userData.userName), icon: <PersonIcon sx={{ fontSize: 18, color: '#0A7A2F' }} /> },
+                                                        { label: "Father's Name", value: formatValue(userData.fatherName), icon: <GroupsIcon sx={{ fontSize: 18, color: '#0A7A2F' }} /> },
+                                                        { label: 'Email Address', value: formatValue(userData.email), icon: <EmailIcon sx={{ fontSize: 18, color: '#0A7A2F' }} /> },
+                                                        { label: 'Phone', value: formatValue(userData.mobile), icon: <PhoneIcon sx={{ fontSize: 18, color: '#0A7A2F' }} /> },
+                                                        { label: 'Gender', value: formatValue(userData.gender), icon: <WcIcon sx={{ fontSize: 18, color: '#0A7A2F' }} /> },
+                                                        { label: 'Position', value: formatValue(userData.position), icon: <BadgeIcon sx={{ fontSize: 18, color: '#0A7A2F' }} /> },
+                                                    ].map((field, fi) => (
+                                                        <Grid item xs={12} sm={6} md={6} key={fi}>
+                                                            <Box sx={{
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                gap: 1.5,
+                                                                p: 2,
+                                                                borderRadius: '12px',
+                                                                bgcolor: '#fcfdfc',
+                                                                border: '1px solid rgba(10, 122, 47, 0.08)',
+                                                                height: '100%',
+                                                                transition: 'transform 0.2s, box-shadow 0.2s',
+                                                                '&:hover': {
+                                                                    transform: 'translateY(-2px)',
+                                                                    boxShadow: '0 4px 12px rgba(10,122,47,0.08)',
+                                                                    bgcolor: 'white'
+                                                                }
+                                                            }}>
+                                                                <Box sx={{ bgcolor: '#f0f9f1', p: 1, borderRadius: '8px', display: 'flex' }}>
+                                                                    {field.icon}
+                                                                </Box>
+                                                                <Box>
+                                                                    <Typography sx={{ color: '#999', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', mb: 0.5 }}>{field.label}</Typography>
+                                                                    <Typography sx={{ color: '#111', fontSize: '14px', fontWeight: 700 }}>{field.value}</Typography>
+                                                                </Box>
+                                                            </Box>
                                                         </Grid>
-                                                        {ri < 2 && <Divider sx={{ opacity: 0.6 }} />}
-                                                    </Box>
-                                                ))
+                                                    ))}
+                                                </Grid>
                                             )}
                                         </Box>
                                     </Paper>
 
                                     {/* Account Details Section (read-only) */}
-                                    <Paper variant="outlined" sx={{ borderRadius: '16px', overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.03)' }}>
+                                    <Paper variant="outlined" sx={{ borderRadius: '18px', overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.02)', mb: 3 }}>
                                         <Box sx={{ px: 3, py: 2, bgcolor: '#f8fbf9', borderBottom: '1px solid #f0f0f0' }}>
-                                            <Typography sx={{ fontWeight: 700, fontSize: '15px', color: '#111', display: 'flex', alignItems: 'center', gap: 1 }}>
-                                                <FingerprintIcon sx={{ fontSize: 20, color: '#0A7A2F' }} /> Account Details
+                                            <Typography sx={{ fontWeight: 800, fontSize: '16px', color: '#111', display: 'flex', alignItems: 'center', gap: 1.2, letterSpacing: '0.2px' }}>
+                                                <FingerprintIcon sx={{ fontSize: 22, color: '#0A7A2F' }} /> Account Details
                                             </Typography>
                                         </Box>
-                                        <Box sx={{ px: 3, py: 1 }}>
-                                            {[
-                                                [{ label: 'Sponsor ID', value: formatValue(userData.sponsorId), icon: <FingerprintIcon sx={{ fontSize: 18, color: '#F7931E' }} /> }, { label: 'Sponsor Name', value: formatValue(userData.sponsorName), icon: <PersonIcon sx={{ fontSize: 18, color: '#F7931E' }} /> }],
-                                                [{ label: 'State', value: formatValue(userData.state), icon: <FlagIcon sx={{ fontSize: 18, color: '#F7931E' }} /> }, { label: 'District', value: formatValue(userData.district), icon: <LocationOnIcon sx={{ fontSize: 18, color: '#F7931E' }} /> }],
-                                            ].map((row, ri) => (
-                                                <Box key={ri}>
-                                                    <Grid container spacing={2} sx={{ py: 2.5 }}>
-                                                        {row.map((field, fi) => (
-                                                            <Grid item xs={12} sm={6} key={fi}>
-                                                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                                                                    <Box sx={{ bgcolor: '#fffbed', p: 1, borderRadius: '8px', display: 'flex' }}>
-                                                                        {field.icon}
-                                                                    </Box>
-                                                                    <Box>
-                                                                        <Typography sx={{ color: '#999', fontSize: '12px', fontWeight: 500, mb: 0.25 }}>{field.label}</Typography>
-                                                                        <Typography sx={{ color: '#111', fontSize: '15px', fontWeight: 700 }}>{field.value}</Typography>
-                                                                    </Box>
-                                                                </Box>
-                                                            </Grid>
-                                                        ))}
+                                        <Box sx={{ px: 3, py: 1.5 }}>
+                                            <Grid container spacing={2.5} sx={{ py: 2 }}>
+                                                {[
+                                                    { label: 'My Sponsor ID', value: formatValue(userData.memberId), icon: <FingerprintIcon sx={{ fontSize: 18, color: '#0A7A2F' }} /> },
+                                                    { label: 'Referrer ID', value: formatValue(userData.sponsorId), icon: <GroupsIcon sx={{ fontSize: 18, color: '#F7931E' }} /> },
+                                                    { label: 'Sponsor Name', value: formatValue(userData.sponsorName), icon: <PersonIcon sx={{ fontSize: 18, color: '#F7931E' }} /> },
+                                                    { label: 'State', value: formatValue(userData.state), icon: <FlagIcon sx={{ fontSize: 18, color: '#F7931E' }} /> },
+                                                ].map((field, fi) => (
+                                                    <Grid item xs={12} sm={6} md={6} key={fi}>
+                                                        <Box sx={{
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            gap: 1.5,
+                                                            p: 2,
+                                                            borderRadius: '12px',
+                                                            bgcolor: '#fffdf9',
+                                                            border: '1px solid rgba(247, 147, 30, 0.08)',
+                                                            height: '100%',
+                                                            transition: 'transform 0.2s, box-shadow 0.2s',
+                                                            '&:hover': {
+                                                                transform: 'translateY(-2px)',
+                                                                boxShadow: '0 4px 12px rgba(247,147,30,0.08)',
+                                                                bgcolor: 'white'
+                                                            }
+                                                        }}>
+                                                            <Box sx={{ bgcolor: '#fffbed', p: 1, borderRadius: '8px', display: 'flex' }}>
+                                                                {field.icon}
+                                                            </Box>
+                                                            <Box>
+                                                                <Typography sx={{ color: '#999', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', mb: 0.5 }}>{field.label}</Typography>
+                                                                <Typography sx={{ color: '#111', fontSize: '14px', fontWeight: 700 }}>{field.value}</Typography>
+                                                            </Box>
+                                                        </Box>
                                                     </Grid>
-                                                    {ri < 1 && <Divider sx={{ opacity: 0.6 }} />}
-                                                </Box>
-                                            ))}
+                                                ))}
+                                            </Grid>
                                         </Box>
                                     </Paper>
                                 </Box>
@@ -816,9 +1005,9 @@ const MyAccount = () => {
                             {tabValue === 1 && (
                                 <Box>
                                     {/* Address Summary Card */}
-                                    <Box sx={{ mb: 3, borderRadius: '14px', overflow: 'hidden', border: '1px solid #e8f5e9', boxShadow: '0 2px 12px rgba(10,122,47,0.07)' }}>
-                                        <Box sx={{ height: '5px', background: 'linear-gradient(90deg, #0A7A2F, #F7931E)' }} />
-                                        <Box sx={{ p: { xs: 2, sm: 3 }, bgcolor: 'white', display: 'flex', alignItems: 'center', gap: 2 }}>
+                                    <Box sx={{ mb: 3, borderRadius: '18px', overflow: 'hidden', border: '1px solid #e8f5e9', boxShadow: '0 4px 20px rgba(10,122,47,0.1)' }}>
+                                        <Box sx={{ height: '6px', background: 'linear-gradient(90deg, #0A7A2F, #F7931E, #0A7A2F)' }} />
+                                        <Box sx={{ p: { xs: 2, sm: 3, md: 4 }, bgcolor: 'white', display: 'flex', alignItems: 'center', gap: 3 }}>
                                             <Box sx={{ width: { xs: 40, sm: 48 }, height: { xs: 40, sm: 48 }, borderRadius: '12px', bgcolor: '#e8f5e9', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                                                 <LocationOnIcon sx={{ color: '#0A7A2F', fontSize: { xs: 20, sm: 26 } }} />
                                             </Box>
@@ -832,48 +1021,61 @@ const MyAccount = () => {
                                     </Box>
 
                                     {/* Location Details */}
-                                    <Paper variant="outlined" sx={{ borderRadius: '16px', overflow: 'hidden', mb: 3, boxShadow: '0 2px 12px rgba(0,0,0,0.03)' }}>
+                                    <Paper variant="outlined" sx={{ borderRadius: '18px', overflow: 'hidden', mb: 3, boxShadow: '0 2px 12px rgba(0,0,0,0.02)' }}>
                                         <Box sx={{ px: 3, py: 2, bgcolor: '#f8fbf9', borderBottom: '1px solid #f0f0f0' }}>
-                                            <Typography sx={{ fontWeight: 700, fontSize: '15px', color: '#111', display: 'flex', alignItems: 'center', gap: 1 }}>
-                                                <HomeIcon sx={{ fontSize: 20, color: '#0A7A2F' }} /> Location Details
+                                            <Typography sx={{ fontWeight: 800, fontSize: '16px', color: '#111', display: 'flex', alignItems: 'center', gap: 1.2, letterSpacing: '0.2px' }}>
+                                                <HomeIcon sx={{ fontSize: 22, color: '#0A7A2F' }} /> Location Details
                                             </Typography>
                                         </Box>
-                                        <Box sx={{ px: 3, py: 1 }}>
-                                            {[
-                                                [{ label: 'State', value: formatValue(userData.state), icon: <FlagIcon sx={{ fontSize: 18, color: '#0A7A2F' }} /> }, { label: 'District', value: formatValue(userData.district), icon: <LocationOnIcon sx={{ fontSize: 18, color: '#0A7A2F' }} /> }],
-                                                [{ label: 'Assembly Area', value: formatValue(userData.assemblyArea), icon: <GroupsIcon sx={{ fontSize: 18, color: '#0A7A2F' }} /> }, { label: 'Block', value: formatValue(userData.block), icon: <VillaIcon sx={{ fontSize: 18, color: '#0A7A2F' }} /> }],
-                                                [{ label: 'Village Council', value: formatValue(userData.villageCouncil), icon: <AccountCircleIcon sx={{ fontSize: 18, color: '#0A7A2F' }} /> }, { label: 'Village', value: formatValue(userData.village), icon: <AgricultureIcon sx={{ fontSize: 18, color: '#0A7A2F' }} /> }],
-                                            ].map((row, ri) => (
-                                                <Box key={ri}>
-                                                    <Grid container spacing={2} sx={{ py: 2.5 }}>
-                                                        {row.map((field, fi) => (
-                                                            <Grid item xs={12} sm={6} key={fi}>
-                                                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                                                                    <Box sx={{ bgcolor: '#f0f9f1', p: 1, borderRadius: '8px', display: 'flex' }}>
-                                                                        {field.icon}
-                                                                    </Box>
-                                                                    <Box>
-                                                                        <Typography sx={{ color: '#999', fontSize: '12px', fontWeight: 500, mb: 0.25 }}>{field.label}</Typography>
-                                                                        <Typography sx={{ color: '#111', fontSize: '15px', fontWeight: 700 }}>{field.value}</Typography>
-                                                                    </Box>
-                                                                </Box>
-                                                            </Grid>
-                                                        ))}
+                                        <Box sx={{ px: 3, py: 1.5 }}>
+                                            <Grid container spacing={2.5} sx={{ py: 2 }}>
+                                                {[
+                                                    { label: 'State', value: formatValue(userData.state), icon: <FlagIcon sx={{ fontSize: 18, color: '#0A7A2F' }} /> },
+                                                    { label: 'District', value: formatValue(userData.district), icon: <LocationOnIcon sx={{ fontSize: 18, color: '#0A7A2F' }} /> },
+                                                    { label: 'Assembly Area', value: formatValue(userData.assemblyArea), icon: <GroupsIcon sx={{ fontSize: 18, color: '#0A7A2F' }} /> },
+                                                    { label: 'Block', value: formatValue(userData.block), icon: <VillaIcon sx={{ fontSize: 18, color: '#0A7A2F' }} /> },
+                                                    { label: 'Village Council', value: formatValue(userData.villageCouncil), icon: <AccountCircleIcon sx={{ fontSize: 18, color: '#0A7A2F' }} /> },
+                                                    { label: 'Village', value: formatValue(userData.village), icon: <AgricultureIcon sx={{ fontSize: 18, color: '#0A7A2F' }} /> },
+                                                ].map((field, fi) => (
+                                                    <Grid item xs={12} sm={6} md={6} key={fi}>
+                                                        <Box sx={{
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            gap: 1.5,
+                                                            p: 2,
+                                                            borderRadius: '12px',
+                                                            bgcolor: '#fcfdfc',
+                                                            border: '1px solid rgba(10, 122, 47, 0.08)',
+                                                            height: '100%',
+                                                            transition: 'transform 0.2s, box-shadow 0.2s',
+                                                            '&:hover': {
+                                                                transform: 'translateY(-2px)',
+                                                                boxShadow: '0 4px 12px rgba(10,122,47,0.08)',
+                                                                bgcolor: 'white'
+                                                            }
+                                                        }}>
+                                                            <Box sx={{ bgcolor: '#f0f9f1', p: 1, borderRadius: '8px', display: 'flex' }}>
+                                                                {field.icon}
+                                                            </Box>
+                                                            <Box>
+                                                                <Typography sx={{ color: '#999', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', mb: 0.5 }}>{field.label}</Typography>
+                                                                <Typography sx={{ color: '#111', fontSize: '14px', fontWeight: 700 }}>{field.value}</Typography>
+                                                            </Box>
+                                                        </Box>
                                                     </Grid>
-                                                    {ri < 2 && <Divider sx={{ opacity: 0.6 }} />}
-                                                </Box>
-                                            ))}
+                                                ))}
+                                            </Grid>
                                         </Box>
                                     </Paper>
 
                                     {/* Shipping Address */}
                                     <Paper variant="outlined" sx={{ borderRadius: '16px', overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.03)' }}>
-                                        <Box sx={{ px: 3, py: 2, bgcolor: '#fffbed', borderBottom: '1px solid #f0f0f0' }}>
+                                        <Box sx={{ px: 2, py: 1.5, bgcolor: '#fffbed', borderBottom: '1px solid #f0f0f0' }}>
                                             <Typography sx={{ fontWeight: 700, fontSize: '15px', color: '#111', display: 'flex', alignItems: 'center', gap: 1 }}>
                                                 <LocationOnIcon sx={{ fontSize: 20, color: '#F7931E' }} /> Shipping Address
                                             </Typography>
                                         </Box>
-                                        <Box sx={{ px: 4, py: 3, bgcolor: 'white' }}>
+                                        <Box sx={{ px: 2, py: 1.5, bgcolor: 'white' }}>
                                             <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
                                                 <Box sx={{ bgcolor: '#fff8e1', p: 1.5, borderRadius: '10px', display: 'flex' }}>
                                                     <HomeIcon sx={{ color: '#F7931E' }} />

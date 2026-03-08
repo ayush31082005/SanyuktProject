@@ -34,9 +34,10 @@ const ProductsPage = () => {
 
     const categories = [
         "All",
+        "Pharmacy and household",
+        "Fashion",
         "Mobile",
         "Electronics",
-        "Fashion",
         "Buty and cosmetic home based products",
         "Toys and baby toys",
         "Food & health",
@@ -47,7 +48,6 @@ const ProductsPage = () => {
         "Footwear",
         "Jwellery & accessories",
         "Appliances",
-        "Pharmacy and household",
         "Everyday needs",
         "Grocery"
     ];
@@ -241,15 +241,15 @@ const ProductsPage = () => {
             </div>
 
             {/* Categories Navigation */}
-            <div className="bg-white border-b sticky top-[80px] md:top-[96px] z-10 overflow-x-auto no-scrollbar">
+            <div className="bg-white border-b sticky top-[60px] md:top-[80px] z-10 overflow-x-auto no-scrollbar">
                 <div className="max-w-7xl mx-auto px-4 py-3 flex gap-3 whitespace-nowrap">
                     {categories.map((cat) => (
                         <button
                             key={cat}
                             onClick={() => setSelectedCategory(cat)}
                             className={`px-4 py-2 rounded-full text-xs md:text-sm font-bold transition-all ${selectedCategory === cat
-                                    ? "bg-green-600 text-white shadow-md shadow-green-100"
-                                    : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                                ? "bg-green-600 text-white shadow-md shadow-green-100"
+                                : "bg-gray-100 text-gray-500 hover:bg-gray-200"
                                 }`}
                         >
                             {cat}

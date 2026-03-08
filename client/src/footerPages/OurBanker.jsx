@@ -9,7 +9,6 @@ const OurBanker = () => {
         setCopied(field);
         setTimeout(() => setCopied(''), 2000);
     };
-
     const bankDetails = [
         { label: 'Bank Name', value: 'CENTRAL BANK OF INDIA', icon: Building2, color: 'from-green-600 to-emerald-500' },
         { label: 'A/C Number', value: '5935938755', icon: CreditCard, color: 'from-green-500 to-teal-500' },
@@ -64,10 +63,10 @@ const OurBanker = () => {
                         <div className="absolute -inset-0.5 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
                         <div className="relative px-8 py-3 bg-white rounded-full flex items-center space-x-3 shadow-md border border-green-100">
                             <span className="text-sm md:text-base font-mono text-gray-700">
-                                ISHAVAIGLOBALMARKET@aubank
+                                SanyuktGLOBALMARKET@aubank
                             </span>
                             <button
-                                onClick={() => copyToClipboard('ISHAVAIGLOBALMARKET@aubank', 'email')}
+                                onClick={() => copyToClipboard('SanyuktGLOBALMARKET@aubank', 'email')}
                                 className="text-gray-400 hover:text-green-600 transition-colors"
                             >
                                 {copied === 'email' ? (
@@ -162,10 +161,10 @@ const OurBanker = () => {
                                 <div className="flex items-center space-x-3">
                                     <QrCode className="w-5 h-5 text-green-600" />
                                     <span className="text-sm text-gray-600">UPI ID:</span>
-                                    <span className="font-mono font-medium text-gray-800">ishaaviaglobal@aubank</span>
+                                    <span className="font-mono font-medium text-gray-800">sanyuktglobal@aubank</span>
                                 </div>
                                 <button
-                                    onClick={() => copyToClipboard('ishaaviaglobal@aubank', 'upi')}
+                                    onClick={() => copyToClipboard('snayuktglobal@aubank', 'upi')}
                                     className="text-gray-400 hover:text-green-600 transition-colors"
                                 >
                                     {copied === 'upi' ? (

@@ -21,6 +21,8 @@ const HomePage = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
     const [imagesLoaded, setImagesLoaded] = useState(false);
     const [imageErrors, setImageErrors] = useState({});
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [userRole, setUserRole] = useState(null);
 
     // Mobile recharge form state
     const [mobileNumber, setMobileNumber] = useState('');
@@ -312,6 +314,28 @@ const HomePage = () => {
             clearInterval(interval);
         };
     }, []);
+
+    // Check authentication status
+    useEffect(() => {
+        const checkAuth = () => {
+            const token = localStorage.getItem('token');
+            const user = localStorage.getItem('user');
+            if (token && user) {
+                try {
+                    const parsedUser = JSON.parse(user);
+                    setIsLoggedIn(true);
+                    setUserRole(parsedUser.role || 'user');
+                } catch (e) {
+                    setIsLoggedIn(false);
+                }
+            } else {
+                setIsLoggedIn(false);
+            }
+        };
+        checkAuth();
+        window.addEventListener('storage', checkAuth);
+        return () => window.removeEventListener('storage', checkAuth);
+    }, [navigate]);
 
     // Filter plans based on search amount
     useEffect(() => {
@@ -624,10 +648,21 @@ const HomePage = () => {
                                         <motion.button
                                             whileHover={{ scale: 1.05 }}
                                             whileTap={{ scale: 0.95 }}
-                                            onClick={() => handleNavigation('/register')}
+                                            onClick={() => {
+                                                if (isLoggedIn) {
+                                                    handleNavigation(userRole === 'admin' ? '/admin/dashboard' : '/my-account');
+                                                } else {
+                                                    handleNavigation('/register');
+                                                }
+                                            }}
                                             className="px-8 py-4 bg-[#F7931E] text-white font-bold rounded-full hover:bg-[#e07d0b] transition-all shadow-xl shadow-orange-900/20 flex items-center space-x-3 text-base"
                                         >
-                                            <span>Join Now</span>
+                                            <span>
+                                                {isLoggedIn 
+                                                    ? (userRole === 'admin' ? 'Admin Dashboard' : 'User Dashboard') 
+                                                    : 'Join Now'
+                                                }
+                                            </span>
                                             <ArrowRight className="w-5 h-5" />
                                         </motion.button>
                                         <motion.button

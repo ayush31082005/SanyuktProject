@@ -40,28 +40,28 @@ const OpportunitiesPage = () => {
 
     const compensationBenefits = [
         {
-            title: "Lifelong visionary plan",
-            description: "A comprehensive plan that provides benefits throughout your lifetime with sustainable growth and long-term wealth creation."
+            title: "Long-Term Visionary Growth Plan",
+            description: "A strategic compensation system designed to support your financial growth for the long run, helping you build sustainable income and future wealth."
         },
         {
-            title: "Plan that benefits you during life and even after that",
-            description: "Unique plan designed to support you and your family, ensuring financial security for generations to come."
+            title: "Lifetime & Legacy Benefits",
+            description: "Our plan is structured to support you throughout your life while also creating financial advantages that can benefit your family in the future."
         },
         {
-            title: "Plan which follows global guidelines",
-            description: "Fully compliant with international direct selling regulations and industry best practices worldwide."
+            title: "International Standard System",
+            description: "Built according to global direct selling standards, ensuring transparency, reliability, and professional business practices."
         },
         {
-            title: "One of the fastest income plan",
-            description: "Accelerated earning potential with quick returns on your efforts and rapid income growth opportunities."
+            title: "Fast-Track Income Opportunity",
+            description: "A dynamic earning model that allows members to start generating income quickly through active participation and network growth."
         },
         {
-            title: "Highest Compensation in the Industry With Highest Sales Commission and Bonus Distribution",
-            description: "Industry-leading commission structure with maximum payouts, generous bonuses, and unmatched profit sharing."
+            title: "Industry-Leading Rewards & Commissions",
+            description: "Enjoy competitive commissions, attractive bonuses, and a rewarding distribution structure designed to maximize your earning potential."
         },
         {
-            title: "Cumulative Performance",
-            description: "Rewards that grow with your cumulative achievements, recognizing consistent performance and long-term dedication."
+            title: "Performance-Based Growth System",
+            description: "Your rewards increase as your performance grows, recognizing dedication, teamwork, and long-term contribution to the network."
         }
     ];
 
@@ -118,7 +118,7 @@ const OpportunitiesPage = () => {
                         <div className="bg-gradient-to-r from-[#F7931E] to-[#F8B84A] p-6 text-white">
                             <h2 className="text-2xl md:text-3xl font-bold flex items-center gap-3">
                                 <Heart className="w-8 h-8" />
-                                WHY Sayukt Parivar Global Marketing?
+                                WHY Sanyukt Parivaar & Rich Life Company?
                             </h2>
                         </div>
                         <div className="p-8">
@@ -144,13 +144,13 @@ const OpportunitiesPage = () => {
                         <div className="bg-gradient-to-r from-[#0A7A2F] to-[#2F7A32] p-6 text-white">
                             <h2 className="text-2xl md:text-3xl font-bold flex items-center gap-3">
                                 <TrendingUp className="w-8 h-8" />
-                                WHY Sayukt Parivar Global Marketing HAS BEST COMPENSATION PLAN?
+                                WHY Sanyukt Parivaar & Rich Life HAS BEST COMPENSATION PLAN?
                             </h2>
                         </div>
                         <div className="p-8">
                             <h3 className="text-xl font-bold text-[#0A7A2F] mb-6 flex items-center gap-2">
                                 <Gift className="w-6 h-6" />
-                                6 Types of Benefits in Compensation Plan
+                                6 Powerful Benefits of Our Compensation Plan
                             </h3>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -240,7 +240,7 @@ const OpportunitiesPage = () => {
                         Start Your Entrepreneurial Journey Today!
                     </h2>
                     <p className="text-[#2F4F4F] mb-8 max-w-2xl mx-auto font-medium">
-                        Join Sayukt Parivar Global Marketing and unlock unlimited earning potential with the industry's best compensation plan.
+                        Join Sanyukt Parivaar & Rich Life Company and unlock unlimited earning potential with the industry's best compensation plan.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Link

@@ -14,6 +14,9 @@ import MyAccount from '../pages/MyAccount.jsx'
 import Gallery from '../pages/Gallery.jsx'
 import Events from '../pages/Events.jsx'
 import News from '../pages/News.jsx'
+import UserDashboardLayout from '../layouts/UserDashboardLayout.jsx'
+import DashboardOverview from '../pages/DashboardOverview.jsx'
+import DashboardPlaceholder from '../components/DashboardPlaceholder.jsx'
 
 import Opportunities from '../pages/Opportunities.jsx'
 import ExchangePolicy from '../footerPages/ExchangePolicy.jsx'
@@ -76,14 +79,26 @@ const MainRoutes = () => {
             <Route path='/checkout' element={<Checkout />} />
             <Route path='/franchise/list' element={<Franchise />} />
             <Route path='/franchise/login' element={<FranchiseLogin />} />
-            <Route path='/my-account' element={<MyAccount />} />
-            <Route path='/my-account/profile' element={<MyAccount />} />
-            <Route path='/my-account/address' element={<MyAccount />} />
-            <Route path='/my-account/orders' element={<MyAccount />} />
-            <Route path='/my-account/transactions' element={<MyAccount />} />
-            <Route path='/my-account/grievances' element={<MyAccount />} />
-            <Route path='/my-account/kyc' element={<MyAccount />} />
-            <Route path='/my-account/cart' element={<MyAccount />} />
+
+            <Route path='/my-account' element={<UserDashboardLayout />}>
+                <Route index element={<DashboardOverview />} />
+                <Route path='profile' element={<MyAccount defaultTab={0} />} />
+                <Route path='address' element={<MyAccount defaultTab={1} />} />
+                <Route path='orders' element={<MyAccount defaultTab={2} />} />
+                <Route path='transactions' element={<MyAccount defaultTab={3} />} />
+                <Route path='grievances' element={<MyAccount defaultTab={4} />} />
+                <Route path='kyc' element={<MyAccount defaultTab={5} />} />
+                <Route path='cart' element={<MyAccount defaultTab={-1} />} />
+                
+                {/* Placeholder Routes for unfinished sections */}
+                <Route path='downline' element={<DashboardPlaceholder title="My Downline" />} />
+                <Route path='bonus/first' element={<DashboardPlaceholder title="First Purchase Bonus" />} />
+                <Route path='bonus/repurchase' element={<DashboardPlaceholder title="Repurchase Bonus" />} />
+                <Route path='wallet' element={<DashboardPlaceholder title="E-Wallet" />} />
+                <Route path='wallet/generation' element={<DashboardPlaceholder title="Generation Wallet" />} />
+                <Route path='folder' element={<DashboardPlaceholder title="My Folder" />} />
+            </Route>
+
             <Route path='/order-details/:id' element={<OrderDetails />} />
             <Route path='/gallery' element={<Gallery />} />
             <Route path='/news' element={<News />} />

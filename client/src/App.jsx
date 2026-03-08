@@ -14,6 +14,7 @@ const App = () => {
   }, [location.pathname]);
 
   const isAdminRoute = location.pathname.startsWith("/admin");
+  const isAccountRoute = location.pathname.startsWith("/my-account");
 
   return (
     <>
@@ -21,7 +22,7 @@ const App = () => {
       <Box sx={{ pt: !isAdminRoute ? { xs: '60px', md: '80px' } : 0 }}>
         <MainRoutes />
       </Box>
-      {!isAdminRoute && <Footer />}
+      {!isAdminRoute && !isAccountRoute && <Footer />}
     </>
   );
 };

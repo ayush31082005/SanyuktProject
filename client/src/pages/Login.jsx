@@ -149,77 +149,91 @@ const UserLogin = () => {
                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-green-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
             </div>
 
-            <div className="max-w-7xl mx-auto relative z-10">
+            <div className="max-w-6xl mx-auto relative z-10 px-4">
                 {/* Main Content Grid */}
-                <div className="flex flex-col lg:flex-row gap-8 items-center min-h-[80vh]">
+                <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-center justify-center min-h-[80vh] py-12">
                     {/* Left Side - Welcome Message */}
-                    <div className="flex-1 text-center lg:text-left animate-slide-right">
-                        <h1 className="text-3xl md:text-4xl font-bold text-green-700 mb-4">
+                    <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left animate-slide-right">
+                        <h1 className="text-4xl md:text-5xl font-extrabold text-green-800 mb-6 tracking-tight drop-shadow-sm">
                             Welcome Back!
                         </h1>
-                        <p className="text-gray-600 text-base max-w-md mx-auto lg:mx-0">
-                            Sign in to access your account and manage your business
+                        <p className="text-gray-600 text-lg max-w-md leading-relaxed">
+                            Sign in to access your account and manage your business ecosystem
                         </p>
 
                         {/* Error Message */}
                         {error && (
-                            <div className="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg max-w-md mx-auto lg:mx-0">
-                                {error}
+                            <div className="mt-8 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-r-lg max-w-md w-full shadow-sm flex items-start gap-3">
+                                <svg className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <span>{error}</span>
                             </div>
                         )}
 
                         {/* Role Info */}
-                        <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg max-w-md mx-auto lg:mx-0">
-                            <p className="text-xs text-green-700">
-                                <span className="font-bold">Note:</span> Admin users will be redirected to Admin Panel
-                            </p>
+                        <div className="mt-8 p-5 bg-green-50/80 backdrop-blur-sm border border-green-200 rounded-xl max-w-md w-full shadow-sm flex items-start gap-4 transition-all hover:bg-green-50">
+                            <div className="bg-green-100 p-2 rounded-lg text-green-700">
+                                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 className="font-bold text-green-800 mb-1">Secure Access</h3>
+                                <p className="text-sm text-green-700 leading-relaxed">
+                                    Admin users will be automatically redirected to the secure Admin Panel upon successful login.
+                                </p>
+                            </div>
                         </div>
 
                         {/* Decorative Stats */}
-                        <div className="mt-8 grid grid-cols-2 gap-4 max-w-md mx-auto lg:mx-0">
-                            <div className="bg-white/60 backdrop-blur-sm p-4 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:scale-105">
-                                <p className="text-xl font-bold text-green-600">10K+</p>
-                                <p className="text-sm text-gray-600">Active Users</p>
+                        <div className="mt-10 grid grid-cols-2 gap-6 max-w-md w-full">
+                            <div className="bg-white/80 backdrop-blur-md p-6 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 border border-white">
+                                <p className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-green-400 mb-1">10K+</p>
+                                <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">Active Users</p>
                             </div>
-                            <div className="bg-white/60 backdrop-blur-sm p-4 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:scale-105">
-                                <p className="text-xl font-bold text-green-600">50+</p>
-                                <p className="text-sm text-gray-600">Countries</p>
+                            <div className="bg-white/80 backdrop-blur-md p-6 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 border border-white">
+                                <p className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-green-400 mb-1">50+</p>
+                                <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">Countries</p>
                             </div>
                         </div>
                     </div>
 
                     {/* Right Side - Login Form */}
-                    <div className="flex-1 max-w-md w-full animate-slide-left">
-                        <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-500 hover:shadow-3xl">
+                    <div className="w-full lg:w-1/2 flex justify-center lg:justify-end animate-slide-left">
+                        <div className="w-full max-w-[440px] bg-white/95 backdrop-blur-xl rounded-3xl shadow-[0_20px_40px_rgba(0,0,0,0.08)] overflow-hidden border border-white">
                             {/* Header - Solid Green */}
-                            <div className="bg-green-700 px-6 md:px-8 py-6 text-center">
-                                <h2 className="text-xl md:text-2xl font-bold text-white animate-slide-in">
+                            <div className="bg-gradient-to-r from-green-800 to-green-600 px-6 md:px-8 py-5 text-center relative overflow-hidden">
+                                <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white opacity-10 rounded-full blur-xl"></div>
+                                <div className="absolute bottom-0 left-0 -mb-4 -ml-4 w-20 h-20 bg-white opacity-10 rounded-full blur-xl"></div>
+                                
+                                <h2 className="text-xl md:text-2xl font-bold text-white relative z-10 tracking-tight animate-slide-up">
                                     User Login
                                 </h2>
-                                <div className="flex items-center justify-center space-x-2 text-green-100 mt-2">
+                                <div className="flex items-center justify-center space-x-2 text-green-100 mt-2 relative z-10">
                                     <Home className="h-4 w-4" />
-                                    <Link to="/" className="text-sm hover:underline">Home</Link>
-                                    <ChevronDown className="h-4 w-4 rotate-[-90deg]" />
-                                    <span className="text-sm font-semibold">User Login</span>
+                                    <Link to="/" className="text-sm font-medium hover:text-white transition-colors">Home</Link>
+                                    <ChevronDown className="h-4 w-4 text-[10px] rotate-[-90deg] opacity-70" />
+                                    <span className="text-sm font-semibold text-white">Login</span>
                                 </div>
                             </div>
 
                             {/* Form Body */}
-                            <form onSubmit={handleSubmit} className="p-6 md:p-8">
+                            <form onSubmit={handleSubmit} className="p-8">
                                 <div className="space-y-6">
                                     {/* Email Input */}
                                     <div className="space-y-2 animate-slide-up" style={{ animationDelay: '0.1s' }}>
                                         <label className="block text-sm font-semibold text-gray-700">
-                                            Email Address <span className="text-red-500">*</span>
+                                            Email / Main ID / Sponsor ID <span className="text-red-500">*</span>
                                         </label>
                                         <div className="relative group">
                                             <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-hover:text-green-600 transition-colors duration-300" />
                                             <input
-                                                type="email"
+                                                type="text"
                                                 name="email"
                                                 value={formData.email}
                                                 onChange={handleChange}
-                                                placeholder="Enter your email address"
+                                                placeholder="Enter email or SPRL ID"
                                                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300 hover:border-green-400"
                                                 required
                                             />

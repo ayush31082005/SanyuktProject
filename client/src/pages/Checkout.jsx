@@ -101,8 +101,25 @@ const CheckoutPage = () => {
             setOrderPlaced(true);
             setCurrentStep(3);
         } catch (error) {
-            console.error('Error placing order:', error);
-            setSnackbar({ open: true, message: 'Error placing order. Please try again.', severity: 'error' });
+            console.error('Error placing order:', error?.response || error);
+
+            const status = error?.response?.status;
+            const message = error?.response?.data?.message;
+
+            if (status === 401) {
+                setSnackbar({
+                    open: true,
+                    message: 'Session expired. Please login again to place order.',
+                    severity: 'error'
+                });
+                setTimeout(() => navigate('/login'), 1500);
+            } else {
+                setSnackbar({
+                    open: true,
+                    message: message || 'Error placing order. Please try again.',
+                    severity: 'error'
+                });
+            }
         } finally {
             setLoading(false);
         }

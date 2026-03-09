@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import api from "../api"
 import {
     Home,
     ChevronDown,
@@ -16,7 +17,7 @@ import {
     Users,
     Star
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 const FranchiseLogin = () => {
     const navigate = useNavigate();
@@ -30,10 +31,6 @@ const FranchiseLogin = () => {
     const [rememberMe, setRememberMe] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
     const [franchiseName, setFranchiseName] = useState('');
-
-    // Demo credentials for testing
-    const demoFranchiseId = "FRANCHISE123";
-    const demoPassword = "franchise123";
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -50,38 +47,45 @@ const FranchiseLogin = () => {
         setIsLoading(true);
         setError("");
 
-        // Simulate API call with setTimeout
-        setTimeout(() => {
-            // Check credentials (you can modify this logic as needed)
-            if (formData.franchiseId && formData.password) {
-                // Success case
-                const franchiseData = {
-                    id: formData.franchiseId,
-                    name: formData.franchiseId === demoFranchiseId ? "Demo Franchise" : "Franchise Partner",
-                    email: "franchise@example.com",
-                    mobile: "9876543210"
-                };
+        try {
 
-                setFranchiseName(franchiseData.name);
+            const res = await api.post("/franchises/login", {
+                franchiseId: formData.franchiseId,
+                password: formData.password
+            });
+
+            if (res.data.success) {
+
+                const franchise = res.data.franchise;
+
+                setFranchiseName(franchise.name);
                 setShowSuccess(true);
 
-                // LocalStorage save (optional)
+                // LocalStorage save
                 localStorage.setItem(
                     "franchiseData",
-                    JSON.stringify(franchiseData)
+                    JSON.stringify(franchise)
                 );
 
-                // Redirect to dashboard after 2 seconds
+                // Redirect
                 setTimeout(() => {
                     navigate("/franchise/dashboard");
                 }, 2000);
-            } else {
-                // Error case
-                setError("Invalid Franchise ID or Password");
+
             }
 
+        } catch (err) {
+
+            setError(
+                err.response?.data?.message ||
+                "Invalid Franchise ID or Password"
+            );
+
+        } finally {
+
             setIsLoading(false);
-        }, 1500); // Simulate network delay
+
+        }
     };
 
     return (
@@ -462,12 +466,6 @@ const FranchiseLogin = () => {
                                             </span>
                                         </label>
 
-                                        <Link
-                                            to="/forgot-password"
-                                            className="text-sm text-green-600 hover:text-green-800 font-medium transition-colors duration-300"
-                                        >
-                                            Forgot Password?
-                                        </Link>
                                     </div>
 
                                     {/* Login Button */}
@@ -501,7 +499,7 @@ const FranchiseLogin = () => {
                                         <p className="text-gray-600 text-sm">
                                             New franchise partner?{' '}
                                             <Link
-                                                to="/franchise/apply"
+                                                to="/franchise/list"
                                                 className="text-green-600 hover:text-green-800 font-semibold hover:underline transition-all duration-300"
                                             >
                                                 Apply for Franchise
@@ -521,7 +519,6 @@ const FranchiseLogin = () => {
                                         <div className="space-y-1 text-xs text-gray-600">
                                             <p><span className="font-medium text-green-700">Franchise ID:</span> FRANCHISE123</p>
                                             <p><span className="font-medium text-green-700">Password:</span> franchise123</p>
-                                            <p className="text-xs text-gray-500 mt-1">(Any ID/Password works for demo)</p>
                                         </div>
                                     </motion.div>
                                 </div>
@@ -544,5 +541,8 @@ const FranchiseLogin = () => {
         </div>
     );
 };
+
+// AnimatePresence import ke liye
+import { AnimatePresence } from 'framer-motion';
 
 export default FranchiseLogin;

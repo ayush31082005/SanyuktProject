@@ -3,11 +3,35 @@ import React, { useState, useEffect } from 'react';
 import api from '../api';
 
 const FranchiseDashboard = ({ user, onLogout }) => {
+    const API_BASE_URL = api.defaults.baseURL?.replace(/\/api\/?$/, '') || 'http://localhost:5001';
+    const getStoredFranchiseData = () => {
+        try {
+            return JSON.parse(localStorage.getItem('franchiseData') || '{}');
+        } catch (error) {
+            console.error('Error reading franchise data from storage:', error);
+            return {};
+        }
+    };
+
+    const getStoredFranchiseIdentifier = () => {
+        const franchiseData = getStoredFranchiseData();
+        return franchiseData.franchiseId || franchiseData.id || franchiseData._id || '';
+    };
+
+    const resolveImageUrl = (url) => {
+        if (!url) return '';
+        if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:')) {
+            return url;
+        }
+        return `${API_BASE_URL}${url.startsWith('/') ? '' : '/'}${url}`;
+    };
+
     const [activeTab, setActiveTab] = useState('dashboard');
     const [showMobileMenu, setShowMobileMenu] = useState(false);
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
     const [loading, setLoading] = useState(false);
     const [dashboardId, setDashboardId] = useState(null);
+    const [franchiseSession] = useState(() => getStoredFranchiseData());
 
     // Member Management State
     const [members, setMembers] = useState([]);
@@ -76,14 +100,16 @@ const FranchiseDashboard = ({ user, onLogout }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [errors, setErrors] = useState({});
     const [saveStatus, setSaveStatus] = useState('');
+    const displayName = franchiseSession.name || profileData.ownerName || profileData.franchiseName || 'Franchise Partner';
+    const displayFranchiseId = franchiseSession.franchiseId || franchiseSession.id || franchiseSession._id || dashboardId || 'N/A';
+    const displayInitial = displayName?.charAt(0)?.toUpperCase() || 'F';
 
     // Load saved profile from backend on mount
     useEffect(() => {
         const loadProfile = async () => {
             try {
                 setLoading(true);
-                const franchiseData = JSON.parse(localStorage.getItem('franchiseData') || '{}');
-                const franchiseId = franchiseData.id;
+                const franchiseId = getStoredFranchiseIdentifier();
 
                 if (franchiseId) {
                     const response = await api.get(`/franchise/dashboard/${franchiseId}`);
@@ -163,8 +189,11 @@ const FranchiseDashboard = ({ user, onLogout }) => {
 
             const formData = new FormData();
 
-            const franchiseData = JSON.parse(localStorage.getItem('franchiseData') || '{}');
-            const franchiseId = franchiseData.id || 'FR12345';
+            const franchiseId = getStoredFranchiseIdentifier();
+
+            if (!franchiseId) {
+                throw new Error('Franchise ID not found. Please login again.');
+            }
 
             formData.append('franchiseName', profileData.franchiseName || '');
             formData.append('ownerName', profileData.ownerName || '');
@@ -497,7 +526,7 @@ const FranchiseDashboard = ({ user, onLogout }) => {
     const confirmLogout = () => {
         console.log("Logging out...");
 
-        localStorage.clear();
+        localStorage.removeItem('franchiseData');
         sessionStorage.clear();
 
         document.cookie.split(";").forEach((c) => {
@@ -544,14 +573,6 @@ const FranchiseDashboard = ({ user, onLogout }) => {
         amount: m.package === 'Gold' ? '₹10,000' : m.package === 'Silver' ? '₹5,000' : '₹25,000'
     }));
 
-    // Recent Transactions
-    const transactions = [
-        { id: '#TXN001', amount: '₹5,000', type: 'Commission', status: 'Success', date: 'Today' },
-        { id: '#TXN002', amount: '₹10,000', type: 'Transfer', status: 'Pending', date: 'Yesterday' },
-        { id: '#TXN003', amount: '₹2,500', type: 'Purchase', status: 'Success', date: '2 days ago' },
-        { id: '#TXN004', amount: '₹15,000', type: 'Commission', status: 'Success', date: '3 days ago' }
-    ];
-
     // Products Data
     const products = [
         { id: 1, name: 'Product 1', sku: 'PROD001', price: 1000, image: '📱' },
@@ -566,6 +587,58 @@ const FranchiseDashboard = ({ user, onLogout }) => {
         { name: 'Gold Package', price: '₹10,000', color: 'purple', features: ['Direct Commission: 12%', 'Level Commission: 7%', 'Product Worth: ₹10,000'] },
         { name: 'Platinum Package', price: '₹25,000', color: 'blue', features: ['Direct Commission: 15%', 'Level Commission: 10%', 'Product Worth: ₹25,000'] }
     ];
+    const packageCardStyles = {
+        blue: 'bg-gradient-to-br from-orange-300 to-orange-400 text-white',
+        purple: 'bg-gradient-to-br from-orange-300 to-orange-400 text-white'
+    };
+
+    const reportCardStyles = {
+        blue: {
+            border: 'border-l-blue-500',
+            text: 'text-blue-600 hover:text-blue-800'
+        },
+        purple: {
+            border: 'border-l-purple-500',
+            text: 'text-purple-600 hover:text-purple-800'
+        }
+    };
+
+    const formatCurrency = (value) => `Rs ${Number(value || 0).toLocaleString('en-IN')}`;
+
+    const convertRowsToCsv = (rows) => {
+        if (!rows.length) {
+            return 'Message\r\nNo data available\r\n';
+        }
+
+        const headers = Object.keys(rows[0]);
+        const csvLines = [
+            headers.join(','),
+            ...rows.map((row) =>
+                headers
+                    .map((header) => {
+                        const value = row[header] ?? '';
+                        const stringValue = String(value).replace(/"/g, '""');
+                        return `"${stringValue}"`;
+                    })
+                    .join(',')
+            )
+        ];
+
+        return csvLines.join('\r\n');
+    };
+
+    const downloadCsvReport = (fileName, rows) => {
+        const csvContent = convertRowsToCsv(rows);
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    };
 
     // Income Data
     const incomeHistory = [
@@ -576,6 +649,105 @@ const FranchiseDashboard = ({ user, onLogout }) => {
         { date: '2024-01-11', type: 'Level', from: 'FR12349', amount: 1000, status: 'Pending' }
     ];
 
+    const totalCreditedIncome = incomeHistory
+        .filter((item) => item.status === 'Credited')
+        .reduce((sum, item) => sum + Number(item.amount || 0), 0);
+
+    const reportDefinitions = [
+        {
+            title: 'Joining Report',
+            icon: '📋',
+            color: 'blue',
+            fileName: 'joining-report.csv',
+            rows: (members.length ? members : recentJoinings).map((member, index) => ({
+                serialNo: index + 1,
+                memberId: member.id || 'N/A',
+                name: member.name || 'N/A',
+                mobile: member.mobile || 'N/A',
+                package: member.package || 'N/A',
+                joiningDate: member.date || 'N/A',
+                status: member.status || 'N/A'
+            }))
+        },
+        {
+            title: 'Income Report',
+            icon: '💰',
+            color: 'purple',
+            fileName: 'income-report.csv',
+            rows: incomeHistory.map((item, index) => ({
+                serialNo: index + 1,
+                date: item.date,
+                type: item.type,
+                sourceId: item.from,
+                amount: formatCurrency(item.amount),
+                status: item.status
+            }))
+        },
+        {
+            title: 'Purchase Report',
+            icon: '🛒',
+            color: 'blue',
+            fileName: 'purchase-report.csv',
+            rows: products.map((product, index) => ({
+                serialNo: index + 1,
+                productName: product.name,
+                sku: product.sku,
+                price: formatCurrency(product.price),
+                availability: 'In Stock'
+            }))
+        },
+        {
+            title: 'Team Business',
+            icon: '👥',
+            color: 'purple',
+            fileName: 'team-business-report.csv',
+            rows: (members.length ? members : recentJoinings).map((member, index) => ({
+                serialNo: index + 1,
+                memberId: member.id || 'N/A',
+                memberName: member.name || 'N/A',
+                package: member.package || 'N/A',
+                status: member.status || 'N/A',
+                businessValue: member.package === 'Gold' ? formatCurrency(10000) : member.package === 'Silver' ? formatCurrency(5000) : formatCurrency(25000)
+            }))
+        },
+        {
+            title: 'Daily Report',
+            icon: '📅',
+            color: 'blue',
+            fileName: 'daily-report.csv',
+            rows: [
+                {
+                    generatedDate: new Date().toLocaleDateString('en-GB'),
+                    franchiseName: displayName,
+                    franchiseId: displayFranchiseId,
+                    totalMembers: members.length,
+                    totalProducts: products.length,
+                    totalPackages: packages.length,
+                    creditedIncome: formatCurrency(totalCreditedIncome)
+                }
+            ]
+        },
+        {
+            title: 'Monthly Report',
+            icon: '📊',
+            color: 'purple',
+            fileName: 'monthly-report.csv',
+            rows: [
+                {
+                    month: new Date().toLocaleString('en-US', { month: 'long', year: 'numeric' }),
+                    franchiseName: displayName,
+                    franchiseId: displayFranchiseId,
+                    ownerName: profileData.ownerName || displayName,
+                    activeMembers: members.filter((member) => member.status === 'Active').length,
+                    totalMembers: members.length,
+                    totalPackages: packages.length,
+                    totalProducts: products.length,
+                    totalIncome: formatCurrency(totalCreditedIncome)
+                }
+            ]
+        }
+    ];
+
     // Render different sections
     const renderContent = () => {
         switch (activeTab) {
@@ -583,7 +755,7 @@ const FranchiseDashboard = ({ user, onLogout }) => {
                 return (
                     <div className="space-y-6">
                         <div className="bg-green-600 rounded-2xl shadow-lg p-6 text-white">
-                            <h2 className="text-2xl font-bold mb-2">Welcome back, {user?.name || 'Rajesh'}! 👋</h2>
+                            <h2 className="text-2xl font-bold mb-2">Welcome back, {displayName}! 👋</h2>
                             <p className="opacity-90">Here's what's happening with your franchise today.</p>
                         </div>
 
@@ -602,7 +774,7 @@ const FranchiseDashboard = ({ user, onLogout }) => {
                             ))}
                         </div>
 
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 gap-6">
                             <div className="bg-white rounded-xl shadow-lg p-6">
                                 <div className="flex justify-between items-center mb-4">
                                     <h3 className="text-lg font-semibold text-gray-800">Recent Joinings</h3>
@@ -614,51 +786,31 @@ const FranchiseDashboard = ({ user, onLogout }) => {
                                     </button>
                                 </div>
                                 <div className="space-y-3">
-                                    {recentJoinings.map((item, i) => (
-                                        <div key={i} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                                            <div className="flex items-center space-x-3">
-                                                <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-bold">
-                                                    {item.name.charAt(0)}
+                                    {recentJoinings.length > 0 ? (
+                                        recentJoinings.map((item, i) => (
+                                            <div key={i} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                                                <div className="flex items-center space-x-3">
+                                                    <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white font-bold">
+                                                        {item.name.charAt(0)}
+                                                    </div>
+                                                    <div>
+                                                        <p className="font-semibold text-gray-800">{item.name}</p>
+                                                        <p className="text-xs text-gray-500">ID: {item.id} • {item.date}</p>
+                                                    </div>
                                                 </div>
-                                                <div>
-                                                    <p className="font-semibold text-gray-800">{item.name}</p>
-                                                    <p className="text-xs text-gray-500">ID: {item.id} • {item.date}</p>
+                                                <div className="text-right">
+                                                    <p className="font-semibold text-gray-800">{item.amount}</p>
+                                                    <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
+                                                        {item.package}
+                                                    </span>
                                                 </div>
                                             </div>
-                                            <div className="text-right">
-                                                <p className="font-semibold text-gray-800">{item.amount}</p>
-                                                <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
-                                                    {item.package}
-                                                </span>
-                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="text-center py-8 text-gray-500">
+                                            No recent joinings found
                                         </div>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <div className="bg-white rounded-xl shadow-lg p-6">
-                                <div className="flex justify-between items-center mb-4">
-                                    <h3 className="text-lg font-semibold text-gray-800">Recent Transactions</h3>
-                                    <button className="text-sm text-purple-600 hover:text-purple-800">View All →</button>
-                                </div>
-                                <div className="space-y-3">
-                                    {transactions.map((item, i) => (
-                                        <div key={i} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                                            <div>
-                                                <p className="font-semibold text-gray-800">{item.id}</p>
-                                                <p className="text-xs text-gray-500">{item.type} • {item.date}</p>
-                                            </div>
-                                            <div className="text-right">
-                                                <p className="font-semibold text-gray-800">{item.amount}</p>
-                                                <span className={`text-xs px-2 py-1 rounded-full ${item.status === 'Success'
-                                                    ? 'bg-blue-100 text-blue-800'
-                                                    : 'bg-purple-100 text-purple-800'
-                                                    }`}>
-                                                    {item.status}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    ))}
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -749,7 +901,7 @@ const FranchiseDashboard = ({ user, onLogout }) => {
                                         <div className="w-32 h-32 bg-white rounded-full p-1 shadow-xl overflow-hidden">
                                             {profileData.photoUrl ? (
                                                 <img
-                                                    src={profileData.photoUrl}
+                                                    src={resolveImageUrl(profileData.photoUrl)}
                                                     alt="Profile"
                                                     className="w-full h-full object-cover rounded-full"
                                                 />
@@ -784,7 +936,7 @@ const FranchiseDashboard = ({ user, onLogout }) => {
                                     <div className="flex items-center space-x-4">
                                         <div className="flex items-center space-x-2">
                                             <span className="text-sm font-medium text-gray-600">Franchise ID:</span>
-                                            <span className="text-sm font-semibold text-gray-800">{user?.id || 'FR12345'}</span>
+                                            <span className="text-sm font-semibold text-gray-800">{displayFranchiseId}</span>
                                         </div>
                                         <div className="h-4 w-px bg-gray-300"></div>
                                         <div className="flex items-center space-x-2">
@@ -1709,8 +1861,8 @@ const FranchiseDashboard = ({ user, onLogout }) => {
                                                 key={page}
                                                 onClick={() => setMemberPage(page)}
                                                 className={`px-3 py-1 rounded ${page === currentMemberPage
-                                                        ? "bg-green-600 text-white"
-                                                        : "border hover:bg-gray-100"
+                                                    ? "bg-green-600 text-white"
+                                                    : "border hover:bg-gray-100"
                                                     }`}
                                             >
                                                 {page}
@@ -1738,7 +1890,10 @@ const FranchiseDashboard = ({ user, onLogout }) => {
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                             {packages.map((pkg, i) => (
-                                <div key={i} className={`bg-gradient-to-br from-${pkg.color}-500 to-${pkg.color}-600 rounded-xl shadow-lg p-6 text-white transform hover:scale-105 transition-transform`}>
+                                <div
+                                    key={i}
+                                    className={`${packageCardStyles[pkg.color] || 'bg-gradient-to-br from-green-500 to-green-600 text-white'} rounded-xl shadow-lg p-6 transform hover:scale-105 transition-transform`}
+                                >
                                     <h3 className="text-xl font-bold mb-2">{pkg.name}</h3>
                                     <p className="text-3xl font-bold mb-4">{pkg.price}</p>
                                     <ul className="space-y-2 text-sm mb-6">
@@ -1856,7 +2011,10 @@ const FranchiseDashboard = ({ user, onLogout }) => {
                                             <span className="text-3xl mb-2 block">{report.icon}</span>
                                             <h3 className="font-semibold text-gray-800">{report.title}</h3>
                                         </div>
-                                        <button className={`text-${report.color}-600 hover:text-${report.color}-800`}>
+                                        <button
+                                            onClick={() => downloadCsvReport(`${report.title.toLowerCase().replace(/\s+/g, '-')}.csv`, reportDefinitions.find((item) => item.title === report.title)?.rows || [])}
+                                            className="font-semibold text-blue-600 hover:text-blue-800"
+                                        >
                                             Download →
                                         </button>
                                     </div>
@@ -1931,20 +2089,21 @@ const FranchiseDashboard = ({ user, onLogout }) => {
                         </div>
 
                         <div className="flex items-center space-x-4">
-                            <button className="p-2 rounded-full hover:bg-gray-100 relative">
-                                <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                                </svg>
-                                <span className="absolute top-1 right-1 w-2 h-2 bg-purple-500 rounded-full"></span>
-                            </button>
-
                             <div className="flex items-center space-x-3">
-                                <div className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center text-white font-bold">
-                                    {profileData.ownerName?.charAt(0) || 'R'}
+                                <div className="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center text-white font-bold overflow-hidden">
+                                    {profileData.photoUrl ? (
+                                        <img
+                                            src={resolveImageUrl(profileData.photoUrl)}
+                                            alt={displayName}
+                                            className="w-full h-full object-cover"
+                                        />
+                                    ) : (
+                                        displayInitial
+                                    )}
                                 </div>
                                 <div className="hidden md:block">
-                                    <p className="text-sm font-semibold text-gray-800">{profileData.ownerName || 'Rajesh Kumar'}</p>
-                                    <p className="text-xs text-gray-500">ID: {user?.id || 'FR12345'}</p>
+                                    <p className="text-sm font-semibold text-gray-800">{displayName}</p>
+                                    <p className="text-xs text-gray-500">ID: {displayFranchiseId}</p>
                                 </div>
                             </div>
 

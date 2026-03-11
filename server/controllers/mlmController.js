@@ -62,21 +62,21 @@ exports.calculateDailyMatchingBonus = async () => {
 };
 
 const RANKS = [
-    { name: "Bronze", pv: 5, reward: "Bronze Badge" },
+    { name: "Bronze", pv: 5, reward: "Bronze Badge + Company Catalog" },
     { name: "Silver", pv: 25, reward: "₹1200" },
     { name: "Gold", pv: 50, reward: "₹2500" },
-    { name: "Platinum", pv: 100, reward: "₹5000" },
-    { name: "Star", pv: 200, reward: "₹10000" },
+    { name: "Platinum", pv: 100, reward: "₹5000 + NT" },
+    { name: "Star", pv: 200, reward: "₹10000 + NT" },
     { name: "Ruby", pv: 500, reward: "₹50000" },
     { name: "Sapphire", pv: 1000, reward: "₹100000 + India Trip" },
-    { name: "Star Sapphire", pv: 2500, reward: "₹500000" },
+    { name: "Star Sapphire", pv: 2500, reward: "₹500000 + India Trip Couple" },
     { name: "Emerald", pv: 6000, reward: "₹700000" },
-    { name: "Diamond", pv: 30000, reward: "₹10 lakh" },
-    { name: "Double Diamond", pv: 70000, reward: "₹15 lakh" },
-    { name: "Blue Diamond", pv: 125000, reward: "₹30 lakh" },
-    { name: "Ambassador", pv: 300000, reward: "₹1 crore" },
-    { name: "Crown", pv: 700000, reward: "₹2.5 crore" },
-    { name: "MD", pv: 1500000, reward: "₹5 crore" }
+    { name: "Diamond", pv: 30000, reward: "₹1000000" },
+    { name: "Double Diamond", pv: 70000, reward: "₹1500000" },
+    { name: "Blue Diamond", pv: 125000, reward: "₹30 Lakh" },
+    { name: "Ambassador", pv: 300000, reward: "₹1cr ₹" },
+    { name: "Crown", pv: 700000, reward: "₹2.5cr ₹" },
+    { name: "MD", pv: 1500000, reward: "₹5cr ₹" }
 ];
 
 /**

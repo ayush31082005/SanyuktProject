@@ -176,10 +176,10 @@ const OpportunitiesPage = () => {
 
                             {/* View Compensation Plan Button */}
                             <div className="flex justify-center mt-8">
-                                <button className="inline-flex items-center gap-2 bg-[#F7931E] hover:bg-[#F7931E]/90 text-white font-bold py-4 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl group">
+                                <Link to="/compensation-plan" className="inline-flex items-center gap-2 bg-[#F7931E] hover:bg-[#F7931E]/90 text-white font-bold py-4 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl group">
                                     VIEW COMPENSATION PLAN
                                     <ExternalLink className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                                </button>
+                                </Link>
                             </div>
                         </div>
                     </div>

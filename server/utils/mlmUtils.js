@@ -2,15 +2,17 @@ const User = require('../models/User');
 const IncomeHistory = require('../models/IncomeHistory');
 const BinaryTree = require('../models/BinaryTree');
 
-const PACKAGE_DATA = {
+exports.PACKAGE_DATA = {
     "599": { bv: 250, pv: 0.25, capping: 2000 },
     "1299": { bv: 500, pv: 0.5, capping: 4000 },
     "2699": { bv: 1000, pv: 1, capping: 10000 }
 };
 
-const LEVEL_INCOME = {
-    1: 50, 2: 40, 3: 30, 4: 20, 5: 10, 6: 10, 7: 5, 8: 5, 9: 5, 10: 5,
-    11: 4, 12: 4, 13: 3, 14: 3, 15: 3, 16: 3, 17: 3, 18: 3, 19: 2, 20: 2
+exports.LEVEL_INCOME = {
+    1: 50, 2: 40, 3: 30, 4: 20, 5: 10,
+    6: 10, 7: 5, 8: 5, 9: 5, 10: 5,
+    11: 4, 12: 4, 13: 3, 14: 3, 15: 3,
+    16: 3, 17: 3, 18: 3, 19: 2, 20: 2
 };
 
 /**
@@ -76,31 +78,35 @@ exports.findExtremePosition = async (sponsorId, position) => {
  * Distributes Level Income up to 20 levels.
  */
 exports.distributeLevelIncome = async (user) => {
-    let currentParentId = user.parentId;
-    let level = 1;
+    try {
+        let currentParentId = user.parentId;
+        let level = 1;
 
-    while (currentParentId && level <= 20) {
-        const parent = await User.findById(currentParentId);
-        if (!parent) break;
+        while (currentParentId && level <= 20) {
+            const parent = await User.findById(currentParentId);
+            if (!parent) break;
 
-        const incomeAmount = LEVEL_INCOME[level] || 0;
-        if (incomeAmount > 0) {
-            parent.walletBalance += incomeAmount;
-            parent.totalLevelIncome += incomeAmount;
-            await parent.save();
+            const incomeAmount = LEVEL_INCOME[level] || 0;
+            if (incomeAmount > 0) {
+                parent.walletBalance = (parent.walletBalance || 0) + incomeAmount;
+                parent.totalLevelIncome = (parent.totalLevelIncome || 0) + incomeAmount;
+                await parent.save();
 
-            await IncomeHistory.create({
-                userId: parent._id,
-                amount: incomeAmount,
-                type: 'Level',
-                fromUserId: user._id,
-                level: level,
-                description: `Level ${level} income from ${user.memberId}`
-            });
+                await IncomeHistory.create({
+                    userId: parent._id,
+                    amount: incomeAmount,
+                    type: 'Level',
+                    fromUserId: user._id,
+                    level,
+                    description: `Level ${level} income from ${user.memberId}`
+                });
+            }
+
+            currentParentId = parent.parentId;
+            level++;
         }
-
-        currentParentId = parent.parentId;
-        level++;
+    } catch (error) {
+        console.error(`Error distributing level income for user ${user.memberId}:`, error);
     }
 };
 
@@ -112,21 +118,32 @@ exports.distributeDirectIncome = async (user) => {
     if (user.pv < 0.5) return;
 
     // Direct income goes to the SPONSOR, not the binary parent
-    const sponsor = await User.findOne({ memberId: user.sponsorId.toUpperCase() });
-    if (!sponsor) return;
+    try {
+        const sponsor = await User.findOne({ memberId: user.sponsorId.toUpperCase() });
+        if (!sponsor) return;
 
-    const amount = 50;
-    sponsor.walletBalance += amount;
-    sponsor.totalDirectIncome += amount;
-    await sponsor.save();
+        // NEW RULE: Direct Income only for sponsors with 0.5 PV or above package
+        const sponsorPkg = PACKAGE_DATA[sponsor.packageType];
+        if (!sponsorPkg || sponsorPkg.pv < 0.5) {
+            console.log(`Sponsor ${sponsor.memberId} not eligible for direct income (Package: ${sponsor.packageType})`);
+            return;
+        }
 
-    await IncomeHistory.create({
-        userId: sponsor._id,
-        amount: amount,
-        type: 'Direct',
-        fromUserId: user._id,
-        description: `Direct referral income from ${user.memberId}`
-    });
+        const amount = 50; // Fixed direct income
+        sponsor.walletBalance = (sponsor.walletBalance || 0) + amount;
+        sponsor.totalDirectIncome = (sponsor.totalDirectIncome || 0) + amount;
+        await sponsor.save();
+
+        await IncomeHistory.create({
+            userId: sponsor._id,
+            amount,
+            type: 'Direct',
+            fromUserId: user._id,
+            description: `Direct income from ${user.memberId} registration`
+        });
+    } catch (error) {
+        console.error(`Error distributing direct income for user ${user.memberId}:`, error);
+    }
 };
 
 /**

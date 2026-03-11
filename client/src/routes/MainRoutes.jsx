@@ -19,6 +19,7 @@ import BinaryTreeView from '../pages/BinaryTreeView.jsx'
 import UserTable from '../components/UserTable.jsx'
 
 import Opportunities from '../pages/Opportunities.jsx'
+import CompensationPlan from '../pages/CompensationPlan.jsx'
 import ExchangePolicy from '../footerPages/ExchangePolicy.jsx'
 import MarketingSalesPolicy from '../footerPages/MarketingSalesPolicy.jsx'
 import PaymentPolicy from '../footerPages/PaymentPolicy.jsx'
@@ -65,6 +66,7 @@ const MainRoutes = () => {
             <Route path='/products' element={<Product />} />
             <Route path='/recharge' element={<Recharge />} />
             <Route path='/opportunities' element={<Opportunities />} />
+            <Route path='/compensation-plan' element={<CompensationPlan />} />
             <Route path='/exchange-policy' element={<ExchangePolicy />} />
             <Route path='/marketing-sales-policy' element={<MarketingSalesPolicy />} />
             <Route path='/payment-policy' element={<PaymentPolicy />} />

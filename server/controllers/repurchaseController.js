@@ -29,11 +29,11 @@ exports.handleRepurchase = async (req, res) => {
         // User said: "Calculate generation income based on team size and BV multiplication"
         
         const generationPercentages = [
-            0.05, 0.04, 0.03, 0.02, 0.01, 0.01, 0.005, 0.005, 0.005, 0.005,
-            0.004, 0.004, 0.003, 0.003, 0.003, 0.003, 0.003, 0.003, 0.002, 0.002
+            0.15, 0.10, 0.05, 0.025, 0.025, 0.025, 0.025, 0.0125, 0.0125, 0.0125,
+            0.0125, 0.0125, 0.0075, 0.0075, 0.0075, 0.0075, 0.0075, 0.0075, 0.0075, 0.0075
         ];
 
-        let currentId = user.parent;
+        let currentId = user.parentId;
         for (let i = 0; i < generationPercentages.length; i++) {
             if (!currentId) break;
 
@@ -55,7 +55,7 @@ exports.handleRepurchase = async (req, res) => {
                 });
             }
 
-            currentId = parent.parent;
+            currentId = parent.parentId;
         }
 
         res.json({ message: "Repurchase successful and income distributed", repurchase });

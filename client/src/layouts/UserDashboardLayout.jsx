@@ -12,6 +12,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 const UserDashboardLayout = () => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [userData, setUserData] = useState(null);
+    const [stats, setStats] = useState(null);
     const [openDropdown, setOpenDropdown] = useState(null);
     const navigate = useNavigate();
     const location = useLocation();
@@ -23,6 +24,7 @@ const UserDashboardLayout = () => {
         if (user) {
             try {
                 setUserData(JSON.parse(user));
+                fetchStats();
             } catch (error) {
                 console.error("Error parsing user data in dashboard layout:", error);
                 localStorage.removeItem('user');
@@ -43,6 +45,21 @@ const UserDashboardLayout = () => {
         return () => window.removeEventListener('toggle-dashboard-sidebar', handleExternalToggle);
     }, [isMobile, navigate]);
 
+    const fetchStats = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5001'}/api/mlm/get-stats`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await response.json();
+            if (response.ok) {
+                setStats(data);
+            }
+        } catch (error) {
+            console.error("Error fetching stats in layout:", error);
+        }
+    };
+
     const handleLogout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
@@ -57,7 +74,7 @@ const UserDashboardLayout = () => {
             icon: Users,
             path: '/my-account/downline',
             id: 'downline',
-            badge: 5,
+            badge: stats?.totalDownline || 0,
             children: [
                 { name: 'My Directs', path: '/my-account/downline/directs', id: 'downline_directs' },
                 { name: 'Left Team', path: '/my-account/downline/left-team', id: 'downline_left' },
@@ -66,13 +83,12 @@ const UserDashboardLayout = () => {
                 { name: 'Tree View', path: '/my-account/downline/tree-view', id: 'downline_tree' },
             ],
         },
-        { name: 'Product Order', icon: ShoppingCart, path: '/my-account/orders', id: 'orders', badge: 6 },
+        { name: 'Product Order', icon: ShoppingCart, path: '/my-account/orders', id: 'orders' },
         {
             name: 'First Purchase Bonus',
             icon: Gift,
             path: '/my-account/bonus/first',
             id: 'first_bonus',
-            badge: 3,
             children: [
                 { name: 'Silver Matching', path: '/my-account/bonus/first/silver', id: 'first_silver' },
                 { name: 'Gold Matching', path: '/my-account/bonus/first/gold', id: 'first_gold' },
@@ -84,7 +100,6 @@ const UserDashboardLayout = () => {
             icon: Package,
             path: '/my-account/bonus/repurchase',
             id: 'repurchase_bonus',
-            badge: 10,
             children: [
                 { name: 'Self Repurchase Income', path: '/my-account/bonus/repurchase/self', id: 'repurchase_self' },
                 { name: 'Repurchase Level Income', path: '/my-account/bonus/repurchase/level', id: 'repurchase_level' },
@@ -104,7 +119,7 @@ const UserDashboardLayout = () => {
             icon: Wallet,
             path: '/my-account/wallet',
             id: 'wallet',
-            badge: 4,
+            badge: stats?.walletBalance ? `₹${stats.walletBalance}` : null,
             children: [
                 { name: 'Deduction Report', path: '/my-account/wallet/deduction-report', id: 'wallet_deduction' },
                 { name: 'Withdrawal History', path: '/my-account/wallet/withdrawal-history', id: 'wallet_withdrawal' },
@@ -117,7 +132,6 @@ const UserDashboardLayout = () => {
             icon: Wallet,
             path: '/my-account/wallet/generation',
             id: 'gen_wallet',
-            badge: 4,
             children: [
                 { name: 'Deduction Report', path: '/my-account/wallet/generation/deduction-report', id: 'gen_deduction' },
                 { name: 'Withdrawal History', path: '/my-account/wallet/generation/withdrawal-history', id: 'gen_withdrawal' },
@@ -130,7 +144,6 @@ const UserDashboardLayout = () => {
             icon: Folder,
             path: '/my-account/folder',
             id: 'folder',
-            badge: 4,
             children: [
                 { name: 'Welcome Letter', path: '/my-account/folder/welcome-letter', id: 'folder_welcome' },
                 { name: 'Download Files', path: '/my-account/folder/download-files', id: 'folder_downloads' },
@@ -138,8 +151,8 @@ const UserDashboardLayout = () => {
                 { name: 'ID Card', path: '/my-account/folder/id-card', id: 'folder_id' },
             ],
         },
-        { name: 'Profile & KYC', icon: UserCheck, path: '/my-account/profile', id: 'profile', badge: 4 },
-        { name: 'Submit Complain', icon: MessageSquare, path: '/my-account/grievances', id: 'grievance', badge: 2 },
+        { name: 'Profile & KYC', icon: UserCheck, path: '/my-account/profile', id: 'profile' },
+        { name: 'Submit Complain', icon: MessageSquare, path: '/my-account/grievances', id: 'grievance' },
     ];
 
     if (!userData) return null;

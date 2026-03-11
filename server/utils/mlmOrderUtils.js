@@ -2,12 +2,6 @@ const User = require('../models/User');
 const BinaryTree = require('../models/BinaryTree');
 const IncomeHistory = require('../models/IncomeHistory');
 
-/**
- * Processes MLM updates for a successful order.
- * 1. Updates buyer's personal BV and PV.
- * 2. Updates upline team BV and PV (for matching bonuses).
- * 3. Distributes Generation Income up 20 levels.
- */
 exports.processOrderMLM = async (userId, bv, pv) => {
     try {
         const user = await User.findById(userId);
@@ -53,11 +47,11 @@ exports.processOrderMLM = async (userId, bv, pv) => {
             if (isLeft || isRight) {
                 await BinaryTree.findOneAndUpdate(
                     { userId: parent._id },
-                    { 
-                        $inc: { 
+                    {
+                        $inc: {
                             [isLeft ? "leftPV" : "rightPV"]: pv,
                             [isLeft ? "leftBV" : "rightBV"]: bv
-                        } 
+                        }
                     }
                 );
             }
@@ -70,7 +64,7 @@ exports.processOrderMLM = async (userId, bv, pv) => {
         // Note: In some systems, Generation tree follows the 'parent' (unilevel) 
         // while Binary tree follows 'parentId'. Here we'll use 'parent' field for generation income 
         // as seen in repurchaseController.js.
-        
+
         const generationPercentages = [
             0.05, 0.04, 0.03, 0.02, 0.01, 0.01, 0.005, 0.005, 0.005, 0.005,
             0.004, 0.004, 0.003, 0.003, 0.003, 0.003, 0.003, 0.003, 0.002, 0.002

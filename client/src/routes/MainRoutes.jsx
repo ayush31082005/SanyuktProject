@@ -50,6 +50,8 @@ import AdminRoute from '../routes/AdminRoutes.jsx'
 import AdminGrievance from '../pages/admin/AdminGrievance.jsx'
 import AdminOrders from '../pages/admin/Orders.jsx'
 import MLMManagement from '../pages/admin/MLMManagement.jsx'
+import AdminGallery from '../pages/admin/Gallery.jsx'
+import AdminEvents from '../pages/admin/Events.jsx'
 
 const MainRoutes = () => {
     return (
@@ -97,9 +99,9 @@ const MainRoutes = () => {
                 {/* Placeholder Routes for unfinished sections */}
                 <Route path='downline' element={<Construction title="My Downline" />} />
                 <Route path='downline/directs' element={<UserTable title="Direct Referrals" type="downline" endpoint="/mlm/get-directs" />} />
-                <Route path='downline/left-team' element={<Construction title="Left Team" />} />
-                <Route path='downline/right-team' element={<Construction title="Right Team" />} />
-                <Route path='downline/all-team' element={<Construction title="All Team" />} />
+                <Route path='downline/left-team' element={<UserTable title="Left Team Members" type="downline" endpoint="/mlm/get-team-list/left" />} />
+                <Route path='downline/right-team' element={<UserTable title="Right Team Members" type="downline" endpoint="/mlm/get-team-list/right" />} />
+                <Route path='downline/all-team' element={<UserTable title="All Team Members" type="downline" endpoint="/mlm/get-team-list/all" />} />
                 <Route path='downline/tree-view' element={<BinaryTreeView />} />
 
                 <Route path='bonus/first' element={<PackageUpgrade />} />
@@ -155,6 +157,8 @@ const MainRoutes = () => {
                 <Route path="grievance" element={<AdminGrievance />} />
                 <Route path="orders" element={<AdminOrders />} />
                 <Route path="mlm" element={<MLMManagement />} />
+                <Route path="gallery" element={<AdminGallery />} />
+                <Route path="seminar" element={<AdminEvents />} />
 
 
             </Route>

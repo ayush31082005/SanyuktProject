@@ -135,3 +135,52 @@ exports.getIncomeReports = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+/**
+ * Get Team List (Left, Right, or All)
+ */
+exports.getTeamList = async (req, res) => {
+    try {
+        const { type } = req.params; // 'left', 'right', 'all'
+        const userId = req.params.userId || req.user._id;
+        
+        const treeNode = await BinaryTree.findOne({ userId });
+        if (!treeNode) return res.json([]);
+
+        let rootIds = [];
+        if (type === 'left' && treeNode.leftId) rootIds = [treeNode.leftId];
+        else if (type === 'right' && treeNode.rightId) rootIds = [treeNode.rightId];
+        else if (type === 'all') {
+            if (treeNode.leftId) rootIds.push(treeNode.leftId);
+            if (treeNode.rightId) rootIds.push(treeNode.rightId);
+        }
+
+        if (rootIds.length === 0) return res.json([]);
+
+        let team = [];
+        let queue = [...rootIds];
+        let visited = new Set();
+
+        while (queue.length > 0) {
+            const currentId = queue.shift();
+            if (visited.has(currentId.toString())) continue;
+            visited.add(currentId.toString());
+
+            const user = await User.findById(currentId).select("userName memberId packageType activeStatus rank createdAt position");
+            if (user) {
+                team.push(user);
+                
+                const node = await BinaryTree.findOne({ userId: currentId });
+                if (node) {
+                    if (node.leftId) queue.push(node.leftId);
+                    if (node.rightId) queue.push(node.rightId);
+                }
+            }
+        }
+
+        res.json(team);
+    } catch (error) {
+        console.error("getTeamList error:", error);
+        res.status(500).json({ message: error.message });
+    }
+};

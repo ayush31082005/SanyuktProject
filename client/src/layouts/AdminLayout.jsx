@@ -17,8 +17,8 @@ const AdminLayout = () => {
         { path: '/admin/franchise', label: 'Franchise', icon: BarChart3 },
         { path: '/admin/grievance', label: 'Grievance', icon: BarChart3 },
         { path: '/admin/orders', label: 'Orders', icon: Package },
-        // { path: '/admin/gallery', label: 'Gallery', icon: Package },
-        // { path: '/admin/seminar', label: 'Seminar', icon: Package },
+        { path: '/admin/gallery', label: 'Gallery', icon: Package },
+        { path: '/admin/seminar', label: 'Seminar', icon: Package },
         { path: '/admin/mlm', label: 'MLM Management', icon: Shield }
     ];
 

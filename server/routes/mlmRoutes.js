@@ -40,4 +40,8 @@ router.post("/repurchase", protect, async (req, res) => {
 });
 router.get("/binary-tree/:userId", protect, mlmAdminController.getBinaryTree); // Accessible by user for their own tree
 
+// Downline Team Lists
+router.get("/get-team-list/:type", protect, mlmAdminController.getTeamList);
+router.get("/get-team-list/:type/:userId", protect, adminOnly, mlmAdminController.getTeamList);
+
 module.exports = router;

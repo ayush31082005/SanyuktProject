@@ -89,7 +89,7 @@ const FranchiseLogin = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-orange-50 p-4 md:p-6 lg:p-8 relative overflow-hidden">
+        <div className="min-h-screen bg-[#f6faf6] p-4 md:p-6 lg:p-8 relative overflow-hidden">
 
             {/* Animated Background Elements */}
             <div className="absolute inset-0 overflow-hidden">
@@ -106,7 +106,7 @@ const FranchiseLogin = () => {
                     }}
                 />
                 <motion.div
-                    className="absolute -bottom-40 -left-40 w-80 h-80 bg-orange-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30"
+                    className="absolute -bottom-40 -left-40 w-80 h-80 bg-green-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30"
                     animate={{
                         x: [0, -30, 0],
                         y: [0, 30, 0],
@@ -160,7 +160,7 @@ const FranchiseLogin = () => {
                 }}
             >
                 <div className="bg-white/30 backdrop-blur-sm p-3 rounded-2xl shadow-xl border border-white/50">
-                    <TrendingUp className="h-6 w-6 text-orange-600" />
+                    <TrendingUp className="h-6 w-6 text-green-600" />
                 </div>
             </motion.div>
 
@@ -180,7 +180,7 @@ const FranchiseLogin = () => {
                             className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-green-100"
                         >
                             {/* Top Success Bar */}
-                            <div className="h-2 bg-gradient-to-r from-green-500 to-orange-500" />
+                            <div className="h-2 bg-green-600" />
 
                             <div className="p-8 text-center">
                                 {/* Success Icon with Animation */}
@@ -190,7 +190,7 @@ const FranchiseLogin = () => {
                                     animate={{ scale: 1 }}
                                     transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
                                 >
-                                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-green-100 to-orange-100 flex items-center justify-center">
+                                    <div className="w-20 h-20 rounded-full bg-green-50 flex items-center justify-center">
                                         <CheckCircle className="h-10 w-10 text-green-600" />
                                     </div>
                                 </motion.div>
@@ -216,7 +216,7 @@ const FranchiseLogin = () => {
 
                                 {/* Franchise Info Card */}
                                 <motion.div
-                                    className="bg-gradient-to-r from-green-50 to-orange-50 rounded-xl p-4 mb-6 border border-green-100"
+                                    className="bg-green-50 rounded-xl p-4 mb-6 border border-green-100"
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: 0.5 }}
@@ -247,8 +247,8 @@ const FranchiseLogin = () => {
                                 >
                                     <span>Redirecting to Franchise Dashboard</span>
                                     <div className="flex items-center gap-1">
-                                        <Sparkles className="h-4 w-4 text-orange-400" />
-                                        <span className="font-medium text-orange-500">2s</span>
+                                        <Sparkles className="h-4 w-4 text-green-500" />
+                                        <span className="font-medium text-green-600">2s</span>
                                     </div>
                                 </motion.div>
 
@@ -260,7 +260,7 @@ const FranchiseLogin = () => {
                                     transition={{ delay: 0.7 }}
                                 >
                                     <motion.div
-                                        className="h-full bg-gradient-to-r from-green-500 to-orange-500 rounded-full"
+                                        className="h-full bg-green-600 rounded-full"
                                         initial={{ width: "0%" }}
                                         animate={{ width: "100%" }}
                                         transition={{ duration: 2, ease: "linear" }}
@@ -297,7 +297,7 @@ const FranchiseLogin = () => {
                         transition={{ duration: 0.6, delay: 0.2 }}
                     >
                         <motion.div
-                            className="inline-flex items-center gap-2 bg-gradient-to-r from-green-100 to-orange-100 px-4 py-2 rounded-full mb-6"
+                            className="inline-flex items-center gap-2 bg-green-50 border border-green-100 px-4 py-2 rounded-full mb-6"
                             whileHover={{ scale: 1.05 }}
                         >
                             <Store className="h-4 w-4 text-green-600" />
@@ -305,9 +305,7 @@ const FranchiseLogin = () => {
                         </motion.div>
 
                         <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-                            <span className="bg-gradient-to-r from-green-600 to-orange-500 bg-clip-text text-transparent">
-                                Welcome Back,
-                            </span>
+                            <span className="text-green-600">Welcome Back,</span>
                             <br />
                             Franchise Partner!
                         </h1>
@@ -330,7 +328,7 @@ const FranchiseLogin = () => {
                                 className="bg-white/60 backdrop-blur-sm p-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
                                 whileHover={{ scale: 1.05, y: -5 }}
                             >
-                                <TrendingUp className="h-6 w-6 text-orange-600 mb-2" />
+                                <TrendingUp className="h-6 w-6 text-green-600 mb-2" />
                                 <p className="text-2xl font-bold text-gray-800">₹50K+</p>
                                 <p className="text-sm text-gray-600">Avg. Monthly</p>
                             </motion.div>
@@ -368,8 +366,7 @@ const FranchiseLogin = () => {
                         transition={{ duration: 0.6, delay: 0.3 }}
                     >
                         <div className="bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl overflow-hidden border border-white/20">
-                            {/* Header with Gradient */}
-                            <div className="bg-gradient-to-r from-green-600 via-green-500 to-orange-500 px-8 py-6 text-center relative overflow-hidden">
+                            <div className="bg-green-600 px-8 py-6 text-center relative overflow-hidden">
                                 <motion.div
                                     className="absolute inset-0 bg-white/20"
                                     animate={{
@@ -472,7 +469,7 @@ const FranchiseLogin = () => {
                                     <motion.button
                                         type="submit"
                                         disabled={isLoading}
-                                        className="w-full group relative px-8 py-4 bg-gradient-to-r from-green-600 to-orange-500 text-white font-bold rounded-lg overflow-hidden transition-all duration-300 transform hover:scale-105 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+                                        className="w-full group relative px-8 py-4 bg-green-600 text-white font-bold rounded-lg overflow-hidden transition-all duration-300 transform hover:scale-105 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed shadow-lg hover:bg-green-700 hover:shadow-xl"
                                         whileHover={{ scale: 1.02 }}
                                         whileTap={{ scale: 0.98 }}
                                     >
@@ -509,11 +506,11 @@ const FranchiseLogin = () => {
 
                                     {/* Demo Credentials */}
                                     <motion.div
-                                        className="mt-4 p-4 bg-gradient-to-r from-green-50 to-orange-50 rounded-lg border border-green-100"
+                                        className="mt-4 p-4 bg-green-50 rounded-lg border border-green-100"
                                         whileHover={{ scale: 1.02 }}
                                     >
                                         <div className="flex items-center gap-2 mb-2">
-                                            <Star className="h-4 w-4 text-orange-500" />
+                                            <Star className="h-4 w-4 text-green-600" />
                                             <p className="text-xs font-semibold text-gray-700">Demo Credentials</p>
                                         </div>
                                         <div className="space-y-1 text-xs text-gray-600">

@@ -36,3 +36,12 @@ Follow these steps to deploy your application.
 
 1.  **Update CORS**:
     - Once you have your Hostinger domain, update the `allowedOrigins` array in `server/app.js` and redeploy the backend.
+
+### Verification & Troubleshooting
+
+After deploying, follow these steps to verify the connection:
+
+1. **Verify Backend Health**: Open `https://your-backend-url.onrender.com/api/health` in your browser. It should return `{"status": "alive", ...}`.
+2. **Check Frontend Config**: If the website shows "No response from server", look at the error message. it will now show the exact URL it is trying to reach.
+3. **CORS Check**: Ensure the Hostinger domain (`https://sanyuktparivarrichlifefamily.com`) is correctly listed in `server/app.js` under `allowedOrigins`.
+4. **Build & Upload**: If you change `.env.production`, you **must** run `npm run build` again and re-upload the `client/dist` folder to Hostinger.

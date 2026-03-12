@@ -69,7 +69,7 @@ const UserLogin = () => {
                 setError(error.response.data.message || 'Invalid email or password');
             } else if (error.request) {
                 // Request made but no response
-                setError('No response from server. Please try again.');
+                setError(`No response from server. Check if backend is live at: ${api.defaults.baseURL}`);
             } else {
                 // Something else happened
                 setError('An error occurred. Please try again.');

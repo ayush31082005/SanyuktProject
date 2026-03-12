@@ -328,7 +328,7 @@ const RegistrationForm = () => {
             if (error.response) {
                 setError(error.response.data.message || "Registration failed. Please try again.");
             } else if (error.request) {
-                setError("No response from server. Please check your internet connection.");
+                setError(`No response from server. Check if backend is live at: ${api.defaults.baseURL}`);
             } else {
                 setError("An error occurred. Please try again.");
             }

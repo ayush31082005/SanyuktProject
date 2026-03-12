@@ -34,6 +34,16 @@ app.use((req, res, next) => {
 });
 
 
+
+// Health Check
+app.get("/api/health", (req, res) => {
+    res.json({ 
+        status: "alive", 
+        timestamp: new Date().toISOString(),
+        env: process.env.NODE_ENV || "development"
+    });
+});
+
 // Routes
 app.use("/api/mlm", require("./routes/mlmRoutes"));
 app.use("/api", require("./routes/authRoutes"));

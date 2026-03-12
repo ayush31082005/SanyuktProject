@@ -256,7 +256,8 @@ const ContactUs = () => {
                                             <h3 className="font-semibold text-gray-800 mb-1">Head Office</h3>
                                             <p className="text-gray-600 text-sm leading-relaxed">
                                                 Sanyukt Parivaar & Rich Life Private Limited,<br />
-                                                Near Main Business Hub, India
+                                                C/o- Vindeshwari Prasad, Bhatiniya, Gopinathpur,<br />
+                                                Harraiya, Basti - 272130, Uttar Pradesh
                                             </p>
                                         </div>
                                     </div>
@@ -270,8 +271,8 @@ const ContactUs = () => {
                                         </div>
                                         <div className="flex-1">
                                             <h3 className="font-semibold text-gray-800 mb-1">Phone</h3>
-                                            <a href="tel:+919628145157" className="text-gray-600 text-sm hover:text-green-600 transition-colors duration-300">
-                                                +91 96281 45157
+                                            <a href="tel:+917880370057" className="text-gray-600 text-sm hover:text-green-600 transition-colors duration-300">
+                                                +91 78803 70057
                                             </a>
                                         </div>
                                     </div>

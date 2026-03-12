@@ -271,14 +271,13 @@ const Footer = () => {
                                         Sanyukt Parivaar & Rich Life Private Limited
                                     </ContactText>
                                     <ContactText>
-                                        Near Main Business Hub,<br />
-                                        India
+                                        C/o- Vindeshwari Prasad, Bhatiniya, Gopinathpur, Harraiya, Basti - 272130, Uttar Pradesh
                                     </ContactText>
                                 </Box>
                                 <Box>
-                                    <ContactLine onClick={() => window.open('tel:+919628145157', '_self')}>
+                                    <ContactLine onClick={() => window.open('tel:+917880370057', '_self')}>
                                         <Typography sx={{ fontWeight: 600, mr: 1, color: '#F7931E', fontSize: '13px' }}>Phone:</Typography>
-                                        +91 96281 45157
+                                        +91 78803 70057
                                     </ContactLine>
                                     <ContactLine onClick={() => window.open('mailto:info@sanyuktparivaar.com', '_self')}>
                                         <Typography sx={{ fontWeight: 600, mr: 1, color: '#F7931E', fontSize: '13px' }}>Email:</Typography>
@@ -297,12 +296,12 @@ const Footer = () => {
                                 Sanyukt Parivaar & Rich Life Private Limited
                             </ContactText>
                             <ContactText sx={{ fontSize: '13px' }}>
-                                Near Main Business Hub, India
+                                C/o- Vindeshwari Prasad, Bhatiniya, Gopinathpur, Harraiya, Basti - 272130, Uttar Pradesh
                             </ContactText>
                         </Box>
-                        <ContactLine onClick={() => window.open('tel:+919628145157', '_self')}>
+                        <ContactLine onClick={() => window.open('tel:+917880370057', '_self')}>
                             <Typography sx={{ fontWeight: 600, mr: 1, color: '#F7931E', fontSize: '13px' }}>Phone:</Typography>
-                            +91 96281 45157
+                            +91 78803 70057
                         </ContactLine>
                         <ContactLine onClick={() => window.open('mailto:info@sanyuktparivaar.com', '_self')}>
                             <Typography sx={{ fontWeight: 600, mr: 1, color: '#F7931E', fontSize: '13px' }}>Email:</Typography>

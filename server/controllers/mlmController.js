@@ -37,11 +37,22 @@ exports.calculateDailyMatchingBonus = async () => {
                     user.totalMatchingBonus += finalIncome;
                     user.matchedPV += (matchUnits * 0.25); // Cumulative for ranks
                     
-                    // Deduct matched PV from team totals
                     user.leftTeamPV -= (matchUnits * 0.25);
                     user.rightTeamPV -= (matchUnits * 0.25);
                     
                     await user.save();
+
+                    // ✅ SYNC: Deduct matched PV from BinaryTree collection to update Dashboard
+                    await BinaryTree.findOneAndUpdate(
+                        { userId: user._id },
+                        {
+                            $inc: {
+                                leftPV: -(matchUnits * 0.25),
+                                rightPV: -(matchUnits * 0.25),
+                                matchedPV: (matchUnits * 0.25)
+                            }
+                        }
+                    );
                     
                     await IncomeHistory.create({
                         userId: user._id,

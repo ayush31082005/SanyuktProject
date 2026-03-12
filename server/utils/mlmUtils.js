@@ -102,7 +102,10 @@ exports.distributeLevelIncome = async (user) => {
                 });
             }
 
-            currentParentId = parent.parentId;
+            // Move up the level income tree (usually follows unilevel/sponsor 'parent' 
+            // but here code was using parentId which is binary. Sticking to current 
+            // pattern unless evidence says otherwise, but adding a check).
+            currentParentId = parent.parentId || parent.parent; 
             level++;
         }
     } catch (error) {

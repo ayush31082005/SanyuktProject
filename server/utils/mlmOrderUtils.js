@@ -52,7 +52,8 @@ exports.processOrderMLM = async (userId, bv, pv) => {
                             [isLeft ? "leftPV" : "rightPV"]: pv,
                             [isLeft ? "leftBV" : "rightBV"]: bv
                         }
-                    }
+                    },
+                    { upsert: true } // Ensure record exists
                 );
             }
 

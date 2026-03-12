@@ -1,47 +1,21 @@
-// FranchiseDashboard.jsx
 import React, { useState, useEffect } from 'react';
-import api from '../api';
-
-const DocumentBadge = ({ type }) => {
-    if (type === 'pan') {
-        return (
-            <div className="w-10 h-10 rounded-lg overflow-hidden border border-sky-200 bg-white flex flex-col flex-shrink-0">
-                <div className="h-1.5 bg-gradient-to-r from-orange-400 via-white to-green-500" />
-                <div className="flex-1 flex flex-col items-center justify-center bg-sky-50">
-                    <span className="text-[8px] font-black tracking-[0.18em] text-sky-800 leading-none">PAN</span>
-                    <span className="text-[5px] font-bold text-sky-600 leading-none mt-0.5">CARD</span>
-                </div>
-            </div>
-        );
-    }
-
-    if (type === 'aadhaar') {
-        return (
-            <div className="w-10 h-10 rounded-lg border border-orange-200 bg-white flex flex-col items-center justify-center flex-shrink-0 overflow-hidden">
-                <div className="mt-0.5 flex items-center justify-center">
-                    <div className="w-4 h-4 rounded-full bg-gradient-to-b from-orange-400 via-red-500 to-red-700 relative">
-                        <div className="absolute inset-[3px] rounded-full bg-white" />
-                    </div>
-                </div>
-                <span className="text-[5px] font-black tracking-[0.12em] text-red-700 leading-none mt-0.5">AADHAAR</span>
-            </div>
-        );
-    }
-
-    return (
-        <div className="w-10 h-10 rounded-lg overflow-hidden border border-emerald-200 bg-white flex flex-col flex-shrink-0">
-            <div className="h-2 bg-emerald-600 flex items-center justify-center">
-                <span className="text-[6px] font-black tracking-[0.18em] text-white leading-none">GST</span>
-            </div>
-            <div className="flex-1 flex items-center justify-center bg-emerald-50">
-                <span className="text-[6px] font-black tracking-[0.08em] text-emerald-700">CERT</span>
-            </div>
-        </div>
-    );
-};
+import {
+    BadgeIndianRupee,
+    CreditCard,
+    FileBadge,
+    FileText,
+    LayoutDashboard,
+    Package,
+    ShieldCheck,
+    TrendingUp,
+    UserCircle2,
+    UserPlus,
+    Users
+} from 'lucide-react';
+import api, { API_URL } from '../api';
 
 const FranchiseDashboard = ({ user, onLogout }) => {
-    const API_BASE_URL = api.defaults.baseURL?.replace(/\/api\/?$/, '') || 'http://localhost:5001';
+    const API_BASE_URL = API_URL;
     const getStoredFranchiseData = () => {
         try {
             return JSON.parse(localStorage.getItem('franchiseData') || '{}');
@@ -626,8 +600,8 @@ const FranchiseDashboard = ({ user, onLogout }) => {
         { name: 'Platinum Package', price: '₹25,000', color: 'blue', features: ['Direct Commission: 15%', 'Level Commission: 10%', 'Product Worth: ₹25,000'] }
     ];
     const packageCardStyles = {
-        blue: 'bg-gradient-to-br from-orange-300 to-orange-400 text-white',
-        purple: 'bg-gradient-to-br from-orange-300 to-orange-400 text-white'
+        blue: 'bg-[#0A7A2F] text-white',
+        purple: 'bg-[#0A7A2F] text-white'
     };
 
     const reportCardStyles = {
@@ -638,6 +612,53 @@ const FranchiseDashboard = ({ user, onLogout }) => {
         purple: {
             border: 'border-l-purple-500',
             text: 'text-purple-600 hover:text-purple-800'
+        }
+    };
+
+    const getNavIcon = (label) => {
+        switch (label) {
+            case 'Dashboard':
+                return LayoutDashboard;
+            case 'Profile':
+                return UserCircle2;
+            case 'Members':
+                return Users;
+            case 'Products':
+                return Package;
+            case 'Income':
+                return TrendingUp;
+            case 'Reports':
+                return FileText;
+            default:
+                return LayoutDashboard;
+        }
+    };
+
+    const getStatIcon = (label) => {
+        switch (label) {
+            case 'Total Members':
+                return Users;
+            case 'Today Joinings':
+                return UserPlus;
+            case 'Total Business':
+                return BadgeIndianRupee;
+            case 'Commission':
+                return TrendingUp;
+            default:
+                return LayoutDashboard;
+        }
+    };
+
+    const getDocumentIcon = (label) => {
+        switch (label) {
+            case 'PAN Card':
+                return CreditCard;
+            case 'Aadhaar Card':
+                return ShieldCheck;
+            case 'GST Certificate':
+                return FileBadge;
+            default:
+                return FileText;
         }
     };
 
@@ -799,16 +820,23 @@ const FranchiseDashboard = ({ user, onLogout }) => {
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                             {stats.map((stat, index) => (
-                                <div key={index} className={`bg-white rounded-xl shadow-lg p-6 border-l-4 border-${stat.color}-500 hover:shadow-xl transition-shadow`}>
-                                    <div className="flex justify-between items-start">
-                                        <div>
-                                            <p className="text-gray-500 text-sm">{stat.label}</p>
-                                            <p className="text-2xl font-bold text-gray-800 mt-2">{stat.value}</p>
-                                            <p className={`text-xs text-${stat.color}-600 mt-1`}>{stat.change}</p>
+                                (() => {
+                                    const StatIcon = getStatIcon(stat.label);
+                                    return (
+                                        <div key={index} className={`bg-white rounded-xl shadow-lg p-6 border-l-4 border-${stat.color}-500 hover:shadow-xl transition-shadow`}>
+                                            <div className="flex justify-between items-start">
+                                                <div>
+                                                    <p className="text-gray-500 text-sm">{stat.label}</p>
+                                                    <p className="text-2xl font-bold text-gray-800 mt-2">{stat.value}</p>
+                                                    <p className={`text-xs text-${stat.color}-600 mt-1`}>{stat.change}</p>
+                                                </div>
+                                                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-green-50 text-green-700 shadow-sm ring-1 ring-green-100">
+                                                    <StatIcon size={24} strokeWidth={2.2} />
+                                                </div>
+                                            </div>
                                         </div>
-                                        <span className="text-3xl">{stat.icon}</span>
-                                    </div>
-                                </div>
+                                    );
+                                })()
                             ))}
                         </div>
 
@@ -1345,10 +1373,7 @@ const FranchiseDashboard = ({ user, onLogout }) => {
                                         {/* PAN Card */}
                                         <div className="border rounded-lg p-4 bg-white hover:shadow-md transition-shadow">
                                             <div className="flex items-start space-x-3">
-                                                <DocumentBadge type="pan" />
-                                                <div className="hidden w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                                                    <span className="text-xl">🪪</span>
-                                                </div>
+                                                <div className="relative w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0 text-transparent"><CreditCard size={18} strokeWidth={2.2} className="absolute text-green-700" /></div>
                                                 <div className="flex-1 min-w-0">
                                                     <p className="font-semibold text-gray-800 text-sm">PAN Card</p>
                                                     <p className="text-xs text-gray-500 truncate mt-1">
@@ -1381,10 +1406,7 @@ const FranchiseDashboard = ({ user, onLogout }) => {
                                         {/* Aadhaar Card */}
                                         <div className="border rounded-lg p-4 bg-white hover:shadow-md transition-shadow">
                                             <div className="flex items-start space-x-3">
-                                                <DocumentBadge type="aadhaar" />
-                                                <div className="hidden w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                                                    <span className="text-xl">🆔</span>
-                                                </div>
+                                                <div className="relative w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0 text-transparent"><ShieldCheck size={18} strokeWidth={2.2} className="absolute text-green-700" /></div>
                                                 <div className="flex-1 min-w-0">
                                                     <p className="font-semibold text-gray-800 text-sm">Aadhaar Card</p>
                                                     <p className="text-xs text-gray-500 truncate mt-1">
@@ -1417,10 +1439,7 @@ const FranchiseDashboard = ({ user, onLogout }) => {
                                         {/* GST Certificate */}
                                         <div className="border rounded-lg p-4 bg-white hover:shadow-md transition-shadow">
                                             <div className="flex items-start space-x-3">
-                                                <DocumentBadge type="gst" />
-                                                <div className="hidden w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                                                    <span className="text-xl">📄</span>
-                                                </div>
+                                                <div className="relative w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0 text-transparent"><FileBadge size={18} strokeWidth={2.2} className="absolute text-green-700" /></div>
                                                 <div className="flex-1 min-w-0">
                                                     <p className="font-semibold text-gray-800 text-sm">GST Certificate</p>
                                                     <p className="text-xs text-gray-500 truncate mt-1">
@@ -2164,17 +2183,24 @@ const FranchiseDashboard = ({ user, onLogout }) => {
                     <nav className="hidden lg:block border-t">
                         <div className="flex space-x-1 overflow-x-auto">
                             {navItems.map((item) => (
-                                <button
-                                    key={item.id}
-                                    onClick={() => setActiveTab(item.id)}
-                                    className={`px-4 py-3 font-medium text-sm whitespace-nowrap border-b-2 transition-colors ${activeTab === item.id
-                                        ? `border-${item.color}-600 text-${item.color}-600`
-                                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                                        }`}
-                                >
-                                    <span className="mr-2">{item.icon}</span>
-                                    {item.label}
-                                </button>
+                                (() => {
+                                    const NavIcon = getNavIcon(item.label);
+                                    return (
+                                        <button
+                                            key={item.id}
+                                            onClick={() => setActiveTab(item.id)}
+                                            className={`px-4 py-3 font-medium text-sm whitespace-nowrap border-b-2 transition-colors ${activeTab === item.id
+                                                ? `border-${item.color}-600 text-${item.color}-600`
+                                                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                                }`}
+                                        >
+                                            <span className="mr-2 inline-flex align-middle">
+                                                <NavIcon size={16} strokeWidth={2.2} />
+                                            </span>
+                                            {item.label}
+                                        </button>
+                                    );
+                                })()
                             ))}
                         </div>
                     </nav>
@@ -2183,20 +2209,27 @@ const FranchiseDashboard = ({ user, onLogout }) => {
                     {showMobileMenu && (
                         <div className="lg:hidden border-t py-2">
                             {navItems.map((item) => (
-                                <button
-                                    key={item.id}
-                                    onClick={() => {
-                                        setActiveTab(item.id);
-                                        setShowMobileMenu(false);
-                                    }}
-                                    className={`w-full text-left px-4 py-3 font-medium text-sm ${activeTab === item.id
-                                        ? `bg-${item.color}-50 text-${item.color}-600`
-                                        : 'text-gray-600 hover:bg-gray-50'
-                                        }`}
-                                >
-                                    <span className="mr-3">{item.icon}</span>
-                                    {item.label}
-                                </button>
+                                (() => {
+                                    const NavIcon = getNavIcon(item.label);
+                                    return (
+                                        <button
+                                            key={item.id}
+                                            onClick={() => {
+                                                setActiveTab(item.id);
+                                                setShowMobileMenu(false);
+                                            }}
+                                            className={`w-full text-left px-4 py-3 font-medium text-sm ${activeTab === item.id
+                                                ? `bg-${item.color}-50 text-${item.color}-600`
+                                                : 'text-gray-600 hover:bg-gray-50'
+                                                }`}
+                                        >
+                                            <span className="mr-3 inline-flex align-middle">
+                                                <NavIcon size={16} strokeWidth={2.2} />
+                                            </span>
+                                            {item.label}
+                                        </button>
+                                    );
+                                })()
                             ))}
 
                             {/* Mobile Logout Option */}
@@ -2221,3 +2254,4 @@ const FranchiseDashboard = ({ user, onLogout }) => {
 };
 
 export default FranchiseDashboard;
+

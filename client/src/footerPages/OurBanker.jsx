@@ -63,10 +63,10 @@ const OurBanker = () => {
                         <div className="absolute -inset-0.5 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
                         <div className="relative px-8 py-3 bg-white rounded-full flex items-center space-x-3 shadow-md border border-green-100">
                             <span className="text-sm md:text-base font-mono text-gray-700">
-                                SanyuktGLOBALMARKET@aubank
+                                20260325575843-iservuqrsbrp@cbin
                             </span>
                             <button
-                                onClick={() => copyToClipboard('SanyuktGLOBALMARKET@aubank', 'email')}
+                                onClick={() => copyToClipboard('20260325575843-iservuqrsbrp@cbin', 'email')}
                                 className="text-gray-400 hover:text-green-600 transition-colors"
                             >
                                 {copied === 'email' ? (
@@ -161,10 +161,10 @@ const OurBanker = () => {
                                 <div className="flex items-center space-x-3">
                                     <QrCode className="w-5 h-5 text-green-600" />
                                     <span className="text-sm text-gray-600">UPI ID:</span>
-                                    <span className="font-mono font-medium text-gray-800">sanyuktglobal@aubank</span>
+                                    <span className="font-mono font-medium text-gray-800">20260325575843-iservuqrsbrp@cbin</span>
                                 </div>
                                 <button
-                                    onClick={() => copyToClipboard('snayuktglobal@aubank', 'upi')}
+                                    onClick={() => copyToClipboard('20260325575843-iservuqrsbrp@cbin', 'upi')}
                                     className="text-gray-400 hover:text-green-600 transition-colors"
                                 >
                                     {copied === 'upi' ? (

@@ -56,7 +56,7 @@ const AdminLayout = () => {
     const adminName = getAdminInfo();
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-50 flex">
+        <div className="h-screen overflow-hidden bg-gradient-to-br from-green-50 via-white to-green-50 flex">
             {/* Sidebar */}
             <div className={`${sidebarOpen ? 'w-80' : 'w-20'} bg-white shadow-2xl transition-all duration-300 relative overflow-hidden flex flex-col`}>
                 {/* Sidebar Header */}

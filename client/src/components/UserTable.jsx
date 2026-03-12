@@ -16,7 +16,12 @@ const UserTable = ({ title, type, endpoint }) => {
             setLoading(true);
             try {
                 // Determine source endpoint
-                const sourceEndpoint = endpoint || '/mlm/get-stats';
+                let sourceEndpoint = endpoint || 'mlm/get-stats';
+                
+                // Ensure no leading slash for axios baseURL compatibility
+                if (sourceEndpoint.startsWith('/')) {
+                    sourceEndpoint = sourceEndpoint.substring(1);
+                }
                 
                 // Single API call
                 const res = await api.get(sourceEndpoint);

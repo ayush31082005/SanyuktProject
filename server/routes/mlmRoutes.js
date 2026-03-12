@@ -12,9 +12,10 @@ router.get("/admin/income-reports", protect, adminOnly, mlmAdminController.getIn
 router.get("/admin/binary-tree/:userId", protect, adminOnly, mlmAdminController.getBinaryTree);
 
 // Daily Tasks (Triggered by Admin or Cron)
-router.post("/admin/calculate-matching", protect, adminOnly, async (req, res) => {
+router.post("/admin/calculate-binary", protect, adminOnly, async (req, res) => {
+    console.log("DEBUG: HIT /api/mlm/admin/calculate-binary");
     await mlmController.calculateDailyMatchingBonus();
-    res.json({ message: "Matching bonus calculated and distributed" });
+    res.json({ message: "Binary matching bonus calculated and distributed" });
 });
 
 router.post("/admin/calculate-profit-sharing", protect, adminOnly, async (req, res) => {
@@ -24,8 +25,8 @@ router.post("/admin/calculate-profit-sharing", protect, adminOnly, async (req, r
 });
 
 router.post("/admin/update-ranks", protect, adminOnly, async (req, res) => {
-    // This is handled inside calculateDailyMatchingBonus usually
-    res.json({ message: "Rank update logic is part of matching calculation" });
+    await mlmController.updateAllRanks();
+    res.json({ message: "All user ranks updated successfully" });
 });
 
 // User Routes

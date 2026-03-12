@@ -166,7 +166,7 @@ const DashboardOverview = () => {
 
         const fetchStats = async () => {
             try {
-                const res = await api.get('/mlm/get-stats');
+                const res = await api.get('mlm/get-stats');
                 console.log("DEBUG: fetchStats success:", res.data);
                 setStats(res.data);
             } catch (err) {

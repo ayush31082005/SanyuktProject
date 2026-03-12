@@ -98,10 +98,10 @@ const MainRoutes = () => {
 
                 {/* Placeholder Routes for unfinished sections */}
                 <Route path='downline' element={<Construction title="My Downline" />} />
-                <Route path='downline/directs' element={<UserTable title="Direct Referrals" type="downline" endpoint="/mlm/get-directs" />} />
-                <Route path='downline/left-team' element={<UserTable title="Left Team Members" type="downline" endpoint="/mlm/get-team-list/left" />} />
-                <Route path='downline/right-team' element={<UserTable title="Right Team Members" type="downline" endpoint="/mlm/get-team-list/right" />} />
-                <Route path='downline/all-team' element={<UserTable title="All Team Members" type="downline" endpoint="/mlm/get-team-list/all" />} />
+                <Route path='downline/directs' element={<UserTable title="Direct Referrals" type="downline" endpoint="mlm/get-directs" />} />
+                <Route path='downline/left-team' element={<UserTable title="Left Team Members" type="downline" endpoint="mlm/get-team-list/left" />} />
+                <Route path='downline/right-team' element={<UserTable title="Right Team Members" type="downline" endpoint="mlm/get-team-list/right" />} />
+                <Route path='downline/all-team' element={<UserTable title="All Team Members" type="downline" endpoint="mlm/get-team-list/all" />} />
                 <Route path='downline/tree-view' element={<BinaryTreeView />} />
 
                 <Route path='bonus/first' element={<PackageUpgrade />} />
@@ -124,7 +124,7 @@ const MainRoutes = () => {
                 <Route path='wallet' element={<Construction title="E-Wallet" />} />
                 <Route path='wallet/deduction-report' element={<Construction title="Deduction Report" />} />
                 <Route path='wallet/withdrawal-history' element={<Construction title="Withdrawal History" />} />
-                <Route path='wallet/all-transactions' element={<UserTable title="Transaction Report" type="income" endpoint="/mlm/admin/income-reports" />} />
+                <Route path='wallet/all-transactions' element={<UserTable title="Transaction Report" type="income" endpoint="mlm/admin/income-reports" />} />
                 <Route path='wallet/daily-closing' element={<Construction title="Daily Closing Report" />} />
 
                 <Route path='wallet/generation' element={<Construction title="Generation Wallet" />} />

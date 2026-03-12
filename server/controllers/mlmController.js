@@ -61,6 +61,22 @@ exports.calculateDailyMatchingBonus = async () => {
     }
 };
 
+/**
+ * Force updates ranks for all active users.
+ */
+exports.updateAllRanks = async () => {
+    try {
+        const users = await User.find({ activeStatus: true, packageType: { $ne: "none" } });
+        for (const user of users) {
+            await this.checkAndUpgradeRank(user);
+        }
+        console.log("All user ranks updated successfully.");
+    } catch (error) {
+        console.error("Error updating all user ranks:", error);
+        throw error;
+    }
+};
+
 const RANKS = [
     { name: "Bronze", pv: 5, reward: "Bronze Badge + Company Catalog" },
     { name: "Silver", pv: 25, reward: "₹1200" },

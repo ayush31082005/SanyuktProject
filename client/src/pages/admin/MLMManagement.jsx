@@ -31,10 +31,11 @@ const MLMManagement = () => {
         try {
             // This would ideally be a new admin API for overall stats
             // For now, let's use the users count or placeholder
-            const res = await api.get('/admin/users');
+            const res = await api.get('admin/users');
+            const users = res.data.users || [];
             setStats({
-                totalUsers: res.data.length || 0,
-                activeUsers: res.data.filter(u => u.status === 'active').length || 0,
+                totalUsers: users.length || 0,
+                activeUsers: users.filter(u => u.status === 'active').length || 0,
             });
         } catch (err) {
             console.error(err);
@@ -48,7 +49,7 @@ const MLMManagement = () => {
     const handleRunBinaryMatching = async () => {
         setLoading(true);
         try {
-            await api.post('/mlm/admin/calculate-binary');
+            await api.post('mlm/admin/calculate-binary');
             toast.success("Binary matching calculated successfully for all users!");
             setLastUpdated(new Date().toLocaleString());
         } catch (err) {
@@ -62,7 +63,7 @@ const MLMManagement = () => {
     const handleUpdateRanks = async () => {
         setLoading(true);
         try {
-            await api.post('/mlm/admin/update-ranks');
+            await api.post('mlm/admin/update-ranks');
             toast.success("All user ranks updated successfully!");
             setLastUpdated(new Date().toLocaleString());
         } catch (err) {
@@ -112,17 +113,34 @@ const MLMManagement = () => {
     );
 
     return (
-        <Box sx={{ maxWidth: '1200px', mx: 'auto' }}>
-            <Box sx={{ mb: 5, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Box sx={{ 
+            maxWidth: '1200px', 
+            mx: 'auto',
+            px: { xs: 2, sm: 3, md: 4 },
+            py: { xs: 2, sm: 4 }
+        }}>
+            <Box sx={{ 
+                mb: { xs: 3, md: 5 }, 
+                display: 'flex', 
+                flexDirection: { xs: 'column', sm: 'row' },
+                justifyContent: 'space-between', 
+                alignItems: { xs: 'flex-start', sm: 'center' },
+                gap: 2
+            }}>
                 <div>
-                    <Typography variant="h4" sx={{ fontWeight: 900, mb: 1, letterSpacing: '-0.02em' }}>
+                    <Typography variant="h4" sx={{ 
+                        fontWeight: 900, 
+                        mb: 1, 
+                        letterSpacing: '-0.02em',
+                        fontSize: { xs: '1.75rem', md: '2.125rem' }
+                    }}>
                         MLM System Management
                     </Typography>
-                    <Typography variant="body1" color="textSecondary">
+                    <Typography variant="body1" color="textSecondary" sx={{ fontSize: { xs: '0.875rem', md: '1rem' } }}>
                         System-wide controls for income calculation and business logic.
                     </Typography>
                 </div>
-                <Box sx={{ textAlign: 'right' }}>
+                <Box sx={{ textAlign: { xs: 'left', sm: 'right' } }}>
                     <Typography variant="caption" sx={{ display: 'block', fontWeight: 700, color: 'text.disabled', textTransform: 'uppercase' }}>
                         Last System Update
                     </Typography>
@@ -130,11 +148,22 @@ const MLMManagement = () => {
                 </Box>
             </Box>
 
-            <Alert icon={<Shield size={20} />} severity="info" sx={{ mb: 4, borderRadius: '12px', bgcolor: 'rgba(10, 122, 47, 0.05)', color: '#0A7A2F', border: '1px solid rgba(10, 122, 47, 0.1)' }}>
+            <Alert 
+                icon={<Shield size={20} />} 
+                severity="info" 
+                sx={{ 
+                    mb: 4, 
+                    borderRadius: '16px', 
+                    bgcolor: 'rgba(10, 122, 47, 0.05)', 
+                    color: '#0A7A2F', 
+                    border: '1px solid rgba(10, 122, 47, 0.1)',
+                    '& .MuiAlert-message': { fontWeight: 500 }
+                }}
+            >
                 Income calculations are typically run once daily. Use "Run Binary Matching" only when you want to trigger manual calculation for the current cycle.
             </Alert>
 
-            <Grid container spacing={3} sx={{ mb: 5 }}>
+            <Grid container spacing={{ xs: 2, md: 3 }} sx={{ mb: 5 }}>
                 <Grid item xs={12} md={6}>
                     <ActionCard 
                         title="Run Binary Matching"
@@ -158,27 +187,27 @@ const MLMManagement = () => {
             </Grid>
 
             <Typography variant="h6" sx={{ fontWeight: 800, mb: 3 }}>System Performance Overview</Typography>
-            <Grid container spacing={3}>
+            <Grid container spacing={{ xs: 2, md: 3 }}>
                 <Grid item xs={12} sm={6} md={3}>
-                    <Paper sx={{ p: 3, borderRadius: '16px', boxShadow: 'none', border: '1px solid #eee', textAlign: 'center' }}>
+                    <Paper sx={{ p: 3, borderRadius: '16px', boxShadow: 'none', border: '1px solid #eee', textAlign: 'center', transition: 'transform 0.2s', '&:hover': { transform: 'translateY(-4px)' } }}>
                         <Typography variant="h4" sx={{ fontWeight: 900, color: '#0A7A2F' }}>{stats?.totalUsers || '-'}</Typography>
                         <Typography variant="caption" sx={{ fontWeight: 700, color: 'text.disabled', textTransform: 'uppercase' }}>Total Network</Typography>
                     </Paper>
                 </Grid>
                 <Grid item xs={12} sm={6} md={3}>
-                    <Paper sx={{ p: 3, borderRadius: '16px', boxShadow: 'none', border: '1px solid #eee', textAlign: 'center' }}>
+                    <Paper sx={{ p: 3, borderRadius: '16px', boxShadow: 'none', border: '1px solid #eee', textAlign: 'center', transition: 'transform 0.2s', '&:hover': { transform: 'translateY(-4px)' } }}>
                         <Typography variant="h4" sx={{ fontWeight: 900, color: '#2196F3' }}>{stats?.activeUsers || '-'}</Typography>
                         <Typography variant="caption" sx={{ fontWeight: 700, color: 'text.disabled', textTransform: 'uppercase' }}>Active ID's</Typography>
                     </Paper>
                 </Grid>
                 <Grid item xs={12} sm={6} md={3}>
-                    <Paper sx={{ p: 3, borderRadius: '16px', boxShadow: 'none', border: '1px solid #eee', textAlign: 'center' }}>
+                    <Paper sx={{ p: 3, borderRadius: '16px', boxShadow: 'none', border: '1px solid #eee', textAlign: 'center', transition: 'transform 0.2s', '&:hover': { transform: 'translateY(-4px)' } }}>
                         <Typography variant="h4" sx={{ fontWeight: 900, color: '#ff9800' }}>₹0</Typography>
                         <Typography variant="caption" sx={{ fontWeight: 700, color: 'text.disabled', textTransform: 'uppercase' }}>Daily Payout (Est.)</Typography>
                     </Paper>
                 </Grid>
                 <Grid item xs={12} sm={6} md={3}>
-                    <Paper sx={{ p: 3, borderRadius: '16px', boxShadow: 'none', border: '1px solid #eee', textAlign: 'center' }}>
+                    <Paper sx={{ p: 3, borderRadius: '16px', boxShadow: 'none', border: '1px solid #eee', textAlign: 'center', transition: 'transform 0.2s', '&:hover': { transform: 'translateY(-4px)' } }}>
                         <Typography variant="h4" sx={{ fontWeight: 900, color: '#9c27b0' }}>₹0</Typography>
                         <Typography variant="caption" sx={{ fontWeight: 700, color: 'text.disabled', textTransform: 'uppercase' }}>Company Profit Sharing</Typography>
                     </Paper>

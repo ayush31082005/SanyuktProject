@@ -39,6 +39,24 @@ import OrderDetails from '../pages/OrderDetails.jsx'
 import ForgotPassword from '../pages/ForgotPassword.jsx'
 import FranchiseDashboard from '../pages/FranchiseDashboard.jsx'
 
+import SelfRepurchaseIncome from '../pages/RepurchaseBouns/SelfPurchaseIncome.jsx'
+import RepurchaseLevelIncome from '../pages/RepurchaseBouns/RepurchaseLevelIncome';
+import SponsorIncome from '../pages/RepurchaseBouns/SponsorIncome';
+import RoyaltyBonus from '../pages/RepurchaseBouns/RoyaltyBonus';
+import DirectorBonus from '../pages/RepurchaseBouns/DirectorBonus';
+import HouseFund from '../pages/RepurchaseBouns/HouseFund';
+import LeadershipFund from '../pages/RepurchaseBouns/LeadershipFund';
+import CarFund from '../pages/RepurchaseBouns/CarFund';
+import TravelFund from '../pages/RepurchaseBouns/TravelFund';
+import BikeFund from '../pages/RepurchaseBouns/BikeFund';
+
+
+import DeductionReport from '../pages/Wallet/DeductionReport';
+import WithdrawalHistory from '../pages/Wallet/WithdrawalHistory';
+import DailyClosingReport from '../pages/Wallet/DailyClosingReport';
+import WelcomeLetter from '../pages/WelcomeLetter.jsx';
+import IdCard from '../pages/IdCard.jsx';
+
 // ✅ Admin imports
 import AdminLayout from '../layouts/AdminLayout.jsx'
 import AdminDashboard from '../pages/admin/Dashboard.jsx'
@@ -107,23 +125,22 @@ const MainRoutes = () => {
                 <Route path='bonus/first/gold' element={<PackageUpgrade filter="gold" />} />
                 <Route path='bonus/first/diamond' element={<PackageUpgrade filter="diamond" />} />
 
-                <Route path='bonus/repurchase' element={<Construction title="Repurchase Bonus" />} />
-                <Route path='bonus/repurchase/self' element={<Construction title="Self Repurchase Income" />} />
-                <Route path='bonus/repurchase/level' element={<Construction title="Repurchase Level Income" />} />
-                <Route path='bonus/repurchase/sponsor' element={<Construction title="Sponsor Income" />} />
-                <Route path='bonus/repurchase/royalty' element={<Construction title="Royalty Bonus" />} />
-                <Route path='bonus/repurchase/director' element={<Construction title="Director Bonus" />} />
-                <Route path='bonus/repurchase/house' element={<Construction title="House Fund" />} />
-                <Route path='bonus/repurchase/leadership' element={<Construction title="Leadership Fund" />} />
-                <Route path='bonus/repurchase/car' element={<Construction title="Car Fund" />} />
-                <Route path='bonus/repurchase/travel' element={<Construction title="Travel Fund" />} />
-                <Route path='bonus/repurchase/bike' element={<Construction title="Bike Fund" />} />
+                <Route path="bonus/repurchase/self" element={<SelfRepurchaseIncome />} />
+                <Route path="bonus/repurchase/level" element={<RepurchaseLevelIncome />} />
+                <Route path="bonus/repurchase/sponsor" element={<SponsorIncome />} />
+                <Route path="bonus/repurchase/royalty" element={<RoyaltyBonus />} />
+                <Route path="bonus/repurchase/director" element={<DirectorBonus />} />
+                <Route path="bonus/repurchase/house" element={<HouseFund />} />
+                <Route path="bonus/repurchase/leadership" element={<LeadershipFund />} />
+                <Route path="bonus/repurchase/car" element={<CarFund />} />
+                <Route path="bonus/repurchase/travel" element={<TravelFund />} />
+                <Route path="bonus/repurchase/bike" element={<BikeFund />} />
 
-                <Route path='wallet' element={<Construction title="E-Wallet" />} />
-                <Route path='wallet/deduction-report' element={<Construction title="Deduction Report" />} />
-                <Route path='wallet/withdrawal-history' element={<Construction title="Withdrawal History" />} />
+                <Route path="wallet/deduction-report" element={<DeductionReport />} />
+                <Route path="wallet/withdrawal-history" element={<WithdrawalHistory />} />
+                <Route path="wallet/daily-closing" element={<DailyClosingReport />} />
                 <Route path='wallet/all-transactions' element={<UserTable title="Transaction Report" type="income" endpoint="mlm/admin/income-reports" />} />
-                <Route path='wallet/daily-closing' element={<Construction title="Daily Closing Report" />} />
+
 
                 <Route path='wallet/generation' element={<Construction title="Generation Wallet" />} />
                 <Route path='wallet/generation/deduction-report' element={<Construction title="Generation Deduction Report" />} />
@@ -132,10 +149,9 @@ const MainRoutes = () => {
                 <Route path='wallet/generation/monthly-closing' element={<Construction title="Monthly Closing Report" />} />
 
                 <Route path='folder' element={<Construction title="My Folder" />} />
-                <Route path='folder/welcome-letter' element={<Construction title="Welcome Letter" />} />
-                <Route path='folder/download-files' element={<Construction title="Download Files" />} />
+                <Route path='folder/welcome-letter' element={<WelcomeLetter />} />
                 <Route path='folder/our-banker' element={<Construction title="Our Banker" />} />
-                <Route path='folder/id-card' element={<Construction title="ID Card" />} />
+                <Route path='folder/id-card' element={<IdCard />} />
             </Route>
 
             <Route path='/order-details/:id' element={<OrderDetails />} />

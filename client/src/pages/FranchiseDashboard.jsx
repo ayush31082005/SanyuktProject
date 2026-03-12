@@ -1,8 +1,47 @@
+// FranchiseDashboard.jsx
 import React, { useState, useEffect } from 'react';
-import api, { API_URL } from '../api';
+import api from '../api';
+
+const DocumentBadge = ({ type }) => {
+    if (type === 'pan') {
+        return (
+            <div className="w-10 h-10 rounded-lg overflow-hidden border border-sky-200 bg-white flex flex-col flex-shrink-0">
+                <div className="h-1.5 bg-gradient-to-r from-orange-400 via-white to-green-500" />
+                <div className="flex-1 flex flex-col items-center justify-center bg-sky-50">
+                    <span className="text-[8px] font-black tracking-[0.18em] text-sky-800 leading-none">PAN</span>
+                    <span className="text-[5px] font-bold text-sky-600 leading-none mt-0.5">CARD</span>
+                </div>
+            </div>
+        );
+    }
+
+    if (type === 'aadhaar') {
+        return (
+            <div className="w-10 h-10 rounded-lg border border-orange-200 bg-white flex flex-col items-center justify-center flex-shrink-0 overflow-hidden">
+                <div className="mt-0.5 flex items-center justify-center">
+                    <div className="w-4 h-4 rounded-full bg-gradient-to-b from-orange-400 via-red-500 to-red-700 relative">
+                        <div className="absolute inset-[3px] rounded-full bg-white" />
+                    </div>
+                </div>
+                <span className="text-[5px] font-black tracking-[0.12em] text-red-700 leading-none mt-0.5">AADHAAR</span>
+            </div>
+        );
+    }
+
+    return (
+        <div className="w-10 h-10 rounded-lg overflow-hidden border border-emerald-200 bg-white flex flex-col flex-shrink-0">
+            <div className="h-2 bg-emerald-600 flex items-center justify-center">
+                <span className="text-[6px] font-black tracking-[0.18em] text-white leading-none">GST</span>
+            </div>
+            <div className="flex-1 flex items-center justify-center bg-emerald-50">
+                <span className="text-[6px] font-black tracking-[0.08em] text-emerald-700">CERT</span>
+            </div>
+        </div>
+    );
+};
 
 const FranchiseDashboard = ({ user, onLogout }) => {
-    const API_BASE_URL = API_URL;
+    const API_BASE_URL = api.defaults.baseURL?.replace(/\/api\/?$/, '') || 'http://localhost:5001';
     const getStoredFranchiseData = () => {
         try {
             return JSON.parse(localStorage.getItem('franchiseData') || '{}');
@@ -535,7 +574,7 @@ const FranchiseDashboard = ({ user, onLogout }) => {
         if (onLogout) {
             onLogout();
         } else {
-            window.location.href = "/login";
+            window.location.href = "/franchise/login";
         }
 
         setShowLogoutConfirm(false);
@@ -1306,7 +1345,8 @@ const FranchiseDashboard = ({ user, onLogout }) => {
                                         {/* PAN Card */}
                                         <div className="border rounded-lg p-4 bg-white hover:shadow-md transition-shadow">
                                             <div className="flex items-start space-x-3">
-                                                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                                <DocumentBadge type="pan" />
+                                                <div className="hidden w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
                                                     <span className="text-xl">🪪</span>
                                                 </div>
                                                 <div className="flex-1 min-w-0">
@@ -1341,7 +1381,8 @@ const FranchiseDashboard = ({ user, onLogout }) => {
                                         {/* Aadhaar Card */}
                                         <div className="border rounded-lg p-4 bg-white hover:shadow-md transition-shadow">
                                             <div className="flex items-start space-x-3">
-                                                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                                <DocumentBadge type="aadhaar" />
+                                                <div className="hidden w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
                                                     <span className="text-xl">🆔</span>
                                                 </div>
                                                 <div className="flex-1 min-w-0">
@@ -1376,7 +1417,8 @@ const FranchiseDashboard = ({ user, onLogout }) => {
                                         {/* GST Certificate */}
                                         <div className="border rounded-lg p-4 bg-white hover:shadow-md transition-shadow">
                                             <div className="flex items-start space-x-3">
-                                                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                                                <DocumentBadge type="gst" />
+                                                <div className="hidden w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
                                                     <span className="text-xl">📄</span>
                                                 </div>
                                                 <div className="flex-1 min-w-0">

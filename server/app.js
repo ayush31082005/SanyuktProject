@@ -5,10 +5,7 @@ const cors = require("cors");
 
 const app = express();
 
-// const franchiseDashboardRoutes = require("./routes/franchiseDashboardRoutes");
-// const memberRoutes = require("./routes/memberRoutes");
-// const galleryRoutes = require("./routes/galleryRoutes")
-// const eventRoutes = require("./routes/eventRoutes")
+// Routes
 
 const allowedOrigins = [
     "http://localhost:5173",
@@ -46,18 +43,12 @@ app.use("/api/admin/users", require("./routes/adminUserRoutes"));
 app.use("/api/admin", require("./routes/adminStatsRoutes"));
 
 app.use("/api/franchises", require("./routes/franchiseRoutes"));
-// app.use("/api/franchise", franchiseDashboardRoutes);
-// app.use("/api/members", memberRoutes);
 
 app.use("/api/grievance", require("./routes/grievanceRoutes"));
 
 app.use("/api/recharge", require("./routes/rechargeRoutes"));
 app.use("/api/orders", require("./routes/orderRoutes"));
-app.use("/api/orders", require("./routes/orderRoutes"));
-// app.use("/api/mlm", require("./routes/mlmRoutes")); // Moved up
 
-// app.use("/api/gallery", galleryRoutes)
-// app.use("/api/events", eventRoutes)
 
 
 // Error handling for unknown routes

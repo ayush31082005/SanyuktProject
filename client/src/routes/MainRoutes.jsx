@@ -13,7 +13,6 @@ import Recharge from '../pages/Recharge.jsx'
 import MyAccount from '../pages/MyAccount.jsx'
 import UserDashboardLayout from '../layouts/UserDashboardLayout.jsx'
 import DashboardOverview from '../pages/DashboardOverview.jsx'
-import DashboardPlaceholder from '../components/DashboardPlaceholder.jsx'
 import Construction from '../pages/Construction.jsx'
 import BinaryTreeView from '../pages/BinaryTreeView.jsx'
 import UserTable from '../components/UserTable.jsx'
@@ -96,7 +95,6 @@ const MainRoutes = () => {
                 <Route path='kyc' element={<MyAccount defaultTab={5} />} />
                 <Route path='cart' element={<MyAccount defaultTab={-1} />} />
 
-                {/* Placeholder Routes for unfinished sections */}
                 <Route path='downline' element={<Construction title="My Downline" />} />
                 <Route path='downline/directs' element={<UserTable title="Direct Referrals" type="downline" endpoint="mlm/get-directs" />} />
                 <Route path='downline/left-team' element={<UserTable title="Left Team Members" type="downline" endpoint="mlm/get-team-list/left" />} />

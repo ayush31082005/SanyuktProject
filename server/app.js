@@ -37,8 +37,8 @@ app.use((req, res, next) => {
 
 // Health Check
 app.get("/api/health", (req, res) => {
-    res.json({ 
-        status: "alive", 
+    res.json({
+        status: "alive",
         timestamp: new Date().toISOString(),
         env: process.env.NODE_ENV || "development"
     });
@@ -54,6 +54,9 @@ app.use("/api/admin/users", require("./routes/adminUserRoutes"));
 app.use("/api/admin", require("./routes/adminStatsRoutes"));
 
 app.use("/api/franchises", require("./routes/franchiseRoutes"));
+app.use("/api/members", require("./routes/memberRoutes"))
+app.use("/api/franchise", require("./routes/franchiseDashboardRoutes"))
+
 
 app.use("/api/grievance", require("./routes/grievanceRoutes"));
 

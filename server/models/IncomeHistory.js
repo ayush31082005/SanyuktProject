@@ -10,9 +10,10 @@ const incomeHistorySchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    // ✅ FIX 2: 'Repurchase' type add kiya enum mein
     type: {
         type: String,
-        enum: ['Direct', 'Level', 'Matching', 'ProfitSharing', 'Generation'],
+        enum: ['Direct', 'Level', 'Matching', 'ProfitSharing', 'Generation', 'Repurchase'],
         required: true
     },
     fromUserId: {

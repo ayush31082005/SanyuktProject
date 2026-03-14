@@ -57,7 +57,7 @@ app.use("/api/franchises", require("./routes/franchiseRoutes"));
 app.use("/api/members", require("./routes/memberRoutes"))
 app.use("/api/franchise", require("./routes/franchiseDashboardRoutes"))
 
-
+app.use("/api/repurchase", require("./routes/repurchaseRoutes"))
 app.use("/api/grievance", require("./routes/grievanceRoutes"));
 
 app.use("/api/recharge", require("./routes/rechargeRoutes"));

@@ -196,7 +196,7 @@ const UserDashboardLayout = () => {
                             <div className="flex flex-col gap-1 mt-2">
                                 <p className="text-[11px] text-white/90 font-black tracking-widest uppercase">Member ID: {userData.memberId || 'SPRL0000'}</p>
                                 <div className="flex items-center justify-center gap-2 text-white/90">
-                                    <div className="w-2 h-2 bg-orange-400 rounded-full animate-pulse"></div>
+                                    <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
                                     <span className="text-[10px] font-bold uppercase tracking-wider">Live Support</span>
                                 </div>
                             </div>

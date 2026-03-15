@@ -60,7 +60,7 @@ const ModernWalletCard = ({ title, value, color, icon: Icon, progress, showCurre
             <div className="flex flex-col items-end">
                 <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest leading-none mb-1">Status</span>
                 <div className="flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                     <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Active</span>
                 </div>
             </div>

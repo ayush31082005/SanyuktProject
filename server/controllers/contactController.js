@@ -3,15 +3,14 @@ const Contact = require("../models/Contact");
 // ================= SEND MESSAGE =================
 exports.sendMessage = async (req, res) => {
     try {
-        const { firstName, lastName, email, phone, enquiryType, message } = req.body;
+        const { name, email, phone, enquiryType, message } = req.body;
 
-        if (!firstName || !message) {
-            return res.status(400).json({ message: "First name and message are required" });
+        if (!name || !message) {
+            return res.status(400).json({ message: "Name and message are required" });
         }
 
         const contact = new Contact({
-            firstName,
-            lastName,
+            name,
             email,
             phone,
             enquiryType,

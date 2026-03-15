@@ -252,7 +252,6 @@ const AdminDashboard = () => {
                     <h2 className="text-2xl font-bold text-gray-800">Dashboard Overview</h2>
                     <div className="flex items-center mt-1 text-sm text-gray-500 uppercase tracking-wider font-semibold">
                         <span className="relative flex h-2 w-2 mr-2">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                             <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
                         </span>
                         Network Live Updates
@@ -429,7 +428,6 @@ const AdminDashboard = () => {
                                 <h3 className="text-xl font-bold text-gray-800">Recent Activity</h3>
                                 <div className="flex items-center text-[10px] font-bold text-green-500 bg-green-50 px-2 py-1 rounded-full border border-green-100">
                                     <span className="relative flex h-1.5 w-1.5 mr-1.5">
-                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                                         <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500"></span>
                                     </span>
                                     LIVE

@@ -121,45 +121,98 @@ exports.getOrderStats = async (req, res) => {
 // @access Admin Protected
 exports.getRecentActivity = async (req, res) => {
     try {
-        const [recentOrders, recentUsers] = await Promise.all([
-            Order.find().sort({ createdAt: -1 }).limit(8)
+        const [recentOrders, recentUsers, recentTransactions, recentIncomes] = await Promise.all([
+            Order.find().sort({ createdAt: -1 }).limit(10)
                 .populate('user', 'name firstName lastName')
                 .populate('product', 'name'),
-            User.find().sort({ createdAt: -1 }).limit(5).select('name firstName lastName createdAt')
+            User.find().sort({ createdAt: -1 }).limit(10).select('name firstName lastName createdAt rank'),
+            Transaction.find({ status: 'success' }).sort({ createdAt: -1 }).limit(10)
+                .populate('userId', 'name firstName lastName'),
+            IncomeHistory.find().sort({ createdAt: -1 }).limit(10)
+                .populate('userId', 'name firstName lastName')
         ]);
 
-        const orderActivities = recentOrders.map((order, i) => {
+        const activities = [];
+
+        // 1. Process Orders
+        recentOrders.forEach(order => {
             const userName = order.shippingInfo?.fullName
                 || order.user?.name
                 || `${order.user?.firstName || ''} ${order.user?.lastName || ''}`.trim()
                 || 'Customer';
-            const productName = order.product?.name || 'a product';
-            const timeAgo = getTimeAgo(order.createdAt);
-            return {
-                id: `order-${i}`,
+            activities.push({
+                id: `order-${order._id}`,
                 user: userName,
-                action: 'placed an order',
-                product: productName,
-                time: timeAgo,
-                amount: order.total
-            };
+                type: 'order',
+                action: 'purchased',
+                product: order.product?.name || 'a product',
+                amount: order.total,
+                createdAt: order.createdAt
+            });
         });
 
-        const userActivities = recentUsers.map((user, i) => {
+        // 2. Process User Registrations & Rank
+        recentUsers.forEach(user => {
             const userName = user.name || `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'New User';
-            return {
-                id: `user-${i}`,
+            activities.push({
+                id: `user-${user._id}`,
                 user: userName,
-                action: 'registered as new user',
-                time: getTimeAgo(user.createdAt)
-            };
+                type: 'user',
+                action: 'joined the network',
+                createdAt: user.createdAt
+            });
+
+            if (user.rank && user.rank !== 'Member') {
+                activities.push({
+                    id: `rank-${user._id}`,
+                    user: userName,
+                    type: 'rank',
+                    action: `achieved ${user.rank} Rank`,
+                    createdAt: user.updatedAt || user.createdAt
+                });
+            }
         });
 
-        // Merge and sort by recency
-        const allActivities = [...orderActivities, ...userActivities]
-            .slice(0, 10);
+        // 3. Process Recharges (Transactions)
+        recentTransactions.forEach(tx => {
+            const userName = tx.userId?.name
+                || `${tx.userId?.firstName || ''} ${tx.userId?.lastName || ''}`.trim()
+                || 'User';
+            activities.push({
+                id: `tx-${tx._id}`,
+                user: userName,
+                type: 'recharge',
+                action: `recharged ${tx.operator} (${tx.type})`,
+                amount: tx.amount,
+                createdAt: tx.createdAt
+            });
+        });
 
-        res.json(allActivities);
+        // 4. Process Incomes/Bonuses
+        recentIncomes.forEach(income => {
+            const userName = income.userId?.name
+                || `${income.userId?.firstName || ''} ${income.userId?.lastName || ''}`.trim()
+                || 'User';
+            activities.push({
+                id: `income-${income._id}`,
+                user: userName,
+                type: 'income',
+                action: `earned ${income.type} Bonus`,
+                amount: income.amount,
+                createdAt: income.createdAt
+            });
+        });
+
+        // Sort all by createdAt desc and limit to top 15
+        const sortedActivities = activities
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+            .slice(0, 15)
+            .map(act => ({
+                ...act,
+                time: getTimeAgo(act.createdAt)
+            }));
+
+        res.json(sortedActivities);
     } catch (err) {
         console.error('getRecentActivity error:', err);
         res.status(500).json({ message: 'Server error' });

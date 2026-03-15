@@ -64,7 +64,7 @@ const CartPage = () => {
                                     <div className="w-full md:w-32 h-32 flex-shrink-0 bg-slate-50 rounded-xl overflow-hidden border border-slate-50 relative group-hover:scale-105 transition-transform duration-500">
                                         {item.image ? (
                                             <img
-                                                src={item.image.startsWith('http') ? item.image : `${API_URL}/uploads/${item.image}`}
+                                                src={item.image.startsWith('http') ? item.image : `${API_URL}${item.image.startsWith('/uploads') ? item.image : '/uploads/' + item.image}`}
                                                 alt={item.name}
                                                 className="w-full h-full object-cover"
                                                 onError={(e) => { e.target.src = 'https://via.placeholder.com/150'; }}

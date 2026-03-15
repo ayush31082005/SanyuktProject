@@ -132,6 +132,11 @@ exports.verifyOtp = async (req, res) => {
 
         await user.save();
 
+        // Send Welcome Email
+        const welcomeSubject = "Welcome to Sanyukt Parivaar";
+        const welcomeText = `Dear ${user.userName || 'Member'},\n\nCongratulations! Your account has been successfully verified.\n\nYour Member ID: ${user.memberId}\n\nYou can now log in to your dashboard and explore our services.\n\nThank you for joining Sanyukt Parivaar!`;
+        sendEmail(user.email, welcomeSubject, welcomeText).catch(err => console.error("Welcome Email Error:", err));
+
         res.json({ message: "Account Verified Successfully" });
     } catch (error) {
         console.error("verifyOtp error:", error);

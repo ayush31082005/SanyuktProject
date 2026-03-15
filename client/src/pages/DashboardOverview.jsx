@@ -4,7 +4,7 @@ import {
     Wallet, CreditCard, PieChart, ShoppingBag,
     TrendingUp, Users, UserCheck, Activity,
     Copy, Target, ChevronRight, Share2,
-    CheckCircle2, Clock, Package, Briefcase, Zap, 
+    CheckCircle2, Clock, Package, Briefcase, Zap,
     TrendingDown, ArrowUpRight, BarChart3, Gem, Award, Trophy
 } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -65,7 +65,7 @@ const ModernWalletCard = ({ title, value, color, icon: Icon, progress, showCurre
                 </div>
             </div>
         </div>
-        
+
         <div className="flex flex-col gap-1">
             <h3 className="text-[11px] font-black text-slate-500 uppercase tracking-widest">{title}</h3>
             <div className="flex items-baseline gap-1.5">
@@ -84,7 +84,7 @@ const ModernWalletCard = ({ title, value, color, icon: Icon, progress, showCurre
                 ></motion.div>
             </div>
         )}
-        
+
         <div className={`absolute top-0 right-0 w-24 h-24 opacity-5 rounded-full -mr-8 -mt-8`} style={{ backgroundColor: color }}></div>
     </motion.div>
 );
@@ -136,7 +136,7 @@ const BusinessMatrixCard = ({ title, lValue, rValue, icon: Icon }) => (
                 <span className="text-xl font-black text-slate-900 tracking-tight leading-none">{rValue !== undefined ? rValue : 0}</span>
             </div>
         </div>
-        
+
         <div className={`absolute bottom-0 left-0 h-1 w-full bg-[#0A7A2F] opacity-40`}></div>
     </motion.div>
 );
@@ -232,36 +232,36 @@ const DashboardOverview = () => {
                     <div className="lg:col-span-8 flex flex-col gap-6">
                         <SectionHeader title="Network Growth" subtitle="Team Performance & Directs" icon={Users} />
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                            <ModernWalletCard 
-                                title="Right Count" 
-                                value={Number(stats?.totalRight || 0).toString()} 
-                                icon={Users} 
-                                color="#0A7A2F" 
+                            <ModernWalletCard
+                                title="Right Count"
+                                value={Number(stats?.totalRight || 0).toString()}
+                                icon={Users}
+                                color="#0A7A2F"
                                 showCurrency={false}
                             />
-                            <ModernWalletCard 
-                                title="Active Directs" 
-                                value={Number(stats?.directCount || 0).toString()} 
-                                icon={UserCheck} 
-                                color="#F7931E" 
+                            <ModernWalletCard
+                                title="Active Directs"
+                                value={Number(stats?.directCount || 0).toString()}
+                                icon={UserCheck}
+                                color="#F7931E"
                                 showCurrency={false}
                             />
-                            <ModernWalletCard 
-                                title="Total Downline" 
-                                value={Number(stats?.totalDownline || 0).toString()} 
-                                icon={TrendingUp} 
-                                color="#0A7A2F" 
+                            <ModernWalletCard
+                                title="Total Downline"
+                                value={Number(stats?.totalDownline || 0).toString()}
+                                icon={TrendingUp}
+                                color="#0A7A2F"
                                 showCurrency={false}
                             />
-                            <ModernWalletCard 
-                                title="Left Count" 
-                                value={Number(stats?.totalLeft || 0).toString()} 
-                                icon={TrendingDown} 
-                                color="#64748b" 
+                            <ModernWalletCard
+                                title="Left Count"
+                                value={Number(stats?.totalLeft || 0).toString()}
+                                icon={TrendingDown}
+                                color="#64748b"
                                 showCurrency={false}
                             />
                         </div>
-                        
+
                         <div className="mt-4 p-6 bg-[#083d1c] rounded-[2rem] text-white flex items-center justify-between shadow-xl shadow-slate-200">
                             <div className="flex items-center gap-4">
                                 <div className="p-3 bg-white/10 rounded-2xl">
@@ -282,22 +282,22 @@ const DashboardOverview = () => {
                     <div className="lg:col-span-4 flex flex-col gap-6">
                         <SectionHeader title="PV Goals" subtitle="Daily & Lifetime Status" icon={Target} />
                         <div className="flex flex-col gap-6 h-full">
-                                <ModernWalletCard 
-                                    title="Today PV Points" 
-                                    value={`${Number(stats?.dailyPV?.current || 0)} / ${Number(stats?.dailyPV?.target || 320)}`} 
-                                    icon={Zap} 
-                                    color="#F7931E" 
-                                    showCurrency={false}
-                                    progress={(Number(stats?.dailyPV?.current || 0) / Number(stats?.dailyPV?.target || 320)) * 100}
-                                />
-                                <ModernWalletCard 
-                                    title="Total PV Points" 
-                                    value={`${Number(stats?.lifetimePV?.current || 0)} / ${Number(stats?.lifetimePV?.target || 10200)}`} 
-                                    icon={Trophy} 
-                                    color="#0A7A2F" 
-                                    showCurrency={false}
-                                    progress={(Number(stats?.lifetimePV?.current || 0) / Number(stats?.lifetimePV?.target || 10200)) * 100}
-                                />
+                            <ModernWalletCard
+                                title="Today PV Points"
+                                value={`${Number(stats?.dailyPV?.current || 0)} / ${Number(stats?.dailyPV?.target || 320)}`}
+                                icon={Zap}
+                                color="#F7931E"
+                                showCurrency={false}
+                                progress={(Number(stats?.dailyPV?.current || 0) / Number(stats?.dailyPV?.target || 320)) * 100}
+                            />
+                            <ModernWalletCard
+                                title="Total PV Points"
+                                value={`${Number(stats?.lifetimePV?.current || 0)} / ${Number(stats?.lifetimePV?.target || 10200)}`}
+                                icon={Trophy}
+                                color="#0A7A2F"
+                                showCurrency={false}
+                                progress={(Number(stats?.lifetimePV?.current || 0) / Number(stats?.lifetimePV?.target || 10200)) * 100}
+                            />
                         </div>
                     </div>
                 </div>
@@ -368,8 +368,8 @@ const DashboardOverview = () => {
                             {recentActivities.map((item, index) => {
                                 const Icon = item.icon;
                                 return (
-                                    <div 
-                                        key={item.id} 
+                                    <div
+                                        key={item.id}
                                         className={`flex items-center justify-between py-4 px-6 group cursor-pointer hover:bg-slate-50/80 transition-all ${index !== recentActivities.length - 1 ? 'border-b border-slate-50' : ''}`}
                                     >
                                         <div className="flex items-center gap-5">
@@ -385,7 +385,7 @@ const DashboardOverview = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         <div className="flex flex-col items-end gap-1">
                                             <div className="text-[11px] font-black text-slate-900 uppercase tracking-widest">
                                                 {item.time}

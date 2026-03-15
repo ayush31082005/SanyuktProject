@@ -19,13 +19,14 @@ const AdminProducts = () => {
         description: "",
         rating: "",
         numReviews: "",
+        isFeatured: false,
     });
 
     const categories = [
         "Mobile",
         "Electronics",
         "Fashion",
-        "Buty and cosmetic home based products",
+        "Beauty and cosmetic home based products",
         "Toys and baby toys",
         "Food & health",
         "Auto & accessories",
@@ -86,8 +87,8 @@ const AdminProducts = () => {
             stock: "",
             category: "",
             description: "",
-            rating: "",
             numReviews: "",
+            isFeatured: false,
         });
         setSelectedImage(null);
         setImagePreview(null);
@@ -152,6 +153,7 @@ const AdminProducts = () => {
             description: product.description || "",
             rating: product.rating || "",
             numReviews: product.numReviews || "",
+            isFeatured: product.isFeatured || false,
         });
 
         // ✅ प्रीव्यू के लिए पूरा URL
@@ -380,6 +382,26 @@ const AdminProducts = () => {
                                     ))}
                                 </select>
                             </div>
+
+                            {/* Featured Toggle */}
+                            <div className="space-y-2 flex items-center h-full pt-6">
+                                <label className="flex items-center gap-3 cursor-pointer group">
+                                    <div className="relative">
+                                        <input
+                                            type="checkbox"
+                                            name="isFeatured"
+                                            checked={formData.isFeatured}
+                                            onChange={(e) => setFormData({...formData, isFeatured: e.target.checked})}
+                                            className="sr-only"
+                                        />
+                                        <div className={`w-14 h-7 rounded-full transition-colors duration-300 border-2 ${formData.isFeatured ? 'bg-green-600 border-green-600' : 'bg-gray-100 border-gray-300'}`}></div>
+                                        <div className={`absolute top-1 left-1 bg-white w-5 h-5 rounded-full shadow-md transition-transform duration-300 ${formData.isFeatured ? 'translate-x-7' : 'translate-x-0'}`}></div>
+                                    </div>
+                                    <span className="text-sm font-semibold text-gray-700 uppercase tracking-wider group-hover:text-green-600 transition-colors">
+                                        Featured on Homepage ⭐
+                                    </span>
+                                </label>
+                            </div>
                         </div>
 
                         {/* Description */}
@@ -579,6 +601,14 @@ const AdminProducts = () => {
                                             </span>
                                         )}
                                     </div>
+
+                                    {product.isFeatured && (
+                                        <div className="mb-3">
+                                            <span className="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-md text-xs font-bold border border-yellow-200">
+                                                ⭐ FEATURED ON HOME
+                                            </span>
+                                        </div>
+                                    )}
 
                                     <div className="flex gap-3 mb-3">
                                         <span className="px-2 py-1 bg-green-100 text-green-700 rounded-md text-sm font-semibold">

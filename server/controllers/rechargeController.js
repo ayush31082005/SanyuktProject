@@ -1,11 +1,14 @@
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
 const Transaction = require('../models/Transaction');
+const sendEmail = require('../utils/sendEmail');
+const User = require('../models/User');
+const IncomeHistory = require('../models/IncomeHistory');
 
 // Initialize Razorpay
 const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID || 'rzp_test_YourTestKeyId',
-    key_secret: process.env.RAZORPAY_KEY_SECRET || 'YourTestKeySecret'
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET
 });
 
 // @desc    Create a new recharge order
@@ -15,39 +18,18 @@ exports.createOrder = async (req, res) => {
     try {
         const { amount, type, operator, rechargeNumber } = req.body;
 
-        if (!amount || !type || !operator || !rechargeNumber) {
-            return res.status(400).json({ message: "All fields are required" });
+        if (!amount || !type || !operator || !rechargeNumber || Number(amount) <= 0) {
+            return res.status(400).json({ message: "Invalid amount or missing fields" });
         }
 
-        // Check if we are using placeholder keys
-        const isMocking = process.env.RAZORPAY_KEY_ID === 'rzp_test_your_key_here' || !process.env.RAZORPAY_KEY_ID;
-        let order;
+        // Razorpay expects amount in paise (multiply by 100)
+        const options = {
+            amount: amount * 100,
+            currency: "INR",
+            receipt: `receipt_order_${Date.now()}`
+        };
 
-        if (isMocking) {
-            // Create a mock order
-            order = {
-                id: `order_mock_${Date.now()}`,
-                entity: "order",
-                amount: amount * 100,
-                amount_paid: 0,
-                amount_due: amount * 100,
-                currency: "INR",
-                receipt: `receipt_order_${Date.now()}`,
-                status: "created",
-                attempts: 0,
-                notes: [],
-                created_at: Math.floor(Date.now() / 1000)
-            };
-        } else {
-            // Razorpay expects amount in paise (multiply by 100)
-            const options = {
-                amount: amount * 100,
-                currency: "INR",
-                receipt: `receipt_order_${Date.now()}`
-            };
-
-            order = await razorpay.orders.create(options);
-        }
+        const order = await razorpay.orders.create(options);
 
         if (!order) {
             return res.status(500).json({ message: "Failed to create order" });
@@ -87,23 +69,14 @@ exports.verifyPayment = async (req, res) => {
             transactionId
         } = req.body;
 
-        const secret = process.env.RAZORPAY_KEY_SECRET || 'YourTestKeySecret';
-        const isMocking = process.env.RAZORPAY_KEY_ID === 'rzp_test_your_key_here' || !process.env.RAZORPAY_KEY_ID;
+        const secret = process.env.RAZORPAY_KEY_SECRET;
+        const body = razorpay_order_id + "|" + razorpay_payment_id;
+        const expectedSignature = crypto
+            .createHmac("sha256", secret)
+            .update(body.toString())
+            .digest("hex");
 
-        let isAuthentic = false;
-
-        if (isMocking) {
-            // Always authenticate mock payments
-            isAuthentic = true;
-        } else {
-            const body = razorpay_order_id + "|" + razorpay_payment_id;
-            const expectedSignature = crypto
-                .createHmac("sha256", secret)
-                .update(body.toString())
-                .digest("hex");
-
-            isAuthentic = expectedSignature === razorpay_signature;
-        }
+        const isAuthentic = expectedSignature === razorpay_signature;
 
         if (isAuthentic) {
             // Update transaction status to success
@@ -112,6 +85,20 @@ exports.verifyPayment = async (req, res) => {
                 razorpayPaymentId: razorpay_payment_id,
                 transactionId: `TXN${Date.now()}` // Generate a unique TXN ID for your system
             });
+
+            // Send Email notification
+            const transaction = await Transaction.findById(transactionId);
+            if (transaction) {
+                const user = await User.findById(transaction.userId);
+                if (user && user.email) {
+                    const subject = `Recharge Successful - Sanyukt Parivaar`;
+                    const text = `Dear ${user.userName || 'Member'},\n\nYour ${transaction.type} recharge of Rs.${transaction.amount} for ${transaction.rechargeNumber} was successful.\n\nTransaction Details:\nOperator: ${transaction.operator}\nTransaction ID: TXN${Date.now()}\nDate: ${new Date().toLocaleString()}\n\nThank you for choosing Sanyukt Parivaar!`;
+                    sendEmail(user.email, subject, text).catch(err => console.error("Email error:", err));
+                    
+                    // Credit 5% reward to user
+                    await creditRechargeReward(user._id, transaction.amount, transaction.type, transaction.rechargeNumber);
+                }
+            }
 
             res.status(200).json({
                 success: true,
@@ -130,6 +117,63 @@ exports.verifyPayment = async (req, res) => {
         }
     } catch (error) {
         console.error("Verify payment error:", error);
+        res.status(500).json({ message: "Server error", error: error.message, stack: error.stack });
+    }
+};
+
+// @desc    Recharge using internal wallet balance
+// @route   POST /api/recharge/wallet
+// @access  Protected
+exports.walletRecharge = async (req, res) => {
+    try {
+        const { amount, type, operator, rechargeNumber } = req.body;
+
+        if (!amount || !type || !operator || !rechargeNumber || Number(amount) <= 0) {
+            return res.status(400).json({ message: "Invalid amount or missing fields" });
+        }
+
+        const user = await User.findById(req.user._id);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        if (user.walletBalance < amount) {
+            return res.status(400).json({ message: "Insufficient wallet balance" });
+        }
+
+        // Deduct balance
+        user.walletBalance -= amount;
+        await user.save();
+
+        // Create transaction record
+        const transaction = await Transaction.create({
+            userId: req.user._id,
+            amount,
+            type,
+            operator,
+            rechargeNumber,
+            status: 'success',
+            paymentMethod: 'wallet',
+            transactionId: `TXN_WL_${Date.now()}`
+        });
+
+        // Send Email notification
+        if (user && user.email) {
+            const subject = `Recharge Successful - Sanyukt Parivaar`;
+            const text = `Dear ${user.userName || 'Member'},\n\nYour ${type} recharge of Rs.${amount} for ${rechargeNumber} was successful using your wallet balance.\n\nTransaction Details:\nOperator: ${operator}\nTransaction ID: TXN_WL_${Date.now()}\nDate: ${new Date().toLocaleString()}\n\nThank you for choosing Sanyukt Parivaar!`;
+            sendEmail(user.email, subject, text).catch(err => console.error("Email error:", err));
+        }
+
+        // Credit 5% reward to user
+        await creditRechargeReward(req.user._id, amount, type, rechargeNumber);
+
+        res.status(200).json({
+            success: true,
+            message: "Recharge successful using wallet balance",
+            transactionId: transaction._id
+        });
+    } catch (error) {
+        console.error("Wallet recharge error:", error);
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
@@ -145,5 +189,30 @@ exports.getUserTransactions = async (req, res) => {
     } catch (error) {
         console.error("Fetch transactions error:", error);
         res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+// Helper to credit 5% reward to user
+const creditRechargeReward = async (userId, amount, type, rechargeNumber) => {
+    try {
+        const rewardAmount = amount * 0.05; // 5% reward
+        if (rewardAmount <= 0) return;
+
+        const user = await User.findById(userId);
+        if (user) {
+            user.walletBalance = (user.walletBalance || 0) + rewardAmount;
+            await user.save();
+
+            await IncomeHistory.create({
+                userId: user._id,
+                amount: rewardAmount,
+                type: 'RechargeReward',
+                description: `5% reward for ${type} recharge of ₹${amount} for ${rechargeNumber}`
+            });
+            console.log(`Recharge reward of ₹${rewardAmount} credited to user ${userId}`);
+        }
+    } catch (error) {
+        console.error("Error crediting recharge reward:", error);
+        console.error(error.stack);
     }
 };

@@ -1,9 +1,5 @@
 @import "tailwindcss";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 /* Add these animations to your global CSS file */
 
 @keyframes fadeIn {
@@ -122,6 +118,15 @@
 }
 
 /* For animation delays on dynamically generated items */
+@keyframes highlight-glow {
+    0%, 100% { border-color: #0A7A2F; box-shadow: 0 0 10px rgba(10, 122, 47, 0.2); }
+    50% { border-color: #F7931E; box-shadow: 0 0 20px rgba(247, 147, 30, 0.4); }
+}
+
+.animate-highlight-glow {
+    animation: highlight-glow 3s ease-in-out infinite;
+}
+
 .animate-slide-up,
 .animate-fade-in,
 .animate-slide-in,

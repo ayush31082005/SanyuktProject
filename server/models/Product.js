@@ -18,7 +18,7 @@ const productSchema = new mongoose.Schema(
                 "Mobile",
                 "Electronics",
                 "Fashion",
-                "Buty and cosmetic home based products",
+                "Beauty and cosmetic home based products",
                 "Toys and baby toys",
                 "Food & health",
                 "Auto & accessories",
@@ -40,6 +40,10 @@ const productSchema = new mongoose.Schema(
         numReviews: {
             type: Number,
             default: 0,
+        },
+        isFeatured: {
+            type: Boolean,
+            default: false,
         },
     },
     { timestamps: true }

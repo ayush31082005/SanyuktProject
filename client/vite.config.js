@@ -8,6 +8,18 @@ export default defineConfig({
   plugins: [react(),
   tailwindcss()
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-mui': ['@mui/material', '@mui/icons-material'],
+          'vendor-charts': ['chart.js', 'react-chartjs-2'],
+          'vendor-utils': ['jspdf', 'html2pdf.js', 'framer-motion', 'lucide-react'],
+        }
+      }
+    },
+    chunkSizeWarningLimit: 1000,
+  }
 })
 
 

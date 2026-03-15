@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Search, ShoppingCart, Star, ChevronUp, Trash2, ShieldCheck, Truck, RotateCcw, Info, Tag, Package } from 'lucide-react';
 import api, { API_URL } from '../api';
 import { useCart } from '../context/CartContext';
@@ -20,6 +20,7 @@ import {
     useTheme
 } from '@mui/material';
 import { X as CloseIcon } from 'lucide-react';
+import ProductDetailsModal from '../components/ProductDetailsModal';
 
 const ProductsPage = () => {
     const navigate = useNavigate();
@@ -38,7 +39,7 @@ const ProductsPage = () => {
         "Fashion",
         "Mobile",
         "Electronics",
-        "Buty and cosmetic home based products",
+        "Beauty & Cosmetics",
         "Toys and baby toys",
         "Food & health",
         "Auto & accessories",
@@ -81,11 +82,32 @@ const ProductsPage = () => {
         fetchProducts();
     }, []);
 
-    // Filter products based on search and category
+    const location = useLocation();
+    useEffect(() => {
+        if (products.length > 0 && location.state?.productId) {
+            const product = products.find(p => p._id === location.state.productId);
+            if (product) {
+                setSelectedProduct(product);
+                setIsModalOpen(true);
+                // Clear state to prevent modal reappearing on back/refresh
+                window.history.replaceState({}, document.title);
+            }
+        }
+    }, [products, location.state]);
+
     const filteredProducts = products.filter(product => {
         const matchesSearch = product.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
             product.description?.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesCategory = selectedCategory === "All" || product.category === selectedCategory;
+        
+        let matchesCategory = selectedCategory === "All";
+        if (!matchesCategory) {
+            if (selectedCategory === "Beauty & Cosmetics") {
+                matchesCategory = product.category === "Beauty & Cosmetics" || product.category === "Beauty and cosmetic home based products";
+            } else {
+                matchesCategory = product.category === selectedCategory;
+            }
+        }
+        
         return matchesSearch && matchesCategory;
     });
 
@@ -183,7 +205,8 @@ const ProductsPage = () => {
     const getImageUrl = (imageName) => {
         if (!imageName) return null;
         if (imageName.startsWith('http')) return imageName;
-        return `${API_URL}/uploads/${imageName}`;
+        const path = imageName.startsWith('/uploads') ? imageName : `/uploads/${imageName}`;
+        return `${API_URL}${path}`;
     };
 
     return (
@@ -298,17 +321,17 @@ const ProductsPage = () => {
                                             </div>
                                         )}
 
-                                        {/* Offer Badge */}
+                                        {/* Offer Badge - Replaced Red with Orange/Yellow */}
                                         {discount && (
                                             <div className="absolute top-2 left-2 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-sm">
                                                 {discount}% OFF
                                             </div>
                                         )}
 
-                                        {/* Out of Stock Overlay */}
+                                        {/* Out of Stock Overlay - Replaced Red with Orange */}
                                         {product.stock === 0 && (
                                             <div className="absolute inset-0 bg-black/60 flex items-center justify-center backdrop-blur-sm">
-                                                <span className="bg-red-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
+                                                <span className="bg-orange-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
                                                     Out of Stock
                                                 </span>
                                             </div>
@@ -332,9 +355,14 @@ const ProductsPage = () => {
                                         )}
 
                                         {/* Product Name */}
-                                        <h3 className="font-bold text-[#111827] text-sm mb-2 line-clamp-2 h-10 hover:text-green-600 transition-all duration-300 leading-snug">
-                                            {product.name}
-                                        </h3>
+                                        <div className="flex flex-col gap-1.5 mb-2">
+                                            <h3 className="font-bold text-[#111827] text-sm hover:text-green-600 transition-all duration-300 leading-snug">
+                                                {product.name}
+                                            </h3>
+                                            <span className="w-fit text-[10px] font-black bg-green-50 text-[#0A7A2F] px-2 py-0.5 rounded-md uppercase tracking-wider border border-green-100">
+                                                {product.category === "Beauty and cosmetic home based products" ? "Beauty & Cosmetics" : product.category}
+                                            </span>
+                                        </div>
 
                                         {/* Price */}
                                         <div className="mb-2 flex items-baseline gap-2">
@@ -368,8 +396,8 @@ const ProductsPage = () => {
                                                     </span>
                                                 </div>
                                             ) : (
-                                                <span className="text-red-600 text-xs flex items-center gap-1">
-                                                    <span className="w-1.5 h-1.5 bg-red-600 rounded-full"></span>
+                                                <span className="text-orange-600 text-xs flex items-center gap-1">
+                                                    <span className="w-1.5 h-1.5 bg-orange-600 rounded-full"></span>
                                                     Out of Stock
                                                 </span>
                                             )}
@@ -425,287 +453,16 @@ const ProductsPage = () => {
                 )}
             </div>
 
-            {/* Professional Product Details Modal */}
-            <Dialog
-                open={isModalOpen}
+            {/* Product Details Modal */}
+            <ProductDetailsModal
+                isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
-                fullScreen={useMediaQuery(useTheme().breakpoints.down('md'))}
-                maxWidth="lg"
-                fullWidth
-                TransitionComponent={Fade}
-                PaperProps={{
-                    sx: {
-                        borderRadius: { xs: 0, md: '28px' },
-                        overflow: 'hidden',
-                        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
-                    }
-                }}
-            >
-                {selectedProduct && (
-                    <Box sx={{ position: 'relative', bgcolor: '#fff' }}>
-                        {/* Close Button */}
-                        <IconButton
-                            onClick={() => setIsModalOpen(false)}
-                            sx={{
-                                position: 'absolute',
-                                right: 16,
-                                top: 16,
-                                zIndex: 10,
-                                bgcolor: 'rgba(255,255,255,0.8)',
-                                backdropFilter: 'blur(4px)',
-                                '&:hover': { bgcolor: '#fff', color: '#ef4444' }
-                            }}
-                        >
-                            <CloseIcon size={20} />
-                        </IconButton>
-
-                        <DialogContent sx={{ p: 0, overflowY: 'auto', maxHeight: '90vh' }}>
-                            <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, minHeight: { md: '500px' } }}>
-
-                                {/* Left Column: Media & Visuals */}
-                                <Box sx={{
-                                    flex: 0.8, // Reduced flex to give right side more room
-                                    bgcolor: '#ffffff',
-                                    p: { xs: 2, md: 4 }, // Significantly reduced padding
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    position: 'relative',
-                                    borderRight: { md: '1px solid #f3f4f6' }
-                                }}>
-                                    <Box sx={{
-                                        position: 'relative',
-                                        width: '100%',
-                                        maxWidth: '400px',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        mb: 2
-                                    }}>
-                                        <img
-                                            src={getImageUrl(selectedProduct.image)}
-                                            alt={selectedProduct.name}
-                                            style={{
-                                                maxWidth: '100%',
-                                                maxHeight: '100%',
-                                                objectFit: 'contain',
-                                                filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.1))'
-                                            }}
-                                        />
-
-                                        {calculateDiscount(selectedProduct.price, selectedProduct.oldPrice) && (
-                                            <div className="absolute top-0 left-0 bg-gradient-to-br from-[#f7931e] to-orange-600 text-white px-4 py-2 rounded-2xl font-black text-sm shadow-xl shadow-orange-200 ring-4 ring-white">
-                                                {calculateDiscount(selectedProduct.price, selectedProduct.oldPrice)}% OFF
-                                            </div>
-                                        )}
-                                    </Box>
-
-                                    {/* Quick Trust Indicators */}
-                                    <Box sx={{ mt: 6, display: 'flex', gap: 4, opacity: 0.7 }}>
-                                        <Box sx={{ textAlign: 'center' }}>
-                                            <ShieldCheck className="w-6 h-6 mx-auto mb-1 text-green-600" />
-                                            <Typography variant="caption" fontWeight="700">100% Secure</Typography>
-                                        </Box>
-                                        <Box sx={{ textAlign: 'center' }}>
-                                            <Truck className="w-6 h-6 mx-auto mb-1 text-blue-600" />
-                                            <Typography variant="caption" fontWeight="700">Fast Delivery</Typography>
-                                        </Box>
-                                        <Box sx={{ textAlign: 'center' }}>
-                                            <RotateCcw className="w-6 h-6 mx-auto mb-1 text-orange-600" />
-                                            <Typography variant="caption" fontWeight="700">Easy Returns</Typography>
-                                        </Box>
-                                    </Box>
-                                </Box>
-
-                                {/* Right Column: Details & Actions */}
-                                <Box sx={{
-                                    flex: 1.2,
-                                    p: { xs: 4, md: 6 },
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    height: { md: '100%' },
-                                    overflowY: { md: 'visible' } // Let DialogContent handle the main scroll
-                                }}>
-                                    <Box sx={{ mb: 4 }}>
-                                        <Chip
-                                            label={selectedProduct.category || "General"}
-                                            size="small"
-                                            sx={{
-                                                bgcolor: '#f0fdf4',
-                                                color: '#166534',
-                                                fontWeight: 800,
-                                                fontSize: '10px',
-                                                textTransform: 'uppercase',
-                                                letterSpacing: '0.1em',
-                                                mb: 2,
-                                                border: '1px solid #dcfce7'
-                                            }}
-                                        />
-                                        <Typography variant="h4" sx={{ fontWeight: 900, color: '#111827', lineHeight: 1.2, mb: 1, letterSpacing: '-0.02em' }}>
-                                            {selectedProduct.name}
-                                        </Typography>
-
-                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                                            <div className="flex text-[#f7931e]">
-                                                {renderRatingStars(selectedProduct.rating || 5)}
-                                            </div>
-                                            <Typography variant="body2" sx={{ color: '#6b7280', fontWeight: 600 }}>
-                                                ({selectedProduct.numReviews || 150}+ Reviews)
-                                            </Typography>
-                                        </Box>
-                                    </Box>
-
-                                    <Box sx={{ mb: 4, p: 3, bgcolor: '#f8fafc', borderRadius: '20px', border: '1px solid #f1f5f9' }}>
-                                        <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 2, mb: 0.5 }}>
-                                            <Typography sx={{ fontSize: '2.5rem', fontWeight: 900, color: '#15803d', letterSpacing: '-0.04em' }}>
-                                                ₹{formatCurrency(selectedProduct.price)}
-                                            </Typography>
-                                            {selectedProduct.oldPrice && (
-                                                <Typography sx={{ textDecoration: 'line-through', color: '#94a3b8', fontSize: '1.25rem', fontWeight: 600 }}>
-                                                    ₹{formatCurrency(selectedProduct.oldPrice)}
-                                                </Typography>
-                                            )}
-                                        </Box>
-                                        {selectedProduct.oldPrice && (
-                                            <Typography variant="caption" sx={{ color: '#f7931e', fontWeight: 800 }}>
-                                                You save ₹{formatCurrency(selectedProduct.oldPrice - selectedProduct.price)} ({calculateDiscount(selectedProduct.price, selectedProduct.oldPrice)}%)
-                                            </Typography>
-                                        )}
-                                    </Box>
-
-                                    <Box sx={{ mb: 6 }}>
-                                        <Typography variant="subtitle2" sx={{ fontWeight: 800, color: '#111827', mb: 1.5, display: 'flex', alignItems: 'center', gap: 1 }}>
-                                            <Info className="w-4 h-4 text-green-600" /> Description
-                                        </Typography>
-                                        <Box>
-                                            <Typography
-                                                variant="body2"
-                                                sx={{
-                                                    color: '#4b5563',
-                                                    lineHeight: 1.8,
-                                                    fontSize: '15px',
-                                                    display: '-webkit-box',
-                                                    WebkitBoxOrient: 'vertical',
-                                                    WebkitLineClamp: isDescExpanded ? 'none' : 10,
-                                                    overflow: 'hidden',
-                                                    transition: 'all 0.3s ease'
-                                                }}
-                                            >
-                                                {selectedProduct.description || "Indulge in our premium quality product, crafted with the finest ingredients and rigorous quality checks to ensure your maximum satisfaction and wellness."}
-                                            </Typography>
-                                            {selectedProduct.description && selectedProduct.description.length > 500 && (
-                                                <Button
-                                                    size="small"
-                                                    onClick={() => setIsDescExpanded(!isDescExpanded)}
-                                                    sx={{
-                                                        mt: 1,
-                                                        textTransform: 'none',
-                                                        fontWeight: 800,
-                                                        color: '#f7931e',
-                                                        '&:hover': { bgcolor: 'transparent', textDecoration: 'underline' },
-                                                        p: 0,
-                                                        minWidth: 'auto'
-                                                    }}
-                                                >
-                                                    {isDescExpanded ? 'View Less' : 'View More'}
-                                                </Button>
-                                            )}
-                                        </Box>
-                                    </Box>
-
-                                    {/* Structured Specs Grid */}
-                                    <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 2, mb: 6 }}>
-                                        <Box sx={{ p: 2, bgcolor: '#fff', border: '1px solid #f3f4f6', borderRadius: '16px' }}>
-                                            <Typography variant="caption" sx={{ color: '#9ca3af', fontWeight: 700, display: 'block', mb: 0.5 }}>BUSINESS VOLUME</Typography>
-                                            <Typography variant="body2" sx={{ fontWeight: 800, color: '#111827', display: 'flex', alignItems: 'center', gap: 1 }}>
-                                                <Tag className="w-4 h-4 text-[#f7931e]" /> BV: {selectedProduct.bv || '00'}
-                                            </Typography>
-                                        </Box>
-                                        <Box sx={{ p: 2, bgcolor: '#fff', border: '1px solid #f3f4f6', borderRadius: '16px' }}>
-                                            <Typography variant="caption" sx={{ color: '#9ca3af', fontWeight: 700, display: 'block', mb: 0.5 }}>AVAILABILITY</Typography>
-                                            <Typography variant="body2" sx={{ fontWeight: 800, color: selectedProduct.stock > 0 ? '#16a34a' : '#dc2626', display: 'flex', alignItems: 'center', gap: 1 }}>
-                                                <Package className="w-4 h-4" /> {selectedProduct.stock > 0 ? 'In Stock' : 'Out of Stock'}
-                                            </Typography>
-                                        </Box>
-                                    </Box>
-
-                                    <Box sx={{ mt: 'auto', display: 'flex', gap: 2 }}>
-                                        {isInCart(selectedProduct._id) ? (
-                                            <Button
-                                                variant="outlined"
-                                                fullWidth
-                                                size="large"
-                                                startIcon={<Trash2 className="w-5 h-5" />}
-                                                onClick={() => handleRemoveFromCart(selectedProduct._id, selectedProduct.name)}
-                                                sx={{
-                                                    borderRadius: '16px',
-                                                    py: 2,
-                                                    borderColor: '#f7931e',
-                                                    color: '#f7931e',
-                                                    fontWeight: 900,
-                                                    fontSize: '15px',
-                                                    '&:hover': { borderColor: '#e67e00', bgcolor: '#fffaf0', transform: 'translateY(-2px)' },
-                                                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
-                                                }}
-                                            >
-                                                Remove Item
-                                            </Button>
-                                        ) : (
-                                            <Button
-                                                variant="outlined"
-                                                fullWidth
-                                                size="large"
-                                                startIcon={<ShoppingCart className="w-5 h-5" />}
-                                                onClick={() => {
-                                                    handleAddToCart(selectedProduct);
-                                                    if (!isInCart(selectedProduct._id)) setIsModalOpen(false);
-                                                }}
-                                                disabled={selectedProduct.stock === 0}
-                                                sx={{
-                                                    borderRadius: '16px',
-                                                    py: 2,
-                                                    borderColor: '#059669',
-                                                    color: '#059669',
-                                                    fontWeight: 900,
-                                                    fontSize: '15px',
-                                                    '&:hover': { borderColor: '#047857', bgcolor: '#f0fdf4', transform: 'translateY(-2px)' },
-                                                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
-                                                }}
-                                            >
-                                                Add to Cart
-                                            </Button>
-                                        )}
-                                        <Button
-                                            variant="contained"
-                                            fullWidth
-                                            size="large"
-                                            onClick={() => {
-                                                buyNow(selectedProduct);
-                                                setIsModalOpen(false);
-                                            }}
-                                            disabled={selectedProduct.stock === 0}
-                                            sx={{
-                                                borderRadius: '16px',
-                                                py: 2,
-                                                bgcolor: '#059669',
-                                                color: '#fff',
-                                                fontWeight: 900,
-                                                fontSize: '15px',
-                                                boxShadow: '0 10px 15px -3px rgba(5, 150, 105, 0.3)',
-                                                '&:hover': { bgcolor: '#047857', transform: 'translateY(-2px)' },
-                                                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
-                                            }}
-                                        >
-                                            Buy Now
-                                        </Button>
-                                    </Box>
-                                </Box>
-                            </Box>
-                        </DialogContent>
-                    </Box>
-                )}
-            </Dialog>
+                product={selectedProduct}
+                onAddToCart={handleAddToCart}
+                onRemoveFromCart={(id, name) => handleRemoveFromCart(id, name)}
+                onBuyNow={buyNow}
+                isInCart={selectedProduct ? isInCart(selectedProduct._id) : false}
+            />
 
             {/* Global Notifications Snackbar */}
             <Snackbar

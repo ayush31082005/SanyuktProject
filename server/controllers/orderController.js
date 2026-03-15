@@ -2,8 +2,15 @@ const Order = require("../models/Order");
 const Product = require("../models/Product");
 const Repurchase = require("../models/Repurchase");
 const { processOrderMLM } = require("../utils/mlmOrderUtils");
+const Razorpay = require("razorpay");
+const crypto = require("crypto");
 // ✅ Import repurchase income processor
 const { processRepurchaseGenerationIncome } = require("./repurchaseController");
+
+const razorpay = new Razorpay({
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET
+});
 
 // ================= CREATE ORDER =================
 exports.createOrder = async (req, res) => {
@@ -17,8 +24,24 @@ exports.createOrder = async (req, res) => {
             shipping,
             tax,
             discount,
-            total
+            total,
+            razorpay_order_id,
+            razorpay_payment_id,
+            razorpay_signature
         } = req.body;
+
+        // Verify payment if online
+        if (paymentMethod !== 'cod') {
+            const body = razorpay_order_id + "|" + razorpay_payment_id;
+            const expectedSignature = crypto
+                .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+                .update(body.toString())
+                .digest("hex");
+
+            if (expectedSignature !== razorpay_signature) {
+                return res.status(400).json({ message: "Invalid payment signature" });
+            }
+        }
 
         // Fetch product to get BV
         const productData = await Product.findById(productId);
@@ -42,9 +65,12 @@ exports.createOrder = async (req, res) => {
             total,
             bv: orderBv,
             pv: orderPv,
+            razorpayOrderId: razorpay_order_id,
+            razorpayPaymentId: razorpay_payment_id,
+            status: paymentMethod === 'cod' ? 'pending' : 'paid',
             tracking: [{
-                status: 'pending',
-                message: 'Order placed successfully',
+                status: paymentMethod === 'cod' ? 'pending' : 'paid',
+                message: paymentMethod === 'cod' ? 'Order placed successfully' : 'Payment successful and order placed',
                 timestamp: new Date()
             }]
         });
@@ -73,6 +99,28 @@ exports.createOrder = async (req, res) => {
     } catch (error) {
         console.error("Order creation error:", error);
         res.status(500).json({ message: "Failed to place order" });
+    }
+};
+
+// ================= CREATE RAZORPAY ORDER =================
+exports.createRazorpayOrder = async (req, res) => {
+    try {
+        const { amount } = req.body;
+        if (!amount || amount <= 0) {
+            return res.status(400).json({ message: "Invalid amount" });
+        }
+
+        const options = {
+            amount: Math.round(amount * 100), // convert to paise
+            currency: "INR",
+            receipt: `receipt_product_${Date.now()}`
+        };
+
+        const razorpayOrder = await razorpay.orders.create(options);
+        res.status(200).json(razorpayOrder);
+    } catch (error) {
+        console.error("Razorpay order creation error:", error);
+        res.status(500).json({ message: "Failed to create payment order" });
     }
 };
 

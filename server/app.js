@@ -1,4 +1,5 @@
-require("dotenv").config();
+const path = require('path');
+require("dotenv").config({ path: path.join(__dirname, '.env') });
 
 const express = require("express");
 const cors = require("cors");
@@ -54,14 +55,16 @@ app.use("/api/admin/users", require("./routes/adminUserRoutes"));
 app.use("/api/admin", require("./routes/adminStatsRoutes"));
 
 app.use("/api/franchises", require("./routes/franchiseRoutes"));
-app.use("/api/members", require("./routes/memberRoutes"))
-app.use("/api/franchise", require("./routes/franchiseDashboardRoutes"))
+app.use("/api/members", require("./routes/memberRoutes"));
+app.use("/api/franchise", require("./routes/franchiseDashboardRoutes"));
 
 app.use("/api/repurchase", require("./routes/repurchaseRoutes"))
 app.use("/api/grievance", require("./routes/grievanceRoutes"));
 
 app.use("/api/recharge", require("./routes/rechargeRoutes"));
+app.use("/api/news", require("./routes/newsRoutes"));
 app.use("/api/orders", require("./routes/orderRoutes"));
+app.use("/api/gallery", require("./routes/galleryRoutes"));
 
 
 
@@ -70,8 +73,21 @@ app.use((req, res, next) => {
     console.log(`[${new Date().toISOString()}] 404 - Not Found: ${req.method} ${req.url}`);
     next();
 });
+// Final 404 handler
 app.use((req, res) => {
     res.status(404).json({ message: "Route not found" });
+});
+
+// Global Error Handler
+app.use((err, req, res, next) => {
+    console.error("--- GLOBAL ERROR ---");
+    console.error(err);
+    console.error("--------------------");
+    res.status(500).json({
+        success: false,
+        message: err.message || "Internal Server Error",
+        stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
+    });
 });
 
 module.exports = app;

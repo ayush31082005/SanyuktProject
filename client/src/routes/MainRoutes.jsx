@@ -16,6 +16,7 @@ import DashboardOverview from '../pages/DashboardOverview.jsx'
 import Construction from '../pages/Construction.jsx'
 import BinaryTreeView from '../pages/BinaryTreeView.jsx'
 import UserTable from '../components/UserTable.jsx'
+import Gallery from '../pages/Gallery.jsx'
 
 import Opportunities from '../pages/Opportunities.jsx'
 import CompensationPlan from '../pages/CompensationPlan.jsx'
@@ -69,6 +70,7 @@ import AdminOrders from '../pages/admin/Orders.jsx'
 import MLMManagement from '../pages/admin/MLMManagement.jsx'
 import AdminGallery from '../pages/admin/Gallery.jsx'
 import AdminEvents from '../pages/admin/Events.jsx'
+import AdminNews from '../pages/admin/AdminNews.jsx'
 
 const MainRoutes = () => {
     return (
@@ -173,6 +175,7 @@ const MainRoutes = () => {
                 <Route path="mlm" element={<MLMManagement />} />
                 <Route path="gallery" element={<AdminGallery />} />
                 <Route path="seminar" element={<AdminEvents />} />
+                <Route path="news" element={<AdminNews />} />
 
 
             </Route>

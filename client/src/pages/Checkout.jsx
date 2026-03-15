@@ -69,6 +69,16 @@ const CheckoutPage = () => {
         }
     };
 
+    const loadRazorpayScript = () => {
+        return new Promise((resolve) => {
+            const script = document.createElement('script');
+            script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+            script.onload = () => resolve(true);
+            script.onerror = () => resolve(false);
+            document.body.appendChild(script);
+        });
+    };
+
     const handlePlaceOrder = async () => {
         // Validate form
         if (!shippingInfo.fullName || !shippingInfo.email || !shippingInfo.phone ||
@@ -77,8 +87,67 @@ const CheckoutPage = () => {
             return;
         }
 
-        setLoading(true);
+        if (paymentMethod === 'cod') {
+            await createOrder();
+        } else {
+            await handleRazorpayPayment();
+        }
+    };
 
+    const handleRazorpayPayment = async () => {
+        setLoading(true);
+        try {
+            const isLoaded = await loadRazorpayScript();
+            if (!isLoaded) {
+                setSnackbar({ open: true, message: 'Razorpay SDK failed to load. Are you online?', severity: 'error' });
+                setLoading(false);
+                return;
+            }
+
+            // 1. Create order on server
+            const { data: rpOrder } = await api.post('/orders/razorpay-order', { amount: total });
+
+            const options = {
+                key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_SROihejcCAh8Vm', // Fallback to provided key if env not set
+                amount: rpOrder.amount,
+                currency: rpOrder.currency,
+                name: "Sanyukt Parivaar",
+                description: `Order for ${product.name}`,
+                image: `${API_URL}/logo.png`,
+                order_id: rpOrder.id,
+                handler: async (response) => {
+                    // 2. Verification and Order Finalization
+                    await createOrder({
+                        razorpay_order_id: response.razorpay_order_id,
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        razorpay_signature: response.razorpay_signature
+                    });
+                },
+                prefill: {
+                    name: shippingInfo.fullName,
+                    email: shippingInfo.email,
+                    contact: shippingInfo.phone,
+                },
+                theme: {
+                    color: "#0A7A2F",
+                },
+            };
+
+            const rzp = new window.Razorpay(options);
+            rzp.on('payment.failed', function (response) {
+                setSnackbar({ open: true, message: 'Payment Failed: ' + response.error.description, severity: 'error' });
+                setLoading(false);
+            });
+            rzp.open();
+        } catch (error) {
+            console.error('Razorpay payment error:', error);
+            setSnackbar({ open: true, message: 'Error initiating payment. Please try again.', severity: 'error' });
+            setLoading(false);
+        }
+    };
+
+    const createOrder = async (paymentDetails = {}) => {
+        setLoading(true);
         try {
             const orderData = {
                 product: product._id,
@@ -91,7 +160,7 @@ const CheckoutPage = () => {
                 discount,
                 total,
                 orderDate: new Date(),
-                status: 'pending'
+                ...paymentDetails
             };
 
             // API call to place order
@@ -102,24 +171,12 @@ const CheckoutPage = () => {
             setCurrentStep(3);
         } catch (error) {
             console.error('Error placing order:', error?.response || error);
-
-            const status = error?.response?.status;
             const message = error?.response?.data?.message;
-
-            if (status === 401) {
-                setSnackbar({
-                    open: true,
-                    message: 'Session expired. Please login again to place order.',
-                    severity: 'error'
-                });
-                setTimeout(() => navigate('/login'), 1500);
-            } else {
-                setSnackbar({
-                    open: true,
-                    message: message || 'Error placing order. Please try again.',
-                    severity: 'error'
-                });
-            }
+            setSnackbar({
+                open: true,
+                message: message || 'Error placing order. Please try again.',
+                severity: 'error'
+            });
         } finally {
             setLoading(false);
         }
@@ -405,7 +462,7 @@ const CheckoutPage = () => {
                                 <div className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden">
                                     {product.image ? (
                                         <img
-                                            src={`${API_URL}/uploads/${product.image}`}
+                                            src={product.image.startsWith('http') ? product.image : `${API_URL}${product.image.startsWith('/uploads') ? product.image : '/uploads/' + product.image}`}
                                             alt={product.name}
                                             className="w-full h-full object-cover"
                                         />

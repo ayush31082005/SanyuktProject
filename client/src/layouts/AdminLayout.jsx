@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import {
     Home, Users, Package, BarChart3, LogOut,
-    Menu, X, Search, Bell, ChevronDown, Shield
+    Menu, X, Search, Bell, ChevronDown, Shield, Newspaper
 } from 'lucide-react';
 
 const AdminLayout = () => {
@@ -19,6 +19,7 @@ const AdminLayout = () => {
         { path: '/admin/orders', label: 'Orders', icon: Package },
         { path: '/admin/gallery', label: 'Gallery', icon: Package },
         { path: '/admin/seminar', label: 'Seminar', icon: Package },
+        { path: '/admin/news', label: 'News Management', icon: Newspaper },
         { path: '/admin/mlm', label: 'MLM Management', icon: Shield }
     ];
 

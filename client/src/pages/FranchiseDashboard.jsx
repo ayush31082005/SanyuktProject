@@ -129,7 +129,7 @@ const FranchiseDashboard = ({ user, onLogout }) => {
                 const franchiseId = getStoredFranchiseIdentifier();
 
                 if (franchiseId) {
-                    const response = await api.get(`/franchise/dashboard/${franchiseId}`);
+                    const response = await api.get(`franchise/dashboard/${franchiseId}`);
                     if (response.data) {
                         setProfileData(response.data);
                         setDashboardId(response.data._id);
@@ -250,7 +250,7 @@ const FranchiseDashboard = ({ user, onLogout }) => {
                 formData.append('gstCertificate', gstFile);
             }
 
-            const response = await api.post('/franchise/create-dashboard', formData, {
+            const response = await api.post('franchise/create-dashboard', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -352,7 +352,7 @@ const FranchiseDashboard = ({ user, onLogout }) => {
     useEffect(() => {
         const fetchMembers = async () => {
             try {
-                const response = await api.get("/members");
+                const response = await api.get("members");
                 if (response.data?.success && Array.isArray(response.data.data)) {
                     setMembers(
                         response.data.data.map((m) => ({
@@ -416,7 +416,7 @@ const FranchiseDashboard = ({ user, onLogout }) => {
                 status: newMember.status,
             };
 
-            const response = await api.post("/members/add", payload);
+            const response = await api.post("members/add", payload);
 
             if (response.data?.success && response.data.data) {
                 const m = response.data.data;
@@ -471,7 +471,7 @@ const FranchiseDashboard = ({ user, onLogout }) => {
                 status: selectedMember.status,
             };
 
-            const response = await api.put(`/members/${memberDoc._id}`, payload);
+            const response = await api.put(`members/${memberDoc._id}`, payload);
 
             if (response.data?.success && response.data.data) {
                 const updated = response.data.data;
@@ -513,7 +513,7 @@ const FranchiseDashboard = ({ user, onLogout }) => {
                 return;
             }
 
-            const response = await api.delete(`/members/${memberDoc._id}`);
+            const response = await api.delete(`members/${memberDoc._id}`);
             if (response.data?.success) {
                 setMembers(members.filter((m) => m._id !== memberDoc._id));
                 setShowDeleteConfirm(false);

@@ -96,7 +96,7 @@ function Gallery() {
                             >
                                 <div className="relative w-full h-64 overflow-hidden">
                                     <img
-                                        src={`${API_URL}/uploads/gallery/${item.image}`}
+                                        src={item.image.startsWith('http') ? item.image : `${API_URL}${item.image.startsWith('/uploads') ? item.image : '/uploads/' + item.image}`}
                                         alt={`Gallery item ${index + 1}`}
                                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                         loading="lazy"
@@ -154,7 +154,7 @@ function Gallery() {
                     >
                         <div className="relative max-w-6xl w-full max-h-[90vh] animate-scale-in">
                             <img
-                                src={`${API_URL}/uploads/gallery/${selectedImage.image}`}
+                                src={selectedImage.image.startsWith('http') ? selectedImage.image : `${API_URL}${selectedImage.image.startsWith('/uploads') ? selectedImage.image : '/uploads/' + selectedImage.image}`}
                                 alt="Selected gallery item"
                                 className="w-full h-full object-contain rounded-lg"
                             />

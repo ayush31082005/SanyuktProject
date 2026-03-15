@@ -508,4 +508,3 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
-Dashboard;

@@ -5,10 +5,21 @@ import {
     Home, UserPlus, Users, ShoppingCart,
     Gift, Package, Wallet, Folder,
     UserCheck, MessageSquare, LogOut, Menu, X, ChevronDown, Bell, Search, Shield,
-    ShoppingBag, Globe
+    ShoppingBag, Globe, Trophy
 } from 'lucide-react';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+
+// ── Rank color helper ─────────────────────────────────────────────────────────
+const getRankColor = (rank) => {
+    const colors = {
+        "Member": "#94a3b8", "Bronze": "#cd7f32", "Silver": "#64748b",
+        "Gold": "#d97706", "Platinum": "#3b82f6", "Star": "#8b5cf6",
+        "Ruby": "#ef4444", "Sapphire": "#06b6d4", "Star Sapphire": "#0ea5e9",
+        "Emerald": "#10b981", "Diamond": "#0A7A2F", "MD": "#FFD700",
+    };
+    return colors[rank] || "#94a3b8";
+};
 
 const UserDashboardLayout = () => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -40,7 +51,6 @@ const UserDashboardLayout = () => {
             setSidebarOpen(false);
         }
 
-        // Global listener for cross-component toggle
         const handleExternalToggle = () => setSidebarOpen(prev => !prev);
         window.addEventListener('toggle-dashboard-sidebar', handleExternalToggle);
         return () => window.removeEventListener('toggle-dashboard-sidebar', handleExternalToggle);
@@ -84,9 +94,10 @@ const UserDashboardLayout = () => {
         {
             name: 'First Purchase Bonus',
             icon: Gift,
-            path: '/my-account/bonus/first',
+            path: '/my-account/bonus',
             id: 'first_bonus',
             children: [
+                { name: 'Active Package', path: '/my-account/bonus/first', id: 'first_active' },
                 { name: 'Silver Matching', path: '/my-account/bonus/first/silver', id: 'first_silver' },
                 { name: 'Gold Matching', path: '/my-account/bonus/first/gold', id: 'first_gold' },
                 { name: 'Diamond Matching', path: '/my-account/bonus/first/diamond', id: 'first_diamond' },
@@ -97,18 +108,6 @@ const UserDashboardLayout = () => {
             icon: Package,
             path: '/my-account/bonus/repurchase/self',
             id: 'repurchase_bonus',
-            // children: [
-            //     { name: 'Self Repurchase Income', path: '/my-account/bonus/repurchase/self', id: 'repurchase_self' },
-            // { name: 'Repurchase Level Income', path: '/my-account/bonus/repurchase/level', id: 'repurchase_level' },
-            // { name: 'Sponsor Income', path: '/my-account/bonus/repurchase/sponsor', id: 'repurchase_sponsor' },
-            // { name: 'Royalty Bonus', path: '/my-account/bonus/repurchase/royalty', id: 'repurchase_royalty' },
-            // { name: 'Director Bonus', path: '/my-account/bonus/repurchase/director', id: 'repurchase_director' },
-            // { name: 'House Fund', path: '/my-account/bonus/repurchase/house', id: 'repurchase_house' },
-            // { name: 'Leadership Fund', path: '/my-account/bonus/repurchase/leadership', id: 'repurchase_leadership' },
-            // { name: 'Car Fund', path: '/my-account/bonus/repurchase/car', id: 'repurchase_car' },
-            // { name: 'Travel Fund', path: '/my-account/bonus/repurchase/travel', id: 'repurchase_travel' },
-            // { name: 'Bike Fund', path: '/my-account/bonus/repurchase/bike', id: 'repurchase_bike' },
-            // ],
         },
         { name: 'Our Products', icon: ShoppingBag, path: '/products', id: 'shop' },
         {
@@ -116,15 +115,24 @@ const UserDashboardLayout = () => {
             icon: Wallet,
             path: '/my-account/wallet',
             id: 'wallet',
-            badge: stats?.walletBalance ? `₹${stats.walletBalance}` : null,
+            badge: stats?.walletBalance ? `₹${Number(stats.walletBalance).toFixed(2)}` : null,
             children: [
                 { name: 'Deduction Report', path: '/my-account/wallet/deduction-report', id: 'wallet_deduction' },
                 { name: 'Withdrawal History', path: '/my-account/wallet/withdrawal-history', id: 'wallet_withdrawal' },
                 { name: 'All Transaction Report', path: '/my-account/wallet/all-transactions', id: 'wallet_all_txn' },
                 { name: 'Daily Closing Report', path: '/my-account/wallet/daily-closing', id: 'wallet_daily' },
+                { name: 'Wallet TopUP', path: '/my-account/wallet/topup', id: 'wallet_topup' },
+                { name: 'Wallet Request', path: '/my-account/wallet/withdrawal-request', id: 'wallet_request' },
             ],
         },
-
+        // ✅ MY RANK — naya menu item
+        {
+            name: 'My Rank',
+            icon: Trophy,
+            path: '/my-account/rank',
+            id: 'my_rank',
+            rankBadge: stats?.rank || 'Member',
+        },
         {
             name: 'My Folder',
             icon: Folder,
@@ -194,8 +202,29 @@ const UserDashboardLayout = () => {
                             </div>
                             <h3 className="font-black text-lg leading-tight uppercase tracking-wide text-white">{userData.userName}</h3>
                             <div className="flex flex-col gap-1 mt-2">
-                                <p className="text-[11px] text-white/90 font-black tracking-widest uppercase">Member ID: {userData.memberId || 'SPRL0000'}</p>
-                                <div className="flex items-center justify-center gap-2 text-white/90">
+                                <p className="text-[11px] text-white/90 font-black tracking-widest uppercase">
+                                    Member ID: {userData.memberId || 'SPRL0000'}
+                                </p>
+
+                                {/* ✅ RANK BADGE — click karo rank page pe jao */}
+                                <button
+                                    onClick={() => navigate('/my-account/rank')}
+                                    className="flex items-center justify-center gap-1.5 mx-auto mt-1 px-3 py-1 rounded-full transition-all active:scale-95 hover:opacity-90"
+                                    style={{
+                                        backgroundColor: getRankColor(stats?.rank || 'Member') + '25',
+                                        border: `1px solid ${getRankColor(stats?.rank || 'Member')}50`,
+                                    }}
+                                >
+                                    <Trophy size={11} style={{ color: getRankColor(stats?.rank || 'Member') }} />
+                                    <span
+                                        className="text-[10px] font-black uppercase tracking-wider"
+                                        style={{ color: getRankColor(stats?.rank || 'Member') }}
+                                    >
+                                        {stats?.rank || 'Member'}
+                                    </span>
+                                </button>
+
+                                <div className="flex items-center justify-center gap-2 text-white/90 mt-1">
                                     <div className="w-2 h-2 bg-orange-400 rounded-full animate-pulse"></div>
                                     <span className="text-[10px] font-bold uppercase tracking-wider">Live Support</span>
                                 </div>
@@ -238,6 +267,19 @@ const UserDashboardLayout = () => {
                                             <div className="flex items-center justify-between flex-1 overflow-hidden">
                                                 <span className="font-bold text-[13px] whitespace-nowrap">{item.name}</span>
                                                 <div className="flex items-center gap-2">
+                                                    {/* ✅ Rank badge in menu item */}
+                                                    {item.rankBadge && (
+                                                        <span
+                                                            className="text-[9px] px-2 py-0.5 rounded-full font-black"
+                                                            style={{
+                                                                backgroundColor: getRankColor(item.rankBadge) + '30',
+                                                                color: active ? getRankColor(item.rankBadge) : '#fff',
+                                                                border: `1px solid ${getRankColor(item.rankBadge)}60`,
+                                                            }}
+                                                        >
+                                                            {item.rankBadge}
+                                                        </span>
+                                                    )}
                                                     {item.badge && (
                                                         <span className={`text-[9px] px-1.5 py-0.5 rounded font-black
                                                             ${active ? 'bg-orange-600 text-white' : 'bg-white/20 text-white'}`}>
@@ -258,6 +300,7 @@ const UserDashboardLayout = () => {
                                             <div className="absolute left-full ml-4 px-3 py-2 bg-slate-900 text-white text-[11px] font-bold rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-[100] shadow-xl border border-white/10 pointer-events-none">
                                                 {item.name}
                                                 {item.badge && <span className="ml-2 bg-orange-500 px-1 rounded text-[9px]">{item.badge}</span>}
+                                                {item.rankBadge && <span className="ml-2 bg-white/20 px-1 rounded text-[9px]">{item.rankBadge}</span>}
                                             </div>
                                         )}
                                     </button>
@@ -313,7 +356,6 @@ const UserDashboardLayout = () => {
                     ${sidebarOpen ? 'md:ml-72' : 'md:ml-20'}`}
             >
                 <div className="flex-1 px-4 md:px-8 pb-8 pt-0 animate-fadeIn relative">
-                    {/* Mobile Menu Action Bar - Only visible when sidebar is closed on mobile */}
                     {!sidebarOpen && isMobile && (
                         <div className="py-5 mb-4 flex items-center space-x-4 text-[#0A7A2F] md:hidden">
                             <button
@@ -332,7 +374,6 @@ const UserDashboardLayout = () => {
                 </div>
             </main>
 
-            {/* Global Overlay for mobile when sidebar is open */}
             {isMobile && sidebarOpen && (
                 <div
                     className="fixed inset-0 bg-[#0A7A2F]/20 backdrop-blur-sm z-40"
@@ -342,13 +383,8 @@ const UserDashboardLayout = () => {
 
             <style>{`
                 .no-scrollbar::-webkit-scrollbar { display: none; }
-                .animate-fadeIn {
-                    animation: fadeIn 0.3s ease-out;
-                }
-                @keyframes fadeIn {
-                    from { opacity: 0; }
-                    to { opacity: 1; }
-                }
+                .animate-fadeIn { animation: fadeIn 0.3s ease-out; }
+                @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
             `}</style>
         </div>
     );

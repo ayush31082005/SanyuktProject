@@ -362,15 +362,30 @@ const DashboardOverview = () => {
                     <SectionHeader title="Recent Activity" subtitle="Network Live Updates" icon={Activity} />
                     <motion.div
                         variants={cardVariants}
-                        className="bg-white rounded-[2rem] p-6 shadow-[0_20px_60px_rgb(0,0,0,0.03)] border border-slate-50 overflow-hidden"
+                        className="bg-white rounded-[2rem] p-4 shadow-[0_20px_60px_rgb(0,0,0,0.03)] border border-slate-100 overflow-hidden relative h-[380px]"
                     >
-                        <div className="flex flex-col">
-                            {recentActivities.map((item, index) => {
+                        {/* Gradient Masks for seamless feel */}
+                        <div className="absolute top-0 left-0 w-full h-12 bg-gradient-to-b from-white to-transparent z-10"></div>
+                        <div className="absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-white to-transparent z-10"></div>
+
+                        <motion.div
+                            animate={{
+                                y: [0, -400], // Adjust based on total height of one set
+                            }}
+                            transition={{
+                                duration: 20,
+                                repeat: Infinity,
+                                ease: "linear",
+                            }}
+                            className="flex flex-col"
+                        >
+                            {/* Duplicate items for seamless loop */}
+                            {[...recentActivities, ...recentActivities].map((item, index) => {
                                 const Icon = item.icon;
                                 return (
                                     <div
-                                        key={item.id}
-                                        className={`flex items-center justify-between py-4 px-6 group cursor-pointer hover:bg-slate-50/80 transition-all ${index !== recentActivities.length - 1 ? 'border-b border-slate-50' : ''}`}
+                                        key={`${item.id}-${index}`}
+                                        className={`flex items-center justify-between py-5 px-6 group cursor-pointer hover:bg-slate-50/80 transition-all border-b border-slate-50`}
                                     >
                                         <div className="flex items-center gap-5">
                                             <div className={`shrink-0 w-11 h-11 rounded-2xl flex items-center justify-center ${item.color} shadow-sm group-hover:scale-105 transition-transform`}>
@@ -397,7 +412,7 @@ const DashboardOverview = () => {
                                     </div>
                                 );
                             })}
-                        </div>
+                        </motion.div>
                     </motion.div>
                 </div>
 

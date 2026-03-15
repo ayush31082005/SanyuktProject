@@ -57,6 +57,8 @@ app.use("/api/franchises", require("./routes/franchiseRoutes"));
 app.use("/api/members", require("./routes/memberRoutes"))
 app.use("/api/franchise", require("./routes/franchiseDashboardRoutes"))
 
+app.use("/api/mlm", require("./routes/Matchingbonusroutes"));
+app.use("/api/package", require("./routes/PackageRoutes"));
 app.use("/api/repurchase", require("./routes/repurchaseRoutes"))
 app.use('/api/wallet', require('./routes/walletRoutes'));
 

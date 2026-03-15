@@ -52,6 +52,8 @@ import TravelFund from '../pages/RepurchaseBonus/TravelFund.jsx';
 import BikeFund from '../pages/RepurchaseBonus/BikeFund.jsx';
 
 
+
+import AllTransactionReport from '../pages/Wallet/AllTransactionReport';
 import DeductionReport from '../pages/Wallet/DeductionReport';
 import WithdrawalHistory from '../pages/Wallet/WithdrawalHistory';
 import DailyClosingReport from '../pages/Wallet/DailyClosingReport';
@@ -141,7 +143,7 @@ const MainRoutes = () => {
                 <Route path="wallet/deduction-report" element={<DeductionReport />} />
                 <Route path="wallet/withdrawal-history" element={<WithdrawalHistory />} />
                 <Route path="wallet/daily-closing" element={<DailyClosingReport />} />
-                <Route path='wallet/all-transactions' element={<UserTable title="Transaction Report" type="income" endpoint="mlm/admin/income-reports" />} />
+                <Route path='wallet/all-transactions' element={<AllTransactionReport />} />
 
 
                 <Route path='wallet/generation' element={<Construction title="Generation Wallet" />} />

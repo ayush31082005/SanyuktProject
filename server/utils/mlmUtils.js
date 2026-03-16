@@ -25,10 +25,10 @@ exports.findBinaryPosition = async (sponsorId, position) => {
     if (!currentParent) return null;
 
     let queue = [currentParent];
-    
+
     // We only traverse the specific leg (Left or Right) initially requested
     let targetLeg = position.toLowerCase(); // 'left' or 'right'
-    
+
     while (queue.length > 0) {
         let node = queue.shift();
         let childId = node[targetLeg];
@@ -45,15 +45,15 @@ exports.findBinaryPosition = async (sponsorId, position) => {
             // or "First Available in Subtree" if we want to be more helpful.
             // Prompt says: "New users should be placed under sponsor in the selected position."
             // If Left is chosen, we go down the Left leg of the sponsor.
-            
+
             // To maintain a "Full Binary Tree" as requested, we use BFS for that sub-tree.
             queue.push(childNode);
             // Once we are inside the sub-tree, we check BOTH legs to fill it level by level.
-            targetLeg = 'left'; 
+            targetLeg = 'left';
             if (node.left && node.right) {
                 // both full, continue BFS
             } else if (!node.left) {
-               // this logic is slightly flawed for a specific "Left/Right" choice
+                // this logic is slightly flawed for a specific "Left/Right" choice
             }
         }
     }
@@ -78,34 +78,38 @@ exports.findExtremePosition = async (sponsorId, position) => {
  * Distributes Level Income up to 20 levels.
  */
 exports.distributeLevelIncome = async (user) => {
+    // Plan ke hisaab se: 20 level income — SPONSOR CHAIN se upar jaata hai
+    // user.parent = unilevel/sponsor parent (binary nahi)
     try {
-        let currentParentId = user.parentId;
+        let currentParentId = user.parent; // ← sponsor chain (unilevel)
         let level = 1;
 
         while (currentParentId && level <= 20) {
             const parent = await User.findById(currentParentId);
             if (!parent) break;
 
-            const incomeAmount = LEVEL_INCOME[level] || 0;
-            if (incomeAmount > 0) {
-                parent.walletBalance = (parent.walletBalance || 0) + incomeAmount;
-                parent.totalLevelIncome = (parent.totalLevelIncome || 0) + incomeAmount;
-                await parent.save();
+            // Sirf active members ko income milegi
+            if (parent.activeStatus) {
+                const incomeAmount = exports.LEVEL_INCOME[level] || 0;
+                if (incomeAmount > 0) {
+                    parent.walletBalance = (parent.walletBalance || 0) + incomeAmount;
+                    parent.totalLevelIncome = (parent.totalLevelIncome || 0) + incomeAmount;
+                    await parent.save();
 
-                await IncomeHistory.create({
-                    userId: parent._id,
-                    amount: incomeAmount,
-                    type: 'Level',
-                    fromUserId: user._id,
-                    level,
-                    description: `Level ${level} income from ${user.memberId}`
-                });
+                    await IncomeHistory.create({
+                        userId: parent._id,
+                        amount: incomeAmount,
+                        type: 'Level',
+                        fromUserId: user._id,
+                        level,
+                        description: `Level ${level} income from ${user.memberId} (₹${incomeAmount})`
+                    });
+
+                    console.log(`✅ Level ${level} ₹${incomeAmount} → ${parent.memberId}`);
+                }
             }
 
-            // Move up the level income tree (usually follows unilevel/sponsor 'parent' 
-            // but here code was using parentId which is binary. Sticking to current 
-            // pattern unless evidence says otherwise, but adding a check).
-            currentParentId = parent.parentId || parent.parent; 
+            currentParentId = parent.parent; // ← sponsor chain se upar
             level++;
         }
     } catch (error) {
@@ -117,22 +121,21 @@ exports.distributeLevelIncome = async (user) => {
  * Distributes Direct Income to the sponsor.
  */
 exports.distributeDirectIncome = async (user) => {
-    // Only for 0.5 PV or higher packages (₹1299 and ₹2699)
-    if (user.pv < 0.5) return;
+    // Plan ke hisaab se: ₹50 per referral — SABHI packages pe milta hai
+    // Condition: Sirf tab jab sponsor active ho (koi bhi package)
+    if (!user.sponsorId) return;
 
-    // Direct income goes to the SPONSOR, not the binary parent
     try {
         const sponsor = await User.findOne({ memberId: user.sponsorId.toUpperCase() });
         if (!sponsor) return;
 
-        // NEW RULE: Direct Income only for sponsors with 0.5 PV or above package
-        const sponsorPkg = PACKAGE_DATA[sponsor.packageType];
-        if (!sponsorPkg || sponsorPkg.pv < 0.5) {
-            console.log(`Sponsor ${sponsor.memberId} not eligible for direct income (Package: ${sponsor.packageType})`);
+        // Sponsor active hona chahiye
+        if (!sponsor.activeStatus) {
+            console.log(`Sponsor ${sponsor.memberId} active nahi hai, direct income skip`);
             return;
         }
 
-        const amount = 50; // Fixed direct income
+        const amount = 50; // Plan: ₹50 per referral fixed
         sponsor.walletBalance = (sponsor.walletBalance || 0) + amount;
         sponsor.totalDirectIncome = (sponsor.totalDirectIncome || 0) + amount;
         await sponsor.save();
@@ -142,8 +145,10 @@ exports.distributeDirectIncome = async (user) => {
             amount,
             type: 'Direct',
             fromUserId: user._id,
-            description: `Direct income from ${user.memberId} registration`
+            description: `Direct income from ${user.memberId} registration (₹50)`
         });
+
+        console.log(`✅ Direct income ₹50 → Sponsor ${sponsor.memberId} from ${user.memberId}`);
     } catch (error) {
         console.error(`Error distributing direct income for user ${user.memberId}:`, error);
     }
@@ -169,11 +174,11 @@ exports.updateTeamPV = async (user) => {
             // Sync with BinaryTree
             await BinaryTree.findOneAndUpdate(
                 { userId: parent._id },
-                { 
-                    $inc: { 
-                        leftPV: user.pv || 0, 
+                {
+                    $inc: {
+                        leftPV: user.pv || 0,
                         leftBV: user.bv || 0,
-                        totalLeft: 1 
+                        totalLeft: 1
                     }
                 },
                 { upsert: true }
@@ -187,11 +192,11 @@ exports.updateTeamPV = async (user) => {
             // Sync with BinaryTree
             await BinaryTree.findOneAndUpdate(
                 { userId: parent._id },
-                { 
-                    $inc: { 
-                        rightPV: user.pv || 0, 
+                {
+                    $inc: {
+                        rightPV: user.pv || 0,
                         rightBV: user.bv || 0,
-                        totalRight: 1 
+                        totalRight: 1
                     }
                 },
                 { upsert: true }

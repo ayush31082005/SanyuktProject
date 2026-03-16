@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { 
-    ChevronRight, Award, Zap, Star, Shield, Gift, 
+import {
+    ChevronRight, Award, Zap, Star, Shield, Gift,
     TrendingUp, Briefcase, Target, Rocket, CheckCircle2,
     DollarSign, Users, PieChart, Info
 } from 'lucide-react';
@@ -15,7 +15,7 @@ const CompensationPlan = () => {
     ];
 
     const levelIncome = [
-        { level: "1", amount: "₹50" }, { level: "2", amount: "₹40" }, 
+        { level: "1", amount: "₹50" }, { level: "2", amount: "₹40" },
         { level: "3", amount: "₹30" }, { level: "4", amount: "₹20" },
         { level: "5-6", amount: "₹10" }, { level: "7-10", amount: "₹5" },
         { level: "11-12", amount: "₹4" }, { level: "13-18", amount: "₹3" },
@@ -24,15 +24,19 @@ const CompensationPlan = () => {
 
     const rewards = [
         { rank: "Bronze", target: "5PV : 5PV", reward: "Company Catalog" },
-        { rank: "Silver", target: "25PV : 25PV", reward: "₹1200" },
-        { rank: "Gold", target: "50PV : 50PV", reward: "₹2500" },
-        { rank: "Platinum", target: "100PV : 100PV", reward: "₹5000 + NT" },
-        { rank: "Star", target: "200PV : 200PV", reward: "₹10000 + NT" },
-        { rank: "Ruby", target: "500PV : 500PV", reward: "₹50000" },
+        { rank: "Silver", target: "25PV : 25PV", reward: "₹1,200" },
+        { rank: "Gold", target: "50PV : 50PV", reward: "₹2,500" },
+        { rank: "Platinum", target: "100PV : 100PV", reward: "₹5,000 + NT" },
+        { rank: "Star", target: "200PV : 200PV", reward: "₹10,000 + NT" },
+        { rank: "Ruby", target: "500PV : 500PV", reward: "₹50,000" },
         { rank: "Sapphire", target: "1000PV : 1000PV", reward: "₹1 Lakh + India Trip" },
         { rank: "Star Sapphire", target: "2500PV : 2500PV", reward: "₹5 Lakh + India Trip Couple" },
         { rank: "Emerald", target: "6000PV : 6000PV", reward: "₹7 Lakh" },
         { rank: "Diamond", target: "30000PV : 30000PV", reward: "₹10 Lakh" },
+        { rank: "Double Diamond", target: "70000PV : 70000PV", reward: "₹15 Lakh" },
+        { rank: "Blue Diamond", target: "125k PV : 125k PV", reward: "₹30 Lakh" },
+        { rank: "Ambassador", target: "300k PV : 300k PV", reward: "₹1 Crore" },
+        { rank: "Crown", target: "700k PV : 700k PV", reward: "₹2.5 Crore" },
         { rank: "MD", target: "1500k PV : 1500k PV", reward: "₹5 Crore" }
     ];
 
@@ -67,10 +71,10 @@ const CompensationPlan = () => {
                         </div>
                         <h2 className="text-2xl font-black text-slate-800 uppercase tracking-tight">Joining Packages</h2>
                     </div>
-                    
+
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {packages.map((pkg, i) => (
-                            <motion.div 
+                            <motion.div
                                 key={i}
                                 initial={{ opacity: 0, scale: 0.9 }}
                                 animate={{ opacity: 1, scale: 1 }}
@@ -80,7 +84,7 @@ const CompensationPlan = () => {
                                 <div className={`absolute top-0 right-0 w-32 h-32 bg-${pkg.color}-500/5 -mr-16 -mt-16 rounded-full group-hover:scale-150 transition-transform duration-700`}></div>
                                 <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest mb-1">{pkg.name}</h3>
                                 <div className="text-4xl font-black text-slate-800 mb-6">{pkg.price}</div>
-                                
+
                                 <div className="space-y-4">
                                     <div className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl">
                                         <span className="text-xs font-bold text-slate-500 uppercase">BV</span>
@@ -116,8 +120,20 @@ const CompensationPlan = () => {
                             </div>
                             <div className="text-5xl font-black text-slate-800 mb-4">₹50</div>
                             <p className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-6">Per Referral</p>
-                            <div className="p-4 bg-blue-50 rounded-2xl inline-block border border-blue-100">
-                                <p className="text-xs font-black text-blue-700 uppercase">* Applies to 0.5 PV or above packages</p>
+                            <div className="p-4 bg-green-50 rounded-2xl inline-block border border-green-100">
+                                <p className="text-xs font-black text-green-700 uppercase">✓ Sabhi Active Members ko milta hai</p>
+                            </div>
+                            <div className="mt-4 grid grid-cols-3 gap-3">
+                                {[
+                                    { name: "Basic", price: "₹599", color: "bg-slate-100 text-slate-600" },
+                                    { name: "Standard", price: "₹1299", color: "bg-yellow-100 text-yellow-700" },
+                                    { name: "Premium", price: "₹2699", color: "bg-orange-100 text-orange-700" },
+                                ].map((p) => (
+                                    <div key={p.name} className={`p-2 rounded-xl ${p.color}`}>
+                                        <p className="text-[10px] font-black uppercase">{p.name}</p>
+                                        <p className="text-sm font-black">{p.price}</p>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </section>
@@ -216,8 +232,8 @@ const CompensationPlan = () => {
 
                 {/* Footer Link */}
                 <div className="text-center">
-                    <Link 
-                        to="/register" 
+                    <Link
+                        to="/register"
                         className="inline-flex items-center gap-3 bg-[#0A7A2F] text-white px-12 py-5 rounded-[2rem] font-black uppercase tracking-[0.2em] shadow-2xl shadow-green-200 hover:bg-green-700 transition-all active:scale-95"
                     >
                         Join Now & Start Earning

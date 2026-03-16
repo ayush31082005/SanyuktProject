@@ -2,10 +2,12 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
+
+const galleryRoutes = require("./routes/galleryRoutes")
+const eventRoutes = require("./routes/eventRoutes")
 
 const app = express();
-
-// Routes
 
 const allowedOrigins = [
     "http://localhost:5173",
@@ -25,15 +27,15 @@ app.use(cors({
     credentials: true,
 }));
 app.use(express.json({ limit: '10mb' }));
-app.use("/uploads", express.static("uploads"));
+
+// ✅ Static file serving - serves ALL subfolders under uploads
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Request Logger
 app.use((req, res, next) => {
     console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
     next();
 });
-
-
 
 // Health Check
 app.get("/api/health", (req, res) => {
@@ -57,17 +59,17 @@ app.use("/api/franchises", require("./routes/franchiseRoutes"));
 app.use("/api/members", require("./routes/memberRoutes"))
 app.use("/api/franchise", require("./routes/franchiseDashboardRoutes"))
 
+app.use("/api/gallery", galleryRoutes)
+app.use("/api/events", eventRoutes)
+
 app.use("/api/repurchase", require("./routes/repurchaseRoutes"))
 app.use('/api/wallet', require('./routes/walletRoutes'));
 
 app.use("/api/grievance", require("./routes/grievanceRoutes"));
-
 app.use("/api/recharge", require("./routes/rechargeRoutes"));
 app.use("/api/orders", require("./routes/orderRoutes"));
 
-
-
-// Error handling for unknown routes
+// Error handling
 app.use((req, res, next) => {
     console.log(`[${new Date().toISOString()}] 404 - Not Found: ${req.method} ${req.url}`);
     next();

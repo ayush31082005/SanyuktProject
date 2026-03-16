@@ -116,7 +116,6 @@ const MainRoutes = () => {
             <Route path='/seminars' element={<Events />} />
 
 
-
             <Route path='/my-account' element={<UserDashboardLayout />}>
                 <Route index element={<DashboardOverview />} />
                 <Route path='profile' element={<MyAccount defaultTab={0} />} />

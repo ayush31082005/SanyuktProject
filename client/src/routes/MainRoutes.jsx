@@ -39,6 +39,8 @@ import PackageUpgrade from '../pages/PackageUpgrade.jsx'
 import OrderDetails from '../pages/OrderDetails.jsx'
 import ForgotPassword from '../pages/ForgotPassword.jsx'
 import FranchiseDashboard from '../pages/FranchiseDashboard.jsx'
+import Gallery from "../pages/Gallery.jsx"
+import Events from "../pages/Events.jsx"
 
 import SelfRepurchaseIncome from '../pages/RepurchaseBonus/SelfRepurchaseIncome.jsx'
 import RepurchaseLevelIncome from '../pages/RepurchaseBonus/RepurchaseLevelIncome.jsx';
@@ -51,14 +53,20 @@ import CarFund from '../pages/RepurchaseBonus/CarFund.jsx';
 import TravelFund from '../pages/RepurchaseBonus/TravelFund.jsx';
 import BikeFund from '../pages/RepurchaseBonus/BikeFund.jsx';
 
+import MyRank from '../pages/MyRank';
 
-
+import WalletTopup from '../pages/Wallet/Wallettoup';
+import WithdrawalRequest from '../pages/Wallet/Withdrawalrequest';
 import AllTransactionReport from '../pages/Wallet/AllTransactionReport';
 import DeductionReport from '../pages/Wallet/DeductionReport';
 import WithdrawalHistory from '../pages/Wallet/WithdrawalHistory';
 import DailyClosingReport from '../pages/Wallet/DailyClosingReport';
 import WelcomeLetter from '../pages/WelcomeLetter.jsx';
 import IdCard from '../pages/IdCard.jsx';
+
+import SilverMatching from '../pages/RepurchaseBonus/Silvermatching';
+import GoldMatching from '../pages/RepurchaseBonus/Goldmatching';
+import DiamondMatching from '../pages/RepurchaseBonus/Diamondmatching';
 
 // ✅ Admin imports
 import AdminLayout from '../layouts/AdminLayout.jsx'
@@ -106,6 +114,9 @@ const MainRoutes = () => {
             <Route path='/franchise/login' element={<FranchiseLogin />} />
             <Route path='/forgot-password' element={<ForgotPassword />} />
             <Route path='/franchise/dashboard' element={<FranchiseDashboard />} />
+            <Route path='/gallery' element={<Gallery />} />
+            <Route path='/seminars' element={<Events />} />
+
 
             <Route path='/my-account' element={<UserDashboardLayout />}>
                 <Route index element={<DashboardOverview />} />
@@ -117,6 +128,7 @@ const MainRoutes = () => {
                 <Route path='kyc' element={<MyAccount defaultTab={5} />} />
                 <Route path='cart' element={<MyAccount defaultTab={-1} />} />
 
+
                 <Route path='downline' element={<Construction title="My Downline" />} />
                 <Route path='downline/directs' element={<UserTable title="Direct Referrals" type="downline" endpoint="mlm/get-directs" />} />
                 <Route path='downline/left-team' element={<UserTable title="Left Team Members" type="downline" endpoint="mlm/get-team-list/left" />} />
@@ -125,9 +137,10 @@ const MainRoutes = () => {
                 <Route path='downline/tree-view' element={<BinaryTreeView />} />
 
                 <Route path='bonus/first' element={<PackageUpgrade />} />
-                <Route path='bonus/first/silver' element={<PackageUpgrade filter="silver" />} />
-                <Route path='bonus/first/gold' element={<PackageUpgrade filter="gold" />} />
-                <Route path='bonus/first/diamond' element={<PackageUpgrade filter="diamond" />} />
+                <Route path='bonus/first/silver' element={<SilverMatching />} />
+                <Route path='bonus/first/gold' element={<GoldMatching />} />
+                <Route path='bonus/first/diamond' element={<DiamondMatching />} />
+                <Route path='/my-account/rank' element={<MyRank />} />
 
                 <Route path="bonus/repurchase/self" element={<SelfRepurchaseIncome />} />
                 <Route path="bonus/repurchase/level" element={<RepurchaseLevelIncome />} />
@@ -144,6 +157,8 @@ const MainRoutes = () => {
                 <Route path="wallet/withdrawal-history" element={<WithdrawalHistory />} />
                 <Route path="wallet/daily-closing" element={<DailyClosingReport />} />
                 <Route path='wallet/all-transactions' element={<AllTransactionReport />} />
+                <Route path='wallet/topup' element={<WalletTopup />} />
+                <Route path='wallet/withdrawal-request' element={<WithdrawalRequest />} />
 
 
                 <Route path='wallet/generation' element={<Construction title="Generation Wallet" />} />
@@ -181,6 +196,7 @@ const MainRoutes = () => {
 
 
             </Route>
+
 
         </Routes>
     )

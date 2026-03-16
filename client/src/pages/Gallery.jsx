@@ -5,49 +5,7 @@ function Gallery() {
     const [gallery, setGallery] = useState([])
     const [loading, setLoading] = useState(true)
     const [selectedImage, setSelectedImage] = useState(null)
-
-    // Add animation styles
-    const animationStyles = `
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes scaleIn {
-            from {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-        
-        .animate-fade-in {
-            animation: fadeIn 0.8s ease-out forwards;
-        }
-        
-        .animate-fade-in-up {
-            opacity: 0;
-            animation: fadeInUp 0.6s ease-out forwards;
-        }
-        
-        .animate-scale-in {
-            animation: scaleIn 0.3s ease-out forwards;
-        }
-    `
+    const [selectedIndex, setSelectedIndex] = useState(0)
 
     useEffect(() => {
         api.get("/gallery/all")
@@ -61,125 +19,361 @@ function Gallery() {
             })
     }, [])
 
+    const openLightbox = (item, index) => {
+        setSelectedImage(item)
+        setSelectedIndex(index)
+    }
+
+    const closeLightbox = () => setSelectedImage(null)
+
+    const prevImage = (e) => {
+        e.stopPropagation()
+        const newIndex = (selectedIndex - 1 + gallery.length) % gallery.length
+        setSelectedImage(gallery[newIndex])
+        setSelectedIndex(newIndex)
+    }
+
+    const nextImage = (e) => {
+        e.stopPropagation()
+        const newIndex = (selectedIndex + 1) % gallery.length
+        setSelectedImage(gallery[newIndex])
+        setSelectedIndex(newIndex)
+    }
+
+    const getImageUrl = (item) => {
+        if (!item || !item.image) return "";
+        if (item.image.startsWith('http')) return item.image;
+        const filename = item.image.startsWith('/uploads') ? item.image : `/uploads/gallery/${item.image}`;
+        return `${API_URL}${filename}`;
+    }
+
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-50">
-                <style>{animationStyles}</style>
-                <div className="animate-spin rounded-full h-20 w-20 border-t-4 border-b-4 border-green-600"></div>
+            <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f0fdf4' }}>
+                <div style={{ textAlign: 'center' }}>
+                    <div style={{
+                        width: 56, height: 56, borderRadius: '50%',
+                        border: '4px solid #bbf7d0', borderTopColor: '#16a34a',
+                        animation: 'spin 0.8s linear infinite', margin: '0 auto 16px'
+                    }} />
+                    <p style={{ color: '#15803d', fontWeight: 600, fontSize: 16 }}>Loading gallery...</p>
+                    <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+                </div>
             </div>
         )
     }
 
     return (
-        <>
-            <style>{animationStyles}</style>
+        <div style={{ minHeight: '100vh', background: '#ffffff', fontFamily: 'Georgia, serif' }}>
+            <style>{`
+                @keyframes fadeUp {
+                    from { opacity: 0; transform: translateY(24px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+                @keyframes scaleIn {
+                    from { opacity: 0; transform: scale(0.94); }
+                    to { opacity: 1; transform: scale(1); }
+                }
+                .gallery-card {
+                    animation: fadeUp 0.5s ease forwards;
+                    opacity: 0;
+                    cursor: pointer;
+                    border-radius: 12px;
+                    overflow: hidden;
+                    background: #fff;
+                    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+                    transition: box-shadow 0.3s ease, transform 0.3s ease;
+                    position: relative;
+                }
+                .gallery-card:hover {
+                    box-shadow: 0 8px 32px rgba(22,163,74,0.18);
+                    transform: translateY(-4px);
+                }
+                .gallery-card img {
+                    width: 100%;
+                    height: 220px;
+                    object-fit: cover;
+                    display: block;
+                    transition: transform 0.5s ease;
+                }
+                .gallery-card:hover img {
+                    transform: scale(1.06);
+                }
+                .card-overlay {
+                    position: absolute;
+                    inset: 0;
+                    background: linear-gradient(to top, rgba(5,46,22,0.75) 0%, transparent 55%);
+                    opacity: 0;
+                    transition: opacity 0.3s ease;
+                    display: flex;
+                    align-items: flex-end;
+                    padding: 16px;
+                }
+                .gallery-card:hover .card-overlay {
+                    opacity: 1;
+                }
+                .zoom-btn {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%) scale(0.8);
+                    background: rgba(255,255,255,0.92);
+                    border-radius: 50%;
+                    width: 44px;
+                    height: 44px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    opacity: 0;
+                    transition: opacity 0.3s ease, transform 0.3s ease;
+                }
+                .gallery-card:hover .zoom-btn {
+                    opacity: 1;
+                    transform: translate(-50%, -50%) scale(1);
+                }
+                .badge {
+                    position: absolute;
+                    top: 10px;
+                    right: 10px;
+                    background: rgba(255,255,255,0.92);
+                    color: #15803d;
+                    font-size: 11px;
+                    font-weight: 700;
+                    padding: 3px 10px;
+                    border-radius: 99px;
+                    font-family: sans-serif;
+                    letter-spacing: 0.5px;
+                }
+                .lightbox-nav {
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    background: rgba(255,255,255,0.15);
+                    border: none;
+                    color: white;
+                    width: 48px;
+                    height: 48px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    transition: background 0.2s;
+                    backdrop-filter: blur(4px);
+                }
+                .lightbox-nav:hover { background: rgba(255,255,255,0.3); }
+            `}</style>
 
-            <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 py-12 px-4 sm:px-6 lg:px-8">
-                <div className="max-w-7xl mx-auto">
-                    {/* Header Section */}
-                    <div className="text-center mb-12 animate-fade-in">
-                        <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 mb-4">
-                            Our Gallery
-                        </h1>
-                        <div className="w-24 h-1 bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 mx-auto rounded-full"></div>
-                        <p className="text-gray-600 mt-4 text-lg">Explore our beautiful collection of memories</p>
-                    </div>
+            {/* Hero Header */}
+            <div style={{
+                background: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%)',
+                borderBottom: '1px solid #d1fae5',
+                padding: '60px 24px 48px',
+                textAlign: 'center',
+                animation: 'fadeIn 0.6s ease'
+            }}>
+                <div style={{
+                    display: 'inline-block',
+                    background: '#dcfce7',
+                    border: '1px solid #86efac',
+                    color: '#15803d',
+                    fontSize: 12,
+                    fontWeight: 700,
+                    letterSpacing: 2,
+                    padding: '5px 16px',
+                    borderRadius: 99,
+                    marginBottom: 18,
+                    fontFamily: 'sans-serif',
+                    textTransform: 'uppercase'
+                }}>Our Memories</div>
 
-                    {/* Gallery Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 auto-rows-fr">
-                        {gallery.map((item, index) => (
-                            <div
-                                key={item.id || index}
-                                className="group relative overflow-hidden rounded-2xl shadow-lg transform transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-green-200/50 animate-fade-in-up cursor-pointer"
-                                style={{ animationDelay: `${index * 100}ms` }}
-                                onClick={() => setSelectedImage(item)}
-                            >
-                                <div className="relative w-full h-64 overflow-hidden">
-                                    <img
-                                        src={item.image.startsWith('http') ? item.image : `${API_URL}${item.image.startsWith('/uploads') ? item.image : '/uploads/' + item.image}`}
-                                        alt={`Gallery item ${index + 1}`}
-                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                        loading="lazy"
-                                    />
+                <h1 style={{
+                    fontSize: 'clamp(36px, 5vw, 58px)',
+                    fontWeight: 800,
+                    color: '#052e16',
+                    margin: '0 0 12px',
+                    letterSpacing: '-1px',
+                    lineHeight: 1.1
+                }}>Beautiful Moments</h1>
 
-                                    {/* Overlay with hover effect */}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-green-900/90 via-green-900/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                                        <div className="absolute bottom-0 left-0 right-0 p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
-                                            <h3 className="text-white font-semibold text-xl mb-2">
-                                                {item.title || `Gallery Image ${index + 1}`}
-                                            </h3>
-                                            <p className="text-green-200 text-sm">
-                                                {item.description || 'Click to view full size'}
-                                            </p>
-                                        </div>
-                                    </div>
+                <div style={{ width: 48, height: 3, background: '#16a34a', borderRadius: 99, margin: '0 auto 16px' }} />
 
-                                    {/* Image counter badge */}
-                                    <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm text-green-600 font-semibold px-3 py-1 rounded-full text-sm shadow-lg">
-                                        #{index + 1}
-                                    </div>
+                <p style={{
+                    color: '#4b7a5a',
+                    fontSize: 17,
+                    maxWidth: 480,
+                    margin: '0 auto',
+                    fontFamily: 'sans-serif',
+                    lineHeight: 1.6
+                }}>
+                    Explore our collection of cherished memories and events
+                </p>
 
-                                    {/* Zoom icon on hover */}
-                                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                                        <div className="bg-white/90 backdrop-blur-sm p-3 rounded-full shadow-xl">
-                                            <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
-                                            </svg>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* Empty state */}
-                    {gallery.length === 0 && (
-                        <div className="text-center py-20 animate-fade-in">
-                            <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-12 shadow-xl max-w-md mx-auto">
-                                <svg className="w-20 h-20 text-green-400 mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                                <h3 className="text-2xl font-bold text-gray-700 mb-2">No Images Yet</h3>
-                                <p className="text-gray-500">Check back soon for updates!</p>
-                            </div>
-                        </div>
-                    )}
-                </div>
-
-                {/* Lightbox Modal */}
-                {selectedImage && (
-                    <div
-                        className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 animate-fade-in"
-                        onClick={() => setSelectedImage(null)}
-                    >
-                        <div className="relative max-w-6xl w-full max-h-[90vh] animate-scale-in">
-                            <img
-                                src={selectedImage.image.startsWith('http') ? selectedImage.image : `${API_URL}${selectedImage.image.startsWith('/uploads') ? selectedImage.image : '/uploads/' + selectedImage.image}`}
-                                alt="Selected gallery item"
-                                className="w-full h-full object-contain rounded-lg"
-                            />
-
-                            {/* Close button */}
-                            <button
-                                onClick={() => setSelectedImage(null)}
-                                className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm hover:bg-white/40 text-white rounded-full p-3 transition-all duration-300 transform hover:scale-110"
-                            >
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-
-                            {/* Image info */}
-                            <div className="absolute bottom-4 left-4 right-4 text-white text-center">
-                                <p className="bg-black/50 backdrop-blur-sm inline-block px-6 py-3 rounded-full">
-                                    {selectedImage.title || 'Gallery Image'} • Click anywhere to close
-                                </p>
-                            </div>
-                        </div>
+                {gallery.length > 0 && (
+                    <div style={{
+                        marginTop: 24,
+                        display: 'inline-flex',
+                        gap: 24,
+                        background: 'white',
+                        border: '1px solid #d1fae5',
+                        borderRadius: 12,
+                        padding: '10px 24px',
+                        fontFamily: 'sans-serif'
+                    }}>
+                        <span style={{ color: '#15803d', fontWeight: 700, fontSize: 15 }}>
+                            {gallery.length} <span style={{ color: '#6b7280', fontWeight: 400 }}>Photos</span>
+                        </span>
                     </div>
                 )}
             </div>
-        </>
+
+            {/* Gallery Grid */}
+            <div style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 24px' }}>
+                {gallery.length === 0 ? (
+                    <div style={{
+                        textAlign: 'center', padding: '80px 24px',
+                        animation: 'fadeIn 0.6s ease'
+                    }}>
+                        <div style={{
+                            width: 80, height: 80, borderRadius: '50%',
+                            background: '#f0fdf4', border: '2px dashed #86efac',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            margin: '0 auto 20px'
+                        }}>
+                            <svg width="36" height="36" fill="none" stroke="#16a34a" strokeWidth="1.5" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <h3 style={{ fontSize: 22, fontWeight: 700, color: '#1f2937', marginBottom: 8 }}>No Images Yet</h3>
+                        <p style={{ color: '#9ca3af', fontFamily: 'sans-serif' }}>Gallery will appear here once admin adds photos.</p>
+                    </div>
+                ) : (
+                    <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+                        gap: 20
+                    }}>
+                        {gallery.map((item, index) => (
+                            <div
+                                key={item._id || index}
+                                className="gallery-card"
+                                style={{ animationDelay: `${index * 70}ms` }}
+                                onClick={() => openLightbox(item, index)}
+                            >
+                                <img
+                                    src={getImageUrl(item)}
+                                    alt={item.title || `Gallery ${index + 1}`}
+                                    loading="lazy"
+                                    onError={(e) => {
+                                        e.target.style.background = '#f0fdf4'
+                                        e.target.src = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='220' viewBox='0 0 260 220'%3E%3Crect width='260' height='220' fill='%23f0fdf4'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%2386efac' font-size='14'%3EImage not found%3C/text%3E%3C/svg%3E`
+                                    }}
+                                />
+                                <div className="card-overlay">
+                                    <div style={{ color: 'white', display: 'flex', flexDirection: 'column' }}>
+                                        <span style={{ fontSize: 13, fontFamily: 'sans-serif', fontWeight: 700 }}>{item.title}</span>
+                                        <span style={{ fontSize: 11, fontFamily: 'sans-serif', fontWeight: 500, opacity: 0.8 }}>Click to view</span>
+                                    </div>
+                                </div>
+                                <div className="zoom-btn">
+                                    <svg width="18" height="18" fill="none" stroke="#15803d" strokeWidth="2" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
+                                    </svg>
+                                </div>
+                                <div className="badge">#{index + 1}</div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+
+            {/* Lightbox */}
+            {selectedImage && (
+                <div
+                    onClick={closeLightbox}
+                    style={{
+                        position: 'fixed', inset: 0,
+                        background: 'rgba(0,0,0,0.95)',
+                        zIndex: 1000,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: 24,
+                        animation: 'fadeIn 0.2s ease'
+                    }}
+                >
+                    <div
+                        onClick={e => e.stopPropagation()}
+                        style={{
+                            position: 'relative',
+                            maxWidth: '90vw',
+                            maxHeight: '88vh',
+                            animation: 'scaleIn 0.25s ease'
+                        }}
+                    >
+                        <img
+                            src={getImageUrl(selectedImage)}
+                            alt="Gallery full"
+                            style={{
+                                maxWidth: '90vw',
+                                maxHeight: '85vh',
+                                objectFit: 'contain',
+                                borderRadius: 10,
+                                display: 'block'
+                            }}
+                        />
+
+                        {/* Counter and Title */}
+                        <div style={{
+                            position: 'absolute', bottom: -50, left: '50%',
+                            transform: 'translateX(-50%)',
+                            color: 'white',
+                            textAlign: 'center',
+                            fontFamily: 'sans-serif', fontSize: 14
+                        }}>
+                            <div style={{ fontWeight: 700, marginBottom: 4 }}>{selectedImage.title}</div>
+                            <div style={{ opacity: 0.6, fontSize: 12 }}>{selectedIndex + 1} / {gallery.length}</div>
+                        </div>
+                    </div>
+
+                    {/* Prev */}
+                    <button className="lightbox-nav" onClick={prevImage} style={{ left: 16 }}>
+                        <svg width="20" height="20" fill="none" stroke="white" strokeWidth="2.5" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+
+                    {/* Next */}
+                    <button className="lightbox-nav" onClick={nextImage} style={{ right: 16 }}>
+                        <svg width="20" height="20" fill="none" stroke="white" strokeWidth="2.5" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </button>
+
+                    {/* Close */}
+                    <button
+                        onClick={closeLightbox}
+                        style={{
+                            position: 'fixed', top: 20, right: 20,
+                            background: 'rgba(255,255,255,0.12)',
+                            border: 'none', color: 'white',
+                            width: 40, height: 40, borderRadius: '50%',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            cursor: 'pointer', backdropFilter: 'blur(4px)',
+                            transition: 'background 0.2s'
+                        }}
+                    >
+                        <svg width="18" height="18" fill="none" stroke="white" strokeWidth="2.5" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            )}
+        </div>
     )
 }
 

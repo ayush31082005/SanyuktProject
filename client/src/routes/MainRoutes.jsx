@@ -38,6 +38,8 @@ import PackageUpgrade from '../pages/PackageUpgrade.jsx'
 import OrderDetails from '../pages/OrderDetails.jsx'
 import ForgotPassword from '../pages/ForgotPassword.jsx'
 import FranchiseDashboard from '../pages/FranchiseDashboard.jsx'
+import Gallery from "../pages/Gallery.jsx"
+import Events from "../pages/Events.jsx"
 
 import SelfRepurchaseIncome from '../pages/RepurchaseBonus/SelfRepurchaseIncome.jsx'
 import RepurchaseLevelIncome from '../pages/RepurchaseBonus/RepurchaseLevelIncome.jsx';
@@ -110,6 +112,9 @@ const MainRoutes = () => {
             <Route path='/franchise/login' element={<FranchiseLogin />} />
             <Route path='/forgot-password' element={<ForgotPassword />} />
             <Route path='/franchise/dashboard' element={<FranchiseDashboard />} />
+            <Route path='/gallery' element={<Gallery />} />
+            <Route path='/seminars' element={<Events />} />
+
 
 
             <Route path='/my-account' element={<UserDashboardLayout />}>
@@ -189,6 +194,7 @@ const MainRoutes = () => {
 
 
             </Route>
+
 
         </Routes>
     )

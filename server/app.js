@@ -18,10 +18,7 @@ const allowedOrigins = [
 
 app.use(cors({
     origin: function (origin, callback) {
-        // Allow if no origin (like mobile apps or curl requests) 
-        // or if origin is in allowedOrigins 
-        // or if origin matches process.env.FRONTEND_URL
-        if (!origin || allowedOrigins.indexOf(origin) !== -1 || origin === process.env.FRONTEND_URL) {
+        if (!origin || allowedOrigins.indexOf(origin) !== -1 || origin === process.env.FRONTEND_URL || process.env.NODE_ENV !== 'production') {
             callback(null, true);
         } else {
             console.warn(`CORS blocked for origin: ${origin}`);
@@ -37,7 +34,9 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Request Logger
 app.use((req, res, next) => {
-    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+    if (process.env.NODE_ENV !== 'test') {
+        console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+    }
     next();
 });
 
@@ -51,42 +50,46 @@ app.get("/api/health", (req, res) => {
 });
 
 // Routes
-const authRoutes = require("./routes/authRoutes");
 app.use("/api/mlm", require("./routes/mlmRoutes"));
-app.use("/api/auth", authRoutes);
-app.use("/api", authRoutes); // Ensure both /api/login and /api/auth/login work
+app.use("/api/auth", require("./routes/authRoutes"));
+app.use("/api", require("./routes/authRoutes")); 
 app.use("/api", require("./routes/contactRoutes"));
-
 app.use("/api/products", require("./routes/productRoutes"));
 app.use("/api/admin/users", require("./routes/adminUserRoutes"));
 app.use("/api/admin", require("./routes/adminStatsRoutes"));
-
 app.use("/api/franchises", require("./routes/franchiseRoutes"));
 app.use("/api/members", require("./routes/memberRoutes"));
 app.use("/api/franchise", require("./routes/franchiseDashboardRoutes"));
-
 app.use("/api/mlm", require("./routes/Matchingbonusroutes"));
 app.use("/api/package", require("./routes/PackageRoutes"));
-app.use("/api/gallery", galleryRoutes);
-app.use("/api/events", eventRoutes);
-
+app.use("/api/gallery", require("./routes/galleryRoutes"));
+app.use("/api/events", require("./routes/eventRoutes"));
 app.use("/api/repurchase", require("./routes/repurchaseRoutes"));
 app.use('/api/wallet', require('./routes/walletRoutes'));
-
 app.use("/api/grievance", require("./routes/grievanceRoutes"));
 app.use("/api/recharge", require("./routes/rechargeRoutes"));
 app.use("/api/news", require("./routes/newsRoutes"));
 app.use("/api/orders", require("./routes/orderRoutes"));
 
-// Error handling
-app.use((req, res, next) => {
-    console.log(`[${new Date().toISOString()}] 404 - Not Found: ${req.method} ${req.url}`);
-    next();
-});
-// Final 404 handler
-app.use((req, res) => {
-    res.status(404).json({ message: "Route not found" });
-});
+// PRODUCTION: Serve static files from React build
+if (process.env.NODE_ENV === 'production') {
+    const buildPath = path.join(__dirname, '..', 'client', 'dist');
+    app.use(express.static(buildPath));
+    
+    // Catch-all for SPA routing
+    app.get('*', (req, res) => {
+        if (!req.url.startsWith('/api')) {
+            res.sendFile(path.join(buildPath, 'index.html'));
+        } else {
+            res.status(404).json({ message: "API route not found" });
+        }
+    });
+} else {
+    // Final API 404 handler for development
+    app.use((req, res) => {
+        res.status(404).json({ message: "Route not found" });
+    });
+}
 
 // Global Error Handler
 app.use((err, req, res, next) => {

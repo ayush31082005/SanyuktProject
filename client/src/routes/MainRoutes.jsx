@@ -160,6 +160,8 @@ const MainRoutes = () => {
                 <Route path="wallet/daily-closing" element={<DailyClosingReport />} />
                 <Route path='wallet/all-transactions' element={<AllTransactionReport />} />
                 <Route path='wallet/management' element={<WalletManagement />} />
+                <Route path='wallet/topup' element={<WalletManagement defaultTab="topup" />} />
+                <Route path='wallet/withdrawal-request' element={<WalletManagement defaultTab="withdraw" />} />
 
 
                 <Route path='wallet/generation' element={<GenerationWallet />} />

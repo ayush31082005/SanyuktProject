@@ -61,6 +61,7 @@ const HomePage = () => {
     const { addToCart: contextAddToCart, removeFromCart, isInCart } = useCart();
     const [showCartNotification, setShowCartNotification] = useState(false);
     const [addedToCartProduct, setAddedToCartProduct] = useState('');
+    const [searchAmount, setSearchAmount] = useState('');
 
     // Contact form state
     const [contactForm, setContactForm] = useState({
@@ -73,21 +74,21 @@ const HomePage = () => {
     const heroSlides = [
         {
             image: "https://images.unsplash.com/photo-1521791136064-7986c2920216?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080&q=80",
-            title: "Welcome to Sanyukt Parivaar & Rich Life Private Limited",
+            title: "Welcome to Sanyukt Parivaar & Rich Life Pvt.Ltd.",
             subtitle: "A Trusted & Fast-Growing Multi-Level Marketing Company",
-            description: "Sanyukt Parivaar & Rich Life Private Limited is a people-driven direct selling organization committed to empowering individuals with sustainable income opportunities. Through our transparent MLM business model and high-quality products, we help ordinary people build extraordinary futures."
+            description: "Sanyukt Parivaar & Rich Life Pvt.Ltd. is a people-driven direct selling organization committed to empowering individuals with sustainable income opportunities. Through our transparent MLM business model and high-quality products, we help ordinary people build extraordinary futures."
         },
         {
             image: "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080&q=80",
-            title: "Welcome to Sanyukt Parivaar & Rich Life Private Limited",
+            title: "Welcome to Sanyukt Parivaar & Rich Life Pvt.Ltd.",
             subtitle: "A Trusted & Fast-Growing Multi-Level Marketing Company",
-            description: "Sanyukt Parivaar & Rich Life Private Limited is a people-driven direct selling organization committed to empowering individuals with sustainable income opportunities. Through our transparent MLM business model and high-quality products, we help ordinary people build extraordinary futures."
+            description: "Sanyukt Parivaar & Rich Life Pvt.Ltd. is a people-driven direct selling organization committed to empowering individuals with sustainable income opportunities. Through our transparent MLM business model and high-quality products, we help ordinary people build extraordinary futures."
         },
         {
             image: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080&q=80",
-            title: "Welcome to Sanyukt Parivaar & Rich Life Private Limited",
+            title: "Welcome to Sanyukt Parivaar & Rich Life Pvt.Ltd.",
             subtitle: "A Trusted & Fast-Growing Multi-Level Marketing Company",
-            description: "Sanyukt Parivaar & Rich Life Private Limited is a people-driven direct selling organization committed to empowering individuals with sustainable income opportunities. Through our transparent MLM business model and high-quality products, we help ordinary people build extraordinary futures."
+            description: "Sanyukt Parivaar & Rich Life Pvt.Ltd. is a people-driven direct selling organization committed to empowering individuals with sustainable income opportunities. Through our transparent MLM business model and high-quality products, we help ordinary people build extraordinary futures."
         }
     ];
 
@@ -274,7 +275,7 @@ const HomePage = () => {
             try {
                 setIsProcessingPayment(true);
                 const toastId = toast.loading("Processing wallet payment...");
-                
+
                 const { data } = await api.post('/recharge/wallet', {
                     amount: Number(amount),
                     type: 'mobile',
@@ -368,7 +369,7 @@ const HomePage = () => {
                         }
                     },
                     modal: {
-                        ondismiss: function() {
+                        ondismiss: function () {
                             setIsProcessingPayment(false);
                         }
                     },
@@ -603,7 +604,7 @@ const HomePage = () => {
                             Together We Grow, Together We Prosper
                         </h2>
                         <p className="text-sm mb-4 max-w-2xl mx-auto text-gray-600">
-                            At Sanyukt Parivaar & Rich Life Private Limited, we don't just build income — we build people, confidence, and a better future.
+                            At Sanyukt Parivaar & Rich Life Pvt.Ltd., we don't just build income - we build people, confidence, and a better future.
                         </p>
                         <button
                             onClick={() => handleNavigation('/register')}

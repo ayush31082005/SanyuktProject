@@ -21,7 +21,10 @@ import {
     Info, 
     Tag, 
     Package,
-    Star
+    Star,
+    Banknote,
+    QrCode,
+    CreditCard as CardIcon
 } from 'lucide-react';
 import { API_URL } from '../api';
 
@@ -128,9 +131,9 @@ const ProductDetailsModal = ({
                                 justifyContent: 'center',
                                 mb: 2
                             }}>
-                                {imageUrl ? (
+                                {productImage ? (
                                     <img
-                                        src={imageUrl}
+                                        src={productImage}
                                         alt={product.name}
                                         style={{
                                             maxWidth: '100%',
@@ -272,6 +275,32 @@ const ProductDetailsModal = ({
                                     <Typography variant="body2" sx={{ fontWeight: 800, color: product.stock > 0 ? '#16a34a' : '#f59e0b', display: 'flex', alignItems: 'center', gap: 1 }}>
                                         <Package className="w-4 h-4" /> {product.stock > 0 ? 'In Stock' : 'Out of Stock'}
                                     </Typography>
+                                </Box>
+                            </Box>
+
+                            <Box sx={{ mb: 6 }}>
+                                <Typography variant="subtitle2" sx={{ fontWeight: 800, color: '#111827', mb: 1.5, display: 'flex', alignItems: 'center', gap: 1 }}>
+                                    <Banknote className="w-4 h-4 text-green-600" /> Accepted Payment Methods
+                                </Typography>
+                                <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+                                    {(product.paymentMethods || ['cod', 'upi', 'card']).includes('cod') && (
+                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, px: 2, py: 1, bgcolor: '#f0fdf4', borderRadius: '12px', border: '1px solid #dcfce7' }}>
+                                            <Banknote size={14} className="text-green-600" />
+                                            <Typography variant="caption" fontWeight="700" color="#166534">COD</Typography>
+                                        </Box>
+                                    )}
+                                    {(product.paymentMethods || ['cod', 'upi', 'card']).includes('upi') && (
+                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, px: 2, py: 1, bgcolor: '#eff6ff', borderRadius: '12px', border: '1px solid #dbeafe' }}>
+                                            <QrCode size={14} className="text-blue-600" />
+                                            <Typography variant="caption" fontWeight="700" color="#1e40af">UPI</Typography>
+                                        </Box>
+                                    )}
+                                    {(product.paymentMethods || ['cod', 'upi', 'card']).includes('card') && (
+                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, px: 2, py: 1, bgcolor: '#fff7ed', borderRadius: '12px', border: '1px solid #ffedd5' }}>
+                                            <CardIcon size={14} className="text-orange-600" />
+                                            <Typography variant="caption" fontWeight="700" color="#9a3412">Card</Typography>
+                                        </Box>
+                                    )}
                                 </Box>
                             </Box>
 

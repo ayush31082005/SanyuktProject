@@ -14,6 +14,7 @@ router.get("/profile", protect, auth.profile);
 router.put("/profile", protect, auth.updateProfile);
 router.put("/kyc", protect, auth.submitKyc);
 router.get("/sponsor/:id", auth.getSponsorName);
+router.get("/public-profile/:id", auth.publicProfile);
 router.post("/create-admin",
     protect,
     adminOnly,

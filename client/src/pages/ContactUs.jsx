@@ -255,9 +255,9 @@ const ContactUs = () => {
                                         <div className="flex-1">
                                             <h3 className="font-semibold text-gray-800 mb-1">Head Office</h3>
                                             <p className="text-gray-600 text-sm leading-relaxed">
-                                                Sanyukt Parivaar & Rich Life Private Limited,<br />
-                                                C/o- Vindeshwari Prasad, Bhatiniya, Gopinathpur,<br />
-                                                Harraiya, Basti - 272130, Uttar Pradesh
+                                                Sanyukt Parivaar & Rich Life Pvt.Ltd.,<br />
+                                                Bhatiniya, Gopinathpur, Harraiya,<br />
+                                                Basti - 272130, Uttar Pradesh
                                             </p>
                                         </div>
                                     </div>

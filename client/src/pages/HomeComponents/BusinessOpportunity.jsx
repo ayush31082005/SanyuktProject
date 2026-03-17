@@ -11,7 +11,7 @@ const BusinessOpportunity = ({ businessHighlights, businessImage, handleNavigati
                             A Powerful Business Opportunity
                         </h2>
                         <p className="text-gray-200 text-xs md:text-sm leading-relaxed">
-                            Sanyukt Parivaar & Rich Life Private Limited offers a proven MLM business plan that allows individuals to earn through product sales, team building, and leadership development. Whether you are a student, professional, homemaker, or entrepreneur — this opportunity is open to all.
+                            Sanyukt Parivaar & Rich Life Pvt.Ltd. offers a proven MLM business plan that allows individuals to earn through product sales, team building, and leadership development. Whether you are a student, professional, homemaker, or entrepreneur - this opportunity is open to all.
                         </p>
                         <div className="space-y-1">
                             {businessHighlights.map((highlight, index) => (

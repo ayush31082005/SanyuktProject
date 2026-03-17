@@ -113,11 +113,11 @@ const LogoTagline = styled('span')(({ theme }) => ({
 // NavButton with exact styling
 const NavButton = styled(Button)(({ theme }) => ({
     fontFamily: '"Poppins", "Roboto", sans-serif',
-    fontSize: '13px',
+    fontSize: '15px',
     fontWeight: 500,
     color: '#2F7A32',
     textTransform: 'none',
-    padding: '4px 6px',
+    padding: '4px 8px',
     minWidth: 'auto',
     whiteSpace: 'nowrap',
     '&:hover': {
@@ -129,19 +129,19 @@ const NavButton = styled(Button)(({ theme }) => ({
     },
     transition: 'color 0.2s ease-in-out',
     [theme.breakpoints.up('xl')]: {
-        fontSize: '15px',
-        padding: '6px 10px',
+        fontSize: '17px',
+        padding: '6px 12px',
     },
 }));
 
 // Register Button (#F7931E, White text)
 const RegisterButton = styled(Button)(({ theme }) => ({
     fontFamily: '"Poppins", "Roboto", sans-serif',
-    fontSize: '14px',
+    fontSize: '15px',
     fontWeight: 600,
     backgroundColor: '#F7931E',
     color: '#FFFFFF',
-    padding: '6px 12px',
+    padding: '6px 14px',
     borderRadius: '4px',
     textTransform: 'none',
     whiteSpace: 'nowrap',
@@ -151,20 +151,20 @@ const RegisterButton = styled(Button)(({ theme }) => ({
     },
     transition: 'all 0.2s ease-in-out',
     [theme.breakpoints.up('xl')]: {
-        fontSize: '15px',
-        padding: '8px 16px',
+        fontSize: '16px',
+        padding: '8px 20px',
     },
 }));
 
 // Login Button (Transparent, #F7931E Border)
 const LoginButton = styled(Button)(({ theme }) => ({
     fontFamily: '"Poppins", "Roboto", sans-serif',
-    fontSize: '14px',
+    fontSize: '15px',
     fontWeight: 600,
     backgroundColor: 'transparent',
     border: '1px solid #F7931E',
     color: '#F7931E',
-    padding: '6px 12px',
+    padding: '6px 14px',
     borderRadius: '4px',
     textTransform: 'none',
     whiteSpace: 'nowrap',
@@ -174,19 +174,19 @@ const LoginButton = styled(Button)(({ theme }) => ({
     },
     transition: 'all 0.2s ease-in-out',
     [theme.breakpoints.up('xl')]: {
-        fontSize: '15px',
-        padding: '8px 16px',
+        fontSize: '16px',
+        padding: '8px 20px',
     },
 }));
 
 // My Account Button (Yellow/Orange theme color)
 const MyAccountButton = styled(Button)(({ theme }) => ({
     fontFamily: '"Poppins", "Roboto", sans-serif',
-    fontSize: '13px',
+    fontSize: '15px',
     fontWeight: 600,
     backgroundColor: '#F7931E',
     color: '#FFFFFF',
-    padding: '5px 14px',
+    padding: '5px 16px',
     borderRadius: '8px',
     textTransform: 'none',
     whiteSpace: 'nowrap',
@@ -199,19 +199,19 @@ const MyAccountButton = styled(Button)(({ theme }) => ({
     },
     transition: 'all 0.2s ease-in-out',
     [theme.breakpoints.up('xl')]: {
-        fontSize: '14px',
-        padding: '6px 18px',
+        fontSize: '16px',
+        padding: '6px 20px',
     },
 }));
 
 // Admin Dashboard Button (Orange/Different color - for admins)
 const AdminDashboardButton = styled(Button)(({ theme }) => ({
     fontFamily: '"Poppins", "Roboto", sans-serif',
-    fontSize: '13px',
+    fontSize: '15px',
     fontWeight: 600,
     backgroundColor: '#F7931E',
     color: '#FFFFFF',
-    padding: '5px 14px',
+    padding: '5px 16px',
     borderRadius: '8px',
     textTransform: 'none',
     whiteSpace: 'nowrap',
@@ -224,8 +224,8 @@ const AdminDashboardButton = styled(Button)(({ theme }) => ({
     },
     transition: 'all 0.2s ease-in-out',
     [theme.breakpoints.up('xl')]: {
-        fontSize: '14px',
-        padding: '6px 18px',
+        fontSize: '16px',
+        padding: '6px 20px',
     },
 }));
 
@@ -500,7 +500,7 @@ const Header = () => {
                     )}
                     <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', lineHeight: 1.2 }}>
                         <LogoMain>Sanyukt Parivaar <span style={{ fontSize: '0.8rem' }}>&</span> Rich Life</LogoMain>
-                        <LogoTagline>Company</LogoTagline>
+                        <LogoTagline>Together We Grow, Together We Prosper</LogoTagline>
                     </Box>
                 </LogoContainer>
             </Box>
@@ -527,7 +527,7 @@ const Header = () => {
                 <ListItem disablePadding sx={{ flexDirection: 'column', alignItems: 'flex-start' }}>
                     <StyledListItemButton onClick={handleMobileCompanyToggle} sx={{ width: '100%' }}>
                         <ListItemText
-                            primary="Company"
+                            primary="Sanyukt Parivaar"
                             sx={{
                                 '& .MuiTypography-root': {
                                     fontFamily: '"Poppins", "Roboto", sans-serif',
@@ -766,7 +766,7 @@ const Header = () => {
                                 <LogoImage src="/logo.png" alt="Sanyukt Parivaar Logo" onError={handleLogoError} />
                             )}
                             <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', lineHeight: 1.2 }}>
-                                <LogoMain>Sanyukt Parivaar <span style={{ fontSize: '0.8rem' }}>&</span> Rich Life Private Limited</LogoMain>
+                                <LogoMain>Sanyukt Parivaar <span style={{ fontSize: '0.8rem' }}>&</span> Rich Life Pvt.Ltd.</LogoMain>
                                 <LogoTagline>Together We Grow, Together We Prosper</LogoTagline>
                             </Box>
                         </LogoContainer>
@@ -791,7 +791,7 @@ const Header = () => {
                                     className={isCompanyActive() ? 'active' : ''}
                                     sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}
                                 >
-                                    Company <ExpandMore sx={{ fontSize: '18px' }} />
+                                    Sanyukt Parivaar <ExpandMore sx={{ fontSize: '18px' }} />
                                 </NavButton>
 
                                 <Menu

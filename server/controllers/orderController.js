@@ -4,6 +4,8 @@ const Repurchase = require("../models/Repurchase");
 const { processOrderMLM } = require("../utils/mlmOrderUtils");
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
+const sendEmail = require("../utils/sendEmail");
+
 // ✅ Import repurchase income processor
 const { processRepurchaseGenerationIncome } = require("./repurchaseController");
 
@@ -94,6 +96,33 @@ exports.createOrder = async (req, res) => {
         processRepurchaseGenerationIncome(newRepurchase._id).catch(err =>
             console.error("❌ Repurchase income error:", err.message)
         );
+
+        // ── Send Order Success Email ──
+        try {
+            const userEmail = req.user.email;
+            const orderIdShort = order._id.toString().slice(-8).toUpperCase();
+            const subject = `Order Confirmed: #${orderIdShort} - Sanyukt Parivaar`;
+            const text = `Dear ${req.user.name},
+
+Thank you for your order! Your mission with Sanyukt Parivaar has begun.
+
+Order ID: #${orderIdShort}
+Product: ${productData.name}
+Quantity: ${quantity}
+Total Amount: ₹${total}
+Payment Method: ${paymentMethod.toUpperCase()}
+
+You can track your order status in your mission hub: ${process.env.FRONTEND_URL || 'http://localhost:5173'}/my-account/orders/${order._id}
+
+Thank you for choosing Sanyukt Parivaar!
+Empowering Lives, Together.`;
+
+            sendEmail(userEmail, subject, text).catch(err => 
+                console.error("❌ Failed to send order success email:", err.message)
+            );
+        } catch (emailErr) {
+            console.error("❌ Email data preparation error:", emailErr.message);
+        }
 
         res.status(201).json(order);
     } catch (error) {

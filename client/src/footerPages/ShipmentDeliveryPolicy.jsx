@@ -56,7 +56,7 @@ const ShippingDeliveryPolicy = () => {
                                     <div className="space-y-4 pl-4">
                                         <div className="pl-4 border-l-2 border-[#F7931E]">
                                             <h5 className="font-bold text-[#0A7A2F] mb-1">Order Processing</h5>
-                                            <p className="text-[#222222] text-sm">Orders are usually processed within 2–5 working days after order confirmation and payment verification.</p>
+                                            <p className="text-[#222222] text-sm">Orders are usually processed within 2-5 working days after order confirmation and payment verification.</p>
                                         </div>
 
                                         <div className="pl-4 border-l-2 border-[#F7931E]">
@@ -178,7 +178,7 @@ const ShippingDeliveryPolicy = () => {
                                 <div>
                                     <h3 className="font-bold text-[#0A7A2F] mb-2">Legal Disclaimer</h3>
                                     <p className="text-[#222222] text-sm">
-                                        Sanyukt Parivaar & Rich Life Private Limited follows applicable Direct Selling Guidelines.
+                                        Sanyukt Parivaar & Rich Life Pvt.Ltd. follows applicable Direct Selling Guidelines.
                                         Income depends on individual effort and performance. No guaranteed earnings.
                                     </p>
                                 </div>

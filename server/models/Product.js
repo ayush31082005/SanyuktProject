@@ -45,6 +45,11 @@ const productSchema = new mongoose.Schema(
             type: Boolean,
             default: false,
         },
+        paymentMethods: {
+            type: [String],
+            enum: ['cod', 'upi', 'card'],
+            default: ['cod', 'upi', 'card']
+        },
     },
     { timestamps: true }
 );

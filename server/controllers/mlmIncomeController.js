@@ -9,49 +9,75 @@ const { PACKAGES } = require("../utils/mlmLogic");
 exports.calculateMatchingBonus = async () => {
     try {
         const trees = await BinaryTree.find({});
+        const now = new Date();
+        const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         
         for (const tree of trees) {
             const user = await User.findById(tree.userId);
-            if (!user || user.packageType === "none") continue;
+            if (!user || user.packageType === "none" || !user.activeStatus) continue;
 
             const packageInfo = PACKAGES[user.packageType];
-            const capping = packageInfo.capping;
+            if (!packageInfo) continue;
+            
+            const cappingLimit = packageInfo.capping || 0;
 
-            // Calculate current matching
-            // Available to match = totalPV - matchedPV
-            // We use leftPV and rightPV as total accumulators
-            // matchedPV is what we already paid for
-            
-            // Actually, a better way: leftPV and rightPV are current totals.
-            // We match the minimum of (leftPV - paidLeftPV) and (rightPV - paidRightPV)
-            // But let's stick to the simplest interpretation of matching.
-            
-            const leftAvailable = tree.leftPV - tree.matchedPV;
-            const rightAvailable = tree.rightPV - tree.matchedPV;
+            // 1. Check today's already earned matching income
+            const todayEarned = await IncomeHistory.aggregate([
+                {
+                    $match: {
+                        userId: user._id,
+                        type: "Matching",
+                        createdAt: { $gte: startOfDay }
+                    }
+                },
+                {
+                    $group: {
+                        _id: null,
+                        total: { $sum: "$amount" }
+                    }
+                }
+            ]);
+
+            const earnedAlready = todayEarned.length > 0 ? todayEarned[0].total : 0;
+            const remainingCap = Math.max(0, cappingLimit - earnedAlready);
+
+            if (remainingCap <= 0) {
+                console.log(`User ${user.memberId} has already hit daily cap of ₹${cappingLimit}`);
+                continue;
+            }
+
+            // 2. Calculate current matching available
+            const leftAvailable = (tree.leftPV || 0) - (tree.matchedPV || 0);
+            const rightAvailable = (tree.rightPV || 0) - (tree.matchedPV || 0);
             
             const matchingPV = Math.min(leftAvailable, rightAvailable);
 
             if (matchingPV >= 0.25) {
-                // Calculate income: 0.25 PV = ₹100 -> ₹400 per 1 PV
-                let income = matchingPV * 400;
+                // Calculate potential income: 0.25 PV = ₹100 -> ₹400 per 1 PV
+                let potentialIncome = matchingPV * 400;
+                
+                // Enforce remaining daily capping
+                let finalIncome = Math.min(potentialIncome, remainingCap);
 
-                // Respect daily capping
-                if (income > capping) income = capping;
-
-                if (income > 0) {
-                    user.walletBalance += income;
+                if (finalIncome > 0) {
+                    user.walletBalance = (user.walletBalance || 0) + finalIncome;
+                    user.totalMatchingBonus = (user.totalMatchingBonus || 0) + finalIncome;
                     await user.save();
 
-                    tree.matchedPV += matchingPV;
+                    // Even if we cap the income, we consider the PV "matched" 
+                    // (Matching is based on PV, capping is based on income)
+                    tree.matchedPV = (tree.matchedPV || 0) + matchingPV;
                     await tree.save();
 
                     await IncomeHistory.create({
                         userId: user._id,
-                        fromUserId: user._id, // Self or system
-                        amount: income,
+                        fromUserId: user._id,
+                        amount: finalIncome,
                         type: "Matching",
-                        description: `Matching bonus for ${matchingPV} PV`
+                        description: `Matching bonus for ${matchingPV} PV${finalIncome < potentialIncome ? ` (Capped from ₹${potentialIncome})` : ""}`
                     });
+
+                    console.log(`✅ User ${user.memberId} earned ₹${finalIncome} matching bonus (Cap: ₹${cappingLimit})`);
                 }
             }
         }

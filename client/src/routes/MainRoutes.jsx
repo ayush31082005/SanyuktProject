@@ -17,6 +17,7 @@ import Construction from '../pages/Construction.jsx'
 import BinaryTreeView from '../pages/BinaryTreeView.jsx'
 import UserTable from '../components/UserTable.jsx'
 import Gallery from '../pages/Gallery.jsx'
+import Donate from '../pages/Donate.jsx'
 
 import Opportunities from '../pages/Opportunities.jsx'
 import CompensationPlan from '../pages/CompensationPlan.jsx'
@@ -39,23 +40,18 @@ import PackageUpgrade from '../pages/PackageUpgrade.jsx'
 import OrderDetails from '../pages/OrderDetails.jsx'
 import ForgotPassword from '../pages/ForgotPassword.jsx'
 import FranchiseDashboard from '../pages/FranchiseDashboard.jsx'
-import Gallery from "../pages/Gallery.jsx"
 import Events from "../pages/Events.jsx"
 
 import SelfRepurchaseIncome from '../pages/RepurchaseBonus/SelfRepurchaseIncome.jsx'
 import RepurchaseLevelIncome from '../pages/RepurchaseBonus/RepurchaseLevelIncome.jsx';
-import SponsorIncome from '../pages/RepurchaseBonus/SponsorIncome.jsx';
-import RoyaltyBonus from '../pages/RepurchaseBonus/RoyaltyBonus.jsx';
-import DirectorBonus from '../pages/RepurchaseBonus/DirectorBonus.jsx';
-import HouseFund from '../pages/RepurchaseBonus/HouseFund.jsx';
-import LeadershipFund from '../pages/RepurchaseBonus/LeadershipFund.jsx';
-import CarFund from '../pages/RepurchaseBonus/CarFund.jsx';
-import TravelFund from '../pages/RepurchaseBonus/TravelFund.jsx';
-import BikeFund from '../pages/RepurchaseBonus/BikeFund.jsx';
+import {
+    SponsorIncome, RoyaltyBonus, DirectorBonus,
+    HouseFund, LeadershipFund, CarFund, TravelFund, BikeFund
+} from '../pages/RepurchaseBonus/BonusComponents.jsx';
 
 import MyRank from '../pages/MyRank';
 
-import WalletTopup from '../pages/Wallet/Wallettoup';
+import WalletTopup from '../pages/Wallet/Wallettopup';
 import WithdrawalRequest from '../pages/Wallet/Withdrawalrequest';
 import AllTransactionReport from '../pages/Wallet/AllTransactionReport';
 import DeductionReport from '../pages/Wallet/DeductionReport';
@@ -96,6 +92,7 @@ const MainRoutes = () => {
             <Route path='/grievance' element={<Grievance />} />
             <Route path='/products' element={<Product />} />
             <Route path='/recharge' element={<Recharge />} />
+            <Route path='/donate' element={<Donate />} />
             <Route path='/opportunities' element={<Opportunities />} />
             <Route path='/compensation-plan' element={<CompensationPlan />} />
             <Route path='/exchange-policy' element={<ExchangePolicy />} />
@@ -169,7 +166,7 @@ const MainRoutes = () => {
 
                 <Route path='folder' element={<Construction title="My Folder" />} />
                 <Route path='folder/welcome-letter' element={<WelcomeLetter />} />
-                <Route path='folder/our-banker' element={<Construction title="Our Banker" />} />
+                <Route path='folder/our-banker' element={<OurBanker />} />
                 <Route path='folder/id-card' element={<IdCard />} />
             </Route>
 

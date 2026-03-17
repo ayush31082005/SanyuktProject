@@ -2,6 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Calendar, Clock, User, Tag } from 'lucide-react';
 import { useEffect } from 'react';
+import { API_URL } from '../api';
 
 const NewsDetailsModal = ({ isOpen, onClose, news }) => {
     if (!news) return null;

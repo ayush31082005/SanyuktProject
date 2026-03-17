@@ -41,7 +41,7 @@ const TestimonialPolicy = () => {
                     {/* Content */}
                     <div className="p-6 md:p-8">
                         <p className="text-[#222222] mb-8 leading-relaxed text-lg border-l-4 border-[#0A7A2F] pl-4">
-                            Sanyukt Parivaar & Rich Life Private Limited values authentic feedback from our community. This policy outlines how testimonials are collected, used, and displayed to ensure transparency, honesty, and compliance with direct selling guidelines.
+                            Sanyukt Parivaar & Rich Life Pvt.Ltd. values authentic feedback from our community. This policy outlines how testimonials are collected, used, and displayed to ensure transparency, honesty, and compliance with direct selling guidelines.
                         </p>
 
                         {/* Testimonial Collection */}
@@ -458,7 +458,7 @@ const TestimonialPolicy = () => {
                                 <div>
                                     <h3 className="font-bold text-[#0A7A2F] mb-2">Legal Disclaimer</h3>
                                     <p className="text-[#222222] text-sm">
-                                        Sanyukt Parivaar & Rich Life Private Limited follows applicable Direct Selling Guidelines and FTC regulations regarding testimonials and endorsements. Income depends on individual effort and performance. No guaranteed earnings. Testimonials represent individual experiences and are not guarantees of similar results. This policy is subject to change without prior notice.
+                                        Sanyukt Parivaar & Rich Life Pvt.Ltd. follows applicable Direct Selling Guidelines and FTC regulations regarding testimonials and endorsements. Income depends on individual effort and performance. No guaranteed earnings. Testimonials represent individual experiences and are not guarantees of similar results. This policy is subject to change without prior notice.
                                     </p>
                                 </div>
                             </div>

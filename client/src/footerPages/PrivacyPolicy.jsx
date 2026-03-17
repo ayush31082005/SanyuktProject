@@ -41,7 +41,7 @@ const PrivacyPolicy = () => {
                     {/* Content */}
                     <div className="p-6 md:p-8">
                         <p className="text-[#222222] mb-8 leading-relaxed text-lg border-l-4 border-[#0A7A2F] pl-4">
-                            Sanyukt Parivaar & Rich Life Private Limited respects the privacy of its users, members, and customers.
+                            Sanyukt Parivaar & Rich Life Pvt.Ltd. respects the privacy of its users, members, and customers.
                             This Privacy Policy explains how we collect, use, protect, and disclose personal information
                             provided on our website and digital platforms.
                         </p>
@@ -53,7 +53,7 @@ const PrivacyPolicy = () => {
                                 Scope of the Privacy Policy
                             </h3>
                             <p className="text-[#222222] text-sm leading-relaxed">
-                                This is Sanyukt Parivaar & Rich Life Private Limited's global Privacy Policy. We have highlighted below where a particular section applies to you based on where you live. For the purposes of the General Data Protection Regulation ('GDPR'), if you are a resident in the EEA, Switzerland, and the UK, Sanyukt Parivaar Europe Ltd. and Sanyukt Parivaar, Inc. are joint data controllers of your personal data. Sanyukt Parivaar Europe Ltd. is an Irish company with its registered office at Waterloo Exchange, 3rd Floor, Waterloo Road, Dublin 4, Ireland. Sanyukt Parivaar, Inc. is a US company with its registered office at 651 Brannan St., San Francisco, CA 94107, USA. Sanyukt Parivaar Europe Ltd is the responsible controller for fulfilling key obligations under the GDPR. If you have any questions about our data processing activities, please contact our Data Protection Officer.
+                                This is Sanyukt Parivaar & Rich Life Pvt.Ltd.'s global Privacy Policy. We have highlighted below where a particular section applies to you based on where you live. For the purposes of the General Data Protection Regulation ('GDPR'), if you are a resident in the EEA, Switzerland, and the UK, Sanyukt Parivaar Europe Ltd. and Sanyukt Parivaar, Inc. are joint data controllers of your personal data. Sanyukt Parivaar Europe Ltd. is an Irish company with its registered office at Waterloo Exchange, 3rd Floor, Waterloo Road, Dublin 4, Ireland. Sanyukt Parivaar, Inc. is a US company with its registered office at 651 Brannan St., San Francisco, CA 94107, USA. Sanyukt Parivaar Europe Ltd is the responsible controller for fulfilling key obligations under the GDPR. If you have any questions about our data processing activities, please contact our Data Protection Officer.
                             </p>
                         </div>
 
@@ -213,7 +213,7 @@ const PrivacyPolicy = () => {
                                 <div>
                                     <h3 className="font-bold text-[#0A7A2F] mb-2">Legal Disclaimer</h3>
                                     <p className="text-[#222222] text-sm">
-                                        Sanyukt Parivaar & Rich Life Private Limited follows applicable Direct Selling Guidelines.
+                                        Sanyukt Parivaar & Rich Life Pvt.Ltd. follows applicable Direct Selling Guidelines.
                                         Income depends on individual effort and performance. No guaranteed earnings.
                                     </p>
                                 </div>

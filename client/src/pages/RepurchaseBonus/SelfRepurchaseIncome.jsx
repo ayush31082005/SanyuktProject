@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, TrendingUp, Users, Layers, ChevronDown } from 'lucide-react';
 import api from '../../api'; // ✅ apna path check kar lena
 
-const RepurchaseLevelIncome = () => {
+const SelfRepurchaseIncome = () => {
     const navigate = useNavigate();
     const cardsRef = useRef([]);
     const tableRef = useRef(null);
@@ -342,4 +342,4 @@ const RepurchaseLevelIncome = () => {
     );
 };
 
-export default RepurchaseLevelIncome;
+export default SelfRepurchaseIncome;

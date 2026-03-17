@@ -2,12 +2,12 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Phone, Mail, MapPin, Clock, Facebook, Instagram, Youtube, Twitter, Check } from 'lucide-react';
 
-const ContactFormSection = ({ 
-    contactForm, 
-    setContactForm, 
-    handleContactSubmit, 
-    contactSubmitting, 
-    contactSuccess 
+const ContactFormSection = ({
+    contactForm,
+    setContactForm,
+    handleContactSubmit,
+    contactSubmitting,
+    contactSuccess
 }) => {
     return (
         <section className="py-16 bg-white" >
@@ -20,15 +20,15 @@ const ContactFormSection = ({
                 </div>
 
                 <div className="grid lg:grid-cols-2 gap-10 items-start">
-                    {/* LEFT — Contact info cards */}
+                    {/* LEFT - Contact info cards */}
                     <div className="space-y-5">
                         {/* Info cards */}
                         {[
                             {
                                 icon: Phone,
                                 title: 'Call Us',
-                                lines: ['+91 96281 45157'],
-                                sub: 'Mon–Sat, 9 AM – 7 PM',
+                                lines: ['+91  7880370057'],
+                                sub: 'Mon-Sat, 9 AM - 7 PM',
                                 color: 'bg-green-50 text-[#0A7A2F]',
                             },
                             {
@@ -41,14 +41,14 @@ const ContactFormSection = ({
                             {
                                 icon: MapPin,
                                 title: 'Visit Us',
-                                lines: ['Sanyukt Parivaar & Rich Life Private Limited,  Near Main Business Hub, India'],
+                                lines: ['Sanyukt Parivaar & Rich Life Pvt.Ltd., Bhatiniya, Gopinathpur, Harraiya, Basti - 272130, Uttar Pradesh'],
                                 sub: 'Head Office',
                                 color: 'bg-blue-50 text-blue-600',
                             },
                             {
                                 icon: Clock,
                                 title: 'Business Hours',
-                                lines: ['Monday – Saturday: 9:00 AM – 7:00 PM', 'Sunday: 10:00 AM – 4:00 PM'],
+                                lines: ['Monday - Saturday: 9:00 AM - 7:00 PM', 'Sunday: 10:00 AM - 4:00 PM'],
                                 sub: 'IST (Indian Standard Time)',
                                 color: 'bg-purple-50 text-purple-600',
                             },
@@ -90,7 +90,7 @@ const ContactFormSection = ({
                         </div>
                     </div>
 
-                    {/* RIGHT — Quick Contact Form */}
+                    {/* RIGHT - Quick Contact Form */}
                     <div className="bg-[#F8FAF5] rounded-3xl p-8 border border-gray-100 shadow-sm">
                         <h3 className="text-xl font-extrabold text-gray-900 mb-1">Send a Message</h3>
                         <p className="text-gray-400 text-sm mb-6">Fill in your details and we'll get back to you.</p>
@@ -112,7 +112,7 @@ const ContactFormSection = ({
                             </div>
                             <div>
                                 <label className="text-xs font-semibold text-gray-600 mb-1 block">Phone Number</label>
-                                <input type="tel" placeholder="+91 98765 43210" value={contactForm.phone} onChange={e => setContactForm(p => ({ ...p, phone: e.target.value }))} className="w-full px-4 py-3 rounded-xl bg-white border border-gray-200 text-sm focus:ring-2 focus:ring-[#0A7A2F] outline-none transition" />
+                                <input type="tel" placeholder="+91 78803 70057" value={contactForm.phone} onChange={e => setContactForm(p => ({ ...p, phone: e.target.value }))} className="w-full px-4 py-3 rounded-xl bg-white border border-gray-200 text-sm focus:ring-2 focus:ring-[#0A7A2F] outline-none transition" />
                             </div>
                             <div>
                                 <label className="text-xs font-semibold text-gray-600 mb-1 block">Enquiry Type</label>

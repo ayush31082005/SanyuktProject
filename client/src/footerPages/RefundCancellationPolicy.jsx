@@ -41,7 +41,7 @@ const RefundCancellationPolicy = () => {
                     {/* Content */}
                     <div className="p-6 md:p-8">
                         <p className="text-[#222222] mb-8 leading-relaxed text-lg border-l-4 border-[#0A7A2F] pl-4">
-                            Sanyukt Parivaar & Rich Life Private Limited follows a transparent refund and cancellation policy
+                            Sanyukt Parivaar & Rich Life Pvt.Ltd. follows a transparent refund and cancellation policy
                             in accordance with applicable laws.
                         </p>
 
@@ -189,7 +189,7 @@ const RefundCancellationPolicy = () => {
                                 <div>
                                     <h3 className="font-bold text-[#0A7A2F] mb-2">Legal Disclaimer</h3>
                                     <p className="text-[#222222] text-sm">
-                                        Sanyukt Parivaar & Rich Life Private Limited follows applicable Direct Selling Guidelines.
+                                        Sanyukt Parivaar & Rich Life Pvt.Ltd. follows applicable Direct Selling Guidelines.
                                         Income depends on individual effort and performance. No guaranteed earnings.
                                     </p>
                                 </div>

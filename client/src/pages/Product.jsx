@@ -98,7 +98,7 @@ const ProductsPage = () => {
     const filteredProducts = products.filter(product => {
         const matchesSearch = product.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
             product.description?.toLowerCase().includes(searchTerm.toLowerCase());
-        
+
         let matchesCategory = selectedCategory === "All";
         if (!matchesCategory) {
             if (selectedCategory === "Beauty & Cosmetics") {
@@ -107,7 +107,7 @@ const ProductsPage = () => {
                 matchesCategory = product.category === selectedCategory;
             }
         }
-        
+
         return matchesSearch && matchesCategory;
     });
 
@@ -195,7 +195,7 @@ const ProductsPage = () => {
         }).format(amount || 0);
     };
 
-    // इमेज एरर हैंडल करने के लिए फंक्शन
+
     const handleImageError = (productId) => {
         setImageErrors(prev => ({ ...prev, [productId]: true }));
         console.log(`Image load failed for product: ${productId}`);
@@ -222,9 +222,9 @@ const ProductsPage = () => {
                             </div>
                             <div>
                                 <h1 className="text-2xl md:text-3xl font-black text-[#111827] tracking-tight">
-                                    Our <span className="text-green-600">Products</span>
+                                    <span className="text-green-600 font-black">Our Products</span>
                                 </h1>
-                                <p className="text-[11px] md:text-xs text-gray-500 font-bold uppercase tracking-[0.2em] mt-1">
+                                <p className="text-[11px] md:text-xs text-gray-500 font-extrabold uppercase tracking-[0.2em] mt-1">
                                     Trusted Quality • Best Value
                                 </p>
                             </div>

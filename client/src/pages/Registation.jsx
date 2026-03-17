@@ -349,570 +349,483 @@ const RegistrationForm = () => {
                 </div>
 
                 {/* Main Grid */}
-                <div className="flex flex-col lg:flex-row gap-6">
-                    {/* Registration Form */}
-                    <div className="flex-1">
-                        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
+                <div className="flex justify-center">
+                    <div className="w-full max-w-2xl">
+                        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
                             {/* Header */}
-                            <div className="bg-gradient-to-r from-green-600 to-green-800 px-6 md:px-8 py-6 text-center">
-                                <h2 className="text-2xl md:text-3xl font-bold text-white">
+                            <div className="bg-gradient-to-r from-[#0A7A2F] to-[#085a23] px-6 py-8 text-center">
+                                <h2 className="text-3xl font-black text-white">
                                     Registration Form
                                 </h2>
-                                <p className="text-blue-100 mt-2 text-sm md:text-base">Join our network today</p>
+                                <p className="text-white/80 mt-1 font-medium italic">Join our Sanyukt Parivaar today</p>
                             </div>
 
                             {/* Error Display */}
                             {error && (
-                                <div className="mx-4 md:mx-6 lg:mx-8 mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
-                                    {error}
+                                <div className="mx-8 mt-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-r-lg shadow-sm">
+                                    <p className="font-bold text-sm">{error}</p>
                                 </div>
                             )}
 
                             {/* Success Display */}
                             {success && (
-                                <div className="mx-4 md:mx-6 lg:mx-8 mt-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded-lg">
-                                    {success}
+                                <div className="mx-8 mt-6 p-4 bg-green-50 border-l-4 border-green-500 text-green-700 rounded-r-lg shadow-sm">
+                                    <p className="font-bold text-sm">{success}</p>
                                 </div>
                             )}
 
-                            {/* Profile Picture Upload */}
-                            <div className="flex flex-col items-center py-5 border-b border-gray-100 bg-gray-50">
-                                <div className="relative inline-flex cursor-pointer group" onClick={() => document.getElementById('reg-profile-upload').click()}>
-                                    <div className="w-20 h-20 rounded-full overflow-hidden border-4 border-green-200 bg-green-100 flex items-center justify-center shadow-md group-hover:border-green-400 transition-all">
-                                        {profileImage ? (
-                                            <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
-                                        ) : (
-                                            <Users className="w-10 h-10 text-green-400" />
-                                        )}
-                                    </div>
-                                    <div className="absolute bottom-0 right-0 w-7 h-7 rounded-full bg-green-600 border-2 border-white flex items-center justify-center group-hover:bg-green-700 transition-colors">
-                                        <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                                    </div>
-                                </div>
-                                <p className="mt-2 text-sm text-gray-500">
-                                    {profileImage ? (
-                                        <span className="text-green-600 font-medium cursor-pointer" onClick={() => setProfileImage(null)}>Remove photo</span>
-                                    ) : (
-                                        <span className="text-gray-400">Click to upload photo <span className="text-gray-300">(optional)</span></span>
-                                    )}
-                                </p>
-                                <input id="reg-profile-upload" type="file" accept="image/*" hidden onChange={handleImageUpload} />
-                            </div>
-
                             {/* Form Body */}
-                            <form onSubmit={handleSubmit} noValidate>
-                                <div className="p-4 md:p-6 lg:p-8">
-
-
-                                    <div className="grid md:grid-cols-2 gap-4 md:gap-6">
-                                        {/* Left Column */}
-                                        <div className="space-y-4">
-                                            {/* Sponsor Id */}
-                                            <div className="space-y-2">
-                                                <label className="block text-sm font-semibold text-gray-700">
-                                                    Sponsor Id <span className="text-red-500">*</span>
-                                                </label>
-                                                <div className="relative">
-                                                    <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                                                    <input
-                                                        type="text"
-                                                        name="sponsorId"
-                                                        value={formData.sponsorId}
-                                                        onChange={handleChange}
-                                                        placeholder="Enter Sponsor Id"
-                                                        className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                                        required
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            {/* Sponsor Name */}
-                                            <div className="space-y-2">
-                                                <label className="block text-sm font-semibold text-gray-700">
-                                                    Sponsor Name
-                                                </label>
-                                                <div className="relative">
-                                                    <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                                                    <input
-                                                        type="text"
-                                                        name="sponsorName"
-                                                        value={formData.sponsorName}
-                                                        onChange={handleChange}
-                                                        placeholder="Sponsor Name"
-                                                        className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            {/* Position Radio */}
-                                            <div className="space-y-2">
-                                                <label className="block text-sm font-semibold text-gray-700">
-                                                    Position <span className="text-red-500">*</span>
-                                                </label>
-                                                <div className="flex flex-wrap gap-4">
-                                                    {['Left', 'Right'].map((pos) => (
-                                                        <label key={pos} className="flex items-center space-x-2 cursor-pointer">
-                                                            <input
-                                                                type="radio"
-                                                                name="position"
-                                                                value={pos}
-                                                                checked={formData.position === pos}
-                                                                onChange={handleChange}
-                                                                className="w-4 h-4 text-blue-600 focus:ring-blue-500"
-                                                                required
-                                                            />
-                                                            <span className="text-gray-700">{pos}</span>
-                                                        </label>
-                                                    ))}
-                                                </div>
-                                            </div>
-
-                                            {/* User Name */}
-                                            <div className="space-y-2">
-                                                <label className="block text-sm font-semibold text-gray-700">
-                                                    User Name <span className="text-red-500">*</span>
-                                                </label>
-                                                <div className="relative">
-                                                    <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                                                    <input
-                                                        type="text"
-                                                        name="userName"
-                                                        value={formData.userName}
-                                                        onChange={handleChange}
-                                                        placeholder="Enter User Name"
-                                                        className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                                        required
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            {/* Father Name */}
-                                            <div className="space-y-2">
-                                                <label className="block text-sm font-semibold text-gray-700">
-                                                    Father Name <span className="text-red-500">*</span>
-                                                </label>
-                                                <div className="relative">
-                                                    <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                                                    <input
-                                                        type="text"
-                                                        name="fatherName"
-                                                        value={formData.fatherName}
-                                                        onChange={handleChange}
-                                                        placeholder="Enter Father Name"
-                                                        className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                                        required
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {/* Right Column */}
-                                        <div className="space-y-4">
-                                            {/* Gender Radio */}
-                                            <div className="space-y-2">
-                                                <label className="block text-sm font-semibold text-gray-700">
-                                                    Gender <span className="text-red-500">*</span>
-                                                </label>
-                                                <div className="flex flex-wrap gap-4">
-                                                    {['Male', 'Female', 'Other'].map((gen) => (
-                                                        <label key={gen} className="flex items-center space-x-2 cursor-pointer">
-                                                            <input
-                                                                type="radio"
-                                                                name="gender"
-                                                                value={gen}
-                                                                checked={formData.gender === gen}
-                                                                onChange={handleChange}
-                                                                className="w-4 h-4 text-blue-600 focus:ring-blue-500"
-                                                                required
-                                                            />
-                                                            <span className="text-gray-700">{gen}</span>
-                                                        </label>
-                                                    ))}
-                                                </div>
-                                            </div>
-
-                                            {/* Mobile Number */}
-                                            <div className="space-y-2">
-                                                <label className="block text-sm font-semibold text-gray-700">
-                                                    Mobile No. <span className="text-red-500">*</span>
-                                                </label>
-                                                <div className="relative">
-                                                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                                                    <input
-                                                        type="tel"
-                                                        name="mobile"
-                                                        value={formData.mobile}
-                                                        onChange={handleChange}
-                                                        placeholder="Enter Mobile Number"
-                                                        className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                                        required
-                                                        maxLength="10"
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            {/* Email ID */}
-                                            <div className="space-y-2">
-                                                <label className="block text-sm font-semibold text-gray-700">
-                                                    Email ID <span className="text-red-500">*</span>
-                                                </label>
-                                                <div className="relative">
-                                                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                                                    <input
-                                                        type="email"
-                                                        name="email"
-                                                        value={formData.email}
-                                                        onChange={handleChange}
-                                                        placeholder="Enter Email Id"
-                                                        className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                                        required
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            {/* Password */}
-                                            <div className="space-y-2">
-                                                <label className="block text-sm font-semibold text-gray-700">
-                                                    Password <span className="text-red-500">*</span>
-                                                </label>
-                                                <div className="relative">
-                                                    <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                                                    <input
-                                                        type="password"
-                                                        name="password"
-                                                        value={formData.password}
-                                                        onChange={handleChange}
-                                                        placeholder="Enter Password"
-                                                        className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                                        required
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
+                            <form onSubmit={handleSubmit} noValidate className="p-8">
+                                <div className="grid grid-cols-1 gap-6">
+                                    {/* Sponsor Id */}
+                                    <div className="space-y-1.5">
+                                        <label className="block text-sm font-black text-[#222222]">
+                                            Sponsor Id <span className="text-red-500">*</span>
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="sponsorId"
+                                            value={formData.sponsorId}
+                                            onChange={handleChange}
+                                            placeholder="Enter Sponsor Id"
+                                            className="w-full px-4 py-3 bg-[#EEF2FF] border-none rounded-md text-[#222222] placeholder:text-gray-400 focus:ring-2 focus:ring-green-500/20 transition-all font-medium"
+                                            required
+                                        />
                                     </div>
 
-
-
-                                    {/* Address Section */}
-                                    <div className="mt-6 space-y-4">
-                                        <div className="bg-gray-50 border border-gray-200 p-4 md:p-6 rounded-xl mt-4 space-y-4">
-                                            <h3 className="text-lg font-bold text-gray-800 mb-2">Address Details</h3>
-
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                {/* State Select */}
-                                                <div className="space-y-2 relative" ref={stateDropdownRef}>
-                                                    <label className="block text-sm font-semibold text-gray-700">
-                                                        State <span className="text-red-500">*</span>
-                                                    </label>
-                                                    <div
-                                                        onClick={() => setIsStateDropdownOpen(!isStateDropdownOpen)}
-                                                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-white flex items-center justify-between cursor-pointer hover:border-blue-400 transition-colors"
-                                                    >
-                                                        <span className={formData.state ? 'text-gray-900' : 'text-gray-400'}>
-                                                            {formData.state || '- Select State -'}
-                                                        </span>
-                                                        <ChevronDown className={`h-5 w-5 text-gray-400 transition-transform ${isStateDropdownOpen ? 'rotate-180' : ''}`} />
-                                                    </div>
-
-                                                    <AnimatePresence>
-                                                        {isStateDropdownOpen && (
-                                                            <motion.div
-                                                                initial={{ opacity: 0, y: -10 }}
-                                                                animate={{ opacity: 1, y: 0 }}
-                                                                exit={{ opacity: 0, y: -10 }}
-                                                                className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden"
-                                                            >
-                                                                <div className="p-2 border-b border-gray-100 bg-gray-50">
-                                                                    <div className="relative">
-                                                                        <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                                                                        <input
-                                                                            type="text"
-                                                                            placeholder="Search state..."
-                                                                            value={stateSearch}
-                                                                            onChange={(e) => setStateSearch(e.target.value)}
-                                                                            onClick={(e) => e.stopPropagation()}
-                                                                            className="w-full pl-8 pr-3 py-1.5 text-sm border border-gray-200 rounded focus:border-blue-500 bg-white"
-                                                                        />
-                                                                    </div>
-                                                                </div>
-                                                                <div className="max-h-60 overflow-y-auto">
-                                                                    {filteredStates.length > 0 ? (
-                                                                        filteredStates.map((st) => (
-                                                                            <div
-                                                                                key={st}
-                                                                                onClick={() => {
-                                                                                    setFormData({ ...formData, state: st, district: '', assemblyArea: '' });
-                                                                                    setIsStateDropdownOpen(false);
-                                                                                    setStateSearch('');
-                                                                                }}
-                                                                                className={`px-4 py-2.5 text-sm cursor-pointer transition-colors hover:bg-blue-50 hover:text-blue-700 ${formData.state === st ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-gray-700'
-                                                                                    }`}
-                                                                            >
-                                                                                {st}
-                                                                            </div>
-                                                                        ))
-                                                                    ) : (
-                                                                        <div className="px-4 py-3 text-sm text-gray-500 text-center italic">
-                                                                            No states found
-                                                                        </div>
-                                                                    )}
-                                                                </div>
-                                                            </motion.div>
-                                                        )}
-                                                    </AnimatePresence>
-                                                </div>
-
-                                                {/* District Select */}
-                                                <div className="space-y-2 relative" ref={districtDropdownRef}>
-                                                    <label className="block text-sm font-semibold text-gray-700">
-                                                        District <span className="text-red-500">*</span>
-                                                    </label>
-                                                    <div
-                                                        onClick={() => {
-                                                            if (!formData.state) {
-                                                                setError("Please select a state first");
-                                                                return;
-                                                            }
-                                                            setIsDistrictDropdownOpen(!isDistrictDropdownOpen);
-                                                        }}
-                                                        className={`w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-white flex items-center justify-between cursor-pointer hover:border-blue-400 transition-colors ${!formData.state ? 'opacity-60 cursor-not-allowed' : ''}`}
-                                                    >
-                                                        <span className={formData.district ? 'text-gray-900' : 'text-gray-400'}>
-                                                            {formData.district || '- Select District -'}
-                                                        </span>
-                                                        <ChevronDown className={`h-5 w-5 text-gray-400 transition-transform ${isDistrictDropdownOpen ? 'rotate-180' : ''}`} />
-                                                    </div>
-
-                                                    <AnimatePresence>
-                                                        {isDistrictDropdownOpen && (
-                                                            <motion.div
-                                                                initial={{ opacity: 0, y: -10 }}
-                                                                animate={{ opacity: 1, y: 0 }}
-                                                                exit={{ opacity: 0, y: -10 }}
-                                                                className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden"
-                                                            >
-                                                                <div className="p-2 border-b border-gray-100 bg-gray-50">
-                                                                    <div className="relative">
-                                                                        <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                                                                        <input
-                                                                            type="text"
-                                                                            placeholder="Search district..."
-                                                                            value={districtSearch}
-                                                                            onChange={(e) => setDistrictSearch(e.target.value)}
-                                                                            onClick={(e) => e.stopPropagation()}
-                                                                            className="w-full pl-8 pr-3 py-1.5 text-sm border border-gray-200 rounded focus:border-blue-500 bg-white"
-                                                                        />
-                                                                    </div>
-                                                                </div>
-                                                                <div className="max-h-60 overflow-y-auto">
-                                                                    {filteredDistricts.length > 0 ? (
-                                                                        filteredDistricts.map((d) => (
-                                                                            <div
-                                                                                key={d}
-                                                                                onClick={() => {
-                                                                                    setFormData({ ...formData, district: d, assemblyArea: '' });
-                                                                                    setIsDistrictDropdownOpen(false);
-                                                                                    setDistrictSearch('');
-                                                                                }}
-                                                                                className={`px-4 py-2.5 text-sm cursor-pointer transition-colors hover:bg-blue-50 hover:text-blue-700 ${formData.district === d ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-gray-700'
-                                                                                    }`}
-                                                                            >
-                                                                                {d}
-                                                                            </div>
-                                                                        ))
-                                                                    ) : (
-                                                                        <div className="px-4 py-3 text-sm text-gray-500 text-center italic">
-                                                                            No districts found for {formData.state}
-                                                                        </div>
-                                                                    )}
-                                                                </div>
-                                                            </motion.div>
-                                                        )}
-                                                    </AnimatePresence>
-                                                </div>
-
-                                                {/* Assembly Select */}
-                                                <div className="space-y-2 relative" ref={assemblyDropdownRef}>
-                                                    <label className="block text-sm font-semibold text-gray-700">
-                                                        Assembly <span className="text-red-500">*</span>
-                                                    </label>
-                                                    <div
-                                                        onClick={() => {
-                                                            if (!formData.district) {
-                                                                setError("Please select a district first");
-                                                                return;
-                                                            }
-                                                            setIsAssemblyDropdownOpen(!isAssemblyDropdownOpen);
-                                                        }}
-                                                        className={`w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-white flex items-center justify-between cursor-pointer hover:border-blue-400 transition-colors ${!formData.district ? 'opacity-60 cursor-not-allowed' : ''}`}
-                                                    >
-                                                        <span className={formData.assemblyArea ? 'text-gray-900' : 'text-gray-400'}>
-                                                            {formData.assemblyArea || '- Select Assembly -'}
-                                                        </span>
-                                                        <ChevronDown className={`h-5 w-5 text-gray-400 transition-transform ${isAssemblyDropdownOpen ? 'rotate-180' : ''}`} />
-                                                    </div>
-
-                                                    <AnimatePresence>
-                                                        {isAssemblyDropdownOpen && (
-                                                            <motion.div
-                                                                initial={{ opacity: 0, y: -10 }}
-                                                                animate={{ opacity: 1, y: 0 }}
-                                                                exit={{ opacity: 0, y: -10 }}
-                                                                className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden"
-                                                            >
-                                                                <div className="p-2 border-b border-gray-100 bg-gray-50">
-                                                                    <div className="relative">
-                                                                        <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                                                                        <input
-                                                                            type="text"
-                                                                            placeholder="Search assembly..."
-                                                                            value={assemblySearch}
-                                                                            onChange={(e) => setAssemblySearch(e.target.value)}
-                                                                            onClick={(e) => e.stopPropagation()}
-                                                                            className="w-full pl-8 pr-3 py-1.5 text-sm border border-gray-200 rounded focus:border-blue-500 bg-white"
-                                                                        />
-                                                                    </div>
-                                                                </div>
-                                                                <div className="max-h-60 overflow-y-auto">
-                                                                    {filteredAssemblies.length > 0 ? (
-                                                                        filteredAssemblies.map((a) => (
-                                                                            <div
-                                                                                key={a}
-                                                                                onClick={() => {
-                                                                                    setFormData({ ...formData, assemblyArea: a });
-                                                                                    setIsAssemblyDropdownOpen(false);
-                                                                                    setAssemblySearch('');
-                                                                                }}
-                                                                                className={`px-4 py-2.5 text-sm cursor-pointer transition-colors hover:bg-blue-50 hover:text-blue-700 ${formData.assemblyArea === a ? 'bg-blue-50 text-blue-700 font-semibold' : 'text-gray-700'
-                                                                                    }`}
-                                                                            >
-                                                                                {a}
-                                                                            </div>
-                                                                        ))
-                                                                    ) : (
-                                                                        <div className="px-4 py-3 text-sm text-gray-500 text-center italic">
-                                                                            {formData.district ? 'No assemblies found for this district' : 'Select a district first'}
-                                                                        </div>
-                                                                    )}
-                                                                </div>
-                                                            </motion.div>
-                                                        )}
-                                                    </AnimatePresence>
-                                                </div>
-
-                                                {/* Block */}
-                                                <div className="space-y-2">
-                                                    <label className="block text-sm font-semibold text-gray-700">
-                                                        Block <span className="text-red-500">*</span>
-                                                    </label>
-                                                    <div className="relative">
-                                                        <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                                                        <input
-                                                            type="text"
-                                                            name="block"
-                                                            value={formData.block}
-                                                            onChange={handleChange}
-                                                            placeholder="Enter Block"
-                                                            className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
-                                                            required
-                                                        />
-                                                    </div>
-                                                </div>
-
-                                                {/* Village (Council) */}
-                                                <div className="space-y-2">
-                                                    <label className="block text-sm font-semibold text-gray-700">
-                                                        Village (Council) <span className="text-red-500">*</span>
-                                                    </label>
-                                                    <div className="relative">
-                                                        <Flag className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                                                        <input
-                                                            type="text"
-                                                            name="villageCouncil"
-                                                            value={formData.villageCouncil}
-                                                            onChange={handleChange}
-                                                            placeholder="Enter Village Council"
-                                                            className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
-                                                            required
-                                                        />
-                                                    </div>
-                                                </div>
-
-                                                {/* Village */}
-                                                <div className="space-y-2">
-                                                    <label className="block text-sm font-semibold text-gray-700">
-                                                        Village <span className="text-red-500">*</span>
-                                                    </label>
-                                                    <div className="relative">
-                                                        <TreePine className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                                                        <input
-                                                            type="text"
-                                                            name="village"
-                                                            value={formData.village}
-                                                            onChange={handleChange}
-                                                            placeholder="Enter Village Name"
-                                                            className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
-                                                            required
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            {/* Shipping Address */}
-                                            <div className="space-y-2 mt-4 pt-4 border-t border-gray-200">
-                                                <label className="block text-sm font-semibold text-gray-700">
-                                                    Shipping Address <span className="text-red-500">*</span>
-                                                </label>
-                                                <p className="text-xs text-gray-500 mb-2 italic">
-                                                    Note: Enter complete shipping address with Pincode.
-                                                </p>
-                                                <textarea
-                                                    name="shippingAddress"
-                                                    value={formData.shippingAddress}
-                                                    onChange={handleChange}
-                                                    placeholder="Enter complete shipping address"
-                                                    rows="3"
-                                                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none bg-white"
-                                                    required
-                                                />
-                                            </div>
-                                        </div>
+                                    {/* Sponsor Name */}
+                                    <div className="space-y-1.5">
+                                        <label className="block text-sm font-black text-[#222222]">
+                                            Sponsor Name
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="sponsorName"
+                                            value={formData.sponsorName}
+                                            onChange={handleChange}
+                                            placeholder="Sponser Name Visible Here"
+                                            readOnly
+                                            className="w-full px-4 py-3 bg-[#EEF2FF] border-none rounded-md text-[#222222] placeholder:text-gray-400 focus:outline-none opacity-80 font-medium"
+                                        />
                                     </div>
 
-                                    {/* Agreement and Submit Section */}
-                                    <div className="mt-8 space-y-4">
-                                        {/* Agreement Checkbox */}
-                                        <div className="flex items-start space-x-3">
-                                            <input
-                                                type="checkbox"
-                                                id="agreement"
-                                                checked={agreed}
-                                                onChange={(e) => setAgreed(e.target.checked)}
-                                                className="mt-1 w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
-                                            />
-                                            <label htmlFor="agreement" className="text-sm text-gray-600">
-                                                I accept the <Link to="/terms" className="text-blue-600 hover:underline font-semibold">terms and conditions</Link> and <Link to="/privacy" className="text-blue-600 hover:underline font-semibold">privacy policy</Link>.
-                                            </label>
-                                        </div>
-
-                                        {/* Sign In Link and Submit Button */}
-                                        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-gray-200">
-                                            <p className="text-gray-600 text-sm">
-                                                Already have an account?{' '}
-                                                <Link to="/login" className="text-blue-600 hover:underline font-semibold">
-                                                    Sign In
-                                                </Link>
-                                            </p>
-
-                                            <button
-                                                type="submit"
-                                                disabled={loading}
-                                                className={`px-8 py-3 bg-[#F7931E] hover:bg-[#e08418] text-white font-semibold rounded-lg transition-all duration-300 hover:shadow-xl transform hover:scale-105 ${loading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-                                                    }`}
+                                    {/* Position Dropdown */}
+                                    <div className="space-y-1.5">
+                                        <label className="block text-sm font-black text-[#222222]">
+                                            Position <span className="text-red-500">*</span>
+                                        </label>
+                                        <div className="relative">
+                                            <select
+                                                name="position"
+                                                value={formData.position}
+                                                onChange={handleChange}
+                                                className="w-full px-4 py-3 bg-[#EEF2FF] border-none rounded-md text-[#222222] appearance-none focus:ring-2 focus:ring-green-500/20 transition-all font-medium"
+                                                required
                                             >
-                                                {loading ? 'REGISTERING...' : 'SIGN UP'}
-                                            </button>
+                                                <option value="">- Select Position -</option>
+                                                <option value="Left">Left</option>
+                                                <option value="Right">Right</option>
+                                            </select>
+                                            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
                                         </div>
+                                    </div>
+
+                                    {/* Name */}
+                                    <div className="space-y-1.5">
+                                        <label className="block text-sm font-black text-[#222222]">
+                                            Name <span className="text-red-500">*</span>
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="userName"
+                                            value={formData.userName}
+                                            onChange={handleChange}
+                                            placeholder="Enter Full Name"
+                                            className="w-full px-4 py-3 bg-[#EEF2FF] border-none rounded-md text-[#222222] placeholder:text-gray-400 focus:ring-2 focus:ring-green-500/20 transition-all font-medium"
+                                            required
+                                        />
+                                    </div>
+
+                                    {/* Father Name */}
+                                    <div className="space-y-1.5">
+                                        <label className="block text-sm font-black text-[#222222]">
+                                            Father Name <span className="text-red-500">*</span>
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="fatherName"
+                                            value={formData.fatherName}
+                                            onChange={handleChange}
+                                            placeholder="Enter Father Name"
+                                            className="w-full px-4 py-3 bg-[#EEF2FF] border-none rounded-md text-[#222222] placeholder:text-gray-400 focus:ring-2 focus:ring-green-500/20 transition-all font-medium"
+                                            required
+                                        />
+                                    </div>
+
+                                    {/* Gender Dropdown */}
+                                    <div className="space-y-1.5">
+                                        <label className="block text-sm font-black text-[#222222]">
+                                            Gender <span className="text-red-500">*</span>
+                                        </label>
+                                        <div className="relative">
+                                            <select
+                                                name="gender"
+                                                value={formData.gender}
+                                                onChange={handleChange}
+                                                className="w-full px-4 py-3 bg-[#EEF2FF] border-none rounded-md text-[#222222] appearance-none focus:ring-2 focus:ring-green-500/20 transition-all font-medium"
+                                                required
+                                            >
+                                                <option value="">- Select Gender -</option>
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
+                                        </div>
+                                    </div>
+
+                                    {/* Mobile Number */}
+                                    <div className="space-y-1.5">
+                                        <label className="block text-sm font-black text-[#222222]">
+                                            Mobile No. <span className="text-red-500">*</span>
+                                        </label>
+                                        <input
+                                            type="tel"
+                                            name="mobile"
+                                            value={formData.mobile}
+                                            onChange={handleChange}
+                                            placeholder="Enter Mobile Number"
+                                            className="w-full px-4 py-3 bg-[#EEF2FF] border-none rounded-md text-[#222222] placeholder:text-gray-400 focus:ring-2 focus:ring-green-500/20 transition-all font-medium"
+                                            required
+                                            maxLength="10"
+                                        />
+                                    </div>
+
+                                    {/* Email ID */}
+                                    <div className="space-y-1.5">
+                                        <label className="block text-sm font-black text-[#222222]">
+                                            Email ID <span className="text-red-500">*</span>
+                                        </label>
+                                        <input
+                                            type="email"
+                                            name="email"
+                                            value={formData.email}
+                                            onChange={handleChange}
+                                            placeholder="Enter Email Id"
+                                            className="w-full px-4 py-3 bg-[#EEF2FF] border-none rounded-md text-[#222222] placeholder:text-gray-400 focus:ring-2 focus:ring-green-500/20 transition-all font-medium"
+                                            required
+                                        />
+                                    </div>
+
+                                    {/* Password */}
+                                    <div className="space-y-1.5">
+                                        <label className="block text-sm font-black text-[#222222]">
+                                            Password <span className="text-red-500">*</span>
+                                        </label>
+                                        <input
+                                            type="password"
+                                            name="password"
+                                            value={formData.password}
+                                            onChange={handleChange}
+                                            placeholder="Enter Password"
+                                            className="w-full px-4 py-3 bg-[#EEF2FF] border-none rounded-md text-[#222222] placeholder:text-gray-400 focus:ring-2 focus:ring-green-500/20 transition-all font-medium"
+                                            required
+                                        />
+                                    </div>
+
+                                    {/* Shipping Address */}
+                                    <div className="space-y-1.5 pt-4">
+                                        <label className="block text-sm font-black text-[#222222]">
+                                            Shipping Address <span className="text-red-500">*</span>
+                                        </label>
+                                        <p className="text-xs text-gray-500 mb-2 font-medium">
+                                            Note : Enter complete shipping address with city, Pincode & State.
+                                        </p>
+                                        <textarea
+                                            name="shippingAddress"
+                                            value={formData.shippingAddress}
+                                            onChange={handleChange}
+                                            placeholder="Enter Shipping Address"
+                                            rows="3"
+                                            className="w-full px-4 py-3 bg-[#EEF2FF] border-none rounded-md text-[#222222] placeholder:text-gray-400 focus:ring-2 focus:ring-green-500/20 transition-all font-medium resize-none shadow-sm"
+                                            required
+                                        />
+                                    </div>
+
+                                    {/* State Select */}
+                                    <div className="space-y-1.5 relative" ref={stateDropdownRef}>
+                                        <label className="block text-sm font-black text-[#222222]">
+                                            State <span className="text-red-500">*</span>
+                                        </label>
+                                        <div
+                                            onClick={() => setIsStateDropdownOpen(!isStateDropdownOpen)}
+                                            className="w-full px-4 py-3 bg-[#EEF2FF] border-none rounded-md flex items-center justify-between cursor-pointer focus:ring-2 focus:ring-green-500/20 transition-all font-medium"
+                                        >
+                                            <span className={formData.state ? 'text-[#222222]' : 'text-gray-400'}>
+                                                {formData.state || '- Select State -'}
+                                            </span>
+                                            <ChevronDown className={`h-5 w-5 text-gray-400 transition-transform ${isStateDropdownOpen ? 'rotate-180' : ''}`} />
+                                        </div>
+
+                                        <AnimatePresence>
+                                            {isStateDropdownOpen && (
+                                                <motion.div
+                                                    initial={{ opacity: 0, y: -10 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    exit={{ opacity: 0, y: -10 }}
+                                                    className="absolute z-50 w-full mt-1 bg-white border border-gray-100 rounded-lg shadow-2xl overflow-hidden"
+                                                >
+                                                    <div className="p-3 bg-gray-50 border-b border-gray-100">
+                                                        <div className="relative">
+                                                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                                                            <input
+                                                                type="text"
+                                                                placeholder="Search state..."
+                                                                value={stateSearch}
+                                                                onChange={(e) => setStateSearch(e.target.value)}
+                                                                onClick={(e) => e.stopPropagation()}
+                                                                className="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-md focus:border-green-500 bg-white shadow-inner focus:outline-none"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div className="max-h-60 overflow-y-auto premium-scrollbar">
+                                                        {filteredStates.length > 0 ? (
+                                                            filteredStates.map((st) => (
+                                                                <div
+                                                                    key={st}
+                                                                    onClick={() => {
+                                                                        setFormData({ ...formData, state: st, district: '', assemblyArea: '' });
+                                                                        setIsStateDropdownOpen(false);
+                                                                        setStateSearch('');
+                                                                    }}
+                                                                    className={`px-4 py-3 text-sm cursor-pointer transition-colors hover:bg-green-50 hover:text-[#0A7A2F] ${formData.state === st ? 'bg-green-50 text-[#0A7A2F] font-bold' : 'text-gray-700'
+                                                                        }`}
+                                                                >
+                                                                    {st}
+                                                                </div>
+                                                            ))
+                                                        ) : (
+                                                            <div className="px-4 py-6 text-sm text-gray-500 text-center italic">
+                                                                No states found
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
+                                    </div>
+
+                                    {/* District Select */}
+                                    <div className="space-y-1.5 relative" ref={districtDropdownRef}>
+                                        <label className="block text-sm font-black text-[#222222]">
+                                            District <span className="text-red-500">*</span>
+                                        </label>
+                                        <div
+                                            onClick={() => {
+                                                if (!formData.state) return;
+                                                setIsDistrictDropdownOpen(!isDistrictDropdownOpen);
+                                            }}
+                                            className={`w-full px-4 py-3 bg-[#EEF2FF] border-none rounded-md flex items-center justify-between cursor-pointer focus:ring-2 focus:ring-green-500/20 transition-all font-medium ${!formData.state ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                        >
+                                            <span className={formData.district ? 'text-[#222222]' : 'text-gray-400'}>
+                                                {formData.district || '- Select District -'}
+                                            </span>
+                                            <ChevronDown className={`h-5 w-5 text-gray-400 transition-transform ${isDistrictDropdownOpen ? 'rotate-180' : ''}`} />
+                                        </div>
+
+                                        <AnimatePresence>
+                                            {isDistrictDropdownOpen && (
+                                                <motion.div
+                                                    initial={{ opacity: 0, y: -10 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    exit={{ opacity: 0, y: -10 }}
+                                                    className="absolute z-50 w-full mt-1 bg-white border border-gray-100 rounded-lg shadow-2xl overflow-hidden"
+                                                >
+                                                    <div className="p-3 bg-gray-50 border-b border-gray-100">
+                                                        <div className="relative">
+                                                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                                                            <input
+                                                                type="text"
+                                                                placeholder="Search district..."
+                                                                value={districtSearch}
+                                                                onChange={(e) => setDistrictSearch(e.target.value)}
+                                                                onClick={(e) => e.stopPropagation()}
+                                                                className="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-md focus:border-green-500 bg-white shadow-inner focus:outline-none"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div className="max-h-60 overflow-y-auto premium-scrollbar">
+                                                        {filteredDistricts.length > 0 ? (
+                                                            filteredDistricts.map((d) => (
+                                                                <div
+                                                                    key={d}
+                                                                    onClick={() => {
+                                                                        setFormData({ ...formData, district: d, assemblyArea: '' });
+                                                                        setIsDistrictDropdownOpen(false);
+                                                                        setDistrictSearch('');
+                                                                    }}
+                                                                    className={`px-4 py-3 text-sm cursor-pointer transition-colors hover:bg-green-50 hover:text-[#0A7A2F] ${formData.district === d ? 'bg-green-50 text-[#0A7A2F] font-bold' : 'text-gray-700'
+                                                                        }`}
+                                                                >
+                                                                    {d}
+                                                                </div>
+                                                            ))
+                                                        ) : (
+                                                            <div className="px-4 py-6 text-sm text-gray-500 text-center italic">
+                                                                No districts found
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
+                                    </div>
+
+                                    {/* Other address fields with consistent styling */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        {/* Assembly Select */}
+                                        <div className="space-y-1.5 relative" ref={assemblyDropdownRef}>
+                                            <label className="block text-sm font-black text-[#222222]">
+                                                Assembly <span className="text-red-500">*</span>
+                                            </label>
+                                            <div
+                                                onClick={() => {
+                                                    if (!formData.district) return;
+                                                    setIsAssemblyDropdownOpen(!isAssemblyDropdownOpen);
+                                                }}
+                                                className={`w-full px-4 py-3 bg-[#EEF2FF] border-none rounded-md flex items-center justify-between cursor-pointer focus:ring-2 focus:ring-green-500/20 transition-all font-medium ${!formData.district ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                            >
+                                                <span className={formData.assemblyArea ? 'text-[#222222]' : 'text-gray-400'}>
+                                                    {formData.assemblyArea || '- Select Assembly -'}
+                                                </span>
+                                                <ChevronDown className={`h-5 w-5 text-gray-400 transition-transform ${isAssemblyDropdownOpen ? 'rotate-180' : ''}`} />
+                                            </div>
+
+                                            <AnimatePresence>
+                                                {isAssemblyDropdownOpen && (
+                                                    <motion.div
+                                                        initial={{ opacity: 0, y: -10 }}
+                                                        animate={{ opacity: 1, y: 0 }}
+                                                        exit={{ opacity: 0, y: -10 }}
+                                                        className="absolute z-50 w-full mt-1 bg-white border border-gray-100 rounded-lg shadow-2xl overflow-hidden"
+                                                    >
+                                                        <div className="p-3 bg-gray-50 border-b border-gray-100">
+                                                            <div className="relative">
+                                                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                                                                <input
+                                                                    type="text"
+                                                                    placeholder="Search assembly..."
+                                                                    value={assemblySearch}
+                                                                    onChange={(e) => setAssemblySearch(e.target.value)}
+                                                                    onClick={(e) => e.stopPropagation()}
+                                                                    className="w-full pl-9 pr-3 py-2 text-sm border border-gray-200 rounded-md focus:border-green-500 bg-white shadow-inner focus:outline-none"
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <div className="max-h-60 overflow-y-auto premium-scrollbar">
+                                                            {filteredAssemblies.length > 0 ? (
+                                                                filteredAssemblies.map((a) => (
+                                                                    <div
+                                                                        key={a}
+                                                                        onClick={() => {
+                                                                            setFormData({ ...formData, assemblyArea: a });
+                                                                            setIsAssemblyDropdownOpen(false);
+                                                                            setAssemblySearch('');
+                                                                        }}
+                                                                        className={`px-4 py-3 text-sm cursor-pointer transition-colors hover:bg-green-50 hover:text-[#0A7A2F] ${formData.assemblyArea === a ? 'bg-green-50 text-[#0A7A2F] font-bold' : 'text-gray-700'
+                                                                            }`}
+                                                                    >
+                                                                        {a}
+                                                                    </div>
+                                                                ))
+                                                            ) : (
+                                                                <div className="px-4 py-6 text-sm text-gray-500 text-center italic">
+                                                                    No assemblies found
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </motion.div>
+                                                )}
+                                            </AnimatePresence>
+                                        </div>
+
+                                        {/* Block */}
+                                        <div className="space-y-1.5">
+                                            <label className="block text-sm font-black text-[#222222]">
+                                                Block <span className="text-red-500">*</span>
+                                            </label>
+                                            <input
+                                                type="text"
+                                                name="block"
+                                                value={formData.block}
+                                                onChange={handleChange}
+                                                placeholder="Enter Block"
+                                                className="w-full px-4 py-3 bg-[#EEF2FF] border-none rounded-md text-[#222222] font-medium placeholder:text-gray-400 focus:ring-2 focus:ring-green-500/20"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Village Council & Village */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div className="space-y-1.5">
+                                            <label className="block text-sm font-black text-[#222222]">
+                                                Village Council <span className="text-red-500">*</span>
+                                            </label>
+                                            <input
+                                                type="text"
+                                                name="villageCouncil"
+                                                value={formData.villageCouncil}
+                                                onChange={handleChange}
+                                                placeholder="Enter Village Council"
+                                                className="w-full px-4 py-3 bg-[#EEF2FF] border-none rounded-md text-[#222222] font-medium placeholder:text-gray-400 focus:ring-2 focus:ring-green-500/20"
+                                            />
+                                        </div>
+                                        <div className="space-y-1.5">
+                                            <label className="block text-sm font-black text-[#222222]">
+                                                Village <span className="text-red-500">*</span>
+                                            </label>
+                                            <input
+                                                type="text"
+                                                name="village"
+                                                value={formData.village}
+                                                onChange={handleChange}
+                                                placeholder="Enter Village"
+                                                className="w-full px-4 py-3 bg-[#EEF2FF] border-none rounded-md text-[#222222] font-medium placeholder:text-gray-400 focus:ring-2 focus:ring-green-500/20"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Agreement Checkbox */}
+                                    <div className="flex items-start space-x-3 pt-4">
+                                        <input
+                                            type="checkbox"
+                                            id="agreement"
+                                            checked={agreed}
+                                            onChange={(e) => setAgreed(e.target.checked)}
+                                            className="mt-1 w-5 h-5 text-[#0A7A2F] rounded border-none bg-[#EEF2FF] focus:ring-green-500/20"
+                                        />
+                                        <label htmlFor="agreement" className="text-sm text-gray-600 font-medium leading-relaxed">
+                                            I accept the <Link to="/terms" className="text-[#0A7A2F] hover:underline font-bold">terms and conditions</Link> and <Link to="/privacy" className="text-[#0A7A2F] hover:underline font-bold">privacy policy</Link>.
+                                        </label>
+                                    </div>
+
+                                    {/* Submit Section */}
+                                    <div className="flex flex-col items-center gap-6 pt-8 border-t border-gray-100">
+                                        <button
+                                            type="submit"
+                                            disabled={loading}
+                                            className={`w-full py-4 bg-[#0A7A2F] hover:bg-[#085a23] text-white font-black text-lg rounded-xl transition-all duration-300 shadow-lg shadow-green-100 transform active:scale-[0.98] ${loading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:-translate-y-1 hover:shadow-green-200'
+                                                }`}
+                                        >
+                                            {loading ? 'REGISTERING...' : 'SIGN UP'}
+                                        </button>
+
+                                        <p className="text-gray-600 text-sm font-medium">
+                                            Already have an account?{' '}
+                                            <Link to="/login" className="text-[#0A7A2F] hover:underline font-bold">
+                                                Sign In
+                                            </Link>
+                                        </p>
                                     </div>
                                 </div>
                             </form>

@@ -5,7 +5,7 @@ import {
     Home, UserPlus, Users, ShoppingCart,
     Gift, Package, Wallet, Folder,
     UserCheck, MessageSquare, LogOut, Menu, X, ChevronDown, Bell, Search, Shield,
-    ShoppingBag, Globe, Trophy
+    ShoppingBag, Globe, Trophy, Monitor, LogIn, Network, Briefcase, Tag, Mail
 } from 'lucide-react';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -74,14 +74,15 @@ const UserDashboardLayout = () => {
     };
 
     const menuItems = [
-        { name: 'Home', icon: Home, path: '/my-account', id: 'home' },
-        { name: 'New Sign Up', icon: UserPlus, path: '/register', id: 'signup' },
+        { id: 'home', name: 'Home', icon: Monitor, path: '/my-account' },
+        { id: 'signup', name: 'New Sign Up', icon: LogIn, path: '/register' },
         {
+            id: 'downline',
             name: 'My Downline',
             icon: Users,
             path: '/my-account/downline',
-            id: 'downline',
-            badge: stats?.totalDownline || 0,
+            badge: stats?.totalDownline || '5',
+            badgeColor: 'bg-[#EF4444]',
             children: [
                 { name: 'My Directs', path: '/my-account/downline/directs', id: 'downline_directs' },
                 { name: 'Left Team', path: '/my-account/downline/left-team', id: 'downline_left' },
@@ -90,12 +91,14 @@ const UserDashboardLayout = () => {
                 { name: 'Tree View', path: '/my-account/downline/tree-view', id: 'downline_tree' },
             ],
         },
-        { name: 'Product Order', icon: ShoppingCart, path: '/my-account/orders', id: 'orders' },
+        { id: 'orders', name: 'Product Order', icon: ShoppingCart, path: '/my-account/orders', badge: stats?.totalOrders || '0', badgeColor: 'bg-[#F7931E]' },
         {
-            name: 'First Purchase Bonus',
-            icon: Gift,
-            path: '/my-account/bonus',
             id: 'first_bonus',
+            name: 'First Purchase Bonus',
+            icon: Briefcase,
+            path: '/my-account/bonus/first',
+            badge: '3',
+            badgeColor: 'bg-[#10B981]',
             children: [
                 { name: 'Active Package', path: '/my-account/bonus/first', id: 'first_active' },
                 { name: 'Silver Matching', path: '/my-account/bonus/first/silver', id: 'first_silver' },
@@ -104,18 +107,20 @@ const UserDashboardLayout = () => {
             ],
         },
         {
-            name: 'Repurchase Bonus',
-            icon: Package,
-            path: '/my-account/bonus/repurchase/self',
             id: 'repurchase_bonus',
+            name: 'Repurchase Bonus',
+            icon: Briefcase,
+            path: '/my-account/bonus/repurchase/self',
+            badge: '10',
+            badgeColor: 'bg-[#10B981]',
         },
-        { name: 'Our Products', icon: ShoppingBag, path: '/products', id: 'shop' },
         {
-            name: 'E-Wallet',
-            icon: Wallet,
-            path: '/my-account/wallet',
             id: 'wallet',
-            badge: stats?.walletBalance ? `₹${Number(stats.walletBalance).toFixed(2)}` : null,
+            name: 'E-Wallet',
+            icon: Briefcase,
+            path: '/my-account/wallet',
+            badge: stats?.walletBalance ? `₹${Number(stats.walletBalance).toFixed(2)}` : '0',
+            badgeColor: 'bg-[#3B82F6]',
             children: [
                 { name: 'Deduction Report', path: '/my-account/wallet/deduction-report', id: 'wallet_deduction' },
                 { name: 'Withdrawal History', path: '/my-account/wallet/withdrawal-history', id: 'wallet_withdrawal' },
@@ -134,19 +139,30 @@ const UserDashboardLayout = () => {
             rankBadge: stats?.rank || 'Member',
         },
         {
-            name: 'My Folder',
-            icon: Folder,
-            path: '/my-account/folder',
+            id: 'gen_wallet',
+            name: 'Generation Wallet',
+            icon: Briefcase,
+            path: '/my-account/wallet/generation',
+            badge: '4',
+            badgeColor: 'bg-[#3B82F6]',
+        },
+        {
             id: 'folder',
+            name: 'My Folder',
+            icon: Tag,
+            path: '/my-account/folder',
+            badge: '4',
+            badgeColor: 'bg-[#F7931E]',
             children: [
                 { name: 'Welcome Letter', path: '/my-account/folder/welcome-letter', id: 'folder_welcome' },
                 { name: 'Our Banker', path: '/banker', id: 'folder_banker' },
                 { name: 'ID Card', path: '/my-account/folder/id-card', id: 'folder_id' },
             ],
         },
-        { name: 'Profile & KYC', icon: UserCheck, path: '/my-account/profile', id: 'profile' },
-        { name: 'Submit Complain', icon: MessageSquare, path: '/my-account/grievances', id: 'grievance' },
+        { id: 'profile', name: 'Profile & KYC', icon: UserCheck, path: '/my-account/profile', badge: '4', badgeColor: 'bg-[#10B981]' },
+        { id: 'grievance', name: 'Submit Complain', icon: Mail, path: '/my-account/grievances', badge: '2', badgeColor: 'bg-[#3B82F6]' },
     ];
+    ;
 
     if (!userData) return null;
 
@@ -157,9 +173,9 @@ const UserDashboardLayout = () => {
                 className={`fixed left-0 h-[calc(100vh-60px)] md:h-[calc(100vh-80px)] top-[60px] md:top-[80px] bg-[#0A7A2F] text-white transition-all duration-300 z-50 shadow-none overflow-y-auto no-scrollbar
                     ${sidebarOpen ? 'w-72' : 'w-0 md:w-20 overflow-hidden'}`}
             >
-                <div className={`flex flex-col h-full transition-all duration-300 ${sidebarOpen ? 'p-6' : 'p-0 py-6'}`}>
+                <div className={`flex flex-col h-full transition-all duration-300 ${sidebarOpen ? 'p-0' : 'p-0 py-6'}`}>
                     {/* Brand / Logo Area */}
-                    <div className={`flex items-center mb-10 ${sidebarOpen ? 'justify-between' : 'justify-center'}`}>
+                    <div className={`flex items-center mb-6 pt-6 ${sidebarOpen ? 'px-6 justify-between' : 'justify-center'}`}>
                         <div className={`flex items-center ${sidebarOpen ? 'space-x-3' : 'flex-col space-y-4'}`}>
                             <button
                                 onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -176,38 +192,29 @@ const UserDashboardLayout = () => {
                                 </Link>
                             )}
                         </div>
-                        {sidebarOpen && (
-                            <button
-                                onClick={() => setSidebarOpen(false)}
-                                className="p-2 rounded-xl hover:bg-black/10 text-white transition-all"
-                                title="Close Menu"
-                            >
-                                <X size={20} />
-                            </button>
-                        )}
                     </div>
 
-                    {/* Profile Summary in Sidebar */}
+                    {/* Highly Compact Profile Summary */}
                     {sidebarOpen && (
-                        <div className="mb-10 text-center px-4">
-                            <div className="relative inline-block mb-4">
-                                <div className="w-24 h-24 rounded-full border-2 border-white/20 p-1 bg-[#096628] overflow-hidden">
+                        <div className="mb-6 px-6 flex items-center gap-4">
+                            <div className="relative shrink-0">
+                                <div className="w-14 h-14 rounded-full border-2 border-white/20 p-0.5 bg-[#096628] overflow-hidden">
                                     <img
                                         src={userData.profileImage || "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=200&h=200&q=80"}
                                         alt="Profile"
                                         className="w-full h-full rounded-full object-cover"
                                     />
                                 </div>
-                                <div className="absolute bottom-1 right-1 w-5 h-5 bg-orange-500 border-2 border-[#0A7A2F] rounded-full"></div>
+                                <div className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-orange-500 border-2 border-[#0A7A2F] rounded-full"></div>
                             </div>
-                            <h3 className="font-black text-lg leading-tight uppercase tracking-wide text-white">{userData.userName}</h3>
-                            <div className="flex flex-col gap-1 mt-2">
-                                <p className="text-[11px] text-white/90 font-black tracking-widest uppercase">Member ID: {userData.memberId || 'SPRL0000'}</p>
-                                
+                            <div className="overflow-hidden flex-1">
+                                <h3 className="font-black text-sm uppercase tracking-wide text-white truncate">{userData.userName}</h3>
+                                <p className="text-[10px] text-white/70 font-bold uppercase tracking-widest">{userData.memberId || 'SPRL0000'}</p>
+
                                 {/* ✅ RANK BADGE — click karo rank page pe jao */}
                                 <button
                                     onClick={() => navigate('/my-account/rank')}
-                                    className="flex items-center justify-center gap-1.5 mx-auto mt-1 px-3 py-1 rounded-full transition-all active:scale-95 hover:opacity-90"
+                                    className="flex items-center justify-center gap-1.5 mt-1 px-3 py-1 rounded-full transition-all active:scale-95 hover:opacity-90 w-fit"
                                     style={{
                                         backgroundColor: getRankColor(stats?.rank || 'Member') + '25',
                                         border: `1px solid ${getRankColor(stats?.rank || 'Member')}50`,
@@ -222,7 +229,7 @@ const UserDashboardLayout = () => {
                                     </span>
                                 </button>
 
-                                <div className="flex items-center justify-center gap-2 text-white/90 mt-1">
+                                <div className="flex items-center gap-2 text-white/90 mt-1">
                                     <div className="w-2 h-2 bg-orange-400 rounded-full animate-pulse"></div>
                                     <span className="text-[10px] font-bold uppercase tracking-wider">Live Support</span>
                                 </div>
@@ -231,7 +238,7 @@ const UserDashboardLayout = () => {
                     )}
 
                     {/* Navigation Menu */}
-                    <nav className="flex-1 space-y-1">
+                    <nav className="flex-1">
                         {menuItems.map((item) => {
                             const hasChildren = Array.isArray(item.children) && item.children.length > 0;
                             const isActiveDirect = location.pathname === item.path || (item.path === '/my-account' && location.pathname === '/my-account/');
@@ -249,21 +256,20 @@ const UserDashboardLayout = () => {
                                                 if (isMobile) setSidebarOpen(false);
                                             }
                                         }}
-                                        className={`relative w-full flex items-center transition-all duration-300 group
+                                        className={`relative w-full flex items-center transition-all duration-300 group border-b border-[#096628]
                                             ${sidebarOpen
-                                                ? 'px-4 mx-0 rounded-xl space-x-3 mb-1 h-12 !justify-start'
-                                                : 'mx-2.5 rounded-[1.5rem] mb-3 h-14 justify-center'
+                                                ? 'px-5 h-16 !justify-start'
+                                                : 'h-16 justify-center'
                                             }
                                             ${active
-                                                ? 'bg-white text-[#0A7A2F] shadow-lg shadow-black/5'
-                                                : 'text-white/90 hover:text-white hover:bg-white/5'}`}
+                                                ? 'bg-[#096628] text-white shadow-inner'
+                                                : 'text-white hover:bg-[#096628]'}`}
                                     >
-                                        <item.icon className={`shrink-0 transition-transform duration-300 ${sidebarOpen ? 'w-5 h-5' : 'w-6 h-6'} 
-                                            ${active ? 'text-[#0A7A2F]' : 'group-hover:scale-110'}`} />
+                                        <item.icon className={`${sidebarOpen ? 'w-7 h-7 mr-4' : 'w-7 h-7'} text-white shrink-0 transition-transform duration-300 group-hover:scale-110`} strokeWidth={2.5} />
 
                                         {sidebarOpen && (
                                             <div className="flex items-center justify-between flex-1 overflow-hidden">
-                                                <span className="font-bold text-[13px] whitespace-nowrap">{item.name}</span>
+                                                <span className="font-bold text-[17px] tracking-tight whitespace-nowrap">{item.name}</span>
                                                 <div className="flex items-center gap-2">
                                                     {/* ✅ Rank badge in menu item */}
                                                     {item.rankBadge && (
@@ -278,16 +284,15 @@ const UserDashboardLayout = () => {
                                                             {item.rankBadge}
                                                         </span>
                                                     )}
-                                                    {item.badge && (
-                                                        <span className={`text-[9px] px-1.5 py-0.5 rounded font-black
-                                                            ${active ? 'bg-orange-600 text-white' : 'bg-white/20 text-white'}`}>
+                                                    {item.badge !== undefined && item.badge !== null && (
+                                                        <span className={`px-1.5 py-0.5 rounded text-[11px] font-black text-white ${item.badgeColor || 'bg-white/20'}`}>
                                                             {item.badge}
                                                         </span>
                                                     )}
                                                     {hasChildren && (
                                                         <ChevronDown
-                                                            size={14}
-                                                            className={`transition-transform duration-300 ${openDropdown === item.id ? 'rotate-180' : ''}`}
+                                                            size={18}
+                                                            className={`text-white/70 transition-transform duration-300 ${openDropdown === item.id ? 'rotate-180' : ''}`}
                                                         />
                                                     )}
                                                 </div>
@@ -305,7 +310,7 @@ const UserDashboardLayout = () => {
 
                                     {/* Dropdown Menu */}
                                     {hasChildren && sidebarOpen && openDropdown === item.id && (
-                                        <div className="ml-12 mr-4 border-l border-white/20 mb-2 py-1 space-y-1">
+                                        <div className="bg-[#085a23] py-2 space-y-1">
                                             {item.children.map((child) => {
                                                 const childActive = location.pathname === child.path;
                                                 return (
@@ -313,9 +318,9 @@ const UserDashboardLayout = () => {
                                                         key={child.id}
                                                         to={child.path}
                                                         onClick={() => isMobile && setSidebarOpen(false)}
-                                                        className={`block px-4 py-1.5 text-[12px] rounded-lg transition-all ${childActive
+                                                        className={`block pl-16 pr-4 py-2.5 text-[14px] transition-all ${childActive
                                                             ? 'text-white font-black bg-white/10'
-                                                            : 'text-white/85 hover:text-white hover:bg-white/5 font-bold'
+                                                            : 'text-white/80 hover:text-white hover:bg-white/5 font-bold'
                                                             }`}
                                                     >
                                                         {child.name}
@@ -327,24 +332,25 @@ const UserDashboardLayout = () => {
                                 </div>
                             );
                         })}
+
+                        {/* Logout at the end of the menu */}
+                        <div className="w-full">
+                            <button
+                                onClick={handleLogout}
+                                className={`relative w-full flex items-center transition-all duration-300 group
+                                    ${sidebarOpen ? 'px-5 h-16 !justify-start' : 'h-16 justify-center'}
+                                    text-white hover:bg-[#096628]`}
+                            >
+                                <LogOut className={`${sidebarOpen ? 'w-7 h-7 mr-4' : 'w-7 h-7'} text-white shrink-0 transition-transform duration-300 group-hover:scale-110`} strokeWidth={2.5} />
+                                {sidebarOpen && <span className="font-bold text-[17px] tracking-tight">Logout</span>}
+                                {!sidebarOpen && (
+                                    <div className="absolute left-full ml-4 px-3 py-2 bg-slate-900 text-white text-[11px] font-bold rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-[100] shadow-xl border border-white/10 pointer-events-none">
+                                        Logout
+                                    </div>
+                                )}
+                            </button>
+                        </div>
                     </nav>
-
-                    <div className={`mt-auto pt-6 ${sidebarOpen ? '' : 'px-2'}`}>
-                        <button
-                            onClick={handleLogout}
-                            className={`flex items-center h-12 rounded-xl transition-all group w-full
-                                ${sidebarOpen ? 'px-4 space-x-3 text-white/90 hover:text-orange-400 hover:bg-white/5' : 'justify-center text-white/90 hover:text-orange-400 hover:bg-white/5'}`}
-                        >
-                            <LogOut className={`shrink-0 ${sidebarOpen ? 'w-5 h-5' : 'w-6 h-6'}`} />
-                            {sidebarOpen && <span className="font-bold text-[13px]">Logout</span>}
-
-                            {!sidebarOpen && (
-                                <div className="absolute left-full ml-4 px-3 py-2 bg-slate-900 text-white text-[11px] font-bold rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-[100] shadow-xl border border-white/10 pointer-events-none">
-                                    Logout
-                                </div>
-                            )}
-                        </button>
-                    </div>
                 </div>
             </aside>
 

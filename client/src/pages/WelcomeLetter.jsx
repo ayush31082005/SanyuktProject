@@ -45,7 +45,7 @@ const WelcomeLetter = () => {
                 <div className="border-b border-slate-300 pb-6">
                     <div className="text-center">
                         <h2 className="text-2xl font-bold uppercase tracking-[0.08em] text-slate-900 md:text-3xl">
-                            Sanyukt Parivaar & Rich Life Private Limited
+                            Sanyukt Parivaar & Rich Life Pvt.Ltd.
                         </h2>
                         <p className="mt-2 text-sm text-slate-600">Welcome Letter</p>
                     </div>
@@ -63,11 +63,11 @@ const WelcomeLetter = () => {
                     </div>
 
                     <div>
-                        <p className="mb-4 font-semibold">Subject: Welcome to Sanyukt Parivaar & Rich Life Private Limited</p>
+                        <p className="mb-4 font-semibold">Subject: Welcome to Sanyukt Parivaar & Rich Life Pvt.Ltd.</p>
                         <p className="mb-6">Dear {userData?.userName || 'Member'},</p>
 
                         <p className="mb-5">
-                            We are pleased to welcome you to Sanyukt Parivaar & Rich Life Private Limited.
+                            We are pleased to welcome you to Sanyukt Parivaar & Rich Life Pvt.Ltd..
                             Your registration has been successfully completed, and your membership profile has been created in our system.
                         </p>
 
@@ -89,7 +89,7 @@ const WelcomeLetter = () => {
                         <div className="mt-12">
                             <p>Yours sincerely,</p>
                             <p className="mt-8 font-semibold">Authorized Signatory</p>
-                            <p>Sanyukt Parivaar & Rich Life Private Limited</p>
+                            <p>Sanyukt Parivaar & Rich Life Pvt.Ltd.</p>
                         </div>
                     </div>
                 </div>

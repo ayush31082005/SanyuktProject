@@ -27,10 +27,19 @@ const CheckoutPage = () => {
         landmark: ''
     });
 
-    const [paymentMethod, setPaymentMethod] = useState('cod');
+    const [paymentMethod, setPaymentMethod] = useState('');
     const [couponCode, setCouponCode] = useState('');
     const [couponApplied, setCouponApplied] = useState(false);
     const [discount, setDiscount] = useState(0);
+
+    const availableMethods = product?.paymentMethods || ['cod', 'upi', 'card'];
+
+    // Set initial payment method
+    useEffect(() => {
+        if (availableMethods.length > 0 && !paymentMethod) {
+            setPaymentMethod(availableMethods[0]);
+        }
+    }, [availableMethods, paymentMethod]);
 
     // Agar product नहीं है तो redirect
     useEffect(() => {
@@ -404,50 +413,56 @@ const CheckoutPage = () => {
                             </h2>
 
                             <div className="space-y-3">
-                                <label className={`flex items-center p-4 border-2 rounded-xl cursor-pointer transition-all ${paymentMethod === 'cod' ? 'border-[#0A7A2F] bg-green-50' : 'border-gray-100'}`}>
-                                    <input
-                                        type="radio"
-                                        name="payment"
-                                        value="cod"
-                                        checked={paymentMethod === 'cod'}
-                                        onChange={(e) => setPaymentMethod(e.target.value)}
-                                        className="w-4 h-4 text-[#0A7A2F]"
-                                    />
-                                    <span className="ml-3 flex items-center gap-2">
-                                        <IndianRupee className="w-5 h-5 text-gray-600" />
-                                        <span className="font-semibold text-gray-800">Cash on Delivery</span>
-                                    </span>
-                                </label>
+                                {availableMethods.includes('cod') && (
+                                    <label className={`flex items-center p-4 border-2 rounded-xl cursor-pointer transition-all ${paymentMethod === 'cod' ? 'border-[#0A7A2F] bg-green-50' : 'border-gray-100'}`}>
+                                        <input
+                                            type="radio"
+                                            name="payment"
+                                            value="cod"
+                                            checked={paymentMethod === 'cod'}
+                                            onChange={(e) => setPaymentMethod(e.target.value)}
+                                            className="w-4 h-4 text-[#0A7A2F]"
+                                        />
+                                        <span className="ml-3 flex items-center gap-2">
+                                            <IndianRupee className="w-5 h-5 text-gray-600" />
+                                            <span className="font-semibold text-gray-800">Cash on Delivery</span>
+                                        </span>
+                                    </label>
+                                )}
 
-                                <label className={`flex items-center p-4 border-2 rounded-xl cursor-pointer transition-all ${paymentMethod === 'upi' ? 'border-[#0A7A2F] bg-green-50' : 'border-gray-100'}`}>
-                                    <input
-                                        type="radio"
-                                        name="payment"
-                                        value="upi"
-                                        checked={paymentMethod === 'upi'}
-                                        onChange={(e) => setPaymentMethod(e.target.value)}
-                                        className="w-4 h-4 text-[#0A7A2F]"
-                                    />
-                                    <span className="ml-3 flex items-center gap-2">
-                                        <div className="w-5 h-5 bg-blue-600 rounded flex items-center justify-center text-[10px] text-white font-bold">UPI</div>
-                                        <span className="font-semibold text-gray-800">UPI (GPay/PhonePe/Paytm)</span>
-                                    </span>
-                                </label>
+                                {availableMethods.includes('upi') && (
+                                    <label className={`flex items-center p-4 border-2 rounded-xl cursor-pointer transition-all ${paymentMethod === 'upi' ? 'border-[#0A7A2F] bg-green-50' : 'border-gray-100'}`}>
+                                        <input
+                                            type="radio"
+                                            name="payment"
+                                            value="upi"
+                                            checked={paymentMethod === 'upi'}
+                                            onChange={(e) => setPaymentMethod(e.target.value)}
+                                            className="w-4 h-4 text-[#0A7A2F]"
+                                        />
+                                        <span className="ml-3 flex items-center gap-2">
+                                            <div className="w-5 h-5 bg-blue-600 rounded flex items-center justify-center text-[10px] text-white font-bold">UPI</div>
+                                            <span className="font-semibold text-gray-800">UPI (GPay/PhonePe/Paytm)</span>
+                                        </span>
+                                    </label>
+                                )}
 
-                                <label className={`flex items-center p-4 border-2 rounded-xl cursor-pointer transition-all ${paymentMethod === 'card' ? 'border-[#0A7A2F] bg-green-50' : 'border-gray-100'}`}>
-                                    <input
-                                        type="radio"
-                                        name="payment"
-                                        value="card"
-                                        checked={paymentMethod === 'card'}
-                                        onChange={(e) => setPaymentMethod(e.target.value)}
-                                        className="w-4 h-4 text-[#0A7A2F]"
-                                    />
-                                    <span className="ml-3 flex items-center gap-2">
-                                        <CreditCard className="w-5 h-5 text-gray-600" />
-                                        <span className="font-semibold text-gray-800">Debit / Credit Card</span>
-                                    </span>
-                                </label>
+                                {availableMethods.includes('card') && (
+                                    <label className={`flex items-center p-4 border-2 rounded-xl cursor-pointer transition-all ${paymentMethod === 'card' ? 'border-[#0A7A2F] bg-green-50' : 'border-gray-100'}`}>
+                                        <input
+                                            type="radio"
+                                            name="payment"
+                                            value="card"
+                                            checked={paymentMethod === 'card'}
+                                            onChange={(e) => setPaymentMethod(e.target.value)}
+                                            className="w-4 h-4 text-[#0A7A2F]"
+                                        />
+                                        <span className="ml-3 flex items-center gap-2">
+                                            <CreditCard className="w-5 h-5 text-gray-600" />
+                                            <span className="font-semibold text-gray-800">Debit / Credit Card</span>
+                                        </span>
+                                    </label>
+                                )}
                             </div>
                         </div>
                     </div>

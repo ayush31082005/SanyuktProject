@@ -118,7 +118,7 @@ const OpportunitiesPage = () => {
                         <div className="bg-gradient-to-r from-[#F7931E] to-[#F8B84A] p-6 text-white">
                             <h2 className="text-2xl md:text-3xl font-bold flex items-center gap-3">
                                 <Heart className="w-8 h-8" />
-                                WHY Sanyukt Parivaar & Rich Life Private Limited?
+                                WHY Sanyukt Parivaar & Rich Life Pvt.Ltd.?
                             </h2>
                         </div>
                         <div className="p-8">
@@ -240,7 +240,7 @@ const OpportunitiesPage = () => {
                         Start Your Entrepreneurial Journey Today!
                     </h2>
                     <p className="text-[#2F4F4F] mb-8 max-w-2xl mx-auto font-medium">
-                        Join Sanyukt Parivaar & Rich Life Private Limited and unlock unlimited earning potential with the industry's best compensation plan.
+                        Join Sanyukt Parivaar & Rich Life Pvt.Ltd. and unlock unlimited earning potential with the industry's best compensation plan.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Link

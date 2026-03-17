@@ -67,7 +67,7 @@ const AboutUsPage = () => {
                 style={{ backgroundImage: "url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')" }}>
                 <div className="absolute inset-0 bg-black/65"></div>
                 <div className="relative h-full flex flex-col items-center justify-center text-center px-4">
-                    <h1 className="text-4xl md:text-5xl font-bold text-white mb-3 animate-fade-in">
+                    <h1 className="text-4xl md:text-5xl font-black text-white mb-3 animate-fade-in">
                         About Us
                     </h1>
                     <div className="flex items-center text-white/90 text-sm md:text-base">
@@ -81,7 +81,7 @@ const AboutUsPage = () => {
             {/* Intro Heading Section - Main Heading (H2) and Sub-line */}
             <section className="py-8 md:py-16 px-4 max-w-7xl mx-auto text-center">
                 <h2 className="text-2xl md:text-4xl font-bold text-[#0A7A2F] mb-4 animate-slide-up">
-                    Welcome to Sanyukt Parivaar & Rich Life Private Limited
+                    Welcome to Sanyukt Parivaar & Rich Life Pvt.Ltd.
                 </h2>
                 <p className="text-lg text-[#222222] font-medium mb-6">
                     A People-Centric Multi-Level Marketing Organization
@@ -96,13 +96,13 @@ const AboutUsPage = () => {
                     <div className="space-y-6 animate-slide-right">
                         <article className="prose max-w-none">
                             <p className="text-[#222222] leading-relaxed max-w-[720px]">
-                                Sanyukt Parivaar & Rich Life Private Limited is a rapidly growing direct selling and multi-level marketing organization built on the foundation of trust, transparency, and teamwork. We were established with a clear purpose — to empower individuals and families by providing a reliable platform for financial independence and personal growth.
+                                Sanyukt Parivaar & Rich Life Pvt.Ltd. is a rapidly growing direct selling and multi-level marketing organization built on the foundation of trust, transparency, and teamwork. We were established with a clear purpose - to empower individuals and families by providing a reliable platform for financial independence and personal growth.
                             </p>
                             <p className="text-[#222222] leading-relaxed max-w-[720px] mt-4">
                                 At Sanyukt Parivaar, we believe success is best achieved together. Our "Parivaar" culture encourages mutual support, ethical business practices, and long-term relationships. We offer high-quality lifestyle, wellness, personal care, and daily-use products that create real value for customers and sustainable income opportunities for our partners.
                             </p>
                             <p className="text-[#222222] leading-relaxed max-w-[720px] mt-4">
-                                Through structured training, leadership development, and a proven compensation plan, we help individuals from all walks of life — students, professionals, homemakers, and entrepreneurs — build a stable and scalable business with confidence.
+                                Through structured training, leadership development, and a proven compensation plan, we help individuals from all walks of life - students, professionals, homemakers, and entrepreneurs - build a stable and scalable business with confidence.
                             </p>
                         </article>
                     </div>
@@ -251,10 +251,10 @@ const AboutUsPage = () => {
                         {/* Left Content with Images */}
                         <div className="space-y-6 animate-slide-right">
                             <h2 className="text-3xl md:text-4xl font-bold text-[#0A7A2F] mb-6">
-                                Why Sanyukt Parivaar & Rich Life Private Limited?
+                                Why Sanyukt Parivaar & Rich Life Pvt.Ltd.?
                             </h2>
                             <p className="text-[#222222] leading-relaxed max-w-[720px]">
-                                We are more than a company — we are a family committed to growth and empowerment. Our business model focuses on stability, repeat income through quality products, and leadership-driven success. With regular training programs, transparent policies, and a strong support ecosystem, we ensure that every partner has the tools to succeed.
+                                We are more than a company - we are a family committed to growth and empowerment. Our business model focuses on stability, repeat income through quality products, and leadership-driven success. With regular training programs, transparent policies, and a strong support ecosystem, we ensure that every partner has the tools to succeed.
                             </p>
 
                             {/* Image Grid inside content */}

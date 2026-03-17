@@ -214,16 +214,29 @@ const AdminOrders = () => {
             </Dialog>
 
             {/* Status Update Dialog */}
-            <Dialog open={openStatusUpdate} onClose={() => setOpenStatusUpdate(false)}>
-                <DialogTitle>Update Order Status</DialogTitle>
-                <DialogContent sx={{ minWidth: 400 }}>
-                    <Box sx={{ py: 2, display: 'flex', flexDirection: 'column', gap: 3 }}>
-                        <FormControl fullWidth>
-                            <InputLabel>New Status</InputLabel>
+            <Dialog 
+                open={openStatusUpdate} 
+                onClose={() => setOpenStatusUpdate(false)}
+                PaperProps={{
+                    sx: { borderRadius: '24px', p: 1, minWidth: 450 }
+                }}
+            >
+                <DialogTitle sx={{ fontWeight: 900, textTransform: 'uppercase', tracking: '0.05em', pb: 1 }}>
+                    Update Order Status
+                </DialogTitle>
+                <DialogContent>
+                    <Typography variant="caption" sx={{ fontWeight: 700, color: 'text.secondary', mb: 3, display: 'block', textTransform: 'uppercase', tracking: '0.1em' }}>
+                        Transition order to a new phase
+                    </Typography>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 1 }}>
+                        <FormControl fullWidth variant="outlined">
+                            <InputLabel id="status-select-label">New Status</InputLabel>
                             <Select
+                                labelId="status-select-label"
                                 value={newStatus}
                                 label="New Status"
                                 onChange={(e) => setNewStatus(e.target.value)}
+                                sx={{ borderRadius: '14px', fontWeight: 600 }}
                             >
                                 <MenuItem value="pending">Pending</MenuItem>
                                 <MenuItem value="processing">Processing</MenuItem>
@@ -242,13 +255,35 @@ const AdminOrders = () => {
                             fullWidth
                             value={statusMessage}
                             onChange={(e) => setStatusMessage(e.target.value)}
-                            placeholder="Describe the current location or status update..."
+                            placeholder="e.g., Package has arrived at local hub..."
+                            InputProps={{
+                                sx: { borderRadius: '14px' }
+                            }}
                         />
                     </Box>
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setOpenStatusUpdate(false)}>Cancel</Button>
-                    <Button onClick={handleUpdateStatus} variant="contained" sx={{ bgcolor: '#0A7A2F', '&:hover': { bgcolor: '#086325' } }}>Update</Button>
+                <DialogActions sx={{ px: 3, pb: 2 }}>
+                    <Button 
+                        onClick={() => setOpenStatusUpdate(false)}
+                        sx={{ color: 'text.secondary', fontWeight: 700, textTransform: 'uppercase', px: 3 }}
+                    >
+                        Cancel
+                    </Button>
+                    <Button 
+                        onClick={handleUpdateStatus} 
+                        variant="contained" 
+                        sx={{ 
+                            bgcolor: '#0A7A2F', 
+                            borderRadius: '12px',
+                            fontWeight: 800,
+                            textTransform: 'uppercase',
+                            px: 4,
+                            '&:hover': { bgcolor: '#086325' },
+                            boxShadow: '0 4px 14px 0 rgba(10, 122, 47, 0.39)'
+                        }}
+                    >
+                        Update Phase
+                    </Button>
                 </DialogActions>
             </Dialog>
         </Box>

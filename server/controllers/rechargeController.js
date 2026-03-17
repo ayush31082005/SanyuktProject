@@ -94,9 +94,11 @@ exports.verifyPayment = async (req, res) => {
                     const subject = `Recharge Successful - Sanyukt Parivaar`;
                     const text = `Dear ${user.userName || 'Member'},\n\nYour ${transaction.type} recharge of Rs.${transaction.amount} for ${transaction.rechargeNumber} was successful.\n\nTransaction Details:\nOperator: ${transaction.operator}\nTransaction ID: TXN${Date.now()}\nDate: ${new Date().toLocaleString()}\n\nThank you for choosing Sanyukt Parivaar!`;
                     sendEmail(user.email, subject, text).catch(err => console.error("Email error:", err));
-                    
-                    // Credit 5% reward to user
-                    await creditRechargeReward(user._id, transaction.amount, transaction.type, transaction.rechargeNumber);
+
+                    // Credit 5% reward to user for recharges only (not donations)
+                    if (transaction.type !== 'donation') {
+                        await creditRechargeReward(user._id, transaction.amount, transaction.type, transaction.rechargeNumber);
+                    }
                 }
             }
 

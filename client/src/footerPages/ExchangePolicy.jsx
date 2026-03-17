@@ -139,7 +139,7 @@ const ExchangePolicy = () => {
                                 <div>
                                     <h3 className="font-bold text-[#0A7A2F] mb-2">Legal Disclaimer</h3>
                                     <p className="text-[#222222] text-sm">
-                                        Sanyukt Parivaar & Rich Life Private Limited follows applicable Direct Selling Guidelines.
+                                        Sanyukt Parivaar & Rich Life Pvt.Ltd. follows applicable Direct Selling Guidelines.
                                         Income depends on individual effort and performance. No guaranteed earnings.
                                     </p>
                                 </div>

@@ -55,7 +55,7 @@ exports.activatePackage = async (req, res) => {
             }
             user.walletBalance -= pkg.price;
         }
-        // For "upi" / "cash" — admin will verify separately, but we still activate
+        // For "upi" / "cash" - admin will verify separately, but we still activate
         // (In production: verify Razorpay payment_id here before activating)
 
         // ── 4. Activate user ─────────────────────────────────────────────────
@@ -85,7 +85,7 @@ exports.activatePackage = async (req, res) => {
                     fromUserId: user._id,
                     amount: directIncome,
                     type: "Direct",
-                    description: `Direct income from ${user.userName || user.memberId} — ${pkg.name} package activation`,
+                    description: `Direct income from ${user.userName || user.memberId} - ${pkg.name} package activation`,
                 });
             }
         }
@@ -135,13 +135,13 @@ exports.activatePackage = async (req, res) => {
             currentParentId = parent.parentId;
         }
 
-        // ── 7. IncomeHistory — self activation record ─────────────────────────
+        // ── 7. IncomeHistory - self activation record ─────────────────────────
         await IncomeHistory.create({
             userId: user._id,
             fromUserId: user._id,
             amount: pkg.price,
             type: "Direct",
-            description: `${pkg.name} package activated — ₹${pkg.price}`,
+            description: `${pkg.name} package activated - ₹${pkg.price}`,
         });
 
         return res.json({

@@ -222,7 +222,7 @@ const GrievancePage = () => {
                             <div className="p-6">
                                 <ol className="space-y-4 list-decimal list-inside text-[#222222] text-sm">
                                     <li className="leading-relaxed animate-fade-in">
-                                        Customer / Distributor can make Grievances in either of the mentioned modes – Calls / Written Application / Email / Walk-in / Online Grievance Cell, etc.
+                                        Customer / Distributor can make Grievances in either of the mentioned modes - Calls / Written Application / Email / Walk-in / Online Grievance Cell, etc.
                                     </li>
                                     <li className="leading-relaxed animate-fade-in animation-delay-200">
                                         Grievances received will be feded into the internal Grievance software. A unique track ID will be generated against all the Grievances and is intimated to the customer / distributor on his / her registered Email id and Mobile Number.
@@ -255,7 +255,7 @@ const GrievancePage = () => {
                                     <Phone className="w-5 h-5 text-[#B8FFB8] mt-0.5" />
                                     <div>
                                         <span className="font-bold text-[#222222]">Mobile Number:</span>
-                                        <span className="text-[#222222] ml-2">+91 98765 43210</span>
+                                        <span className="text-[#222222] ml-2">+91 78803 70057</span>
                                     </div>
                                 </div>
 

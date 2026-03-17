@@ -3,7 +3,6 @@ require("dotenv").config({ path: path.join(__dirname, '.env') });
 
 const express = require("express");
 const cors = require("cors");
-const path = require("path");
 
 const galleryRoutes = require("./routes/galleryRoutes")
 const eventRoutes = require("./routes/eventRoutes")
@@ -48,8 +47,10 @@ app.get("/api/health", (req, res) => {
 });
 
 // Routes
+const authRoutes = require("./routes/authRoutes");
 app.use("/api/mlm", require("./routes/mlmRoutes"));
-app.use("/api", require("./routes/authRoutes"));
+app.use("/api/auth", authRoutes);
+app.use("/api", authRoutes); // Ensure both /api/login and /api/auth/login work
 app.use("/api", require("./routes/contactRoutes"));
 
 app.use("/api/products", require("./routes/productRoutes"));
@@ -60,17 +61,18 @@ app.use("/api/franchises", require("./routes/franchiseRoutes"));
 app.use("/api/members", require("./routes/memberRoutes"));
 app.use("/api/franchise", require("./routes/franchiseDashboardRoutes"));
 
-app.use("/api/gallery", galleryRoutes)
-app.use("/api/events", eventRoutes)
+app.use("/api/mlm", require("./routes/Matchingbonusroutes"));
+app.use("/api/package", require("./routes/PackageRoutes"));
+app.use("/api/gallery", galleryRoutes);
+app.use("/api/events", eventRoutes);
 
-app.use("/api/repurchase", require("./routes/repurchaseRoutes"))
+app.use("/api/repurchase", require("./routes/repurchaseRoutes"));
 app.use('/api/wallet', require('./routes/walletRoutes'));
 
 app.use("/api/grievance", require("./routes/grievanceRoutes"));
 app.use("/api/recharge", require("./routes/rechargeRoutes"));
 app.use("/api/news", require("./routes/newsRoutes"));
 app.use("/api/orders", require("./routes/orderRoutes"));
-app.use("/api/gallery", require("./routes/galleryRoutes"));
 
 // Error handling
 app.use((req, res, next) => {

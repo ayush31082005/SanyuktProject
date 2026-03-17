@@ -1,80 +1,116 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, TrendingUp, Users, Award, ChevronDown } from 'lucide-react';
+import { ArrowLeft, TrendingUp, Users, Layers } from 'lucide-react';
+import api from '../../api';
 
 const RepurchaseLevelIncome = () => {
     const navigate = useNavigate();
-    const [selectedLevel, setSelectedLevel] = useState('all');
+    const cardsRef = useRef([]);
+    const tableRef = useRef(null);
+    const rowsRef = useRef([]);
 
-    const levelIncome = [
-        { level: 1, percentage: 5, earnings: 1250, downline: 8, volume: 25000 },
-        { level: 2, percentage: 3, earnings: 750, downline: 15, volume: 25000 },
-        { level: 3, percentage: 2, earnings: 500, downline: 22, volume: 25000 },
-        { level: 4, percentage: 1, earnings: 250, downline: 30, volume: 25000 },
-    ];
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                setLoading(true);
+                const res = await api.get('/repurchase/level-income');
+                setData(res.data.data);
+            } catch (err) {
+                setError(err?.response?.data?.message || 'Failed to load data');
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="p-6 max-w-7xl mx-auto bg-gray-50 min-h-screen flex items-center justify-center">
+                <div className="text-center">
+                    <div className="w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+                    <p className="text-gray-500 text-sm font-medium">Loading income data...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="p-6 max-w-7xl mx-auto bg-gray-50 min-h-screen flex items-center justify-center">
+                <div className="text-center bg-white rounded-xl p-8 border border-red-100 shadow-sm">
+                    <p className="text-red-500 font-bold text-lg mb-2">⚠️ Error</p>
+                    <p className="text-gray-500 text-sm">{error}</p>
+                    <button
+                        onClick={() => window.location.reload()}
+                        className="mt-4 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-bold hover:bg-green-700 transition"
+                    >
+                        Retry
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
+    const {
+        totalLevelIncome = 0,
+        activeDownline = 0,
+        activeLevels = 0,
+        generationBreakdown = [],
+        recentTransactions = [],
+    } = data || {};
 
     return (
-        <div className="p-4 md:p-6 max-w-7xl mx-auto">
-            <div className="flex items-center gap-4 mb-6">
+        <div className="p-4 md:p-6 max-w-7xl mx-auto bg-gray-50 min-h-screen">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
                 <button
-                    onClick={() => navigate('/my-account/bonus/repurchase')}
-                    className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                    onClick={() => navigate('/my-account')}
+                    className="p-2 hover:bg-gray-100 rounded-lg transition-all"
                 >
                     <ArrowLeft className="w-5 h-5 text-gray-600" />
                 </button>
                 <div>
                     <h1 className="text-2xl md:text-3xl font-black text-gray-800">Repurchase Level Income</h1>
-                    <p className="text-sm text-gray-500 mt-1">Multi-level earnings from team repurchases</p>
+                    <p className="text-sm text-gray-500 mt-1">Earnings from team repurchases</p>
                 </div>
             </div>
 
-            {/* Summary Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <div className="bg-gradient-to-br from-indigo-50 to-blue-50 p-6 rounded-2xl border border-indigo-100">
-                    <TrendingUp className="w-8 h-8 text-indigo-600 mb-2" />
-                    <p className="text-3xl font-black text-gray-800">₹2,750</p>
-                    <p className="text-xs text-gray-500">Total Level Income</p>
-                </div>
-                <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-6 rounded-2xl border border-purple-100">
-                    <Users className="w-8 h-8 text-purple-600 mb-2" />
-                    <p className="text-3xl font-black text-gray-800">75</p>
-                    <p className="text-xs text-gray-500">Active Downline</p>
-                </div>
-                <div className="bg-gradient-to-br from-amber-50 to-orange-50 p-6 rounded-2xl border border-amber-100">
-                    <Award className="w-8 h-8 text-amber-600 mb-2" />
-                    <p className="text-3xl font-black text-gray-800">4</p>
-                    <p className="text-xs text-gray-500">Active Levels</p>
-                </div>
-            </div>
-
-            {/* Level Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                {levelIncome.map((level) => (
-                    <div key={level.level} className="bg-white p-6 rounded-2xl border border-gray-200 hover:shadow-lg transition-shadow">
-                        <div className="flex items-center justify-between mb-4">
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center">
-                                    <span className="text-green-600 font-black">L{level.level}</span>
-                                </div>
-                                <div>
-                                    <h3 className="font-black text-gray-800">Level {level.level}</h3>
-                                    <p className="text-xs text-gray-500">{level.percentage}% Commission</p>
-                                </div>
-                            </div>
-                            <span className="text-xl font-black text-green-600">₹{level.earnings}</span>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                            <div>
-                                <p className="text-xs text-gray-500">Downline Members</p>
-                                <p className="text-lg font-bold text-gray-800">{level.downline}</p>
-                            </div>
-                            <div>
-                                <p className="text-xs text-gray-500">Business Volume</p>
-                                <p className="text-lg font-bold text-gray-800">₹{level.volume}</p>
-                            </div>
-                        </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm transition-all hover:-translate-y-1">
+                    <div className="flex items-center justify-between mb-3">
+                        <TrendingUp className="w-8 h-8 text-green-600" />
+                        <span className="text-xs font-bold text-green-700 bg-green-50 px-2 py-1 rounded-full border border-green-200">Total</span>
                     </div>
-                ))}
+                    <p className="text-2xl font-black text-gray-800">₹{totalLevelIncome.toLocaleString('en-IN')}</p>
+                    <p className="text-xs text-gray-500 mt-1">Total Level Income</p>
+                </div>
+
+                <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm transition-all hover:-translate-y-1">
+                    <div className="flex items-center justify-between mb-3">
+                        <Users className="w-8 h-8 text-green-600" />
+                        <span className="text-xs font-bold text-green-700 bg-green-50 px-2 py-1 rounded-full border border-green-200">Active</span>
+                    </div>
+                    <p className="text-2xl font-black text-gray-800">{activeDownline}</p>
+                    <p className="text-xs text-gray-500 mt-1">Active Downline</p>
+                </div>
+
+                <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm transition-all hover:-translate-y-1">
+                    <div className="flex items-center justify-between mb-3">
+                        <Layers className="w-8 h-8 text-green-600" />
+                        <span className="text-xs font-bold text-green-700 bg-green-50 px-2 py-1 rounded-full border border-green-200">Levels</span>
+                    </div>
+                    <p className="text-2xl font-black text-gray-800">{activeLevels}</p>
+                    <p className="text-xs text-gray-500 mt-1">Active Levels</p>
+                </div>
+            </div>
+            
+            {/* Table and breakdown can be added here as needed */}
+            <div className="bg-white rounded-xl p-8 border border-gray-200 text-center">
+                <p className="text-gray-500">No recent transactions found.</p>
             </div>
         </div>
     );

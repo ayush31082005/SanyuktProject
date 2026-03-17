@@ -77,14 +77,19 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import SearchIcon from '@mui/icons-material/Search';
 import MenuIcon from '@mui/icons-material/Menu';
+import ShareIcon from '@mui/icons-material/Share';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import QrCodeIcon from '@mui/icons-material/QrCode';
+import LinkIcon from '@mui/icons-material/Link';
 import CloseIcon from '@mui/icons-material/Close';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
+import ShieldIcon from '@mui/icons-material/Shield';
 
 // ─── Styled Components ───────────────────────────────────────────────────────
 
-const AnimatedCard = styled(Card)(({ theme }) => ({
+const AnimatedCard = styled(Card)(() => ({
     transition: 'all 0.3s ease-in-out',
     height: '100%',
     '&:hover': {
@@ -93,7 +98,7 @@ const AnimatedCard = styled(Card)(({ theme }) => ({
     },
 }));
 
-const AnimatedPaper = styled(Paper)(({ theme }) => ({
+const AnimatedPaper = styled(Paper)(() => ({
     transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
     width: '100%',
     borderRadius: '24px',
@@ -158,7 +163,6 @@ const MyAccount = ({ defaultTab }) => {
     const [userTransactions, setUserTransactions] = useState([]);
     const [grievancesLoading, setGrievancesLoading] = useState(false);
     const [ordersLoading, setOrdersLoading] = useState(false);
-    const [transactionsLoading, setTransactionsLoading] = useState(false);
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
     const [showContent, setShowContent] = useState(false);
     const [menuAnchorEl, setMenuAnchorEl] = useState(null);
@@ -177,8 +181,9 @@ const MyAccount = ({ defaultTab }) => {
 
     // ── KYC State ──
     const [kycData, setKycData] = useState({
-        aadharNumber: '', panNumber: '',
-        bankDetails: { accountNumber: '', ifscCode: '', bankName: '' },
+        aadharNumber: '',
+        panNumber: '',
+        bankDetails: { accountNumber: '', ifscCode: '', bankName: '', upiId: '' },
         kycDocuments: { aadharFront: '', aadharBack: '', panCard: '', passbook: '' }
     });
     const [kycSubmitting, setKycSubmitting] = useState(false);
@@ -268,10 +273,10 @@ const MyAccount = ({ defaultTab }) => {
     };
 
     const fetchUserTransactions = async () => {
-        setTransactionsLoading(true);
+        setWalletTxLoading(true);
         try { const res = await api.get('/recharge/my-transactions'); setUserTransactions(res.data || []); }
         catch (e) { console.error("Error fetching transactions:", e); }
-        finally { setTransactionsLoading(false); }
+        finally { setWalletTxLoading(false); }
     };
 
     // ── Wallet Transactions API (NEW) ──
@@ -298,8 +303,9 @@ const MyAccount = ({ defaultTab }) => {
             setUserData(parsedUser);
             if (parsedUser.profileImage) setProfileImage(parsedUser.profileImage);
             setKycData({
-                aadharNumber: parsedUser.aadharNumber || '', panNumber: parsedUser.panNumber || '',
-                bankDetails: parsedUser.bankDetails || { accountNumber: '', ifscCode: '', bankName: '' },
+                aadharNumber: parsedUser.aadharNumber || '',
+                panNumber: parsedUser.panNumber || '',
+                bankDetails: parsedUser.bankDetails || { accountNumber: '', ifscCode: '', bankName: '', upiId: '' },
                 kycDocuments: parsedUser.kycDocuments || { aadharFront: '', aadharBack: '', panCard: '', passbook: '' }
             });
             fetchUserGrievances(parsedUser.email);
@@ -385,6 +391,17 @@ const MyAccount = ({ defaultTab }) => {
                     </Grid>
                     <Grid item xs={12} md={4}>
                         <TextField fullWidth label="Bank Name" value={kycData.bankDetails.bankName} onChange={(e) => setKycData({ ...kycData, bankDetails: { ...kycData.bankDetails, bankName: e.target.value } })} disabled={kycReadOnly} />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            label="UPI ID"
+                            placeholder="e.g., username@upi"
+                            value={kycData.bankDetails.upiId}
+                            onChange={(e) => setKycData({ ...kycData, bankDetails: { ...kycData.bankDetails, upiId: e.target.value } })}
+                            disabled={kycReadOnly}
+                            helperText="This UPI ID will be used for your donation link."
+                        />
                     </Grid>
                 </Grid>
             </Paper>
@@ -546,7 +563,6 @@ const MyAccount = ({ defaultTab }) => {
                 {/* Sidebar + Content */}
                 <Fade in={showContent} timeout={800}>
                     <AnimatedPaper sx={{ borderRadius: defaultTab !== undefined ? '0px' : '16px', overflow: 'hidden', display: 'flex', flex: 1, minHeight: 0, boxShadow: defaultTab !== undefined ? 'none' : undefined, border: defaultTab !== undefined ? 'none' : undefined, bgcolor: defaultTab !== undefined ? 'transparent' : undefined }}>
-
                         {/* Left Sidebar */}
                         <Box sx={{ width: { xs: 0, sm: '220px' }, display: defaultTab !== undefined ? 'none' : { xs: 'none', sm: 'flex' }, flexShrink: 0, background: 'linear-gradient(180deg, #0A7A2F 0%, #1a8c3a 60%, #0A7A2F 100%)', flexDirection: 'column', py: 3, overflowY: 'auto', '&::-webkit-scrollbar': { width: '4px' }, '&::-webkit-scrollbar-thumb': { backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: '10px' } }}>
                             {navItems.map((item) => (
@@ -645,8 +661,20 @@ const MyAccount = ({ defaultTab }) => {
                                                                 <Typography sx={{ color: '#444', fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px', mb: 1.2, display: 'flex', alignItems: 'center', gap: 1 }}>
                                                                     {React.cloneElement(field.icon, { sx: { fontSize: 16, color: '#0A7A2F' } })} {field.label}
                                                                 </Typography>
-                                                                <Box sx={{ px: 2.5, py: 1.8, bgcolor: '#f8f9f8', border: '1.5px solid #e0e6e1', borderRadius: '12px', '&:hover': { bgcolor: '#ffffff', borderColor: '#0A7A2F', boxShadow: '0 4px 12px rgba(10,122,47,0.06)' } }}>
-                                                                    <Typography sx={{ color: '#111', fontSize: '14px', fontWeight: 700 }}>{field.value}</Typography>
+                                                                <Box sx={{
+                                                                    px: 2.5,
+                                                                    py: 1.8,
+                                                                    bgcolor: '#f8f9f8',
+                                                                    border: '1.5px solid #e0e6e1',
+                                                                    borderRadius: '12px',
+                                                                    transition: 'all 0.2s ease-in-out',
+                                                                    '&:hover': {
+                                                                        bgcolor: '#ffffff',
+                                                                        borderColor: '#0A7A2F',
+                                                                        boxShadow: '0 4px 12px rgba(10,122,47,0.06)'
+                                                                    }
+                                                                }}>
+                                                                    <Typography sx={{ color: '#111', fontSize: '14px', fontWeight: 700, fontFamily: "'Inter', sans-serif" }}>{field.value}</Typography>
                                                                 </Box>
                                                             </Box>
                                                         </Grid>
@@ -676,8 +704,20 @@ const MyAccount = ({ defaultTab }) => {
                                                             <Typography sx={{ color: '#444', fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px', mb: 1.2, display: 'flex', alignItems: 'center', gap: 1 }}>
                                                                 {React.cloneElement(field.icon, { sx: { fontSize: 16, color: field.accent } })} {field.label}
                                                             </Typography>
-                                                            <Box sx={{ px: 2.5, py: 1.8, bgcolor: '#f8f9f8', border: `1.5px solid ${fi === 0 ? '#e0e6e1' : '#f5ebe0'}`, borderRadius: '12px', '&:hover': { bgcolor: '#ffffff', borderColor: field.accent } }}>
-                                                                <Typography sx={{ color: '#111', fontSize: '14px', fontWeight: 700 }}>{field.value}</Typography>
+                                                            <Box sx={{
+                                                                px: 2.5,
+                                                                py: 1.8,
+                                                                bgcolor: field.label === 'Self Sponsor ID' ? '#f8f9f8' : '#fffbf7',
+                                                                border: `1.5px solid ${field.label === 'Self Sponsor ID' ? '#e0e6e1' : '#f5ebe0'}`,
+                                                                borderRadius: '12px',
+                                                                transition: 'all 0.2s ease-in-out',
+                                                                '&:hover': {
+                                                                    bgcolor: '#ffffff',
+                                                                    borderColor: field.accent,
+                                                                    boxShadow: `0 4px 12px ${field.label === 'Self Sponsor ID' ? 'rgba(10,122,47,0.06)' : 'rgba(247,147,30,0.06)'}`
+                                                                }
+                                                            }}>
+                                                                <Typography sx={{ color: '#111', fontSize: '14px', fontWeight: 700, fontFamily: "'Inter', sans-serif" }}>{field.value}</Typography>
                                                             </Box>
                                                         </Box>
                                                     </Grid>
@@ -920,18 +960,30 @@ const MyAccount = ({ defaultTab }) => {
 
                                     {/* Stats Cards */}
                                     <Grid container spacing={2} sx={{ mb: 4 }}>
-                                        {[
-                                            { label: 'Total Orders', value: userOrders.length, border: '#0A7A2F' },
-                                            { label: 'Recharges', value: userTransactions.length, border: '#F7931E' },
-                                            { label: 'Wallet Transactions', value: allWalletTransactions.length, border: '#2196f3' },
-                                        ].map((stat, i) => (
-                                            <Grid item xs={12} sm={4} key={i}>
-                                                <Paper sx={{ p: 2.5, borderRadius: '12px', borderLeft: `4px solid ${stat.border}`, bgcolor: 'white', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
-                                                    <Typography variant="caption" sx={{ color: '#666', fontWeight: 600, textTransform: 'uppercase' }}>{stat.label}</Typography>
-                                                    <Typography variant="h5" sx={{ fontWeight: 800, mt: 0.5, color: '#111' }}>{stat.value}</Typography>
-                                                </Paper>
-                                            </Grid>
-                                        ))}
+                                        <Grid item xs={6} sm={3}>
+                                            <Paper sx={{ p: 2, borderRadius: '12px', borderLeft: '4px solid #0A7A2F', bgcolor: 'white', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+                                                <Typography variant="caption" sx={{ color: '#666', fontWeight: 600, textTransform: 'uppercase', fontSize: '10px' }}>Total Orders</Typography>
+                                                <Typography variant="h6" sx={{ fontWeight: 800, mt: 0.5, color: '#111' }}>{userOrders.length}</Typography>
+                                            </Paper>
+                                        </Grid>
+                                        <Grid item xs={6} sm={3}>
+                                            <Paper sx={{ p: 2, borderRadius: '12px', borderLeft: '4px solid #F7931E', bgcolor: 'white', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+                                                <Typography variant="caption" sx={{ color: '#666', fontWeight: 600, textTransform: 'uppercase', fontSize: '10px' }}>Recharges</Typography>
+                                                <Typography variant="h6" sx={{ fontWeight: 800, mt: 0.5, color: '#111' }}>{userTransactions.filter(t => t.type !== 'donation').length}</Typography>
+                                            </Paper>
+                                        </Grid>
+                                        <Grid item xs={6} sm={3}>
+                                            <Paper sx={{ p: 2, borderRadius: '12px', borderLeft: '4px solid #e91e63', bgcolor: 'white', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+                                                <Typography variant="caption" sx={{ color: '#666', fontWeight: 600, textTransform: 'uppercase', fontSize: '10px' }}>Donations</Typography>
+                                                <Typography variant="h6" sx={{ fontWeight: 800, mt: 0.5, color: '#111' }}>{userTransactions.filter(t => t.type === 'donation').length}</Typography>
+                                            </Paper>
+                                        </Grid>
+                                        <Grid item xs={6} sm={3}>
+                                            <Paper sx={{ p: 2, borderRadius: '12px', borderLeft: '4px solid #2196f3', bgcolor: 'white', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+                                                <Typography variant="caption" sx={{ color: '#666', fontWeight: 600, textTransform: 'uppercase', fontSize: '10px' }}>Tickets</Typography>
+                                                <Typography variant="h6" sx={{ fontWeight: 800, mt: 0.5, color: '#111' }}>{userGrievances.length}</Typography>
+                                            </Paper>
+                                        </Grid>
                                     </Grid>
 
                                     {/* ══ WALLET TRANSACTION REPORT ══ */}
@@ -1096,38 +1148,164 @@ const MyAccount = ({ defaultTab }) => {
                                         </Box>
                                     )}
 
-                                    <Divider sx={{ my: 3 }} />
+                                    {/* ── RECHARGE HISTORY SECTION ── */}
+                                    {userTransactions.some(t => t.type !== 'donation') && (
+                                        <>
+                                            <Typography variant="h6" sx={{ color: '#0A7A2F', mb: 2, fontWeight: 700, fontSize: '16px', display: 'flex', alignItems: 'center', gap: 1 }}>
+                                                ⚡ Recharge History
+                                            </Typography>
+                                            <Box sx={{ mb: 4 }}>
+                                                {userTransactions.filter(txn => txn.type !== 'donation').map((txn, index) => (
+                                                    <Paper
+                                                        key={txn._id || index}
+                                                        variant="outlined"
+                                                        sx={{
+                                                            p: 0,
+                                                            borderRadius: '14px',
+                                                            mb: 2,
+                                                            overflow: 'hidden',
+                                                            '&:hover': { boxShadow: '0 6px 18px rgba(0,0,0,0.06)' },
+                                                            transition: 'all 0.3s ease'
+                                                        }}
+                                                    >
+                                                        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: 'stretch' }}>
+                                                            <Box sx={{
+                                                                p: 2,
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                bgcolor: txn.status === 'success' ? '#f4faf5' : txn.status === 'failed' ? '#fff9f9' : '#fffdf4',
+                                                                borderRight: { xs: 'none', sm: '1px solid #f0f0f0' },
+                                                                borderBottom: { xs: '1px solid #f0f0f0', sm: 'none' },
+                                                                justifyContent: { xs: 'center', sm: 'flex-start' }
+                                                            }}>
+                                                                <Box sx={{
+                                                                    width: 44, height: 44, borderRadius: '10px', bgcolor: 'white',
+                                                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                                    boxShadow: '0 2px 6px rgba(0,0,0,0.04)'
+                                                                }}>
+                                                                    <ReceiptIcon sx={{
+                                                                        fontSize: 24,
+                                                                        color: txn.status === 'success' ? '#0A7A2F' : txn.status === 'failed' ? '#d32f2f' : '#fbc02d'
+                                                                    }} />
+                                                                </Box>
+                                                            </Box>
+                                                            <Box sx={{ p: 2, flex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                                <Box>
+                                                                    <Typography sx={{ fontWeight: 700, fontSize: '15px', color: '#111', mb: 0.25 }}>
+                                                                        {txn.operator} {txn.type?.toUpperCase()}
+                                                                    </Typography>
+                                                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                                                                        <Typography sx={{ fontSize: '12px', color: '#888', display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                                                            <PhoneIcon sx={{ fontSize: 12 }} /> {txn.rechargeNumber}
+                                                                        </Typography>
+                                                                        <Typography sx={{ fontSize: '12px', color: '#888', display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                                                            <EventIcon sx={{ fontSize: 12 }} /> {new Date(txn.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                                                                        </Typography>
+                                                                    </Box>
+                                                                </Box>
+                                                                <Box sx={{ textAlign: 'right' }}>
+                                                                    <Typography sx={{ fontWeight: 800, color: '#111', fontSize: '16px' }}>₹{txn.amount}</Typography>
+                                                                    <Chip
+                                                                        label={txn.status?.toUpperCase()}
+                                                                        size="small"
+                                                                        sx={{
+                                                                            height: 20, fontSize: '10px', fontWeight: 800, mt: 0.75, px: 0.5,
+                                                                            bgcolor: txn.status === 'success' ? '#0A7A2F' : txn.status === 'failed' ? '#d32f2f' : '#fbc02d',
+                                                                            color: 'white',
+                                                                            borderRadius: '4px'
+                                                                        }}
+                                                                    />
+                                                                </Box>
+                                                            </Box>
+                                                        </Box>
+                                                    </Paper>
+                                                ))}
+                                            </Box>
+                                        </>
+                                    )}
 
-                                    {/* ══ RECHARGE HISTORY ══ */}
-                                    <Typography variant="h6" sx={{ color: '#0A7A2F', mb: 2, fontWeight: 700, fontSize: '16px', display: 'flex', alignItems: 'center', gap: 1 }}>
-                                        ⚡ Recharge History
-                                    </Typography>
-                                    {transactionsLoading ? (
-                                        <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}><CircularProgress size={36} sx={{ color: '#0A7A2F' }} /></Box>
-                                    ) : userTransactions.length === 0 ? (
+                                    {/* ── DONATION HISTORY SECTION ── */}
+                                    {userTransactions.some(t => t.type === 'donation') && (
+                                        <>
+                                            <Typography variant="h6" sx={{ color: '#e91e63', mb: 2, fontWeight: 700, fontSize: '16px', display: 'flex', alignItems: 'center', gap: 1 }}>
+                                                🤝 Donation History
+                                            </Typography>
+                                            <Box sx={{ mb: 4 }}>
+                                                {userTransactions.filter(txn => txn.type === 'donation').map((txn, index) => (
+                                                    <Paper
+                                                        key={txn._id || index}
+                                                        variant="outlined"
+                                                        sx={{
+                                                            p: 0,
+                                                            borderRadius: '14px',
+                                                            mb: 2,
+                                                            overflow: 'hidden',
+                                                            '&:hover': { boxShadow: '0 6px 18px rgba(233,30,99,0.06)', borderColor: '#e91e63' },
+                                                            transition: 'all 0.3s ease',
+                                                            borderLeft: '4px solid #e91e63'
+                                                        }}
+                                                    >
+                                                        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: 'stretch' }}>
+                                                            <Box sx={{
+                                                                p: 2,
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                bgcolor: '#fff9fb',
+                                                                borderRight: { xs: 'none', sm: '1px solid #f0f0f0' },
+                                                                borderBottom: { xs: '1px solid #f0f0f0', sm: 'none' },
+                                                                justifyContent: { xs: 'center', sm: 'flex-start' }
+                                                            }}>
+                                                                <Box sx={{
+                                                                    width: 44, height: 44, borderRadius: '10px', bgcolor: 'white',
+                                                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                                                    boxShadow: '0 2px 6px rgba(0,0,0,0.04)'
+                                                                }}>
+                                                                    <ShareIcon sx={{ color: '#e91e63', fontSize: 24 }} />
+                                                                </Box>
+                                                            </Box>
+                                                            <Box sx={{ p: 2, flex: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                                <Box>
+                                                                    <Typography sx={{ fontWeight: 700, fontSize: '15px', color: '#111', mb: 0.25 }}>
+                                                                        Contribution to Sanyukt Parivaar
+                                                                    </Typography>
+                                                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                                                                        <Typography sx={{ fontSize: '12px', color: '#888', display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                                                            <ShieldIcon sx={{ width: 12, height: 12 }} /> {txn.paymentMethod?.toUpperCase()}
+                                                                        </Typography>
+                                                                        <Typography sx={{ fontSize: '12px', color: '#888', display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                                                            <EventIcon sx={{ fontSize: 12 }} /> {new Date(txn.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                                                                        </Typography>
+                                                                    </Box>
+                                                                </Box>
+                                                                <Box sx={{ textAlign: 'right' }}>
+                                                                    <Typography sx={{ fontWeight: 800, color: '#e91e63', fontSize: '16px' }}>₹{txn.amount}</Typography>
+                                                                    <Chip
+                                                                        label={txn.status?.toUpperCase()}
+                                                                        size="small"
+                                                                        sx={{
+                                                                            height: 20, fontSize: '10px', fontWeight: 800, mt: 0.75, px: 0.5,
+                                                                            bgcolor: txn.status === 'success' ? '#e91e63' : '#757575',
+                                                                            color: 'white',
+                                                                            borderRadius: '4px'
+                                                                        }}
+                                                                    />
+                                                                </Box>
+                                                            </Box>
+                                                        </Box>
+                                                    </Paper>
+                                                ))}
+                                            </Box>
+                                        </>
+                                    )}
+
+                                    {userTransactions.length === 0 && (
                                         <Box sx={{ textAlign: 'center', py: 4, bgcolor: 'white', borderRadius: '12px', border: '1px solid #eee' }}>
                                             <ReceiptIcon sx={{ fontSize: 60, color: '#eee', mb: 1 }} />
-                                            <Typography sx={{ color: '#666', fontWeight: 600 }}>No Recharges Yet</Typography>
-                                            <Button variant="outlined" size="small" sx={{ mt: 2, borderColor: '#0A7A2F', color: '#0A7A2F', borderRadius: '8px' }} onClick={() => navigate('/recharge')}>Do a Recharge</Button>
-                                        </Box>
-                                    ) : (
-                                        <Box>
-                                            {userTransactions.map((txn, index) => (
-                                                <Paper key={txn._id || index} variant="outlined" sx={{ p: 2, borderRadius: '14px', mb: 2, '&:hover': { boxShadow: '0 6px 18px rgba(0,0,0,0.06)' }, transition: 'all 0.3s ease' }}>
-                                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                        <Box>
-                                                            <Typography sx={{ fontWeight: 700, fontSize: '15px', color: '#111' }}>{txn.operator} {txn.type?.toUpperCase()}</Typography>
-                                                            <Typography sx={{ fontSize: '12px', color: '#888' }}>
-                                                                {txn.rechargeNumber} • {new Date(txn.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
-                                                            </Typography>
-                                                        </Box>
-                                                        <Box sx={{ textAlign: 'right' }}>
-                                                            <Typography sx={{ fontWeight: 800, color: '#111', fontSize: '16px' }}>₹{txn.amount}</Typography>
-                                                            <Chip label={txn.status?.toUpperCase()} size="small" sx={{ height: 20, fontSize: '10px', fontWeight: 800, mt: 0.5, bgcolor: txn.status === 'success' ? '#0A7A2F' : txn.status === 'failed' ? '#d32f2f' : '#fbc02d', color: 'white', borderRadius: '4px' }} />
-                                                        </Box>
-                                                    </Box>
-                                                </Paper>
-                                            ))}
+                                            <Typography sx={{ color: '#666', fontWeight: 600 }}>No Payments Yet</Typography>
+                                            <Typography variant="body2" sx={{ color: '#ccc', mt: 0.5 }}>Your recharges and donations will appear here.</Typography>
+                                            <Button variant="outlined" size="small" sx={{ mt: 2, borderColor: '#0A7A2F', color: '#0A7A2F', borderRadius: '8px' }} onClick={() => navigate('/recharge')}>
+                                                Make a Payment
+                                            </Button>
                                         </Box>
                                     )}
                                 </Box>
@@ -1165,6 +1343,10 @@ const MyAccount = ({ defaultTab }) => {
                                                                     <Typography variant="h6" sx={{ fontWeight: 700, color: '#111', mb: 1.5, fontSize: '1.15rem' }}>{grievance.subject || 'No Subject Provided'}</Typography>
                                                                     <Typography variant="body2" sx={{ color: '#666', fontSize: '0.9rem', lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{grievance.message || '—'}</Typography>
                                                                     <Box sx={{ mt: 2.5, display: 'flex', flexWrap: 'wrap', gap: 3 }}>
+                                                                        <Box>
+                                                                            <Typography variant="caption" sx={{ color: '#666', textTransform: 'uppercase', fontWeight: 700, fontSize: '10px' }}>Contact Mobile</Typography>
+                                                                            <Typography variant="body2" sx={{ fontWeight: 600, fontSize: '13px', color: '#333' }}>{grievance.mobile || '—'}</Typography>
+                                                                        </Box>
                                                                         <Box>
                                                                             <Typography variant="caption" sx={{ color: '#666', textTransform: 'uppercase', fontWeight: 700, fontSize: '10px' }}>Submitted On</Typography>
                                                                             <Typography variant="body2" sx={{ fontWeight: 600, fontSize: '13px', color: '#333' }}>

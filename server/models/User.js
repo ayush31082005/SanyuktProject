@@ -177,7 +177,8 @@ const userSchema = new mongoose.Schema(
         bankDetails: {
             accountNumber: String,
             ifscCode: String,
-            bankName: String
+            bankName: String,
+            upiId: String
         },
         kycDocuments: {
             aadharFront: String,

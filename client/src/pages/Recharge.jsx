@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Smartphone, Tv, Wifi, CheckCircle2, ChevronRight, Zap, CircleUser, Wallet, Heart, Shield, Clock, Users, Gift, Receipt, Search } from 'lucide-react';
+import { Smartphone, Tv, Wifi, CheckCircle2, ChevronRight, Zap, CircleUser, Wallet, Heart, Shield, Clock, Users, Gift, Receipt, Search, Copy, Share2, Info, ExternalLink } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../api';
 import PaymentMethodModal from '../components/PaymentMethodModal';
@@ -37,17 +37,24 @@ const Recharge = () => {
     // Browse Plans Modal States
     const [showPlansModal, setShowPlansModal] = useState(false);
 
-    // Fetch User Stats (Balance)
+    // User Data State
+    const [userData, setUserData] = useState(null);
+
+    // Fetch User Stats (Balance) and Profile
     React.useEffect(() => {
-        const fetchStats = async () => {
+        const fetchAllData = async () => {
             try {
-                const res = await api.get('mlm/get-stats');
-                setWalletBalance(res.data?.walletBalance || 0);
+                const [statsRes, userRes] = await Promise.all([
+                    api.get('mlm/get-stats'),
+                    api.get('auth/profile')
+                ]);
+                setWalletBalance(statsRes.data?.walletBalance || 0);
+                setUserData(userRes.data?.user || null);
             } catch (err) {
-                console.error("Error fetching stats:", err);
+                console.error("Error fetching data:", err);
             }
         };
-        fetchStats();
+        fetchAllData();
     }, []);
 
     // Operators
@@ -118,7 +125,7 @@ const Recharge = () => {
     const handleSelectPayment = async (method) => {
         if (!pendingRecharge) return;
         const { operator, rechargeNumber, amount, type } = pendingRecharge;
-        
+
         setIsProcessingPayment(true);
         const toastId = toast.loading(method === 'wallet' ? "Processing wallet recharge..." : "Initiating payment...");
 
@@ -132,6 +139,7 @@ const Recharge = () => {
                 });
 
                 if (data.success) {
+                    window.alert("Recharge successful using your wallet balance!");
                     toast.success("Recharge successful using wallet!", { id: toastId });
                     // Clear forms
                     if (type === 'mobile') { setMobileNumber(''); setMobileAmount(''); }
@@ -178,6 +186,7 @@ const Recharge = () => {
                             });
 
                             if (verifyData.success) {
+                                window.alert("Recharge Successful! Your payment has been verified and your account will be updated shortly.");
                                 toast.success("Recharge successful!", { id: verifyToast });
                                 if (type === 'mobile') { setMobileNumber(''); setMobileAmount(''); }
                                 if (type === 'dth') { setDthNumber(''); setDthAmount(''); }
@@ -276,146 +285,216 @@ const Recharge = () => {
                 </section>
 
                 {/* 3. DONATION SECTION - PREMIUM REDESIGN */}
-                <section className="mb-12 relative text-balance">
+                <section className="mb-8 relative text-balance">
                     {/* Decorative Background Elements */}
-                    <div className="absolute -top-24 -right-24 w-96 h-96 bg-[#F7931E]/10 rounded-full blur-[120px] pointer-events-none"></div>
-                    <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[#0A7A2F]/10 rounded-full blur-[120px] pointer-events-none"></div>
+                    <div className="absolute -top-12 -right-12 w-96 h-96 bg-[#F7931E]/10 rounded-full blur-[120px] pointer-events-none"></div>
+                    <div className="absolute -bottom-12 -left-12 w-96 h-96 bg-[#0A7A2F]/10 rounded-full blur-[120px] pointer-events-none"></div>
 
                     <motion.div
-                        initial={{ opacity: 0, y: 30 }}
+                        initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="relative overflow-hidden rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.15)] border border-white/10"
+                        className="relative overflow-hidden rounded-[2rem] shadow-[0_20px_50px_rgba(10,122,47,0.15)] border border-white/10"
                     >
                         {/* Complex Gradient Background */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-[#0A7A2F] via-[#0A6326] to-[#F7931E]/20"></div>
-                        
-                        {/* Pattern Overlay */}
-                        <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")` }}></div>
+                        <div className="absolute inset-0 bg-gradient-to-br from-[#0A7A2F] via-[#0A6326] to-[#085220]"></div>
 
-                        <div className="relative z-10 p-5 lg:p-8">
+                        {/* Pattern Overlay */}
+                        <div className="absolute inset-0 opacity-[0.05] pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")` }}></div>
+
+                        <div className="relative z-10 p-5 lg:p-10">
                             <div className="max-w-5xl mx-auto">
                                 {/* Header */}
-                                <div className="text-center mb-6">
-                                    <motion.div 
+                                <div className="text-center mb-8">
+                                    <motion.div
                                         initial={{ scale: 0.9 }}
                                         whileInView={{ scale: 1 }}
-                                        className="inline-flex items-center gap-3 py-2 px-6 bg-white/10 backdrop-blur-md rounded-full border border-white/20 mb-8"
+                                        className="inline-flex items-center gap-2 py-1.5 px-5 bg-white/10 backdrop-blur-md rounded-full border border-white/20 mb-6"
                                     >
-                                        <Heart className="w-5 h-5 fill-[#F7931E] text-[#F7931E]" />
-                                        <span className="text-white font-black text-xs uppercase tracking-[0.3em]">Support Our Mission</span>
+                                        <Heart className="w-4 h-4 fill-[#F7931E] text-[#F7931E]" />
+                                        <span className="text-white font-black text-[10px] uppercase tracking-[0.3em]">Support Our Mission</span>
                                     </motion.div>
-                                    <h2 className="text-2xl md:text-3xl font-black text-white mb-2 tracking-tight leading-tight">
-                                        Empower Change <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-[#F7931E]">- With Your Kindness</span>
+                                    <h2 className="text-2xl md:text-4xl font-black text-white mb-3 tracking-tight leading-tight">
+                                        Empower Change <span className="text-[#F7931E]">- With Your Kindness</span>
                                     </h2>
-                                    <p className="text-white/80 text-sm md:text-base leading-relaxed max-w-2xl mx-auto font-black italic">
-                                        Your generosity fuels our commitment to building sustainable communities.
+                                    <p className="text-white/80 text-sm md:text-base leading-relaxed max-w-2xl mx-auto font-medium">
+                                        Your generosity fuels our commitment to building sustainable communities within the <span className="text-white font-black">Sanyukt Parivaar & Rich Life Pvt.Ltd.</span> network.
                                     </p>
                                 </div>
+
                                 {/* Features / Trust Badges */}
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
                                     {[
-                                        { title: 'Secure Gateway', icon: Shield, color: 'from-blue-400 to-cyan-500' },
-                                        { title: 'Tax Benefits', icon: Receipt, color: 'from-yellow-400 to-orange-500' },
-                                        { title: 'Community Led', icon: Users, color: 'from-green-400 to-emerald-500' },
-                                        { title: 'Direct Impact', icon: Zap, color: 'from-purple-400 to-pink-500' }
+                                        { title: 'Secure Gateway', icon: Shield, subtitle: 'VERIFIED' },
+                                        { title: 'Tax Benefits', icon: Receipt, subtitle: 'VERIFIED' },
+                                        { title: 'Community Led', icon: Users, subtitle: 'VERIFIED' },
+                                        { title: 'Direct Impact', icon: Zap, subtitle: 'VERIFIED' }
                                     ].map((feature, i) => (
                                         <motion.div
                                             key={i}
-                                            whileHover={{ y: -2 }}
-                                            className="group bg-white/5 backdrop-blur-xl rounded-xl p-3 border border-white/10 hover:border-[#F7931E]/40 transition-all duration-500"
+                                            whileHover={{ y: -3 }}
+                                            className="bg-white/5 backdrop-blur-xl rounded-xl p-3 border border-white/10 transition-all duration-300"
                                         >
-                                            <div className="w-10 h-10 bg-[#F7931E] rounded-lg flex items-center justify-center mb-2 shadow-lg group-hover:scale-110 transition-transform">
+                                            <div className="w-10 h-10 bg-[#F7931E] rounded-lg flex items-center justify-center mb-2 shadow-lg shadow-[#F7931E]/20">
                                                 <feature.icon className="w-5 h-5 text-white" />
                                             </div>
-                                            <h4 className="text-white font-black text-sm group-hover:text-[#F7931E] transition-colors">{feature.title}</h4>
-                                            <p className="text-white/40 text-[9px] mt-0.5 font-bold tracking-widest uppercase">Verified</p>
+                                            <h4 className="text-white font-bold text-xs">{feature.title}</h4>
+                                            <p className="text-white/30 text-[8px] mt-0.5 font-black tracking-widest uppercase">{feature.subtitle}</p>
                                         </motion.div>
                                     ))}
                                 </div>
 
                                 {/* Transaction Core */}
-                                <div className="grid lg:grid-cols-5 gap-4 bg-black/20 backdrop-blur-3xl rounded-2xl p-5 sm:p-7 border border-white/10 relative group">
-                                    <div className="absolute inset-0 bg-gradient-to-r from-[#F7931E]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000 rounded-2xl"></div>
-                                    
-                                    {/* Left: UPI ID */}
-                                    <div className="lg:col-span-3 relative z-10 flex flex-col justify-center">
-                                        <div className="mb-4">
-                                            <span className="inline-block px-2 py-0.5 bg-[#F7931E] text-white text-[9px] font-black uppercase tracking-widest rounded mb-2">Direct</span>
-                                            <h3 className="text-lg md:text-xl font-black text-white">Scan or Copy UPI</h3>
-                                            <p className="text-white/50 text-[10px] font-medium">Fast transfers via any UPI app</p>
+                                <div className="grid lg:grid-cols-5 gap-5">
+                                    {/* Left: UPI ID & Personal Link */}
+                                    <div className="lg:col-span-3 space-y-3">
+                                        <div className="bg-black/20 backdrop-blur-3xl rounded-2xl p-5 border border-white/10 h-full flex flex-col justify-center">
+                                            <div className="mb-4 flex items-center justify-between">
+                                                <div>
+                                                    <span className="inline-block px-2.5 py-0.5 bg-[#F7931E] text-white text-[8px] font-black uppercase tracking-widest rounded mb-1.5">Direct</span>
+                                                    <h3 className="text-lg font-black text-white">Scan or Copy UPI</h3>
+                                                    <p className="text-[#F7931E] text-[10px] font-black uppercase tracking-wider mb-0.5">Beneficiary: Sanyukt Parivaar & Rich Life</p>
+                                                    <p className="text-white/50 text-[9px] font-medium italic">Verified Official Company Account</p>
+                                                </div>
+                                            </div>
+
+                                            <div className="bg-black/20 rounded-xl p-3 border border-white/5 mb-3 group/upi">
+                                                <p className="text-[#F7931E] text-[9px] font-black uppercase tracking-[0.2em] mb-1.5">UPI ADDRESS</p>
+                                                <div className="flex items-center justify-between gap-3">
+                                                    <span className="text-base md:text-xl font-mono font-bold text-white break-all tracking-tight">20260325575843-iservuqrsbrp@cbin</span>
+                                                    <motion.button
+                                                        whileHover={{ scale: 1.05 }}
+                                                        whileTap={{ scale: 0.95 }}
+                                                        onClick={() => {
+                                                            navigator.clipboard.writeText('20260325575843-iservuqrsbrp@cbin');
+                                                            toast.success('UPI Copied!');
+                                                        }}
+                                                        className="px-4 py-2 bg-[#F7931E] text-white rounded-lg shadow-lg shadow-[#F7931E]/20"
+                                                    >
+                                                        <span className="text-[9px] font-black uppercase tracking-widest">Copy</span>
+                                                    </motion.button>
+                                                </div>
+                                            </div>
+
+                                            <div className="flex items-center gap-4 text-white/40">
+                                                <div className="flex items-center gap-1.5">
+                                                    <Shield className="w-3.5 h-3.5 text-[#F7931E]" />
+                                                    <span className="text-[9px] font-black uppercase tracking-widest">Verified</span>
+                                                </div>
+                                                <div className="flex items-center gap-1.5">
+                                                    <Clock className="w-3.5 h-3.5 text-[#F7931E]" />
+                                                    <span className="text-[9px] font-black uppercase tracking-widest">Instant</span>
+                                                </div>
+                                            </div>
                                         </div>
 
-                                        <div className="relative group/upi">
-                                            <div className="absolute -inset-0.5 bg-gradient-to-r from-[#F7931E] to-yellow-300 rounded-2xl blur opacity-20 group-hover/upi:opacity-40 transition duration-1000"></div>
-                                            <div className="relative flex flex-col sm:flex-row items-center gap-4 bg-black/20 rounded-2xl p-6 border border-white/10">
-                                                <div className="flex-grow">
-                                                    <p className="text-[#F7931E] text-[10px] font-black uppercase tracking-[0.2em] mb-1">UPI ADDRESS</p>
-                                                    <span className="text-lg md:text-2xl font-mono font-bold text-white break-all tracking-tight">20260325575843-iservuqrsbrp@cbin</span>
+                                        {/* Personal SMART Link Sharing */}
+                                        {userData && (
+                                            <motion.div
+                                                initial={{ opacity: 0 }}
+                                                whileInView={{ opacity: 1 }}
+                                                className="bg-white/10 backdrop-blur-3xl rounded-2xl p-5 border border-white/20"
+                                            >
+                                                <div className="flex items-center justify-between mb-3">
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="w-7 h-7 bg-[#0A7A2F] rounded flex items-center justify-center">
+                                                            <Share2 className="w-3.5 h-3.5 text-white" />
+                                                        </div>
+                                                        <h4 className="text-white font-black text-xs uppercase tracking-wide">Sharing Link</h4>
+                                                    </div>
+                                                    <div className="bg-green-500/20 px-2 py-0.5 rounded-full border border-green-500/30">
+                                                        <span className="text-green-400 text-[8px] font-black uppercase">Your Social ID</span>
+                                                    </div>
                                                 </div>
-                                                <motion.button
-                                                    whileHover={{ scale: 1.05 }}
-                                                    whileTap={{ scale: 0.95 }}
-                                                    onClick={() => {
-                                                        navigator.clipboard.writeText('20260325575843-iservuqrsbrp@cbin');
-                                                        toast.success('UPI Copied!');
-                                                    }}
-                                                    className="w-full sm:w-auto px-6 py-3 bg-[#F7931E] text-white font-black text-[11px] uppercase tracking-widest rounded-lg shadow-lg hover:shadow-[#F7931E]/20 transition-all flex items-center justify-center gap-2"
-                                                >
-                                                    Copy ID
-                                                </motion.button>
-                                            </div>
-                                        </div>
-                                        
-                                        <div className="mt-4 flex items-center gap-6 text-white/40">
-                                            <div className="flex items-center gap-2">
-                                                <Shield className="w-4 h-4 text-[#F7931E]" />
-                                                <span className="text-[10px] font-black uppercase tracking-widest">Verified Merchant</span>
-                                            </div>
-                                            <div className="flex items-center gap-2">
-                                                <Clock className="w-4 h-4 text-[#F7931E]" />
-                                                <span className="text-[10px] font-black uppercase tracking-widest">Instant Settlement</span>
-                                            </div>
-                                        </div>
+
+                                                <div className="bg-white/5 rounded-xl p-3 border border-white/5 flex items-center gap-2.5">
+                                                    <div className="flex-1 overflow-hidden">
+                                                        <p className="text-white/40 text-[8px] font-black uppercase tracking-widest mb-1">Link for others to donate to you</p>
+                                                        <p className="text-white font-bold text-[10px] truncate font-mono">
+                                                            {window.location.origin + '/donate?for=' + (userData.memberId || userData._id)}
+                                                        </p>
+                                                    </div>
+                                                    <div className="flex gap-1.5">
+                                                        <button
+                                                            onClick={() => {
+                                                                navigator.clipboard.writeText(window.location.origin + '/donate?for=' + (userData.memberId || userData._id));
+                                                                toast.success('Link Copied!');
+                                                            }}
+                                                            className="p-1.5 bg-white/10 hover:bg-white/20 rounded-md text-white transition-colors"
+                                                        >
+                                                            <Copy className="w-3.5 h-3.5" />
+                                                        </button>
+                                                        <button
+                                                            onClick={() => {
+                                                                if (navigator.share) {
+                                                                    navigator.share({
+                                                                        title: 'Sanyukt Parivaar Donation',
+                                                                        text: `Support my mission on Sanyukt Parivaar.`,
+                                                                        url: window.location.origin + '/donate?for=' + (userData.memberId || userData._id)
+                                                                    });
+                                                                } else {
+                                                                    toast.error('Sharing not supported');
+                                                                }
+                                                            }}
+                                                            className="p-1.5 bg-[#F7931E]/20 hover:bg-[#F7931E]/40 rounded-md text-[#F7931E] transition-colors"
+                                                        >
+                                                            <Share2 className="w-3.5 h-3.5" />
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </motion.div>
+                                        )}
                                     </div>
 
-                                    {/* Right: QR Code */}
-                                    <div className="lg:col-span-2 relative z-10 flex flex-col items-center">
-                                        <div className="relative group/qr p-4">
-                                            {/* Decorative glow */}
-                                            <div className="absolute inset-0 bg-[#F7931E]/20 rounded-[40px] blur-[40px] opacity-0 group-hover/qr:opacity-100 transition-opacity duration-700"></div>
-                                            
-                                            <div className="relative bg-white rounded-2xl p-4 shadow-xl flex flex-col items-center">
-                                                <div className="w-40 h-40 mb-3">
+                                    {/* Right: QR Code & Razorpay Button */}
+                                    <div className="lg:col-span-2 space-y-3">
+                                        <div className="bg-white rounded-[1.5rem] p-5 shadow-2xl flex flex-col items-center justify-center h-full border border-gray-100">
+                                            <div className="relative group/qr mb-3">
+                                                <div className="absolute inset-0 bg-[#F7931E]/10 rounded-2xl blur-xl opacity-0 group-hover/qr:opacity-100 transition-opacity"></div>
+                                                <div className="relative bg-white p-3 rounded-xl border border-gray-100 shadow-sm flex flex-col items-center">
                                                     <img
                                                         src="/qr.jpeg"
                                                         alt="Donation QR Code"
-                                                        className="w-full h-full object-contain rounded-lg"
-                                                        onError={(e) => { e.target.src = "https://via.placeholder.com/200x200?text=QR"; }}
+                                                        className="w-32 h-32 object-contain rounded-lg"
+                                                        onError={(e) => { e.target.src = "https://via.placeholder.com/150x150?text=SCAN+PAY"; }}
                                                     />
+                                                    <div className="mt-2 flex flex-col items-center gap-1">
+                                                        <div className="flex items-center gap-1.5">
+                                                            <Smartphone className="w-3 h-3 text-[#F7931E]" />
+                                                            <span className="text-[9px] font-black text-gray-900 uppercase tracking-widest">Scan to Pay</span>
+                                                        </div>
+                                                        <span className="text-[10px] font-black text-[#F7931E] uppercase tracking-wider">to Sanyukt Parivaar & Rich Life</span>
+                                                    </div>
                                                 </div>
-                                                <div className="w-full h-px bg-gray-100 mb-3"></div>
-                                                <p className="text-gray-900 font-black text-[10px] uppercase tracking-widest flex items-center gap-2">
-                                                    <Smartphone className="w-3 h-3 text-[#F7931E]" />
-                                                    Scan to Pay
-                                                </p>
                                             </div>
-                                        </div>
 
-                                        <div className="mt-4 text-center">
-                                            <div className="bg-white/10 hover:bg-white/20 transition-colors p-1 rounded-xl border border-white/10 group/razor scale-75 origin-center">
-                                                <RazorpayPaymentButton buttonId="pl_SROihejcCAh8Vm" />
+                                            <div className="w-full h-px bg-gray-50 mb-3"></div>
+
+                                            <div className="w-full flex justify-center">
+                                                <div className="relative group/razor transition-transform hover:scale-105">
+                                                    <div className="scale-100">
+                                                        <RazorpayPaymentButton buttonId="pl_SROihejcCAh8Vm" />
+                                                    </div>
+                                                </div>
                                             </div>
+
+                                            <p className="mt-3 text-[8px] text-gray-400 font-bold uppercase tracking-widest flex flex-col items-center gap-1">
+                                                <div className="flex items-center gap-1.5">
+                                                    <Shield className="w-2.5 h-2.5 text-[#F7931E]" />
+                                                    <span>Secured by Razorpay</span>
+                                                </div>
+                                                <span className="text-[9px] text-[#F7931E] font-black">Official Payment to Sanyukt Parivaar</span>
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
 
                                 {/* Footer Note */}
-                                <div className="mt-6 text-center">
-                                    <p className="text-white/40 text-xs font-bold uppercase tracking-[0.2em] flex items-center justify-center gap-3">
-                                        <Heart className="w-3 h-3 text-[#F7931E]" />
-                                        Your support builds a better tomorrow
-                                        <Heart className="w-3 h-3 text-[#F7931E]" />
+                                <div className="mt-8 text-center">
+                                    <p className="text-white/40 text-[9px] font-black uppercase tracking-[0.4em] flex items-center justify-center gap-3">
+                                        <div className="h-px w-6 bg-white/10"></div>
+                                        YOUR SUPPORT BUILDS A BETTER TOMORROW
+                                        <div className="h-px w-6 bg-white/10"></div>
                                     </p>
                                 </div>
                             </div>
@@ -436,10 +515,10 @@ const Recharge = () => {
                                     <button
                                         key={tab.id}
                                         onClick={() => setActiveTab(tab.id)}
-                                        className={`flex-1 py-5 px-4 flex items-center justify-center gap-3 transition-all rounded-2xl ${isActive 
-                                            ? 'bg-gradient-to-r from-[#0A7A2F] to-[#0A6326] text-white shadow-lg' 
+                                        className={`flex-1 py-5 px-4 flex items-center justify-center gap-3 transition-all rounded-2xl ${isActive
+                                            ? 'bg-gradient-to-r from-[#0A7A2F] to-[#0A6326] text-white shadow-lg'
                                             : 'text-gray-600 hover:text-[#0A7A2F] hover:bg-white/50'
-                                        }`}
+                                            }`}
                                     >
                                         <Icon className={`w-5 h-5 ${isActive ? 'text-yellow-400' : ''}`} />
                                         <span className={`font-black text-sm uppercase tracking-widest ${isActive ? 'text-white' : ''}`}>{tab.label}</span>
@@ -464,7 +543,7 @@ const Recharge = () => {
                                                 <h3 className="text-2xl font-bold text-gray-900">Mobile Recharge</h3>
                                                 <span className="bg-[#0A7A2F]/10 text-[#0A7A2F] text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Up to 5% Commission</span>
                                             </div>
-                                            
+
                                             <div className="bg-gray-50 rounded-xl p-6 border border-gray-100">
                                                 <div className="flex items-center gap-3 mb-4">
                                                     <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm">
@@ -609,7 +688,7 @@ const Recharge = () => {
                                     >
                                         <div className="lg:col-span-7 flex flex-col gap-4">
                                             <h3 className="text-2xl font-bold text-gray-900 mb-2">DTH Recharge</h3>
-                                            
+
                                             <div className="bg-gray-50 rounded-xl p-6 border border-gray-100">
                                                 <div className="flex items-center gap-3 mb-4">
                                                     <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm">
@@ -734,7 +813,7 @@ const Recharge = () => {
                                     >
                                         <div className="lg:col-span-7 flex flex-col gap-4">
                                             <h3 className="text-2xl font-bold text-gray-900 mb-2">Data Card Recharge</h3>
-                                            
+
                                             <div className="bg-gray-50 rounded-xl p-6 border border-gray-100">
                                                 <div className="flex items-center gap-3 mb-4">
                                                     <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm">
@@ -859,7 +938,7 @@ const Recharge = () => {
                                     >
                                         <div className="lg:col-span-7 flex flex-col gap-4">
                                             <h3 className="text-2xl font-bold text-gray-900 mb-2">Device Recharge</h3>
-                                            
+
                                             <div className="bg-gray-50 rounded-xl p-6 border border-gray-100">
                                                 <div className="flex items-center gap-3 mb-4">
                                                     <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm">

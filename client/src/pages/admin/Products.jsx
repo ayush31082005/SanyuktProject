@@ -20,6 +20,7 @@ const AdminProducts = () => {
         rating: "",
         numReviews: "",
         isFeatured: false,
+        paymentMethods: ["cod", "upi", "card"],
     });
 
     const categories = [
@@ -89,6 +90,7 @@ const AdminProducts = () => {
             description: "",
             numReviews: "",
             isFeatured: false,
+            paymentMethods: ["cod", "upi", "card"],
         });
         setSelectedImage(null);
         setImagePreview(null);
@@ -154,6 +156,7 @@ const AdminProducts = () => {
             rating: product.rating || "",
             numReviews: product.numReviews || "",
             isFeatured: product.isFeatured || false,
+            paymentMethods: product.paymentMethods || ["cod", "upi", "card"],
         });
 
         // ✅ प्रीव्यू के लिए पूरा URL
@@ -401,6 +404,60 @@ const AdminProducts = () => {
                                         Featured on Homepage ⭐
                                     </span>
                                 </label>
+                            </div>
+
+                            {/* Payment Methods */}
+                            <div className="space-y-3 lg:col-span-2">
+                                <label className="text-sm font-semibold text-gray-700 uppercase tracking-wider block mb-2">
+                                    Available Payment Methods <span className="text-green-600">*</span>
+                                </label>
+                                <div className="flex flex-wrap gap-6 bg-gray-50 p-4 rounded-xl border border-gray-100">
+                                    <label className="flex items-center gap-3 cursor-pointer group">
+                                        <input
+                                            type="checkbox"
+                                            checked={formData.paymentMethods?.includes('cod')}
+                                            onChange={(e) => {
+                                                const newMethods = e.target.checked 
+                                                    ? [...formData.paymentMethods, 'cod']
+                                                    : formData.paymentMethods.filter(m => m !== 'cod');
+                                                setFormData({...formData, paymentMethods: newMethods});
+                                            }}
+                                            className="w-5 h-5 rounded border-gray-300 text-green-600 focus:ring-green-500"
+                                        />
+                                        <span className="text-sm font-bold text-gray-700 group-hover:text-green-600 transition-colors">Cash on Delivery</span>
+                                    </label>
+                                    <label className="flex items-center gap-3 cursor-pointer group">
+                                        <input
+                                            type="checkbox"
+                                            checked={formData.paymentMethods?.includes('upi')}
+                                            onChange={(e) => {
+                                                const newMethods = e.target.checked 
+                                                    ? [...formData.paymentMethods, 'upi']
+                                                    : formData.paymentMethods.filter(m => m !== 'upi');
+                                                setFormData({...formData, paymentMethods: newMethods});
+                                            }}
+                                            className="w-5 h-5 rounded border-gray-300 text-green-600 focus:ring-green-500"
+                                        />
+                                        <span className="text-sm font-bold text-gray-700 group-hover:text-green-600 transition-colors">UPI</span>
+                                    </label>
+                                    <label className="flex items-center gap-3 cursor-pointer group">
+                                        <input
+                                            type="checkbox"
+                                            checked={formData.paymentMethods?.includes('card')}
+                                            onChange={(e) => {
+                                                const newMethods = e.target.checked 
+                                                    ? [...formData.paymentMethods, 'card']
+                                                    : formData.paymentMethods.filter(m => m !== 'card');
+                                                setFormData({...formData, paymentMethods: newMethods});
+                                            }}
+                                            className="w-5 h-5 rounded border-gray-300 text-green-600 focus:ring-green-500"
+                                        />
+                                        <span className="text-sm font-bold text-gray-700 group-hover:text-green-600 transition-colors">Card</span>
+                                    </label>
+                                </div>
+                                {formData.paymentMethods?.length === 0 && (
+                                    <p className="text-xs text-red-500 font-bold">* At least one payment method is required</p>
+                                )}
                             </div>
                         </div>
 

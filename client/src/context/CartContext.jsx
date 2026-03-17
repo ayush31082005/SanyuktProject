@@ -31,7 +31,7 @@ export const CartProvider = ({ children }) => {
         };
         const existing = cartItems.find(item => item._id === product._id);
         if (existing) {
-            // Duplicate — not allowed, caller should show a message
+            // Duplicate - not allowed, caller should show a message
             return false;
         }
         setCartItems(prev => [...prev, { ...safeProduct, cartQuantity: quantity }]);

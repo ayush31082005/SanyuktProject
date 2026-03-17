@@ -26,10 +26,10 @@ const LegalPage = () => {
             icon: <Shield className="w-6 h-6 text-[#0A7A2F]" />,
             path: '/privacy-policy',
             content: {
-                intro: "Sanyukt Parivaar & Rich Life Private Limited respects the privacy of its users, members, and customers. This Privacy Policy explains how we collect, use, protect, and disclose personal information provided on our website and digital platforms.",
+                intro: "Sanyukt Parivaar & Rich Life Pvt.Ltd. respects the privacy of its users, members, and customers. This Privacy Policy explains how we collect, use, protect, and disclose personal information provided on our website and digital platforms.",
                 scope: {
                     title: "Scope of the Privacy Policy",
-                    content: "This is Sanyukt Parivaar & Rich Life Private Limited's global Privacy Policy. We have highlighted below where a particular section applies to you based on where you live. For the purposes of the General Data Protection Regulation ('GDPR'), if you are a resident in the EEA, Switzerland, and the UK, Sanyukt Parivaar Europe Ltd. and Sanyukt Parivaar, Inc. are joint data controllers of your personal data. Sanyukt Parivaar Europe Ltd. is an Irish company with its registered office at Waterloo Exchange, 3rd Floor, Waterloo Road, Dublin 4, Ireland. Sanyukt Parivaar, Inc. is a US company with its registered office at 651 Brannan St., San Francisco, CA 94107, USA. Sanyukt Parivaar Europe Ltd is the responsible controller for fulfilling key obligations under the GDPR. If you have any questions about our data processing activities, please contact our Data Protection Officer."
+                    content: "This is Sanyukt Parivaar & Rich Life Pvt.Ltd.'s global Privacy Policy. We have highlighted below where a particular section applies to you based on where you live. For the purposes of the General Data Protection Regulation ('GDPR'), if you are a resident in the EEA, Switzerland, and the UK, Sanyukt Parivaar Europe Ltd. and Sanyukt Parivaar, Inc. are joint data controllers of your personal data. Sanyukt Parivaar Europe Ltd. is an Irish company with its registered office at Waterloo Exchange, 3rd Floor, Waterloo Road, Dublin 4, Ireland. Sanyukt Parivaar, Inc. is a US company with its registered office at 651 Brannan St., San Francisco, CA 94107, USA. Sanyukt Parivaar Europe Ltd is the responsible controller for fulfilling key obligations under the GDPR. If you have any questions about our data processing activities, please contact our Data Protection Officer."
                 },
                 sections: [
                     {
@@ -160,7 +160,7 @@ const LegalPage = () => {
             icon: <FileText className="w-6 h-6 text-[#0A7A2F]" />,
             path: '/terms-conditions',
             content: {
-                intro: "By accessing or using the services of Sanyukt Parivaar & Rich Life Private Limited, you agree to comply with the following terms and conditions.",
+                intro: "By accessing or using the services of Sanyukt Parivaar & Rich Life Pvt.Ltd., you agree to comply with the following terms and conditions.",
                 sections: [
                     {
                         heading: "User Eligibility and Account Terms",
@@ -280,7 +280,7 @@ const LegalPage = () => {
             icon: <RefreshCw className="w-6 h-6 text-[#0A7A2F]" />,
             path: '/cancellation-policy',
             content: {
-                intro: "Sanyukt Parivaar & Rich Life Private Limited follows a transparent refund and cancellation policy in accordance with applicable laws.",
+                intro: "Sanyukt Parivaar & Rich Life Pvt.Ltd. follows a transparent refund and cancellation policy in accordance with applicable laws.",
                 sections: [
                     {
                         heading: "Cancellation Policy",
@@ -481,7 +481,7 @@ const LegalPage = () => {
             icon: <CreditCard className="w-6 h-6 text-[#0A7A2F]" />,
             path: '/payment-policy',
             content: {
-                intro: "All payments on the Sanyukt Parivaar & Rich Life Private Limited platform are processed securely through authorized payment gateways.",
+                intro: "All payments on the Sanyukt Parivaar & Rich Life Pvt.Ltd. platform are processed securely through authorized payment gateways.",
                 sections: [
                     {
                         heading: "Payment Methods",
@@ -611,7 +611,7 @@ const LegalPage = () => {
                                 items: [
                                     {
                                         subheading: "Order Processing",
-                                        text: "Orders are usually processed within 2–5 working days after order confirmation and payment verification."
+                                        text: "Orders are usually processed within 2-5 working days after order confirmation and payment verification."
                                     },
                                     {
                                         subheading: "Peak Periods",
@@ -713,7 +713,7 @@ const LegalPage = () => {
             icon: <Megaphone className="w-6 h-6 text-[#0A7A2F]" />,
             path: '/marketing-sales-policy',
             content: {
-                intro: "Sanyukt Parivaar & Rich Life Private Limited follows ethical and legal direct selling practices.",
+                intro: "Sanyukt Parivaar & Rich Life Pvt.Ltd. follows ethical and legal direct selling practices.",
                 sections: [
                     {
                         heading: "Code of Conduct",
@@ -858,7 +858,7 @@ const LegalPage = () => {
             {/* Intro Section */}
             <section className="py-12 px-4 max-w-4xl mx-auto text-center">
                 <h2 className="text-3xl md:text-4xl font-bold text-[#222222] mb-4 animate-slide-up">
-                    Sanyukt Parivaar & Rich Life Private Limited
+                    Sanyukt Parivaar & Rich Life Pvt.Ltd.
                 </h2>
                 <p className="text-lg text-[#2F7A32] font-medium mb-6">
                     Legal Information and Policies
@@ -874,7 +874,7 @@ const LegalPage = () => {
                         <div>
                             <h3 className="font-bold text-[#0A7A2F] mb-2">Legal Disclaimer</h3>
                             <p className="text-[#222222] text-sm">
-                                Sanyukt Parivaar & Rich Life Private Limited follows applicable Direct Selling Guidelines.
+                                Sanyukt Parivaar & Rich Life Pvt.Ltd. follows applicable Direct Selling Guidelines.
                                 Income depends on individual effort and performance. No guaranteed earnings.
                             </p>
                         </div>

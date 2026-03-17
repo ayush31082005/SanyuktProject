@@ -205,12 +205,19 @@ exports.getMLMStats = async (req, res) => {
         }
         console.log("BinaryTree record available:", tree ? "Yes" : "No");
 
-        // Optimized calculation for total product purchases using aggregate
+        // Optimized calculation for total product purchases and order count using aggregate
         const purchaseAggregate = await Order.aggregate([
             { $match: { user: user._id, status: { $ne: "cancelled" } } },
-            { $group: { _id: null, totalSales: { $sum: "$total" } } }
+            { 
+                $group: { 
+                    _id: null, 
+                    totalSales: { $sum: "$total" },
+                    orderCount: { $sum: 1 }
+                } 
+            }
         ]);
         const productPurchases = purchaseAggregate[0]?.totalSales || 0;
+        const totalOrders = purchaseAggregate[0]?.orderCount || 0;
 
         // Direct count is already indexed
         const directCount = await User.countDocuments({ sponsorId: user.memberId });
@@ -238,6 +245,7 @@ exports.getMLMStats = async (req, res) => {
             matchedPV: Number(user.matchedPV || 0),
             rank: user.rank || "Member",
             productPurchases: Number(productPurchases || 0),
+            totalOrders: Number(totalOrders || 0),
             dailyPV: {
                 current: Number(user.dailyPV || 0),
                 target: 320

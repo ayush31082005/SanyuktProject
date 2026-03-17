@@ -2,6 +2,7 @@ const User = require('../models/User');
 const Withdrawal = require('../models/Withdrawal');
 const Deduction = require('../models/Deduction');
 const IncomeHistory = require('../models/IncomeHistory');
+const Transaction = require('../models/Transaction');
 
 // ─────────────────────────────────────────
 // 1. DEDUCTION REPORT
@@ -249,8 +250,11 @@ exports.getAllTransactions = async (req, res) => {
             .populate('fromUserId', 'userName memberId')
             .sort({ createdAt: -1 });
 
-        // Withdrawals (debits)
-        const withdrawals = await Withdrawal.find({ userId }).sort({ createdAt: -1 });
+        // Other Payments/Recharges & Withdrawals (debits)
+        const [withdrawals, otherTransactions] = await Promise.all([
+            Withdrawal.find({ userId }).sort({ createdAt: -1 }),
+            Transaction.find({ userId, status: 'success' }).sort({ createdAt: -1 })
+        ]);
 
         // Merge & sort by date
         const transactions = [
@@ -272,6 +276,15 @@ exports.getAllTransactions = async (req, res) => {
                 amount: w.amount,
                 source: w.method,
                 details: w.referenceNo,
+                txType: 'debit'
+            })),
+            ...otherTransactions.map(t => ({
+                _id: t._id,
+                date: t.createdAt,
+                type: t.type.toUpperCase(),
+                amount: t.amount,
+                source: t.type === 'donation' ? 'Sanyukt Parivaar' : `${t.operator} - ${t.paymentMethod}`,
+                details: t.type === 'donation' ? `Contribution (${t.paymentMethod})` : `${t.rechargeNumber} (${t.status})`,
                 txType: 'debit'
             }))
         ].sort((a, b) => new Date(b.date) - new Date(a.date));

@@ -14,10 +14,10 @@ const AboutSection = ({ aboutImage, teamImages }) => {
                 <div className="grid md:grid-cols-2 gap-6 md:gap-8 items-center">
                     <div className="space-y-3 text-gray-700 leading-relaxed order-2 md:order-1">
                         <h3 className="text-lg md:text-xl font-semibold text-[#2F7A32] mb-3">
-                            Sanyukt Parivaar & Rich Life Private Limited
+                            Sanyukt Parivaar & Rich Life Pvt.Ltd.
                         </h3>
                         <p className="text-sm">
-                            Sanyukt Parivaar & Rich Life Private Limited was founded with a clear vision — to create financial independence through ethical direct selling. We believe in growing together as one family, where every member gets equal opportunity, proper training, and long-term support.
+                            Sanyukt Parivaar & Rich Life Pvt.Ltd. was founded with a clear vision  to create financial independence through ethical direct selling. We believe in growing together as one family, where every member gets equal opportunity, proper training, and long-term support.
                         </p>
                         <p className="text-sm">
                             Our company focuses on personal development, leadership growth, and community success while promoting reliable lifestyle, wellness, and personal care products.

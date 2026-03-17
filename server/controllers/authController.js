@@ -116,8 +116,8 @@ exports.verifyOtp = async (req, res) => {
         }
 
         // Create/Update BinaryTree record for the user themselves
-        const sponsorObj = await User.findOne({ 
-            memberId: (user.sponsorId || "").toUpperCase() 
+        const sponsorObj = await User.findOne({
+            memberId: (user.sponsorId || "").toUpperCase()
         });
         await BinaryTree.findOneAndUpdate(
             { userId: user._id },
@@ -154,7 +154,7 @@ exports.login = async (req, res) => {
         if (email.match(/^[0-9a-fA-F]{24}$/)) {
             user = await User.findOne({ $or: [{ email: email }, { _id: email }] });
         } else if (email.toUpperCase().startsWith('SPRL') || email.toUpperCase().startsWith('SP')) {
-             user = await User.findOne({ memberId: email.toUpperCase() });
+            user = await User.findOne({ memberId: email.toUpperCase() });
         } else {
             user = await User.findOne({ email: email });
         }
@@ -172,7 +172,7 @@ exports.login = async (req, res) => {
 
         const secret = process.env.JWT_SECRET || 'your-secret-key';
         console.log("Signing token with secret (prefix):", secret.substring(0, 5));
-        
+
         const token = jwt.sign(
             { id: user._id, role: user.role },
             secret,
@@ -180,6 +180,11 @@ exports.login = async (req, res) => {
         );
 
         console.log("Login SUCCESS for user:", user._id);
+
+        // Send Login Notification Email
+        const loginSubject = "Login Notification - Sanyukt Parivaar";
+        const loginText = `Dear ${user.userName || 'Member'},\n\nYou have successfully logged into your Sanyukt Parivaar account on ${new Date().toLocaleString()}.\n\nIf this was not you, please contact support immediately.\n\nThank you for being part of our family!`;
+        sendEmail(user.email, loginSubject, loginText).catch(err => console.error("Login notification email error:", err));
 
         res.json({
             message: "Login Success",
@@ -221,13 +226,33 @@ exports.forgotPassword = async (req, res) => {
     } catch (error) {
         console.error(`[AUTH ERROR] Forgot password: ${error.message}`, error.stack);
         console.error("Error in forgotPassword:", error);
-        
+
         // Return a more descriptive error if it's likely an email issue
         if (error.message.includes('login') || error.message.includes('auth')) {
             return res.status(500).json({ message: "Email service authentication failed. Please check server configuration." });
         }
-        
+
         res.status(500).json({ message: "Server Error. Please try again later." });
+    }
+};
+
+// ================= PUBLIC PROFILE =================
+exports.publicProfile = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const user = await User.findOne({
+            $or: [
+                { memberId: id.toUpperCase() },
+                { _id: id.match(/^[0-9a-fA-F]{24}$/) ? id : null }
+            ].filter(query => query !== null && query !== undefined)
+        }).select("userName memberId");
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+        res.json({ success: true, user });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
     }
 };
 
@@ -353,7 +378,7 @@ exports.updateProfile = async (req, res) => {
         const allowedFields = [
             'userName', 'fatherName', 'mobile', 'gender', 'position',
             'shippingAddress', 'state', 'district', 'assemblyArea',
-            'block', 'villageCouncil', 'village', 'profileImage'
+            'block', 'villageCouncil', 'village', 'profileImage', 'bankDetails'
         ];
 
         const updates = {};

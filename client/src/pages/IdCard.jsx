@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Download, CreditCard, User, Shield, Award } from 'lucide-react';
+import { Download, CreditCard, User, Shield, Award, CheckCircle } from 'lucide-react';
 
 const IdCard = () => {
     const [userData, setUserData] = useState(null);
@@ -42,7 +42,10 @@ const IdCard = () => {
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-xs font-medium text-green-100">Sanyukt Parivaar</p>
-                                <h2 className="text-sm font-bold text-white">MEMBERSHIP CARD</h2>
+                                <h2 className="text-sm font-bold text-white flex items-center gap-1">
+                                    MEMBERSHIP CARD
+                                    {userData?.activeStatus && <CheckCircle className="w-4 h-4 text-white fill-green-600" />}
+                                </h2>
                             </div>
                             <div className="text-white opacity-80">
                                 <Shield className="w-5 h-5" />
@@ -91,16 +94,16 @@ const IdCard = () => {
                             </div>
                             <div className="border-b border-gray-100 pb-2">
                                 <p className="text-xs text-gray-500">Sponsor ID</p>
-                                <p className="text-sm font-medium text-gray-800 mt-0.5">{userData?.sponsorId || '—'}</p>
+                                <p className="text-sm font-medium text-gray-800 mt-0.5">{userData?.sponsorId || '-'}</p>
                             </div>
                             <div className="border-b border-gray-100 pb-2">
                                 <p className="text-xs text-gray-500">Mobile</p>
-                                <p className="text-sm font-medium text-gray-800 mt-0.5">{userData?.mobile || '—'}</p>
+                                <p className="text-sm font-medium text-gray-800 mt-0.5">{userData?.mobile || '-'}</p>
                             </div>
                             <div className="border-b border-gray-100 pb-2">
                                 <p className="text-xs text-gray-500">Joined</p>
                                 <p className="text-sm font-medium text-gray-800 mt-0.5">
-                                    {userData?.createdAt ? new Date(userData.createdAt).toLocaleDateString('en-GB') : '—'}
+                                    {userData?.createdAt ? new Date(userData.createdAt).toLocaleDateString('en-GB') : '-'}
                                 </p>
                             </div>
                         </div>

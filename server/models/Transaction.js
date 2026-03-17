@@ -17,7 +17,7 @@ const transactionSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        enum: ['mobile', 'dth', 'datacard', 'device'],
+        enum: ['mobile', 'dth', 'datacard', 'donation', 'recharge', 'payment'],
         required: true
     },
     operator: {

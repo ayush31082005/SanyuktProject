@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import { motion } from 'framer-motion';
 import {
     Wallet, CreditCard, PieChart, ShoppingBag,
@@ -149,7 +151,9 @@ const recentActivities = [
 ];
 
 const DashboardOverview = () => {
+    const navigate = useNavigate();
     const [stats, setStats] = useState(null);
+
     const [loading, setLoading] = useState(true);
     const [userData, setUserData] = useState(null);
 
@@ -272,9 +276,13 @@ const DashboardOverview = () => {
                                     <h4 className="text-3xl font-black tracking-tighter">₹ {Number(stats?.productPurchases || 0).toLocaleString()}</h4>
                                 </div>
                             </div>
-                            <button className="px-6 py-3 bg-[#F7931E] hover:bg-orange-500 rounded-xl text-xs font-black uppercase tracking-widest transition-colors shadow-lg shadow-orange-900/20">
+                            <button
+                                onClick={() => navigate('/my-account/orders')}
+                                className="px-6 py-3 bg-[#F7931E] hover:bg-orange-500 rounded-xl text-xs font-black uppercase tracking-widest transition-colors shadow-lg shadow-orange-900/20"
+                            >
                                 View Details
                             </button>
+
                         </div>
                     </div>
 

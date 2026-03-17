@@ -204,7 +204,7 @@ const Footer = () => {
                 {/* 3 Columns Layout */}
                 <Grid container spacing={4} justifyContent="space-between">
 
-                    {/* COLUMN 1 – COMPANY INFO */}
+                    {/* COLUMN 1 - COMPANY INFO */}
                     <Grid item xs={12} md={4}>
                         <LogoContainer onClick={() => handleNavigation('/')}>
                             {!logoError ? (
@@ -218,7 +218,7 @@ const Footer = () => {
                         </LogoContainer>
 
                         <CompanyDescription>
-                            Sanyukt Parivaar & Rich Life Private Limited is a direct selling and network marketing organization founded by experienced professionals. We empower individuals to achieve financial independence by promoting high-quality lifestyle, wellness, personal care, and home utility products through a transparent and rewarding MLM business model.
+                            Sanyukt Parivaar & Rich Life Pvt.Ltd. is a direct selling and network marketing organization founded by experienced professionals. We empower individuals to achieve financial independence by promoting high-quality lifestyle, wellness, personal care, and home utility products through a transparent and rewarding MLM business model.
                         </CompanyDescription>
 
                         <SocialIconContainer>
@@ -237,7 +237,7 @@ const Footer = () => {
                         </SocialIconContainer>
                     </Grid>
 
-                    {/* COLUMN 2 – QUICK LINKS */}
+                    {/* COLUMN 2 - QUICK LINKS */}
                     <Grid item xs={6} sm={6} md={3}>
                         <SectionTitle>Quick Links</SectionTitle>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -249,10 +249,10 @@ const Footer = () => {
                         </Box>
                     </Grid>
 
-                    {/* COLUMN 3 – POLICIES & CONTACT US (Split internally) */}
+                    {/* COLUMN 3 - POLICIES & CONTACT US (Split internally) */}
                     <Grid item xs={6} sm={6} md={5}>
                         <Grid container spacing={2}>
-                            {/* Policies — full width on mobile inside this half-col, side-by-side on sm+ */}
+                            {/* Policies - full width on mobile inside this half-col, side-by-side on sm+ */}
                             <Grid item xs={12} sm={6}>
                                 <SectionTitle>Our Policies</SectionTitle>
                                 <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -264,16 +264,15 @@ const Footer = () => {
                                 </Box>
                             </Grid>
 
-                            {/* Contact Us — hidden on xs, shown from sm+ */}
+                            {/* Contact Us - hidden on xs, shown from sm+ */}
                             <Grid item xs={12} sm={6} sx={{ display: { xs: 'none', sm: 'block' } }}>
                                 <SectionTitle>Contact Us</SectionTitle>
                                 <Box sx={{ mb: 2 }}>
                                     <ContactText sx={{ fontWeight: 700, mb: 1.5, color: '#FFFFFF', fontSize: '15px' }}>
-                                        Sanyukt Parivaar & Rich Life Private Limited
+                                        Sanyukt Parivaar & Rich Life Pvt.Ltd.
                                     </ContactText>
                                     <ContactText sx={{ fontWeight: 500, fontSize: '13px', borderLeft: '2px solid #F7931E', pl: 1.5, mb: 2 }}>
-                                        C/o- Vindeshwari Prasad, Bhatiniya,<br />
-                                        Gopinathpur, Harraiya,<br />
+                                        Bhatiniya, Gopinathpur, Harraiya,<br />
                                         Basti - 272130, Uttar Pradesh
                                     </ContactText>
                                 </Box>
@@ -291,16 +290,15 @@ const Footer = () => {
                         </Grid>
                     </Grid>
 
-                    {/* CONTACT — full width row on xs only */}
+                    {/* CONTACT - full width row on xs only */}
                     <Grid item xs={12} sx={{ display: { xs: 'block', sm: 'none' }, pt: '0 !important' }}>
                         <SectionTitle>Contact Us</SectionTitle>
                         <Box sx={{ mb: 2 }}>
                             <ContactText sx={{ fontWeight: 700, mb: 1, color: '#FFFFFF', fontSize: '14px' }}>
-                                Sanyukt Parivaar & Rich Life Private Limited
+                                Sanyukt Parivaar & Rich Life Pvt.Ltd.
                             </ContactText>
                             <ContactText sx={{ fontSize: '13px', fontWeight: 500, opacity: 1, borderLeft: '2px solid #F7931E', pl: 1.5 }}>
-                                C/o- Vindeshwari Prasad, Bhatiniya,<br />
-                                Gopinathpur, Harraiya,<br />
+                                Bhatiniya, Gopinathpur, Harraiya,<br />
                                 Basti - 272130, Uttar Pradesh
                             </ContactText>
                         </Box>
@@ -320,7 +318,7 @@ const Footer = () => {
             {/* 11. FOOTER BOTTOM BAR */}
             <BottomBar>
                 <CopyrightText>
-                    © 2026 Sanyukt Parivaar & Rich Life Private Limited. All Rights Reserved.
+                    © 2026 Sanyukt Parivaar & Rich Life Pvt.Ltd.. All Rights Reserved.
                 </CopyrightText>
             </BottomBar>
         </FooterContainer>

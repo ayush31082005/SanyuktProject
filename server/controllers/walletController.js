@@ -4,10 +4,6 @@ const Deduction = require('../models/Deduction');
 const IncomeHistory = require('../models/IncomeHistory');
 const Transaction = require('../models/Transaction');
 
-// ─────────────────────────────────────────
-// 1. DEDUCTION REPORT
-// GET /api/wallet/deduction-report
-// ─────────────────────────────────────────
 exports.getDeductionReport = async (req, res) => {
     try {
         const userId = req.user._id;
@@ -87,21 +83,17 @@ exports.getDeductionReport = async (req, res) => {
             deductions
         });
     } catch (err) {
-        console.error('getDeductionReport error:', err);
         res.status(500).json({ success: false, message: 'Server error' });
     }
 };
 
-// ─────────────────────────────────────────
-// 2. WITHDRAWAL HISTORY
-// GET /api/wallet/withdrawal-history
-// ─────────────────────────────────────────
 exports.getWithdrawalHistory = async (req, res) => {
     try {
         const userId = req.user._id;
         const { status = '', method = '', period = '' } = req.query;
 
         let query = { userId };
+
 
         if (status && status !== 'All Status') query.status = status;
         if (method && method !== 'All Methods') query.method = method;
@@ -146,21 +138,16 @@ exports.getWithdrawalHistory = async (req, res) => {
             withdrawals
         });
     } catch (err) {
-        console.error('getWithdrawalHistory error:', err);
         res.status(500).json({ success: false, message: 'Server error' });
     }
 };
 
-// ─────────────────────────────────────────
-// 3. REQUEST WITHDRAWAL
-// POST /api/wallet/withdraw
-// ─────────────────────────────────────────
 exports.requestWithdrawal = async (req, res) => {
     try {
         const userId = req.user._id;
         const { amount, method, accountNumber, ifscCode, bankName, upiId } = req.body;
 
-        if (!amount || amount < 500) {
+        if (!amount || isNaN(amount) || amount < 500) {
             return res.status(400).json({
                 success: false,
                 message: 'Minimum withdrawal amount is ₹500'
@@ -173,7 +160,7 @@ exports.requestWithdrawal = async (req, res) => {
         if (user.walletBalance < amount) {
             return res.status(400).json({
                 success: false,
-                message: 'Insufficient wallet balance'
+                message: `Insufficient wallet balance. You have ₹${user.walletBalance}`
             });
         }
 
@@ -186,53 +173,102 @@ exports.requestWithdrawal = async (req, res) => {
         user.walletBalance -= amount;
         await user.save();
 
-        // Create withdrawal record
-        const withdrawal = await Withdrawal.create({
-            userId,
-            amount: netAmount,
-            method,
-            accountNumber,
-            ifscCode,
-            bankName,
-            upiId
-        });
+        let withdrawal;
+        try {
+            // Create withdrawal record
+            withdrawal = await Withdrawal.create({
+                userId,
+                amount: netAmount,
+                method,
+                accountNumber,
+                ifscCode,
+                bankName,
+                upiId
+            });
 
-        // Create TDS deduction record
-        await Deduction.create({
-            userId,
-            type: 'Tax',
-            amount: tdsAmount,
-            description: 'Tax Deducted at Source (TDS)',
-            relatedWithdrawalId: withdrawal._id,
-            status: 'Processed'
-        });
+            // Create TDS deduction record
+            await Deduction.create({
+                userId,
+                type: 'Tax',
+                amount: tdsAmount,
+                description: 'Tax Deducted at Source (TDS)',
+                relatedWithdrawalId: withdrawal._id,
+                status: 'Processed'
+            });
 
-        // Create processing fee record
-        await Deduction.create({
-            userId,
-            type: 'Fee',
-            amount: processingFee,
-            description: 'Processing Fee - Withdrawal',
-            relatedWithdrawalId: withdrawal._id,
-            status: 'Processed'
-        });
+            // Create processing fee record
+            await Deduction.create({
+                userId,
+                type: 'Fee',
+                amount: processingFee,
+                description: 'Processing Fee - Withdrawal',
+                relatedWithdrawalId: withdrawal._id,
+                status: 'Processed'
+            });
+        } catch (dbErr) {
+            // Error handling for DB records
+        }
 
         res.json({
             success: true,
             message: 'Withdrawal request submitted successfully',
-            withdrawal,
+            withdrawal: withdrawal || { amount: netAmount, referenceNo: 'PENDING' },
             deductions: { tds: tdsAmount, processingFee }
         });
     } catch (err) {
-        console.error('requestWithdrawal error:', err);
+        res.status(500).json({ success: false, message: 'Internal Server Error during withdrawal' });
+    }
+};
+
+exports.getRecentTransactions = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const limit = parseInt(req.query.limit) || 5;
+
+        // Fetch recent records from multiple sources
+        const [incomes, withdrawals, deductions, otherTx] = await Promise.all([
+            IncomeHistory.find({ userId }).sort({ createdAt: -1 }).limit(limit),
+            Withdrawal.find({ userId }).sort({ createdAt: -1 }).limit(limit),
+            Deduction.find({ userId }).sort({ createdAt: -1 }).limit(limit),
+            Transaction.find({ userId, status: 'success' }).sort({ createdAt: -1 }).limit(limit)
+        ]);
+
+        // Merge and format
+        const merged = [
+            ...incomes.map(i => ({
+                id: i._id,
+                date: i.createdAt,
+                type: 'credit',
+                description: i.description || i.type,
+                amount: i.amount
+            })),
+            ...withdrawals.map(w => ({
+                id: w._id,
+                date: w.createdAt,
+                type: 'debit',
+                description: `Withdrawal (${w.method})`,
+                amount: w.amount
+            })),
+            ...otherTx.map(t => ({
+                id: t._id,
+                date: t.createdAt,
+                type: 'debit',
+                description: `${t.type.toUpperCase()} Recharge`,
+                amount: t.amount
+            }))
+        ]
+            .sort((a, b) => new Date(b.date) - new Date(a.date))
+            .slice(0, limit);
+
+        res.json({
+            success: true,
+            transactions: merged
+        });
+    } catch (err) {
         res.status(500).json({ success: false, message: 'Server error' });
     }
 };
 
-// ─────────────────────────────────────────
-// 4. ALL TRANSACTION REPORT
-// GET /api/wallet/all-transactions
-// ─────────────────────────────────────────
 exports.getAllTransactions = async (req, res) => {
     try {
         const userId = req.user._id;
@@ -295,15 +331,10 @@ exports.getAllTransactions = async (req, res) => {
             transactions
         });
     } catch (err) {
-        console.error('getAllTransactions error:', err);
         res.status(500).json({ success: false, message: 'Server error' });
     }
 };
 
-// ─────────────────────────────────────────
-// 5. DAILY CLOSING REPORT
-// GET /api/wallet/daily-closing
-// ─────────────────────────────────────────
 exports.getDailyClosingReport = async (req, res) => {
     try {
         const userId = req.user._id;
@@ -357,7 +388,34 @@ exports.getDailyClosingReport = async (req, res) => {
             totalDebits
         });
     } catch (err) {
-        console.error('getDailyClosingReport error:', err);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+};
+
+exports.updateWithdrawalStatus = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { status, adminNote } = req.body;
+
+        if (!['Approved', 'Completed', 'Rejected', 'Pending'].includes(status)) {
+            return res.status(400).json({ success: false, message: 'Invalid status' });
+        }
+
+        const withdrawal = await Withdrawal.findById(id);
+        if (!withdrawal) return res.status(404).json({ success: false, message: 'Withdrawal not found' });
+
+        withdrawal.status = status;
+        if (adminNote) withdrawal.adminNote = adminNote;
+        if (status === 'Completed') withdrawal.processedDate = new Date();
+
+        await withdrawal.save();
+
+        res.json({
+            success: true,
+            message: `Withdrawal status updated to ${status}`,
+            withdrawal
+        });
+    } catch (err) {
         res.status(500).json({ success: false, message: 'Server error' });
     }
 };

@@ -49,10 +49,9 @@ import {
     HouseFund, LeadershipFund, CarFund, TravelFund, BikeFund
 } from '../pages/RepurchaseBonus/BonusComponents.jsx';
 
-import MyRank from '../pages/MyRank';
+import MyRank from '../pages/Myrank';
 
-import WalletTopup from '../pages/Wallet/Wallettopup';
-import WithdrawalRequest from '../pages/Wallet/Withdrawalrequest';
+import WalletManagement from '../pages/Wallet/WalletManagement';
 import AllTransactionReport from '../pages/Wallet/AllTransactionReport';
 import DeductionReport from '../pages/Wallet/DeductionReport';
 import WithdrawalHistory from '../pages/Wallet/WithdrawalHistory';
@@ -160,8 +159,8 @@ const MainRoutes = () => {
                 <Route path="wallet/withdrawal-history" element={<WithdrawalHistory />} />
                 <Route path="wallet/daily-closing" element={<DailyClosingReport />} />
                 <Route path='wallet/all-transactions' element={<AllTransactionReport />} />
-                <Route path='wallet/topup' element={<WalletTopup />} />
-                <Route path='wallet/withdrawal-request' element={<WithdrawalRequest />} />
+                <Route path='wallet/topup' element={<WalletManagement defaultTab="topup" />} />
+                <Route path='wallet/withdrawal-request' element={<WalletManagement defaultTab="withdraw" />} />
 
 
                 <Route path='wallet/generation' element={<GenerationWallet />} />

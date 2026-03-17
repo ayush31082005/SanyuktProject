@@ -12,10 +12,10 @@ const isMocking = () =>
     !process.env.RAZORPAY_KEY_ID ||
     process.env.RAZORPAY_KEY_ID === 'rzp_test_your_key_here';
 
-/**
- * POST /api/wallet/topup/create-order
- * Body: { amount: Number }   — amount in ₹ (min ₹100)
- */
+const Withdrawal = require('../models/Withdrawal');
+const Transaction = require('../models/Transaction');
+const Deduction = require('../models/Deduction');
+
 exports.createTopupOrder = async (req, res) => {
     try {
         const { amount } = req.body;
@@ -37,13 +37,11 @@ exports.createTopupOrder = async (req, res) => {
                 status: 'created',
             };
         } else {
-            // Receipt ID max length is 40 chars. 
-            // ObjectID (24) + "_" (1) + timestamp (approx 13) = 38. 
-            // "topup_" prefix was pushing it over 40.
+            // Receipt ID max length is 40 chars.
             order = await razorpay.orders.create({
                 amount: amount * 100,
                 currency: 'INR',
-                receipt: `${req.user._id}_${Date.now()}`, 
+                receipt: `${req.user._id}_${Date.now()}`,
                 notes: { userId: req.user._id.toString(), purpose: 'wallet_topup' },
             });
         }
@@ -59,11 +57,9 @@ exports.createTopupOrder = async (req, res) => {
             },
         });
     } catch (err) {
-        console.error('createTopupOrder error complete details:', err);
-        return res.status(500).json({ 
-            success: false, 
-            message: 'Order create karne mein error aaya.',
-            error: err.message // Send error message temporarily to help user debug
+        return res.status(500).json({
+            success: false,
+            message: 'Order create karne mein error aaya.'
         });
     }
 };
@@ -119,7 +115,6 @@ exports.verifyTopup = async (req, res) => {
             walletBalance: user.walletBalance,
         });
     } catch (err) {
-        console.error('verifyTopup error:', err);
         return res.status(500).json({ success: false, message: 'Payment verify karne mein error aaya.' });
     }
 };
@@ -129,8 +124,39 @@ exports.verifyTopup = async (req, res) => {
  */
 exports.getWalletBalance = async (req, res) => {
     try {
-        const user = await User.findById(req.user._id).select('walletBalance userName memberId');
-        return res.json({ success: true, walletBalance: user.walletBalance || 0 });
+        const userId = req.user._id;
+        const user = await User.findById(userId).select('walletBalance userName memberId');
+        
+        // Calculate total deposits (all income history where this user is the recipient)
+        const allIncomes = await IncomeHistory.find({ userId });
+        const totalDeposits = allIncomes.reduce((sum, inc) => sum + inc.amount, 0);
+
+        // Calculate total outflows:
+        // 1. Withdrawal Requests (Gross amount = net + deductions if we had requested amount, but let's sum what we have)
+        const allWithdrawals = await Withdrawal.find({ userId });
+        const totalWdl = allWithdrawals.reduce((sum, wd) => sum + wd.amount, 0);
+
+        // 2. Successful Recharges/Transactions
+        const allTxs = await Transaction.find({ userId, status: 'success' });
+        const totalTxs = allTxs.reduce((sum, tx) => sum + tx.amount, 0);
+
+        // 3. Deductions (TDS/Admin/Fees)
+        const allDeductions = await Deduction.find({ userId });
+        const totalDed = allDeductions.reduce((sum, d) => sum + d.amount, 0);
+
+        const totalOutflow = totalWdl + totalTxs + totalDed;
+
+        return res.json({ 
+            success: true, 
+            walletBalance: user.walletBalance || 0,
+            totalDeposits,
+            totalWithdrawals: totalOutflow, // Return combined outflow as "Total Withdrawals" for the UI
+            details: {
+                withdrawals: totalWdl,
+                recharges: totalTxs,
+                deductions: totalDed
+            }
+        });
     } catch (err) {
         return res.status(500).json({ success: false, message: 'Server error.' });
     }

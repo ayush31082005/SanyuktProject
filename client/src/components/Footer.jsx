@@ -212,7 +212,7 @@ const Footer = () => {
                             ) : null}
                             <LogoTextContainer>
                                 <LogoMain>Sanyukt Parivaar</LogoMain>
-                                <Typography sx={{ fontSize: '0.9rem', fontWeight: 700, color: '#FFFFFF', mb: 0.5 }}>& Rich Life Company</Typography>
+                                <Typography sx={{ fontSize: '0.9rem', fontWeight: 700, color: '#FFFFFF', mb: 0.5 }}>& Rich Life Pvt.Ltd. </Typography>
                                 <Typography sx={{ fontSize: '0.75rem', fontWeight: 700, color: '#F7931E', letterSpacing: '0.02em' }}>Together We Grow, Together We Prosper</Typography>
                             </LogoTextContainer>
                         </LogoContainer>

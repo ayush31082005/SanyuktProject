@@ -18,6 +18,8 @@ const {
     requestWithdrawal,
     getAllTransactions,
     getDailyClosingReport,
+    getRecentTransactions,
+    updateWithdrawalStatus,
 } = require('../controllers/walletController');
 
 const {
@@ -32,10 +34,14 @@ router.get('/withdrawal-history', protect, getWithdrawalHistory);
 router.post('/withdraw', protect, requestWithdrawal);
 router.get('/all-transactions', protect, getAllTransactions);
 router.get('/daily-closing', protect, getDailyClosingReport);
+router.get('/recent-transactions', protect, getRecentTransactions);
+router.patch('/withdrawal/:id/status', protect, updateWithdrawalStatus);
 
 // ── NEW: Wallet Top-Up ────────────────────────────────────────────────────────
 router.get('/topup/balance', protect, getWalletBalance);
 router.post('/topup/create-order', protect, createTopupOrder);
 router.post('/topup/verify', protect, verifyTopup);
 
+
 module.exports = router;
+

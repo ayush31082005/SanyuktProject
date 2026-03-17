@@ -170,6 +170,7 @@ const Footer = () => {
         { name: 'Our Products', path: '/products' },
         { name: 'Opportunities', path: '/opportunities' },
         { name: 'Seminar List', path: '/seminars' },
+        { name: 'Gallery', path: '/gallery' },
         { name: 'Downloads', path: '/downloads' },
         { name: 'Contact Us', path: '/contact' },
     ];

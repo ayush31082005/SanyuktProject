@@ -9,10 +9,16 @@ const sendEmail = require("../utils/sendEmail");
 // ✅ Import repurchase income processor
 const { processRepurchaseGenerationIncome } = require("./repurchaseController");
 
-const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID,
-    key_secret: process.env.RAZORPAY_KEY_SECRET
-});
+// Initialize Razorpay lazily to prevent server crash if keys are missing
+let razorpay;
+if (process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET) {
+    razorpay = new Razorpay({
+        key_id: process.env.RAZORPAY_KEY_ID,
+        key_secret: process.env.RAZORPAY_KEY_SECRET
+    });
+} else {
+    console.warn("[PAYMENT] Razorpay keys are missing in orderController. Product payments will be disabled.");
+}
 
 // ================= CREATE ORDER =================
 exports.createOrder = async (req, res) => {
@@ -135,6 +141,11 @@ Empowering Lives, Together.`;
 exports.createRazorpayOrder = async (req, res) => {
     try {
         const { amount } = req.body;
+
+        if (!razorpay) {
+            return res.status(503).json({ message: "Payment service unavailable. Please configure Razorpay keys." });
+        }
+
         if (!amount || amount <= 0) {
             return res.status(400).json({ message: "Invalid amount" });
         }

@@ -3,10 +3,16 @@ const crypto = require('crypto');
 const User = require('../models/User');
 const IncomeHistory = require('../models/IncomeHistory');
 
-const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID || 'rzp_test_your_key_here',
-    key_secret: process.env.RAZORPAY_KEY_SECRET || 'your_secret_here',
-});
+// Initialize Razorpay lazily to prevent server crash if keys are missing
+let razorpay;
+if (process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET) {
+    razorpay = new Razorpay({
+        key_id: process.env.RAZORPAY_KEY_ID,
+        key_secret: process.env.RAZORPAY_KEY_SECRET
+    });
+} else {
+    console.warn("[PAYMENT] Razorpay keys are missing in Wallettopupcontroller. Topup functionality will use mock mode.");
+}
 
 const isMocking = () =>
     !process.env.RAZORPAY_KEY_ID ||

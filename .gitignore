@@ -11,5 +11,5 @@ yarn-debug.log*
 yarn-error.log*
 .render/
 *.log
-server/uploads/
+# server/uploads/ (Removed to allow pushing existing images to Render)
 client/dist/

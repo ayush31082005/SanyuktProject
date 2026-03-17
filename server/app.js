@@ -14,7 +14,7 @@ const allowedOrigins = [
     "http://localhost:5001",
     "https://sanyuktparivarrichlifefamily.com",
     "https://www.sanyuktparivarrichlifefamily.com",
-    "https://sanyukt-parivaar.onrender.com",
+    "https://sanyuktproject-2o2m.onrender.com",
 ];
 
 app.use(cors({

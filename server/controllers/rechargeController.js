@@ -5,11 +5,16 @@ const sendEmail = require('../utils/sendEmail');
 const User = require('../models/User');
 const IncomeHistory = require('../models/IncomeHistory');
 
-// Initialize Razorpay
-const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID,
-    key_secret: process.env.RAZORPAY_KEY_SECRET
-});
+// Initialize Razorpay lazily to prevent server crash if keys are missing
+let razorpay;
+if (process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET) {
+    razorpay = new Razorpay({
+        key_id: process.env.RAZORPAY_KEY_ID,
+        key_secret: process.env.RAZORPAY_KEY_SECRET
+    });
+} else {
+    console.warn("[PAYMENT] Razorpay keys are missing. Recharge functionality will be disabled.");
+}
 
 // @desc    Create a new recharge order
 // @route   POST /api/recharge/create-order
@@ -17,6 +22,10 @@ const razorpay = new Razorpay({
 exports.createOrder = async (req, res) => {
     try {
         const { amount, type, operator, rechargeNumber } = req.body;
+
+        if (!razorpay) {
+            return res.status(503).json({ message: "Payment service is currently unavailable. Please configure Razorpay keys." });
+        }
 
         if (!amount || !type || !operator || !rechargeNumber || Number(amount) <= 0) {
             return res.status(400).json({ message: "Invalid amount or missing fields" });

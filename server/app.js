@@ -14,6 +14,7 @@ const allowedOrigins = [
     "http://localhost:5001",
     "https://sanyuktparivarrichlifefamily.com",
     "https://www.sanyuktparivarrichlifefamily.com",
+    "https://sanyukt-parivaar.onrender.com",
 ];
 
 app.use(cors({
@@ -29,8 +30,12 @@ app.use(cors({
 }));
 app.use(express.json({ limit: '10mb' }));
 
-// ✅ Static file serving - serves ALL subfolders under uploads
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+// ✅ Static file serving - serves ALL subfolders under uploads with caching
+app.use("/uploads", express.static(path.join(__dirname, "uploads"), {
+    maxAge: '1d', // Cache for 1 day
+    etag: true,
+    lastModified: true
+}));
 
 // Request Logger
 app.use((req, res, next) => {

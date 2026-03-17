@@ -218,6 +218,10 @@ const WalletManagement = ({ defaultTab = 'topup' }) => {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState(defaultTab); // 'topup' or 'withdraw'
 
+    useEffect(() => {
+        setActiveTab(defaultTab);
+    }, [defaultTab]);
+
     // Common State
     const [walletBalance, setWalletBalance] = useState(0);
     const [totalDeposits, setTotalDeposits] = useState(0);

@@ -77,12 +77,8 @@ if (process.env.NODE_ENV === 'production') {
     app.use(express.static(buildPath));
     
     // Catch-all for SPA routing
-    app.get('*', (req, res) => {
-        if (!req.url.startsWith('/api')) {
-            res.sendFile(path.join(buildPath, 'index.html'));
-        } else {
-            res.status(404).json({ message: "API route not found" });
-        }
+    app.get(/^(?!\/api).*/, (req, res) => {
+        res.sendFile(path.join(buildPath, 'index.html'));
     });
 } else {
     // Final API 404 handler for development

@@ -6,14 +6,6 @@ const Repurchase = require('../models/Repurchase');
 const BinaryTree = require('../models/BinaryTree');
 const Order = require('../models/Order');
 
-/**
- * Calculates and distributes the daily matching bonus for all active users.
- * 0.25 PV : 0.25 PV -> ₹100
- * 0.5 PV  : 0.5 PV  -> ₹200
- * 1 PV    : 1 PV    -> ₹400
- * 
- * Each 0.25 PV match gives ₹100.
- */
 exports.calculateDailyMatchingBonus = async () => {
     try {
         const users = await User.find({ activeStatus: true, packageType: { $ne: "none" } });
@@ -69,9 +61,8 @@ exports.calculateDailyMatchingBonus = async () => {
                 }
             }
         }
-        console.log("Daily matching bonus calculation completed.");
     } catch (error) {
-        console.error("Error calculating matching bonus:", error);
+        // Handle error silently or pass to error middleware
     }
 };
 
@@ -84,9 +75,10 @@ exports.updateAllRanks = async () => {
         for (const user of users) {
             await this.checkAndUpgradeRank(user);
         }
-        console.log("All user ranks updated successfully.");
+        for (const user of users) {
+            await this.checkAndUpgradeRank(user);
+        }
     } catch (error) {
-        console.error("Error updating all user ranks:", error);
         throw error;
     }
 };
@@ -133,7 +125,6 @@ exports.checkAndUpgradeRank = async (user) => {
             }
         }
     } catch (error) {
-        console.error("Error upgrading rank:", error);
     }
 };
 
@@ -164,7 +155,6 @@ exports.distributeProfitSharing = async (totalTurnover) => {
             }
         }
     } catch (error) {
-        console.error("Error distributing profit sharing:", error);
     }
 };
 
@@ -176,7 +166,6 @@ exports.getMLMStats = async (req, res) => {
         console.log("Fetching MLM stats for user:", req.user._id);
         const user = await User.findById(req.user._id);
         if (!user) {
-            console.error("User not found for ID:", req.user._id);
             return res.status(404).json({ message: "User not found" });
         }
 
@@ -184,7 +173,6 @@ exports.getMLMStats = async (req, res) => {
         let tree = await BinaryTree.findOne({ userId: user._id });
 
         if (!tree) {
-            console.log("Lazy creating BinaryTree for user:", user.memberId);
             const totalLeft = await exports.countDownline(user.left);
             const totalRight = await exports.countDownline(user.right);
 
@@ -202,7 +190,6 @@ exports.getMLMStats = async (req, res) => {
                 leftPV: user.leftTeamPV || 0,
                 rightPV: user.rightTeamPV || 0
             }).catch(err => {
-                console.error("BinaryTree lazy create failed:", err.message);
                 return null;
             });
         }
@@ -212,12 +199,12 @@ exports.getMLMStats = async (req, res) => {
         const userId = new mongoose.Types.ObjectId(user._id);
         const purchaseAggregate = await Order.aggregate([
             { $match: { user: userId, status: { $ne: "cancelled" } } },
-            { 
-                $group: { 
-                    _id: null, 
+            {
+                $group: {
+                    _id: null,
                     totalSales: { $sum: "$total" },
                     orderCount: { $sum: 1 }
-                } 
+                }
             }
         ]);
         const productPurchases = purchaseAggregate[0]?.totalSales || 0;
@@ -247,7 +234,6 @@ exports.getMLMStats = async (req, res) => {
 
         res.json(stats);
     } catch (error) {
-        console.error("getMLMStats error:", error);
         res.status(500).json({ message: "Server Error", error: error.message });
     }
 };
@@ -322,7 +308,6 @@ exports.handleRepurchase = async (userId, amount, bv) => {
             generation++;
         }
     } catch (error) {
-        console.error("Error handling repurchase:", error);
     }
 };
 

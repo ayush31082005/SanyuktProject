@@ -171,7 +171,6 @@ const DashboardOverview = () => {
         const fetchStats = async () => {
             try {
                 const res = await api.get('mlm/get-stats');
-                console.log("DEBUG: fetchStats success:", res.data);
                 setStats(res.data);
             } catch (err) {
                 console.error("Error fetching MLM stats:", err);

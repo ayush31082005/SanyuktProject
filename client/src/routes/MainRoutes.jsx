@@ -159,8 +159,7 @@ const MainRoutes = () => {
                 <Route path="wallet/withdrawal-history" element={<WithdrawalHistory />} />
                 <Route path="wallet/daily-closing" element={<DailyClosingReport />} />
                 <Route path='wallet/all-transactions' element={<AllTransactionReport />} />
-                <Route path='wallet/topup' element={<WalletManagement defaultTab="topup" />} />
-                <Route path='wallet/withdrawal-request' element={<WalletManagement defaultTab="withdraw" />} />
+                <Route path='wallet/management' element={<WalletManagement />} />
 
 
                 <Route path='wallet/generation' element={<GenerationWallet />} />

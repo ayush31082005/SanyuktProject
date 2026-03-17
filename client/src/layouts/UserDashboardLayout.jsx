@@ -310,7 +310,7 @@ const UserDashboardLayout = () => {
 
                                     {/* Dropdown Menu */}
                                     {hasChildren && sidebarOpen && openDropdown === item.id && (
-                                        <div className="bg-[#085a23] py-2 space-y-1">
+                                        <div className="bg-black/20 py-1.5 space-y-0.5 mx-2 rounded-2xl border border-white/5 my-1">
                                             {item.children.map((child) => {
                                                 const childActive = location.pathname === child.path;
                                                 return (
@@ -318,9 +318,9 @@ const UserDashboardLayout = () => {
                                                         key={child.id}
                                                         to={child.path}
                                                         onClick={() => isMobile && setSidebarOpen(false)}
-                                                        className={`block pl-16 pr-4 py-2.5 text-[14px] transition-all ${childActive
-                                                            ? 'text-white font-black bg-white/10'
-                                                            : 'text-white/80 hover:text-white hover:bg-white/5 font-bold'
+                                                        className={`block pl-12 pr-4 py-2 text-[13px] transition-all rounded-xl mx-2 ${childActive
+                                                            ? 'text-emerald-400 font-bold bg-emerald-500/10'
+                                                            : 'text-slate-400 hover:text-white hover:bg-white/5 font-medium'
                                                             }`}
                                                     >
                                                         {child.name}
@@ -338,11 +338,11 @@ const UserDashboardLayout = () => {
                             <button
                                 onClick={handleLogout}
                                 className={`relative w-full flex items-center transition-all duration-300 group
-                                    ${sidebarOpen ? 'px-5 h-16 !justify-start' : 'h-16 justify-center'}
-                                    text-white hover:bg-[#096628]`}
+                                    ${sidebarOpen ? 'px-6 h-12 !justify-start mb-6' : 'h-16 justify-center'}
+                                    text-slate-400 hover:text-white hover:bg-white/5`}
                             >
-                                <LogOut className={`${sidebarOpen ? 'w-7 h-7 mr-4' : 'w-7 h-7'} text-white shrink-0 transition-transform duration-300 group-hover:scale-110`} strokeWidth={2.5} />
-                                {sidebarOpen && <span className="font-bold text-[17px] tracking-tight">Logout</span>}
+                                <LogOut className={`${sidebarOpen ? 'w-5 h-5 mr-3' : 'w-6 h-6'} shrink-0 transition-all group-hover:text-emerald-400`} strokeWidth={2} />
+                                {sidebarOpen && <span className="font-bold text-[14px] tracking-wide">Logout Account</span>}
                                 {!sidebarOpen && (
                                     <div className="absolute left-full ml-4 px-3 py-2 bg-slate-900 text-white text-[11px] font-bold rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all whitespace-nowrap z-[100] shadow-xl border border-white/10 pointer-events-none">
                                         Logout
@@ -386,9 +386,13 @@ const UserDashboardLayout = () => {
             )}
 
             <style>{`
+                @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
                 .no-scrollbar::-webkit-scrollbar { display: none; }
-                .animate-fadeIn { animation: fadeIn 0.3s ease-out; }
-                @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+                .animate-fadeIn { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+                @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+                
+                /* Selection Color */
+                ::selection { background: #10b98133; color: #10b981; }
             `}</style>
         </div>
     );

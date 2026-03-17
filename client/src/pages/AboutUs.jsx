@@ -303,7 +303,7 @@ const AboutUsPage = () => {
                                 <div className="bg-[#F8FAF5] p-6 rounded-lg text-center hover:shadow-lg transition-shadow">
                                     <Users className="w-10 h-10 text-[#0A7A2F] mx-auto mb-3" />
                                     <h4 className="font-bold text-[#222222] text-xl mb-1">Financial Freedom</h4>
-                                    <p className="text-sm text-gray-600">Empowering 20,000+ partners nationwide.</p>
+                                    <p className="text-sm text-gray-600">Empowering 5,000+ partners nationwide.</p>
                                 </div>
                                 <div className="bg-[#F8FAF5] p-6 rounded-lg text-center hover:shadow-lg transition-shadow">
                                     <Star className="w-10 h-10 text-[#F7931E] mx-auto mb-3" />
@@ -313,7 +313,7 @@ const AboutUsPage = () => {
                                 <div className="bg-[#F8FAF5] p-6 rounded-lg text-center hover:shadow-lg transition-shadow">
                                     <TrendingUp className="w-10 h-10 text-[#0A7A2F] mx-auto mb-3" />
                                     <h4 className="font-bold text-[#222222] text-xl mb-1">Success Legacy</h4>
-                                    <p className="text-sm text-gray-600">500+ successful seminars across India.</p>
+                                    <p className="text-sm text-gray-600">100+ successful seminars across India.</p>
                                 </div>
                                 <div className="bg-[#F8FAF5] p-6 rounded-lg text-center hover:shadow-lg transition-shadow">
                                     <Shield className="w-10 h-10 text-[#F7931E] mx-auto mb-3" />

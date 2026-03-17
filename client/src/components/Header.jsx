@@ -878,19 +878,44 @@ const Header = () => {
                                     <Menu
                                         anchorEl={anchorElUser}
                                         open={openUserMenu}
-                                        onClose={handleUserMenuClose}
+                                        anchorOrigin={{
+                                            vertical: 'bottom',
+                                            horizontal: 'right',
+                                        }}
+                                        transformOrigin={{
+                                            vertical: 'top',
+                                            horizontal: 'right',
+                                        }}
                                         MenuListProps={{
                                             sx: {
-                                                boxShadow: '0px 8px 24px rgba(0,0,0,0.1)',
+                                                boxShadow: '0px 10px 40px rgba(0,0,0,0.12)',
                                                 border: '1px solid #E6E6E6',
-                                                borderRadius: '8px',
-                                                padding: '8px',
-                                                minWidth: '180px',
+                                                borderRadius: '12px',
+                                                padding: '10px',
+                                                minWidth: '220px',
                                             }
                                         }}
                                         slotProps={{
                                             paper: {
                                                 elevation: 0,
+                                                sx: {
+                                                    mt: 1.5,
+                                                    overflow: 'visible',
+                                                    '&:before': {
+                                                        content: '""',
+                                                        display: 'block',
+                                                        position: 'absolute',
+                                                        top: 0,
+                                                        right: 24,
+                                                        width: 10,
+                                                        height: 10,
+                                                        bgcolor: 'background.paper',
+                                                        transform: 'translateY(-50%) rotate(45deg)',
+                                                        zIndex: 0,
+                                                        borderTop: '1px solid #E6E6E6',
+                                                        borderLeft: '1px solid #E6E6E6',
+                                                    },
+                                                }
                                             }
                                         }}
                                     >
@@ -929,15 +954,27 @@ const Header = () => {
                                                     onClick={() => handleNavigation(item.path)}
                                                     sx={{
                                                         fontFamily: '"Poppins", "Roboto", sans-serif',
-                                                        fontSize: '13px',
+                                                        fontSize: '14px',
                                                         fontWeight: 500,
                                                         color: '#2F7A32',
-                                                        borderRadius: '4px',
-                                                        gap: 1.5,
-                                                        py: 1,
+                                                        borderRadius: '8px',
+                                                        gap: 2,
+                                                        py: 1.2,
+                                                        px: 1.5,
+                                                        mb: 0.5,
+                                                        display: 'flex',
+                                                        alignItems: 'center',
                                                         '&:hover': {
-                                                            backgroundColor: 'rgba(10, 122, 47, 0.05)',
+                                                            backgroundColor: 'rgba(10, 122, 47, 0.08)',
                                                             color: '#0A7A2F',
+                                                            '& .MuiSvgIcon-root': {
+                                                                color: '#0A7A2F',
+                                                            }
+                                                        },
+                                                        '& .MuiSvgIcon-root': {
+                                                            fontSize: '20px',
+                                                            color: '#4B9B50',
+                                                            transition: 'color 0.2s',
                                                         }
                                                     }}
                                                 >
@@ -952,12 +989,22 @@ const Header = () => {
                                             sx={{
                                                 fontFamily: '"Poppins", "Roboto", sans-serif',
                                                 fontSize: '14px',
-                                                fontWeight: 500,
-                                                borderRadius: '4px',
-                                                gap: 1,
+                                                fontWeight: 600,
+                                                borderRadius: '8px',
+                                                gap: 2,
+                                                py: 1.2,
+                                                px: 1.5,
+                                                mt: 0.5,
+                                                borderTop: '1px solid #F1F1F1',
+                                                '&:hover': {
+                                                    backgroundColor: 'rgba(211, 47, 47, 0.08)',
+                                                },
+                                                '& .MuiSvgIcon-root': {
+                                                    fontSize: '20px',
+                                                }
                                             }}
                                         >
-                                            <LogoutIcon fontSize="small" />
+                                            <LogoutIcon />
                                             Logout
                                         </LogoutMenuItem>
                                     </Menu>

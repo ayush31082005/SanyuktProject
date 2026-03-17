@@ -149,7 +149,6 @@ const SocialButton = styled('a')({
 const BottomBar = styled(Box)({
     backgroundColor: '#0A5F26',
     padding: '16px 20px',
-    textAlign: 'center',
     width: '100%',
 });
 
@@ -317,9 +316,65 @@ const Footer = () => {
 
             {/* 11. FOOTER BOTTOM BAR */}
             <BottomBar>
-                <CopyrightText>
-                    © 2026 Sanyukt Parivaar & Rich Life Pvt.Ltd.. All Rights Reserved.
-                </CopyrightText>
+                <Box sx={{ 
+                    maxWidth: '1200px', 
+                    margin: '0 auto', 
+                    width: '100%', 
+                    display: 'flex', 
+                    flexDirection: { xs: 'column', md: 'row' }, 
+                    justifyContent: 'space-between', 
+                    alignItems: 'center', 
+                    gap: { xs: 1.5, md: 0 } 
+                }}>
+                    <CopyrightText>
+                        © 2026 Sanyukt Parivaar & Rich Life Pvt.Ltd.. All Rights Reserved.
+                    </CopyrightText>
+                    <CopyrightText sx={{ fontSize: '12px', display: 'flex', alignItems: 'center', opacity: 1, letterSpacing: '0.5px' }}>
+                        POWERED BY 
+                        <Link 
+                            href="https://aigrowthexa.com" 
+                            target="_blank" 
+                            sx={{ 
+                                ml: 1,
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '4px',
+                                textDecoration: 'none',
+                                '&:hover': { opacity: 0.8 }
+                            }}
+                        >
+                            <Box sx={{ 
+                                background: '#F7931E',
+                                color: '#0A5F26',
+                                px: 1,
+                                py: 0.2,
+                                borderRadius: '4px',
+                                fontWeight: 900,
+                                fontSize: '11px',
+                                letterSpacing: '1px'
+                            }}>
+                                AI
+                            </Box>
+                            <Box sx={{ 
+                                background: 'linear-gradient(90deg, #F7931E 0%, #FFD700 50%, #F7931E 100%)',
+                                backgroundSize: '200% auto',
+                                WebkitBackgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent',
+                                fontWeight: 900,
+                                fontSize: '15px',
+                                letterSpacing: '1px',
+                                textTransform: 'uppercase',
+                                animation: 'shimmer 3s linear infinite',
+                                '@keyframes shimmer': {
+                                    '0%': { backgroundPosition: '0% center' },
+                                    '100%': { backgroundPosition: '200% center' }
+                                }
+                            }}>
+                                GROWTH EXA
+                            </Box>
+                        </Link>
+                    </CopyrightText>
+                </Box>
             </BottomBar>
         </FooterContainer>
     );

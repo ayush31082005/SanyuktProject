@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const User = require("../models/User");
 const IncomeHistory = require("../models/IncomeHistory");
 const BinaryTree = require("../models/BinaryTree");
@@ -59,7 +60,7 @@ exports.getMatchingBonusReport = async (req, res) => {
 
         // Fetch user
         const user = await User.findById(userId).select(
-            "packageType walletBalance leftTeamPV rightTeamPV matchedPV totalMatchingBonus dailyCapping activeStatus"
+            "packageType walletBalance leftTeamPV rightTeamPV matchedPV totalMatchingBonus dailyCapping activeStatus pv"
         );
 
         if (!user) return res.status(404).json({ success: false, message: "User not found" });
@@ -77,29 +78,48 @@ exports.getMatchingBonusReport = async (req, res) => {
             .limit(100)
             .lean();
 
-        // ── Calculate summary stats ───────────────────────────────────────────
+        // ── Calculate summary stats using aggregation for accuracy ───────────
         const now = new Date();
         const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
         const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-        const totalEarned = history.reduce((sum, h) => sum + (h.amount || 0), 0);
-        const thisMonth = history
-            .filter((h) => new Date(h.createdAt) >= startOfMonth)
-            .reduce((sum, h) => sum + (h.amount || 0), 0);
-        const todayEarned = history
-            .filter((h) => new Date(h.createdAt) >= startOfDay)
-            .reduce((sum, h) => sum + (h.amount || 0), 0);
+        const totals = await IncomeHistory.aggregate([
+            { $match: { userId: new mongoose.Types.ObjectId(userId), type: "Matching" } },
+            {
+                $group: {
+                    _id: null,
+                    total: { $sum: "$amount" },
+                    month: {
+                        $sum: {
+                            $cond: [{ $gte: ["$createdAt", startOfMonth] }, "$amount", 0],
+                        },
+                    },
+                    today: {
+                        $sum: {
+                            $cond: [{ $gte: ["$createdAt", startOfDay] }, "$amount", 0],
+                        },
+                    },
+                },
+            },
+        ]);
+
+        const totalEarned = totals[0]?.total || 0;
+        const thisMonth = totals[0]?.month || 0;
+        const todayEarned = totals[0]?.today || 0;
 
         // BinaryTree for carry-forward BV
         const tree = await BinaryTree.findOne({ userId }).lean();
-        const leftBV = tree?.leftBV || user.leftTeamPV || 0;
-        const rightBV = tree?.rightBV || user.rightTeamPV || 0;
+        
+        // Ensure we show values in BV for consistency (1 PV = 1000 BV)
+        // If leftTeamPV is 0.25, we show 250 BV
+        const leftBV = tree?.leftBV ? tree.leftBV : (user.leftTeamPV * 1000) || 0;
+        const rightBV = tree?.rightBV ? tree.rightBV : (user.rightTeamPV * 1000) || 0;
         const matchedPV = tree?.matchedPV || user.matchedPV || 0;
 
-        // Carry forward = the unmatched side (the bigger leg excess)
-        const carryForwardBV = userHasPackage ? Math.abs(leftBV - rightBV) : 0;
+        // Carry forward is the balance after matching (usually one side is 0)
+        const carryForwardBV = Math.max(leftBV, rightBV);
 
-        const cappingLimit = userHasPackage ? config.capping : config.capping;
+        const cappingLimit = config.capping;
         const cappingUsed = Math.min(todayEarned, cappingLimit);
 
         // ── Format history rows ───────────────────────────────────────────────
@@ -128,10 +148,11 @@ exports.getMatchingBonusReport = async (req, res) => {
                 cappingLimit,
                 carryForwardBV,
 
-                // Left / Right legs
-                leftBV: userHasPackage ? leftBV : 0,
-                rightBV: userHasPackage ? rightBV : 0,
+                // Left / Right legs (Show volume even if user doesn't have package)
+                leftBV,
+                rightBV,
                 matchedPV,
+                personalPV: user.pv || 0,
 
                 // Config for frontend
                 config: {
@@ -147,7 +168,7 @@ exports.getMatchingBonusReport = async (req, res) => {
         });
     } catch (err) {
         console.error("getMatchingBonusReport error:", err);
-        return res.status(500).json({ success: false, message: "Server error" });
+        return res.status(500).json({ success: false, message: "Internal server error" });
     }
 };
 
@@ -179,6 +200,6 @@ exports.getAllMatchingSummary = async (req, res) => {
 
         return res.json({ success: true, data: summary });
     } catch (err) {
-        return res.status(500).json({ success: false, message: "Server error" });
+        return res.status(500).json({ success: false, message: "Internal server error" });
     }
 };

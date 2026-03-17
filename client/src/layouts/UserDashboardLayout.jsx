@@ -81,7 +81,7 @@ const UserDashboardLayout = () => {
             name: 'My Downline',
             icon: Users,
             path: '/my-account/downline',
-            badge: stats?.totalDownline || '5',
+            badge: stats?.totalDownline || '0',
             badgeColor: 'bg-[#EF4444]',
             children: [
                 { name: 'My Directs', path: '/my-account/downline/directs', id: 'downline_directs' },
@@ -97,7 +97,7 @@ const UserDashboardLayout = () => {
             name: 'First Purchase Bonus',
             icon: Briefcase,
             path: '/my-account/bonus/first',
-            badge: '3',
+            badge: '0',
             badgeColor: 'bg-[#10B981]',
             children: [
                 { name: 'Active Package', path: '/my-account/bonus/first', id: 'first_active' },
@@ -111,7 +111,7 @@ const UserDashboardLayout = () => {
             name: 'Repurchase Bonus',
             icon: Briefcase,
             path: '/my-account/bonus/repurchase/self',
-            badge: '10',
+            badge: '0',
             badgeColor: 'bg-[#10B981]',
         },
         {
@@ -143,7 +143,7 @@ const UserDashboardLayout = () => {
             name: 'Generation Wallet',
             icon: Briefcase,
             path: '/my-account/wallet/generation',
-            badge: '4',
+            badge: '0',
             badgeColor: 'bg-[#3B82F6]',
         },
         {
@@ -151,7 +151,7 @@ const UserDashboardLayout = () => {
             name: 'My Folder',
             icon: Tag,
             path: '/my-account/folder',
-            badge: '4',
+            badge: '0',
             badgeColor: 'bg-[#F7931E]',
             children: [
                 { name: 'Welcome Letter', path: '/my-account/folder/welcome-letter', id: 'folder_welcome' },
@@ -159,8 +159,8 @@ const UserDashboardLayout = () => {
                 { name: 'ID Card', path: '/my-account/folder/id-card', id: 'folder_id' },
             ],
         },
-        { id: 'profile', name: 'Profile & KYC', icon: UserCheck, path: '/my-account/profile', badge: '4', badgeColor: 'bg-[#10B981]' },
-        { id: 'grievance', name: 'Submit Complain', icon: Mail, path: '/my-account/grievances', badge: '2', badgeColor: 'bg-[#3B82F6]' },
+        { id: 'profile', name: 'Profile & KYC', icon: UserCheck, path: '/my-account/profile', badge: '0', badgeColor: 'bg-[#10B981]' },
+        { id: 'grievance', name: 'Submit Complain', icon: Mail, path: '/my-account/grievances', badge: '0', badgeColor: 'bg-[#3B82F6]' },
     ];
     ;
 

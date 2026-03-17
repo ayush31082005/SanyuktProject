@@ -37,10 +37,13 @@ exports.createTopupOrder = async (req, res) => {
                 status: 'created',
             };
         } else {
+            // Receipt ID max length is 40 chars. 
+            // ObjectID (24) + "_" (1) + timestamp (approx 13) = 38. 
+            // "topup_" prefix was pushing it over 40.
             order = await razorpay.orders.create({
                 amount: amount * 100,
                 currency: 'INR',
-                receipt: `topup_${req.user._id}_${Date.now()}`,
+                receipt: `${req.user._id}_${Date.now()}`, 
                 notes: { userId: req.user._id.toString(), purpose: 'wallet_topup' },
             });
         }
@@ -56,8 +59,12 @@ exports.createTopupOrder = async (req, res) => {
             },
         });
     } catch (err) {
-        console.error('createTopupOrder error:', err);
-        return res.status(500).json({ success: false, message: 'Order create karne mein error aaya.' });
+        console.error('createTopupOrder error complete details:', err);
+        return res.status(500).json({ 
+            success: false, 
+            message: 'Order create karne mein error aaya.',
+            error: err.message // Send error message temporarily to help user debug
+        });
     }
 };
 

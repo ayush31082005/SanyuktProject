@@ -1,12 +1,13 @@
 const User = require("../models/User");
 const IncomeHistory = require("../models/IncomeHistory");
 const BinaryTree = require("../models/BinaryTree");
+const crypto = require("crypto");
 
 // ── Package config ────────────────────────────────────────────────────────────
 const PACKAGES = {
-    "599": { name: "Silver", price: 599, bv: 250, pv: 0.25, capping: 2000 },
-    "1299": { name: "Gold", price: 1299, bv: 500, pv: 0.5, capping: 4000 },
-    "2699": { name: "Diamond", price: 2699, bv: 1000, pv: 1, capping: 10000 },
+    "599": { name: "Silver", price: 599, bv: 250, pv: 0.25, capping: 2000, directIncome: 0 },
+    "1299": { name: "Gold", price: 1299, bv: 500, pv: 0.5, capping: 4000, directIncome: 50 },
+    "2699": { name: "Diamond", price: 2699, bv: 1000, pv: 1, capping: 10000, directIncome: 50 },
 };
 
 /**
@@ -41,19 +42,35 @@ exports.activatePackage = async (req, res) => {
         if (user.activeStatus && currentPkg && currentPkg.price >= pkg.price) {
             return res.status(400).json({
                 success: false,
-                message: `Aap already ${currentPkg.name} package par active hain.`
+                message: `You are already active on a ${currentPkg.name} or higher package.`
             });
         }
 
-        // ── 3. Wallet deduction (if paymentMethod === "wallet") ──────────────
+        // ── 3. Payment verification (Wallet or Razorpay) ─────────────────────
         if (paymentMethod === "wallet") {
             if ((user.walletBalance || 0) < pkg.price) {
                 return res.status(400).json({
                     success: false,
-                    message: `Wallet balance kam hai. Zaroorat: ₹${pkg.price}, Available: ₹${user.walletBalance || 0}`
+                    message: `Insufficient wallet balance. Required: ₹${pkg.price}, Available: ₹${user.walletBalance || 0}`
                 });
             }
             user.walletBalance -= pkg.price;
+        } else if (paymentMethod === "razorpay") {
+            const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+            
+            if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+                return res.status(400).json({ success: false, message: "Missing Razorpay payment details." });
+            }
+
+            const body = razorpay_order_id + "|" + razorpay_payment_id;
+            const expectedSignature = crypto
+                .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+                .update(body.toString())
+                .digest("hex");
+
+            if (expectedSignature !== razorpay_signature) {
+                return res.status(400).json({ success: false, message: "Invalid payment signature verification failed." });
+            }
         }
         // For "upi" / "cash" - admin will verify separately, but we still activate
         // (In production: verify Razorpay payment_id here before activating)
@@ -71,11 +88,11 @@ exports.activatePackage = async (req, res) => {
         await user.save();
 
         // ── 5. Distribute Direct Income to sponsor ────────────────────────────
-        // Direct income = 10% of package price
-        if (user.sponsorId) {
+        // Direct income Rule: ₹50 for 0.5 PV or above packages
+        if (user.sponsorId && pkg.directIncome > 0) {
             const sponsor = await User.findOne({ memberId: user.sponsorId });
             if (sponsor && sponsor.activeStatus) {
-                const directIncome = pkg.price * 0.10;
+                const directIncome = pkg.directIncome;
                 sponsor.walletBalance = (sponsor.walletBalance || 0) + directIncome;
                 sponsor.totalDirectIncome = (sponsor.totalDirectIncome || 0) + directIncome;
                 await sponsor.save();
@@ -146,7 +163,7 @@ exports.activatePackage = async (req, res) => {
 
         return res.json({
             success: true,
-            message: `${pkg.name} package successfully activate ho gaya!`,
+            message: `${pkg.name} package successfully activated!`,
             data: {
                 packageType,
                 packageName: pkg.name,
@@ -159,7 +176,7 @@ exports.activatePackage = async (req, res) => {
 
     } catch (err) {
         console.error("activatePackage error:", err);
-        return res.status(500).json({ success: false, message: "Server error" });
+        return res.status(500).json({ success: false, message: "Internal server error" });
     }
 };
 
@@ -188,6 +205,6 @@ exports.getPackageStatus = async (req, res) => {
             },
         });
     } catch (err) {
-        return res.status(500).json({ success: false, message: "Server error" });
+        return res.status(500).json({ success: false, message: "Internal server error" });
     }
 };

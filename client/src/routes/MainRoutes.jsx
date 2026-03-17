@@ -64,6 +64,12 @@ import SilverMatching from '../pages/RepurchaseBonus/Silvermatching';
 import GoldMatching from '../pages/RepurchaseBonus/Goldmatching';
 import DiamondMatching from '../pages/RepurchaseBonus/Diamondmatching';
 
+import GenerationWallet from '../pages/Wallet/GenerationWallet';
+import GenerationDeduction from '../pages/Wallet/GenerationDeduction';
+import GenerationWithdrawal from '../pages/Wallet/GenerationWithdrawal';
+import GenerationTransactions from '../pages/Wallet/GenerationTransactions';
+import MonthlyClosing from '../pages/Wallet/MonthlyClosing';
+
 // ✅ Admin imports
 import AdminLayout from '../layouts/AdminLayout.jsx'
 import AdminDashboard from '../pages/admin/Dashboard.jsx'
@@ -158,11 +164,11 @@ const MainRoutes = () => {
                 <Route path='wallet/withdrawal-request' element={<WithdrawalRequest />} />
 
 
-                <Route path='wallet/generation' element={<Construction title="Generation Wallet" />} />
-                <Route path='wallet/generation/deduction-report' element={<Construction title="Generation Deduction Report" />} />
-                <Route path='wallet/generation/withdrawal-history' element={<Construction title="Generation Withdrawal History" />} />
-                <Route path='wallet/generation/all-transactions' element={<Construction title="Generation All Transactions" />} />
-                <Route path='wallet/generation/monthly-closing' element={<Construction title="Monthly Closing Report" />} />
+                <Route path='wallet/generation' element={<GenerationWallet />} />
+                <Route path='wallet/generation/deduction-report' element={<GenerationDeduction />} />
+                <Route path='wallet/generation/withdrawal-history' element={<GenerationWithdrawal />} />
+                <Route path='wallet/generation/all-transactions' element={<GenerationTransactions />} />
+                <Route path='wallet/generation/monthly-closing' element={<MonthlyClosing />} />
 
                 <Route path='folder' element={<Construction title="My Folder" />} />
                 <Route path='folder/welcome-letter' element={<WelcomeLetter />} />

@@ -71,8 +71,106 @@ const PACKAGES = [
     },
 ];
 
+// ── Components ───────────────────────────────────────────────────────────────
+
+const FeatureRow = ({ label, silver, gold, diamond, isIcon = false }) => (
+    <div className="grid grid-cols-4 py-4 border-b border-slate-100 items-center">
+        <div className="text-sm font-bold text-slate-500 uppercase tracking-wider">{label}</div>
+        <div className="text-center font-black text-slate-700">
+            {isIcon ? (silver ? <CheckCircle2 className="w-5 h-5 text-green-500 mx-auto" /> : <X className="w-5 h-5 text-slate-300 mx-auto" />) : silver}
+        </div>
+        <div className="text-center font-black text-slate-700">
+            {isIcon ? (gold ? <CheckCircle2 className="w-5 h-5 text-green-500 mx-auto" /> : <X className="w-5 h-5 text-slate-300 mx-auto" />) : gold}
+        </div>
+        <div className="text-center font-black text-slate-700">
+            {isIcon ? (diamond ? <CheckCircle2 className="w-5 h-5 text-green-500 mx-auto" /> : <X className="w-5 h-5 text-slate-300 mx-auto" />) : diamond}
+        </div>
+    </div>
+);
+
+const ComparisonTable = () => (
+    <div className="mt-20 mb-20 bg-white rounded-[3rem] p-8 shadow-2xl shadow-slate-200 border border-slate-100">
+        <div className="mb-10 text-center">
+            <h2 className="text-2xl font-black text-slate-800 uppercase tracking-tight mb-2">Detailed Comparison</h2>
+            <p className="text-slate-500 font-bold uppercase text-[10px] tracking-[0.2em]">Select the plan that fits your ambition</p>
+        </div>
+        <div className="grid grid-cols-4 pb-6 border-b-2 border-slate-100">
+            <div className="text-xs font-black text-slate-400 uppercase tracking-widest">Feature</div>
+            <div className="text-center text-xs font-black text-slate-400 uppercase tracking-widest">Silver</div>
+            <div className="text-center text-xs font-black text-slate-400 uppercase tracking-widest">Gold</div>
+            <div className="text-center text-xs font-black text-slate-400 uppercase tracking-widest">Diamond</div>
+        </div>
+        <FeatureRow label="Price" silver="₹599" gold="₹1299" diamond="₹2699" />
+        <FeatureRow label="Team BV" silver="250" gold="500" diamond="1000" />
+        <FeatureRow label="Team PV" silver="0.25" gold="0.5" diamond="1" />
+        <FeatureRow label="Daily Capping" silver="₹2,000" gold="₹4,000" diamond="₹10,000" />
+        <FeatureRow label="Direct Income" silver="₹0" gold="₹50" diamond="₹50" />
+        <FeatureRow label="Binary Matching" silver="10%" gold="10%" diamond="10%" />
+        <FeatureRow label="Support" silver="Standard" gold="Priority" diamond="24/7 Premium" />
+        <FeatureRow label="Training" silver={true} gold={true} diamond={true} isIcon={true} />
+        <FeatureRow label="Events" silver={false} gold={true} diamond={true} isIcon={true} />
+        <FeatureRow label="Personal Mentor" silver={false} gold={false} diamond={true} isIcon={true} />
+    </div>
+);
+
+const FAQItem = ({ question, answer }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    return (
+        <div className="border-b border-slate-100">
+            <button 
+                onClick={() => setIsOpen(!isOpen)}
+                className="w-full py-6 flex items-center justify-between text-left group"
+            >
+                <span className="text-lg font-bold text-slate-700 group-hover:text-green-600 transition-colors uppercase tracking-tight">{question}</span>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${isOpen ? 'bg-green-600 text-white rotate-180' : 'bg-slate-50 text-slate-400'}`}>
+                    <Star className="w-4 h-4 fill-current" />
+                </div>
+            </button>
+            <AnimatePresence>
+                {isOpen && (
+                    <motion.div 
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        className="overflow-hidden"
+                    >
+                        <p className="pb-6 text-slate-500 font-medium leading-relaxed">{answer}</p>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </div>
+    );
+};
+
+const FAQSection = () => (
+    <div className="max-w-4xl mx-auto mb-20">
+        <div className="mb-12 text-center">
+            <h2 className="text-3xl font-black text-slate-800 uppercase tracking-tight mb-4 text-center">Frequently Asked Questions</h2>
+            <div className="w-20 h-1.5 bg-green-500 mx-auto rounded-full" />
+        </div>
+        <div className="space-y-2">
+            <FAQItem 
+                question="How soon is my package activated?" 
+                answer="After a successful payment (Wallet or Razorpay), your package is activated instantly. You will see your updated BV, PV, and Daily Capping limit on your dashboard immediately." 
+            />
+            <FAQItem 
+                question="Can I upgrade my package later?" 
+                answer="Yes! You can upgrade from Silver to Gold or Diamond at any time. Simply choose the higher package and complete the payment. Your team volume will remain intact." 
+            />
+            <FAQItem 
+                question="What happens to my team volume if I upgrade?" 
+                answer="All your previous team volume (BV/PV) is preserved. The upgrade only increases your future earnings potential and daily capping limit." 
+            />
+            <FAQItem 
+                question="How is matching bonus calculated?" 
+                answer="The system matches the PV from your Left and Right legs. For every matched PV, you receive a bonus according to your current package's rate, up to your daily capping limit." 
+            />
+        </div>
+    </div>
+);
+
 // ── Confirm Modal ─────────────────────────────────────────────────────────────
-const ConfirmModal = ({ pkg, walletBalance, onConfirm, onCancel, loading }) => {
+const ConfirmModal = ({ pkg, walletBalance, onConfirm, onRazorpay, onCancel, loading }) => {
     const canAfford = walletBalance >= pkg.price;
 
     return (
@@ -85,7 +183,7 @@ const ConfirmModal = ({ pkg, walletBalance, onConfirm, onCancel, loading }) => {
             >
                 {/* Header */}
                 <div className="flex items-center justify-between mb-5">
-                    <h2 className="text-xl font-black text-slate-800">Package Confirm Karo</h2>
+                    <h2 className="text-xl font-black text-slate-800">Confirm Activation</h2>
                     <button onClick={onCancel} className="p-2 hover:bg-gray-100 rounded-xl transition">
                         <X className="w-5 h-5 text-gray-500" />
                     </button>
@@ -129,7 +227,7 @@ const ConfirmModal = ({ pkg, walletBalance, onConfirm, onCancel, loading }) => {
                     <div className="bg-red-50 border border-red-200 rounded-2xl p-3 mb-4 flex gap-2">
                         <AlertCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
                         <p className="text-sm text-red-600">
-                            Wallet mein ₹{(pkg.price - walletBalance).toLocaleString('en-IN')} aur chahiye. Pehle wallet recharge karo.
+                            Extra ₹{(pkg.price - walletBalance).toLocaleString('en-IN')} required. Please top up your wallet or pay via Razorpay.
                         </p>
                     </div>
                 )}
@@ -137,30 +235,42 @@ const ConfirmModal = ({ pkg, walletBalance, onConfirm, onCancel, loading }) => {
                 {canAfford && (
                     <div className="bg-slate-50 rounded-2xl p-3 mb-5 text-sm text-slate-500 flex gap-2">
                         <Info className="w-4 h-4 shrink-0 mt-0.5 text-slate-400" />
-                        <p>₹{pkg.price.toLocaleString('en-IN')} wallet se deduct ho jaayenge aur package turant activate ho jaayega.</p>
+                        <p>₹{pkg.price.toLocaleString('en-IN')} will be deducted from your wallet and the package will be activated immediately.</p>
                     </div>
                 )}
 
                 {/* Actions */}
-                <div className="flex gap-3">
-                    <button
-                        onClick={onCancel}
-                        disabled={loading}
-                        className="flex-1 py-3 rounded-2xl border border-slate-200 text-slate-600 font-bold text-sm hover:bg-slate-50 transition disabled:opacity-50"
-                    >
-                        Cancel
-                    </button>
-                    <button
-                        onClick={onConfirm}
-                        disabled={!canAfford || loading}
-                        className={`flex-1 py-3 rounded-2xl text-white font-black text-sm transition flex items-center justify-center gap-2 ${pkg.btnColor} disabled:opacity-50 disabled:cursor-not-allowed`}
-                    >
-                        {loading ? (
-                            <><Loader2 className="w-4 h-4 animate-spin" /> Processing...</>
-                        ) : (
-                            <>Confirm & Activate</>
-                        )}
-                    </button>
+                <div className="flex flex-col gap-3">
+                    <div className="flex gap-3">
+                        <button
+                            onClick={onCancel}
+                            disabled={loading}
+                            className="flex-1 py-3 rounded-2xl border border-slate-200 text-slate-600 font-bold text-sm hover:bg-slate-50 transition disabled:opacity-50"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            onClick={onConfirm}
+                            disabled={!canAfford || loading}
+                            className={`flex-1 py-3 rounded-2xl text-white font-black text-sm transition flex items-center justify-center gap-2 ${pkg.btnColor} disabled:opacity-50 disabled:cursor-not-allowed`}
+                        >
+                            {loading ? (
+                                <><Loader2 className="w-4 h-4 animate-spin" /> Processing...</>
+                            ) : (
+                                <>Pay with Wallet</>
+                            )}
+                        </button>
+                    </div>
+                    
+                    {!loading && (
+                        <button
+                            onClick={onRazorpay}
+                            className="w-full py-3 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-black text-sm transition flex items-center justify-center gap-2 shadow-lg shadow-indigo-200"
+                        >
+                            <Shield className="w-4 h-4" />
+                            Pay with Razorpay
+                        </button>
+                    )}
                 </div>
             </motion.div>
         </div>
@@ -213,10 +323,10 @@ const PackageUpgrade = () => {
                 }));
                 setSuccess(selectedPkg.name);
                 setSelectedPkg(null);
-                toast.success(`${selectedPkg.name} package activate ho gaya!`);
+                toast.success(`${selectedPkg.name} package activated successfully!`);
             }
         } catch (err) {
-            const msg = err?.response?.data?.message || 'Activation failed. Dobara try karo.';
+            const msg = err?.response?.data?.message || 'Activation failed. Please try again.';
             toast.error(msg);
         } finally {
             setActivating(false);
@@ -236,10 +346,95 @@ const PackageUpgrade = () => {
         <div className="min-h-screen flex items-center justify-center bg-gray-50">
             <div className="text-center">
                 <Loader2 className="w-10 h-10 text-green-500 animate-spin mx-auto mb-3" />
-                <p className="text-gray-500 text-sm font-medium">Package status load ho raha hai...</p>
+                <p className="text-gray-500 text-sm font-medium">Loading package status...</p>
             </div>
         </div>
     );
+
+    // ── Razorpay Integration ───────────────────────────────────────────────
+    const loadRazorpay = () => {
+        return new Promise((resolve) => {
+            const script = document.createElement('script');
+            script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+            script.onload = () => resolve(true);
+            script.onerror = () => resolve(false);
+            document.body.appendChild(script);
+        });
+    };
+
+    const handleRazorpayPayment = async () => {
+        if (!selectedPkg) return;
+        setActivating(true);
+
+        const resScript = await loadRazorpay();
+        if (!resScript) {
+            toast.error('Razorpay SDK failed to load. Are you online?');
+            setActivating(false);
+            return;
+        }
+
+        try {
+            // 1. Create order on backend
+            // Note: Reusing /orders/razorpay-order if exists, or adding direct support
+            const { data: orderData } = await api.post('/orders/razorpay-order', {
+                amount: selectedPkg.price,
+                isPackage: true,
+                packageType: selectedPkg.id
+            });
+
+            const options = {
+                key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_SQbbsEM3Dlfgi2', // Updated to VITE_
+                amount: orderData.amount,
+                currency: "INR",
+                name: "Sanyukt Parivaar",
+                description: `Activate ${selectedPkg.name} Package`,
+                order_id: orderData.id,
+                handler: async (response) => {
+                    try {
+                        const verifyRes = await api.post('/package/activate', {
+                            packageType: selectedPkg.id,
+                            paymentMethod: 'razorpay',
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_signature: response.razorpay_signature
+                        });
+
+                        if (verifyRes.data.success) {
+                            setStatus(prev => ({
+                                ...prev,
+                                packageType: selectedPkg.id,
+                                packageName: selectedPkg.name,
+                                activeStatus: true,
+                                walletBalance: verifyRes.data.data.walletBalance,
+                                bv: verifyRes.data.data.bv,
+                                pv: verifyRes.data.data.pv,
+                                dailyCapping: verifyRes.data.data.dailyCapping,
+                            }));
+                            setSuccess(selectedPkg.name);
+                            setSelectedPkg(null);
+                            toast.success(`${selectedPkg.name} package activated!`);
+                        }
+                    } catch (err) {
+                        toast.error(err.response?.data?.message || 'Verification failed');
+                    }
+                },
+                prefill: {
+                    name: status?.userName || '',
+                    email: status?.email || '',
+                },
+                theme: { color: "#0A7A2F" },
+            };
+
+            const paymentObject = new window.Razorpay(options);
+            paymentObject.open();
+
+        } catch (err) {
+            console.error('Razorpay Error:', err);
+            toast.error('Failed to initiate Razorpay payment.');
+        } finally {
+            setActivating(false);
+        }
+    };
 
     // ─────────────────────────────────────────────────────────────────────────
     return (
@@ -251,6 +446,7 @@ const PackageUpgrade = () => {
                         pkg={selectedPkg}
                         walletBalance={status?.walletBalance || 0}
                         onConfirm={handleActivate}
+                        onRazorpay={handleRazorpayPayment}
                         onCancel={() => setSelectedPkg(null)}
                         loading={activating}
                     />
@@ -271,7 +467,7 @@ const PackageUpgrade = () => {
                             <CheckCircle className="w-6 h-6 text-green-500 shrink-0" />
                             <div className="flex-1">
                                 <p className="font-black text-green-700">{success} Package Activated!</p>
-                                <p className="text-sm text-green-600">Aapka MLM earnings ab unlock ho gaya hai. Binary tree mein BV/PV add ho gaya.</p>
+                                <p className="text-sm text-green-600">Your MLM earnings are now unlocked. BV/PV added to the binary tree.</p>
                             </div>
                             <button onClick={() => setSuccess(null)} className="p-1 hover:bg-green-100 rounded-lg">
                                 <X className="w-4 h-4 text-green-500" />
@@ -281,13 +477,20 @@ const PackageUpgrade = () => {
                 </AnimatePresence>
 
                 {/* ── Header ── */}
-                <div className="mb-8 text-center">
-                    <h1 className="text-3xl font-black text-slate-800 uppercase tracking-tight mb-2">
-                        Activate Your Success
-                    </h1>
-                    <p className="text-slate-500 font-bold uppercase text-xs tracking-[0.2em]">
-                        Choose a package to unlock your MLM earnings and potential
-                    </p>
+                <div className="relative mb-12 py-10 text-center overflow-hidden">
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-green-400/10 blur-[120px] rounded-full -z-10" />
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="relative z-10"
+                    >
+                        <h1 className="text-4xl md:text-5xl font-black text-slate-800 uppercase tracking-tighter mb-4">
+                            Accelerate Your <span className="text-green-600">Growth</span>
+                        </h1>
+                        <p className="max-w-2xl mx-auto text-slate-500 font-bold uppercase text-xs md:text-sm tracking-[0.3em] leading-relaxed">
+                            Upgrade to a premium package and unlock the full potential of your MLM journey with Sanyukt Parivaar
+                        </p>
+                    </motion.div>
                 </div>
 
                 {/* ── Wallet Balance Strip ── */}
@@ -315,7 +518,8 @@ const PackageUpgrade = () => {
                 </div>
 
                 {/* ── Package Cards ── */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+                    {/* ... (existing cards) */}
                     {PACKAGES.map((pkg, index) => {
                         const isCurrent = isCurrentPkg(pkg.id);
                         const isLower = isLowerPkg(pkg.id);
@@ -413,18 +617,55 @@ const PackageUpgrade = () => {
                     })}
                 </div>
 
+                {/* ── Trust Section ── */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
+                    <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-4">
+                        <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600">
+                            <Shield className="w-6 h-6" />
+                        </div>
+                        <div>
+                            <p className="font-black text-slate-800 uppercase text-xs tracking-wider">Secure Payments</p>
+                            <p className="text-xs text-slate-500 font-medium">Verified by Razorpay</p>
+                        </div>
+                    </div>
+                    <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-4">
+                        <div className="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center text-green-600">
+                            <Zap className="w-6 h-6" />
+                        </div>
+                        <div>
+                            <p className="font-black text-slate-800 uppercase text-xs tracking-wider">Instant Activation</p>
+                            <p className="text-xs text-slate-500 font-medium">No wait time required</p>
+                        </div>
+                    </div>
+                    <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-4">
+                        <div className="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center text-orange-600">
+                            <Star className="w-6 h-6" />
+                        </div>
+                        <div>
+                            <p className="font-black text-slate-800 uppercase text-xs tracking-wider">Premium Support</p>
+                            <p className="text-xs text-slate-500 font-medium">Dedicated expert help</p>
+                        </div>
+                    </div>
+                </div>
+
+                {/* ── Comparison Table ── */}
+                <ComparisonTable />
+
+                {/* ── FAQ Section ── */}
+                <FAQSection />
+
                 {/* ── Info Note ── */}
                 <div className="mt-10 p-6 bg-white rounded-[2rem] border border-slate-200 flex flex-col md:flex-row items-start md:items-center gap-5">
                     <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400 shrink-0">
                         <Info className="w-7 h-7" />
                     </div>
                     <div>
-                        <h4 className="font-black text-slate-700 uppercase tracking-wider mb-1">Kaise kaam karta hai?</h4>
+                        <h4 className="font-black text-slate-700 uppercase tracking-wider mb-1">How it works?</h4>
                         <p className="text-sm text-slate-500 font-medium leading-relaxed">
-                            Package activate hote hi aapki BV/PV binary tree mein add ho jaati hai.
-                            Aapke sponsor ko 10% direct income milti hai. Roz raat ko server matching bonus
-                            calculate karta hai — Left aur Right leg ka minimum PV match karke daily capping
-                            tak bonus aapke wallet mein credit hota hai.
+                            Once your package is activated, your BV/PV is added to the binary tree.
+                            Your sponsor receives a direct income bonus as per the plan. Every night, the server
+                            calculates matching bonuses by matching the minimum PV of your Left and Right legs,
+                            up to your daily capping limit.
                         </p>
                     </div>
                 </div>

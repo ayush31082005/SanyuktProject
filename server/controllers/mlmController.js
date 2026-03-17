@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const User = require('../models/User');
 const IncomeHistory = require('../models/IncomeHistory');
 const Rank = require('../models/Rank');
@@ -16,51 +17,53 @@ const Order = require('../models/Order');
 exports.calculateDailyMatchingBonus = async () => {
     try {
         const users = await User.find({ activeStatus: true, packageType: { $ne: "none" } });
-        
+
         for (const user of users) {
             // Find minimum PV available for matching
             const matchPV = Math.min(user.leftTeamPV, user.rightTeamPV);
-            
+
             if (matchPV >= 0.25) {
                 // Number of 0.25 PV units to match
                 const matchUnits = Math.floor(matchPV / 0.25);
                 const totalMatchingIncome = matchUnits * 100;
-                
+
                 // Respect daily capping
                 let finalIncome = totalMatchingIncome;
                 if (user.dailyCapping > 0 && finalIncome > user.dailyCapping) {
                     finalIncome = user.dailyCapping;
                 }
-                
+
                 if (finalIncome > 0) {
                     user.walletBalance += finalIncome;
                     user.totalMatchingBonus += finalIncome;
                     user.matchedPV += (matchUnits * 0.25); // Cumulative for ranks
-                    
+
                     user.leftTeamPV -= (matchUnits * 0.25);
                     user.rightTeamPV -= (matchUnits * 0.25);
-                    
+
                     await user.save();
 
-                    // ✅ SYNC: Deduct matched PV from BinaryTree collection to update Dashboard
+                    // ✅ SYNC: Deduct matched PV/BV from BinaryTree collection to update Dashboard
                     await BinaryTree.findOneAndUpdate(
                         { userId: user._id },
                         {
                             $inc: {
                                 leftPV: -(matchUnits * 0.25),
                                 rightPV: -(matchUnits * 0.25),
+                                leftBV: -(matchUnits * 250), // 1 unit (0.25 PV) = 250 BV
+                                rightBV: -(matchUnits * 250),
                                 matchedPV: (matchUnits * 0.25)
                             }
                         }
                     );
-                    
+
                     await IncomeHistory.create({
                         userId: user._id,
                         amount: finalIncome,
                         type: 'Matching',
                         description: `Daily matching bonus for ${matchUnits * 0.25} PV match`
                     });
-                    
+
                     // Check for rank upgrades after matching
                     await this.checkAndUpgradeRank(user);
                 }
@@ -113,7 +116,7 @@ exports.checkAndUpgradeRank = async (user) => {
     try {
         // Current matched PV is stored in user.matchedPV
         const eligibleRanks = RANKS.filter(r => user.matchedPV >= r.pv);
-        
+
         for (const rank of eligibleRanks) {
             // Check if user already has this rank
             const existingRank = await Rank.findOne({ userId: user._id, rankName: rank.name });
@@ -123,7 +126,7 @@ exports.checkAndUpgradeRank = async (user) => {
                     rankName: rank.name,
                     reward: rank.reward
                 });
-                
+
                 // Update rank in user object
                 user.rank = rank.name;
                 await user.save();
@@ -143,15 +146,15 @@ exports.distributeProfitSharing = async (totalTurnover) => {
         const bonusPool = totalTurnover * 0.04;
         const activeUsers = await User.find({ activeStatus: true, packageType: { $ne: "none" } });
         const totalSystemPV = activeUsers.reduce((sum, u) => sum + (u.pv || 0), 0);
-        
+
         if (totalSystemPV === 0) return;
-        
+
         for (const user of activeUsers) {
             const userShare = (user.pv / totalSystemPV) * bonusPool;
             if (userShare > 0) {
                 user.walletBalance += userShare;
                 await user.save();
-                
+
                 await IncomeHistory.create({
                     userId: user._id,
                     amount: userShare,
@@ -179,14 +182,14 @@ exports.getMLMStats = async (req, res) => {
 
         // Fetch BinaryTree record for cached tree data
         let tree = await BinaryTree.findOne({ userId: user._id });
-        
+
         if (!tree) {
             console.log("Lazy creating BinaryTree for user:", user.memberId);
             const totalLeft = await exports.countDownline(user.left);
             const totalRight = await exports.countDownline(user.right);
-            
-            const sponsorObj = await User.findOne({ 
-                memberId: (user.sponsorId || "").toUpperCase() 
+
+            const sponsorObj = await User.findOne({
+                memberId: (user.sponsorId || "").toUpperCase()
             });
 
             tree = await BinaryTree.create({
@@ -206,8 +209,9 @@ exports.getMLMStats = async (req, res) => {
         console.log("BinaryTree record available:", tree ? "Yes" : "No");
 
         // Optimized calculation for total product purchases and order count using aggregate
+        const userId = new mongoose.Types.ObjectId(user._id);
         const purchaseAggregate = await Order.aggregate([
-            { $match: { user: user._id, status: { $ne: "cancelled" } } },
+            { $match: { user: userId, status: { $ne: "cancelled" } } },
             { 
                 $group: { 
                     _id: null, 
@@ -221,26 +225,11 @@ exports.getMLMStats = async (req, res) => {
 
         // Direct count is already indexed
         const directCount = await User.countDocuments({ sponsorId: user.memberId });
-        
+
         const stats = {
             walletBalance: Number(user.walletBalance || 0),
             pv: Number(user.pv || 0),
             bv: Number(user.bv || 0),
-            directCount: Number(directCount || 0),
-            // ✅ Optimization: Use cached counts from BinaryTree instead of recursive BFS
-            totalLeft: Number(tree ? tree.totalLeft : 0),
-            totalRight: Number(tree ? tree.totalRight : 0),
-            totalDownline: Number((tree ? tree.totalLeft : 0) + (tree ? tree.totalRight : 0)),
-            pvLeft: Number(tree ? tree.leftPV : 0),
-            pvRight: Number(tree ? tree.rightPV : 0),
-            totalPvLeft: Number(tree ? (tree.leftCarryForward || 0) + (tree.matchedPV || 0) : (user.leftTeamPV || 0)),
-            totalPvRight: Number(tree ? (tree.rightCarryForward || 0) + (tree.matchedPV || 0) : (user.rightTeamPV || 0)),
-            dailyCapping: Number(user.dailyCapping || 0),
-            packageType: user.packageType || "none",
-            activeStatus: !!user.activeStatus,
-            totalDirectIncome: Number(user.totalDirectIncome || 0),
-            totalLevelIncome: Number(user.totalLevelIncome || 0),
-            totalMatchingBonus: Number(user.totalMatchingBonus || 0),
             totalGenerationIncome: Number(user.totalGenerationIncome || 0),
             matchedPV: Number(user.matchedPV || 0),
             rank: user.rank || "Member",
@@ -314,7 +303,7 @@ exports.handleRepurchase = async (userId, amount, bv) => {
             if (!parent) break;
 
             const incomeAmount = bv * (genRates[generation] || 0.005);
-            
+
             if (incomeAmount > 0) {
                 parent.walletBalance += incomeAmount;
                 parent.totalGenerationIncome = (parent.totalGenerationIncome || 0) + incomeAmount;
@@ -329,7 +318,6 @@ exports.handleRepurchase = async (userId, amount, bv) => {
                     description: `Generation ${generation} income from ${user.memberId} repurchase`
                 });
             }
-
             currentParentId = parent.parent;
             generation++;
         }

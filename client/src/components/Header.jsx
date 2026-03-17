@@ -782,35 +782,64 @@ const Header = () => {
                             </NavButton>
 
                             {/* Company Dropdown (Desktop) */}
-                            <Box
-                                onMouseEnter={handleCompanyClick}
-                                onMouseLeave={handleCompanyClose}
-                                sx={{ position: 'relative' }}
-                            >
+                            <Box sx={{ position: 'relative' }}>
                                 <NavButton
                                     className={isCompanyActive() ? 'active' : ''}
+                                    onClick={handleCompanyClick}
                                     sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}
                                 >
-                                    Sanyukt Parivaar <ExpandMore sx={{ fontSize: '18px' }} />
+                                    Sanyukt Parivaar 
+                                    <ExpandMore 
+                                        sx={{ 
+                                            fontSize: '18px',
+                                            transform: openCompanyMenu ? 'rotate(180deg)' : 'rotate(0deg)',
+                                            transition: 'transform 0.2s'
+                                        }} 
+                                    />
                                 </NavButton>
 
                                 <Menu
                                     anchorEl={anchorElCompany}
                                     open={openCompanyMenu}
                                     onClose={handleCompanyClose}
+                                    anchorOrigin={{
+                                        vertical: 'bottom',
+                                        horizontal: 'left',
+                                    }}
+                                    transformOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'left',
+                                    }}
                                     MenuListProps={{
-                                        onMouseLeave: handleCompanyClose,
                                         sx: {
-                                            boxShadow: '0px 8px 24px rgba(0,0,0,0.1)',
-                                            border: '1px solid #E6E6E6',
-                                            borderRadius: '8px',
                                             padding: '8px',
-                                            mt: 1,
                                         }
                                     }}
                                     slotProps={{
                                         paper: {
                                             elevation: 0,
+                                            sx: {
+                                                mt: 1.5,
+                                                minWidth: '180px',
+                                                boxShadow: '0px 10px 40px rgba(0,0,0,0.1)',
+                                                border: '1px solid #E6E6E6',
+                                                borderRadius: '12px',
+                                                overflow: 'visible',
+                                                '&:before': {
+                                                    content: '""',
+                                                    display: 'block',
+                                                    position: 'absolute',
+                                                    top: 0,
+                                                    left: 24,
+                                                    width: 10,
+                                                    height: 10,
+                                                    bgcolor: 'background.paper',
+                                                    transform: 'translateY(-50%) rotate(45deg)',
+                                                    zIndex: 0,
+                                                    borderTop: '1px solid #E6E6E6',
+                                                    borderLeft: '1px solid #E6E6E6',
+                                                },
+                                            }
                                         }
                                     }}
                                     disableScrollLock
@@ -824,10 +853,12 @@ const Header = () => {
                                                 fontSize: '14px',
                                                 fontWeight: 500,
                                                 color: isActive(item.path) ? '#F7931E' : '#2F7A32',
-                                                borderRadius: '4px',
+                                                borderRadius: '8px',
+                                                py: 1,
+                                                px: 1.5,
                                                 '&:hover': {
-                                                    backgroundColor: 'rgba(247, 147, 30, 0.08)',
-                                                    color: '#F7931E',
+                                                    backgroundColor: 'rgba(10, 122, 47, 0.08)',
+                                                    color: '#0A7A2F',
                                                 }
                                             }}
                                         >
@@ -878,6 +909,7 @@ const Header = () => {
                                     <Menu
                                         anchorEl={anchorElUser}
                                         open={openUserMenu}
+                                        onClose={handleUserMenuClose}
                                         anchorOrigin={{
                                             vertical: 'bottom',
                                             horizontal: 'right',
@@ -888,9 +920,6 @@ const Header = () => {
                                         }}
                                         MenuListProps={{
                                             sx: {
-                                                boxShadow: '0px 10px 40px rgba(0,0,0,0.12)',
-                                                border: '1px solid #E6E6E6',
-                                                borderRadius: '12px',
                                                 padding: '10px',
                                                 minWidth: '220px',
                                             }
@@ -900,13 +929,16 @@ const Header = () => {
                                                 elevation: 0,
                                                 sx: {
                                                     mt: 1.5,
+                                                    boxShadow: '0px 10px 40px rgba(0,0,0,0.12)',
+                                                    border: '1px solid #E6E6E6',
+                                                    borderRadius: '12px',
                                                     overflow: 'visible',
                                                     '&:before': {
                                                         content: '""',
                                                         display: 'block',
                                                         position: 'absolute',
                                                         top: 0,
-                                                        right: 24,
+                                                        right: 28,
                                                         width: 10,
                                                         height: 10,
                                                         bgcolor: 'background.paper',
@@ -1022,35 +1054,64 @@ const Header = () => {
                             )}
 
                             {/* Franchise Dropdown (Desktop) */}
-                            <Box
-                                onMouseEnter={handleFranchiseClick}
-                                onMouseLeave={handleFranchiseClose}
-                                sx={{ position: 'relative' }}
-                            >
+                            <Box sx={{ position: 'relative' }}>
                                 <NavButton
                                     className={isFranchiseActive() ? 'active' : ''}
+                                    onClick={handleFranchiseClick}
                                     sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}
                                 >
-                                    Franchise <ExpandMore sx={{ fontSize: '18px' }} />
+                                    Franchise 
+                                    <ExpandMore 
+                                        sx={{ 
+                                            fontSize: '18px',
+                                            transform: openFranchiseMenu ? 'rotate(180deg)' : 'rotate(0deg)',
+                                            transition: 'transform 0.2s'
+                                        }} 
+                                    />
                                 </NavButton>
 
                                 <Menu
                                     anchorEl={anchorElFranchise}
                                     open={openFranchiseMenu}
                                     onClose={handleFranchiseClose}
+                                    anchorOrigin={{
+                                        vertical: 'bottom',
+                                        horizontal: 'left',
+                                    }}
+                                    transformOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'left',
+                                    }}
                                     MenuListProps={{
-                                        onMouseLeave: handleFranchiseClose,
                                         sx: {
-                                            boxShadow: '0px 8px 24px rgba(0,0,0,0.1)',
-                                            border: '1px solid #E6E6E6',
-                                            borderRadius: '8px',
                                             padding: '8px',
-                                            mt: 1,
                                         }
                                     }}
                                     slotProps={{
                                         paper: {
                                             elevation: 0,
+                                            sx: {
+                                                mt: 1.5,
+                                                minWidth: '180px',
+                                                boxShadow: '0px 10px 40px rgba(0,0,0,0.1)',
+                                                border: '1px solid #E6E6E6',
+                                                borderRadius: '12px',
+                                                overflow: 'visible',
+                                                '&:before': {
+                                                    content: '""',
+                                                    display: 'block',
+                                                    position: 'absolute',
+                                                    top: 0,
+                                                    left: 24,
+                                                    width: 10,
+                                                    height: 10,
+                                                    bgcolor: 'background.paper',
+                                                    transform: 'translateY(-50%) rotate(45deg)',
+                                                    zIndex: 0,
+                                                    borderTop: '1px solid #E6E6E6',
+                                                    borderLeft: '1px solid #E6E6E6',
+                                                },
+                                            }
                                         }
                                     }}
                                     disableScrollLock
@@ -1064,10 +1125,12 @@ const Header = () => {
                                                 fontSize: '14px',
                                                 fontWeight: 500,
                                                 color: isActive(item.path) ? '#F7931E' : '#2F7A32',
-                                                borderRadius: '4px',
+                                                borderRadius: '8px',
+                                                py: 1,
+                                                px: 1.5,
                                                 '&:hover': {
-                                                    backgroundColor: 'rgba(247, 147, 30, 0.08)',
-                                                    color: '#F7931E',
+                                                    backgroundColor: 'rgba(10, 122, 47, 0.08)',
+                                                    color: '#0A7A2F',
                                                 }
                                             }}
                                         >

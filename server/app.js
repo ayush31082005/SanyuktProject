@@ -52,7 +52,7 @@ app.get("/api/health", (req, res) => {
 // Routes
 app.use("/api/mlm", require("./routes/mlmRoutes"));
 app.use("/api/auth", require("./routes/authRoutes"));
-app.use("/api", require("./routes/authRoutes")); 
+app.use("/api", require("./routes/authRoutes"));
 app.use("/api", require("./routes/contactRoutes"));
 app.use("/api/products", require("./routes/productRoutes"));
 app.use("/api/admin/users", require("./routes/adminUserRoutes"));
@@ -75,11 +75,11 @@ app.use("/api/orders", require("./routes/orderRoutes"));
 if (process.env.NODE_ENV === 'production') {
     const buildPath = path.join(__dirname, '..', 'client', 'dist');
     app.use(express.static(buildPath));
-    
+
     // Catch-all for React SPA routing (excludes /api paths)
     // Using explicit regex to avoid PathError on Render/Express
-    app.get(/^(?!\/api).+/, (req, res) => {
-        res.sendFile(path.join(buildPath, 'index.html'));
+    app.use((req, res) => {
+        res.sendFile(path.join(__dirname, '../client/dist/index.html'));
     });
 } else {
     // Final API 404 handler for development

@@ -14,8 +14,8 @@ import XIcon from '@mui/icons-material/X';
 
 // 7. FOOTER BACKGROUND & SPACING
 const FooterContainer = styled(Box)({
-    backgroundColor: '#0A7A2F',
-    color: '#FFFFFF',
+    backgroundColor: '#0A0A0A',
+    color: '#0A0A0A',
     fontFamily: '"Poppins", "Roboto", sans-serif',
     width: '100%',
 });
@@ -56,14 +56,14 @@ const LogoMain = styled('span')({
     fontFamily: '"Poppins", "Roboto", sans-serif',
     fontWeight: 800,
     fontSize: '1.4rem',
-    color: '#FFFFFF',
+    color: '#0A0A0A',
     letterSpacing: '0.02em',
 });
 
 const CompanyDescription = styled(Typography)({
     fontSize: '14px',
     lineHeight: 1.7,
-    color: '#FFFFFF',
+    color: '#0A0A0A',
     opacity: 0.9,
     fontFamily: '"Poppins", "Roboto", sans-serif',
     maxWidth: '320px',
@@ -74,7 +74,7 @@ const CompanyDescription = styled(Typography)({
 const SectionTitle = styled(Typography)({
     fontSize: '15px',
     fontWeight: 700,
-    color: '#FFFFFF',
+    color: '#0A0A0A',
     marginBottom: '14px',
     fontFamily: '"Poppins", "Roboto", sans-serif',
 });
@@ -82,7 +82,7 @@ const SectionTitle = styled(Typography)({
 // LINKS
 const FooterLink = styled(Link)({
     display: 'block',
-    color: '#FFFFFF',
+    color: '#0A0A0A',
     fontSize: '13px',
     textDecoration: 'none',
     marginBottom: '8px',
@@ -90,7 +90,7 @@ const FooterLink = styled(Link)({
     transition: 'color 0.2s ease-in-out',
     cursor: 'pointer',
     '&:hover': {
-        color: '#F7931E',
+        color: '#C9A84C',
     },
 });
 
@@ -98,7 +98,7 @@ const FooterLink = styled(Link)({
 const ContactText = styled(Typography)({
     fontSize: '14px',
     lineHeight: 1.6,
-    color: '#FFFFFF',
+    color: '#0A0A0A',
     opacity: 0.9,
     marginBottom: '8px',
     fontFamily: '"Poppins", "Roboto", sans-serif',
@@ -110,13 +110,13 @@ const ContactLine = styled(Box)({
     gap: '8px',
     marginBottom: '10px',
     fontSize: '14px',
-    color: '#FFFFFF',
+    color: '#0A0A0A',
     opacity: 0.9,
     fontFamily: '"Poppins", "Roboto", sans-serif',
     transition: 'color 0.2s ease-in-out',
     cursor: 'pointer',
     '&:hover': {
-        color: '#F7931E',
+        color: '#C9A84C',
     },
 });
 
@@ -128,7 +128,7 @@ const SocialIconContainer = styled(Box)({
 });
 
 const SocialButton = styled('a')({
-    color: '#FFFFFF',
+    color: '#0A0A0A',
     textDecoration: 'none',
     display: 'flex',
     alignItems: 'center',
@@ -136,11 +136,11 @@ const SocialButton = styled('a')({
     width: '36px',
     height: '36px',
     borderRadius: '50%',
-    backgroundColor: 'rgba(255,255,255,0.1)',
+    backgroundColor: 'rgba(201,168,76,0.15)',
     transition: 'all 0.3s ease',
     '&:hover': {
-        backgroundColor: '#F7931E',
-        color: '#FFFFFF',
+        backgroundColor: '#0A0A0A',
+        color: '#0A0A0A',
         transform: 'translateY(-2px)',
     },
 });
@@ -153,7 +153,7 @@ const BottomBar = styled(Box)({
 });
 
 const CopyrightText = styled(Typography)({
-    color: '#FFFFFF',
+    color: '#0A0A0A',
     fontSize: '14px',
     fontFamily: '"Poppins", "Roboto", sans-serif',
     opacity: 0.9,
@@ -212,8 +212,8 @@ const Footer = () => {
                             ) : null}
                             <LogoTextContainer>
                                 <LogoMain>Sanyukt Parivaar</LogoMain>
-                                <Typography sx={{ fontSize: '0.9rem', fontWeight: 700, color: '#FFFFFF', mb: 0.5 }}>& Rich Life Pvt.Ltd. </Typography>
-                                <Typography sx={{ fontSize: '0.75rem', fontWeight: 700, color: '#F7931E', letterSpacing: '0.02em' }}>Together We Grow, Together We Prosper</Typography>
+                                <Typography sx={{ fontSize: '0.9rem', fontWeight: 700, color: '#0A0A0A', mb: 0.5 }}>& Rich Life Pvt.Ltd. </Typography>
+                                <Typography sx={{ fontSize: '0.75rem', fontWeight: 700, color: '#C9A84C', letterSpacing: '0.02em' }}>Together We Grow, Together We Prosper</Typography>
                             </LogoTextContainer>
                         </LogoContainer>
 
@@ -268,21 +268,21 @@ const Footer = () => {
                             <Grid item xs={12} sm={6} sx={{ display: { xs: 'none', sm: 'block' } }}>
                                 <SectionTitle>Contact Us</SectionTitle>
                                 <Box sx={{ mb: 2 }}>
-                                    <ContactText sx={{ fontWeight: 700, mb: 1.5, color: '#FFFFFF', fontSize: '15px' }}>
+                                    <ContactText sx={{ fontWeight: 700, mb: 1.5, color: '#0A0A0A', fontSize: '15px' }}>
                                         Sanyukt Parivaar & Rich Life Pvt.Ltd.
                                     </ContactText>
-                                    <ContactText sx={{ fontWeight: 500, fontSize: '13px', borderLeft: '2px solid #F7931E', pl: 1.5, mb: 2 }}>
+                                    <ContactText sx={{ fontWeight: 500, fontSize: '13px', borderLeft: '2px solid #C9A84C', pl: 1.5, mb: 2 }}>
                                         Bhatiniya, Gopinathpur, Harraiya,<br />
                                         Basti - 272130, Uttar Pradesh
                                     </ContactText>
                                 </Box>
                                 <Box>
                                     <ContactLine onClick={() => window.open('tel:+917880370057', '_self')}>
-                                        <Typography sx={{ fontWeight: 600, mr: 1, color: '#F7931E', fontSize: '13px' }}>Phone:</Typography>
+                                        <Typography sx={{ fontWeight: 600, mr: 1, color: '#C9A84C', fontSize: '13px' }}>Phone:</Typography>
                                         +91 78803 70057
                                     </ContactLine>
                                     <ContactLine onClick={() => window.open('mailto:info@sanyuktparivaar.com', '_self')}>
-                                        <Typography sx={{ fontWeight: 600, mr: 1, color: '#F7931E', fontSize: '13px' }}>Email:</Typography>
+                                        <Typography sx={{ fontWeight: 600, mr: 1, color: '#C9A84C', fontSize: '13px' }}>Email:</Typography>
                                         info@sanyuktparivaar.com
                                     </ContactLine>
                                 </Box>
@@ -294,20 +294,20 @@ const Footer = () => {
                     <Grid item xs={12} sx={{ display: { xs: 'block', sm: 'none' }, pt: '0 !important' }}>
                         <SectionTitle>Contact Us</SectionTitle>
                         <Box sx={{ mb: 2 }}>
-                            <ContactText sx={{ fontWeight: 700, mb: 1, color: '#FFFFFF', fontSize: '14px' }}>
+                            <ContactText sx={{ fontWeight: 700, mb: 1, color: '#0A0A0A', fontSize: '14px' }}>
                                 Sanyukt Parivaar & Rich Life Pvt.Ltd.
                             </ContactText>
-                            <ContactText sx={{ fontSize: '13px', fontWeight: 500, opacity: 1, borderLeft: '2px solid #F7931E', pl: 1.5 }}>
+                            <ContactText sx={{ fontSize: '13px', fontWeight: 500, opacity: 1, borderLeft: '2px solid #C9A84C', pl: 1.5 }}>
                                 Bhatiniya, Gopinathpur, Harraiya,<br />
                                 Basti - 272130, Uttar Pradesh
                             </ContactText>
                         </Box>
                         <ContactLine onClick={() => window.open('tel:+917880370057', '_self')}>
-                            <Typography sx={{ fontWeight: 600, mr: 1, color: '#F7931E', fontSize: '13px' }}>Phone:</Typography>
+                            <Typography sx={{ fontWeight: 600, mr: 1, color: '#C9A84C', fontSize: '13px' }}>Phone:</Typography>
                             +91 78803 70057
                         </ContactLine>
                         <ContactLine onClick={() => window.open('mailto:info@sanyuktparivaar.com', '_self')}>
-                            <Typography sx={{ fontWeight: 600, mr: 1, color: '#F7931E', fontSize: '13px' }}>Email:</Typography>
+                            <Typography sx={{ fontWeight: 600, mr: 1, color: '#C9A84C', fontSize: '13px' }}>Email:</Typography>
                             info@sanyuktparivaar.com
                         </ContactLine>
                     </Grid>
@@ -345,7 +345,7 @@ const Footer = () => {
                             }}
                         >
                             <Box sx={{ 
-                                background: '#F7931E',
+                                background: '#C9A84C',
                                 color: '#0A5F26',
                                 px: 1,
                                 py: 0.2,
@@ -357,7 +357,7 @@ const Footer = () => {
                                 AI
                             </Box>
                             <Box sx={{ 
-                                background: 'linear-gradient(90deg, #F7931E 0%, #FFD700 50%, #F7931E 100%)',
+                                background: 'linear-gradient(90deg, #C9A84C 0%, #FFD700 50%, #C9A84C 100%)',
                                 backgroundSize: '200% auto',
                                 WebkitBackgroundClip: 'text',
                                 WebkitTextFillColor: 'transparent',

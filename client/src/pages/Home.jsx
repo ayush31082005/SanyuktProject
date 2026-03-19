@@ -29,8 +29,8 @@ import { rechargePlans } from '../data/rechargePlans';
 
 // Simple loading fallback
 const SectionLoader = () => (
-    <div className="w-full py-20 flex items-center justify-center bg-gray-50/50">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#0A7A2F]"></div>
+    <div className="w-full py-20 flex items-center justify-center bg-zinc-900/50">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#C9A84C]"></div>
     </div>
 );
 
@@ -154,7 +154,7 @@ const HomePage = () => {
             name: 'BSNL',
             logo: BSNL_LOGO,
             tagline: 'Pan-India',
-            bgColor: 'bg-orange-50'
+            bgColor: 'bg-yellow-50'
         }
     ];
 
@@ -379,7 +379,7 @@ const HomePage = () => {
                         contact: (mobileNumber || "").toString().replace(/\D/g, '').slice(-10)
                     },
                     theme: {
-                        color: "#0A7A2F"
+                        color: "#C9A84C"
                     }
                 };
 
@@ -512,7 +512,7 @@ const HomePage = () => {
 
 
     return (
-        <div className="min-h-screen bg-white font-sans">
+        <div className="min-h-screen bg-zinc-900 font-sans">
             <React.Suspense fallback={<SectionLoader />}>
                 <HeroSection
                     currentSlide={currentSlide}
@@ -565,15 +565,15 @@ const HomePage = () => {
                 />
 
                 {/* Mid CTA Strip */}
-                <section className="py-8 bg-[#F7931E]" >
+                <section className="py-8 bg-[#C9A84C]" >
                     <div className="container mx-auto px-4">
                         <div className="flex flex-col md:flex-row items-center justify-between gap-3">
-                            <h3 className="text-base md:text-lg font-bold text-white text-center md:text-left">
+                            <h3 className="text-base md:text-lg font-bold text-zinc-100 text-center md:text-left">
                                 We Are One of the Fastest Growing Direct Selling Companies
                             </h3>
                             <button
                                 onClick={() => handleNavigation('/contact')}
-                                className="px-4 py-2 bg-white text-[#F7931E] font-semibold rounded-lg hover:bg-gray-100 transform hover:-translate-y-1 transition-all shadow-md whitespace-nowrap text-xs"
+                                className="px-4 py-2 bg-zinc-900 text-[#C9A84C] font-semibold rounded-lg hover:bg-zinc-800 transform hover:-translate-y-1 transition-all shadow-md whitespace-nowrap text-xs"
                             >
                                 CONTACT NOW
                             </button>
@@ -600,15 +600,15 @@ const HomePage = () => {
                 {/* Final Trust Section */}
                 <section className="py-12 md:py-16 bg-[#E8F5E9]" >
                     <div className="container mx-auto px-4 text-center">
-                        <h2 className="text-xl md:text-2xl font-bold mb-2 text-[#0A7A2F]">
+                        <h2 className="text-xl md:text-2xl font-bold mb-2 text-[#C9A84C]">
                             Together We Grow, Together We Prosper
                         </h2>
-                        <p className="text-sm mb-4 max-w-2xl mx-auto text-gray-600">
+                        <p className="text-sm mb-4 max-w-2xl mx-auto text-zinc-300">
                             At Sanyukt Parivaar & Rich Life Pvt.Ltd., we don't just build income - we build people, confidence, and a better future.
                         </p>
                         <button
                             onClick={() => handleNavigation('/register')}
-                            className="inline-block px-4 py-2 bg-[#F7931E] text-white font-semibold rounded-lg hover:bg-[#e07d0b] transform hover:-translate-y-1 transition-all shadow-md text-sm"
+                            className="inline-block px-4 py-2 bg-[#C9A84C] text-zinc-100 font-semibold rounded-lg hover:bg-[#A07830] transform hover:-translate-y-1 transition-all shadow-md text-sm"
                         >
                             Join Sanyukt Parivaar Today
                         </button>
@@ -640,7 +640,7 @@ const HomePage = () => {
             {/* Cart Notification */}
             {showCartNotification && (
                 <div className="fixed bottom-4 right-4 z-50 animate-fadeInUp">
-                    <div className="bg-[#0A7A2F] text-white px-4 py-3 rounded-lg shadow-lg flex items-center gap-3">
+                    <div className="bg-[#C9A84C] text-zinc-100 px-4 py-3 rounded-lg shadow-lg flex items-center gap-3">
                         <Check className="w-5 h-5" />
                         <span>{addedToCartProduct} added to cart!</span>
                     </div>

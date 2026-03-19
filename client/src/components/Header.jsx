@@ -37,9 +37,9 @@ import { useNavigate } from 'react-router-dom';
 
 // Main Header Styling (Sticky, Full width, 80px desktop, 60px mobile)
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
-    backgroundColor: '#FFFFFF',
-    boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
-    borderBottom: '1px solid #E6E6E6',
+    backgroundColor: '#0A0A0A',
+    boxShadow: '0 2px 10px rgba(0,0,0,0.5)',
+    borderBottom: '1px solid rgba(201,168,76,0.3)',
     height: '60px',
     justifyContent: 'center',
     position: 'fixed',
@@ -82,7 +82,7 @@ const LogoMain = styled('span')(({ theme }) => ({
     fontFamily: '"Poppins", "Roboto", sans-serif',
     fontWeight: 700,
     fontSize: '0.75rem',
-    color: '#0A7A2F',
+    color: '#C9A84C',
     whiteSpace: 'normal',
     lineHeight: 1.2,
     [theme.breakpoints.up('md')]: {
@@ -98,7 +98,7 @@ const LogoTagline = styled('span')(({ theme }) => ({
     fontFamily: '"Poppins", "Roboto", sans-serif',
     fontSize: '0.6rem',
     fontWeight: 700,
-    color: '#F7931E',
+    color: '#C9A84C',
     whiteSpace: 'normal',
     letterSpacing: '0.02em',
     [theme.breakpoints.up('md')]: {
@@ -115,17 +115,17 @@ const NavButton = styled(Button)(({ theme }) => ({
     fontFamily: '"Poppins", "Roboto", sans-serif',
     fontSize: '15px',
     fontWeight: 500,
-    color: '#2F7A32',
+    color: '#C9A84C',
     textTransform: 'none',
     padding: '4px 8px',
     minWidth: 'auto',
     whiteSpace: 'nowrap',
     '&:hover': {
-        color: '#F7931E',
+        color: '#C9A84C',
         backgroundColor: 'transparent',
     },
     '&.active': {
-        color: '#F7931E',
+        color: '#C9A84C',
     },
     transition: 'color 0.2s ease-in-out',
     [theme.breakpoints.up('xl')]: {
@@ -134,20 +134,20 @@ const NavButton = styled(Button)(({ theme }) => ({
     },
 }));
 
-// Register Button (#F7931E, White text)
+// Register Button (#C9A84C, White text)
 const RegisterButton = styled(Button)(({ theme }) => ({
     fontFamily: '"Poppins", "Roboto", sans-serif',
     fontSize: '15px',
     fontWeight: 600,
-    backgroundColor: '#F7931E',
-    color: '#FFFFFF',
+    backgroundColor: '#C9A84C',
+    color: '#0A0A0A',
     padding: '6px 14px',
     borderRadius: '4px',
     textTransform: 'none',
     whiteSpace: 'nowrap',
     '&:hover': {
-        backgroundColor: '#e07d0b',
-        boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+        backgroundColor: '#A07830',
+        boxShadow: '0 4px 12px rgba(201,168,76,0.3)',
     },
     transition: 'all 0.2s ease-in-out',
     [theme.breakpoints.up('xl')]: {
@@ -156,21 +156,21 @@ const RegisterButton = styled(Button)(({ theme }) => ({
     },
 }));
 
-// Login Button (Transparent, #F7931E Border)
+// Login Button (Transparent, #C9A84C Border)
 const LoginButton = styled(Button)(({ theme }) => ({
     fontFamily: '"Poppins", "Roboto", sans-serif',
     fontSize: '15px',
     fontWeight: 600,
     backgroundColor: 'transparent',
-    border: '1px solid #F7931E',
-    color: '#F7931E',
+    border: '1px solid #C9A84C',
+    color: '#C9A84C',
     padding: '6px 14px',
     borderRadius: '4px',
     textTransform: 'none',
     whiteSpace: 'nowrap',
     '&:hover': {
-        backgroundColor: 'rgba(247, 147, 30, 0.04)',
-        boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+        backgroundColor: 'rgba(201,168,76,0.06)',
+        boxShadow: '0 4px 12px rgba(201,168,76,0.3)',
     },
     transition: 'all 0.2s ease-in-out',
     [theme.breakpoints.up('xl')]: {
@@ -184,8 +184,8 @@ const MyAccountButton = styled(Button)(({ theme }) => ({
     fontFamily: '"Poppins", "Roboto", sans-serif',
     fontSize: '15px',
     fontWeight: 600,
-    backgroundColor: '#F7931E',
-    color: '#FFFFFF',
+    backgroundColor: '#C9A84C',
+    color: '#0A0A0A',
     padding: '5px 16px',
     borderRadius: '8px',
     textTransform: 'none',
@@ -194,8 +194,8 @@ const MyAccountButton = styled(Button)(({ theme }) => ({
     alignItems: 'center',
     gap: '6px',
     '&:hover': {
-        backgroundColor: '#e07d0b',
-        boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+        backgroundColor: '#A07830',
+        boxShadow: '0 4px 12px rgba(201,168,76,0.3)',
     },
     transition: 'all 0.2s ease-in-out',
     [theme.breakpoints.up('xl')]: {
@@ -209,8 +209,8 @@ const AdminDashboardButton = styled(Button)(({ theme }) => ({
     fontFamily: '"Poppins", "Roboto", sans-serif',
     fontSize: '15px',
     fontWeight: 600,
-    backgroundColor: '#F7931E',
-    color: '#FFFFFF',
+    backgroundColor: '#C9A84C',
+    color: '#0A0A0A',
     padding: '5px 16px',
     borderRadius: '8px',
     textTransform: 'none',
@@ -219,8 +219,8 @@ const AdminDashboardButton = styled(Button)(({ theme }) => ({
     alignItems: 'center',
     gap: '6px',
     '&:hover': {
-        backgroundColor: '#e07d0b',
-        boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+        backgroundColor: '#A07830',
+        boxShadow: '0 4px 12px rgba(201,168,76,0.3)',
     },
     transition: 'all 0.2s ease-in-out',
     [theme.breakpoints.up('xl')]: {
@@ -243,9 +243,9 @@ const LogoutMenuItem = styled(MenuItem)({
 // Regular List item for mobile drawer
 const StyledListItemButton = styled(ListItemButton)({
     '&:hover': {
-        backgroundColor: 'rgba(247, 147, 30, 0.08)',
+        backgroundColor: 'rgba(201,168,76,0.1)',
         '& .MuiListItemText-primary': {
-            color: '#F7931E',
+            color: '#C9A84C',
         },
     },
     transition: 'all 0.2s ease-in-out',
@@ -493,7 +493,7 @@ const Header = () => {
     const drawer = (
         <Box sx={{ width: 280, pt: 2, display: 'flex', flexDirection: 'column', height: '100%' }}>
             {/* Logo inside drawer to always keep it visible */}
-            <Box sx={{ px: 2, pb: 2, borderBottom: '1px solid #E6E6E6', mb: 1 }}>
+            <Box sx={{ px: 2, pb: 2, borderBottom: '1px solid rgba(201,168,76,0.3)', mb: 1 }}>
                 <LogoContainer onClick={() => handleNavigation('/')}>
                     {!logoError && (
                         <LogoImage src="/logo.png" alt="Sanyukt Parivaar Logo" onError={handleLogoError} />
@@ -516,7 +516,7 @@ const Header = () => {
                                     fontFamily: '"Poppins", "Roboto", sans-serif',
                                     fontSize: '14px',
                                     fontWeight: 500,
-                                    color: isActive('/') ? '#F7931E' : '#2F7A32'
+                                    color: isActive('/') ? '#C9A84C' : '#C9A84C'
                                 }
                             }}
                         />
@@ -533,11 +533,11 @@ const Header = () => {
                                     fontFamily: '"Poppins", "Roboto", sans-serif',
                                     fontSize: '14px',
                                     fontWeight: 500,
-                                    color: isCompanyActive() ? '#F7931E' : '#2F7A32'
+                                    color: isCompanyActive() ? '#C9A84C' : '#C9A84C'
                                 }
                             }}
                         />
-                        {mobileSubmenu === 'company' ? <ExpandLess sx={{ color: '#2F7A32' }} /> : <ExpandMore sx={{ color: '#2F7A32' }} />}
+                        {mobileSubmenu === 'company' ? <ExpandLess sx={{ color: '#C9A84C' }} /> : <ExpandMore sx={{ color: '#C9A84C' }} />}
                     </StyledListItemButton>
                     <Collapse in={mobileSubmenu === 'company'} timeout="auto" unmountOnExit sx={{ width: '100%' }}>
                         <List component="div" disablePadding>
@@ -553,8 +553,8 @@ const Header = () => {
                                             '& .MuiTypography-root': {
                                                 fontFamily: '"Poppins", "Roboto", sans-serif',
                                                 fontSize: '13px',
-                                                fontWeight: 400,
-                                                color: isActive(subItem.path) ? '#F7931E' : '#2F7A32'
+                                                fontWeight: 500,
+                                                color: isActive(subItem.path) ? '#C9A84C' : '#C9A84C'
                                             }
                                         }}
                                     />
@@ -575,7 +575,7 @@ const Header = () => {
                                         fontFamily: '"Poppins", "Roboto", sans-serif',
                                         fontSize: '14px',
                                         fontWeight: 500,
-                                        color: isActive(item.path) ? '#F7931E' : '#2F7A32'
+                                        color: isActive(item.path) ? '#C9A84C' : '#C9A84C'
                                     }
                                 }}
                             />
@@ -593,11 +593,11 @@ const Header = () => {
                                     fontFamily: '"Poppins", "Roboto", sans-serif',
                                     fontSize: '14px',
                                     fontWeight: 500,
-                                    color: isFranchiseActive() ? '#F7931E' : '#2F7A32'
+                                    color: isFranchiseActive() ? '#C9A84C' : '#C9A84C'
                                 }
                             }}
                         />
-                        {mobileSubmenu === 'franchise' ? <ExpandLess sx={{ color: '#2F7A32' }} /> : <ExpandMore sx={{ color: '#2F7A32' }} />}
+                        {mobileSubmenu === 'franchise' ? <ExpandLess sx={{ color: '#C9A84C' }} /> : <ExpandMore sx={{ color: '#C9A84C' }} />}
                     </StyledListItemButton>
                     <Collapse in={mobileSubmenu === 'franchise'} timeout="auto" unmountOnExit sx={{ width: '100%' }}>
                         <List component="div" disablePadding>
@@ -613,8 +613,8 @@ const Header = () => {
                                             '& .MuiTypography-root': {
                                                 fontFamily: '"Poppins", "Roboto", sans-serif',
                                                 fontSize: '13px',
-                                                fontWeight: 400,
-                                                color: isActive(subItem.path) ? '#F7931E' : '#2F7A32'
+                                                fontWeight: 500,
+                                                color: isActive(subItem.path) ? '#C9A84C' : '#C9A84C'
                                             }
                                         }}
                                     />
@@ -634,7 +634,7 @@ const Header = () => {
                                         fontFamily: '"Poppins", "Roboto", sans-serif',
                                         fontSize: '14px',
                                         fontWeight: 500,
-                                        color: isActive(item.path) ? '#F7931E' : '#2F7A32'
+                                        color: isActive(item.path) ? '#C9A84C' : '#C9A84C'
                                     }
                                 }}
                             />
@@ -669,7 +669,7 @@ const Header = () => {
                                 <>
                                     <ListItem disablePadding sx={{ flexDirection: 'column', alignItems: 'flex-start' }}>
                                         <StyledListItemButton onClick={handleMobileAccountToggle} sx={{ width: '100%', justifyContent: 'center' }}>
-                                            <AccountCircleIcon sx={{ mr: 1, color: '#2F7A32' }} />
+                                            <AccountCircleIcon sx={{ mr: 1, color: '#C9A84C' }} />
                                             <ListItemText
                                                 primary={getDisplayName()}
                                                 sx={{
@@ -677,11 +677,11 @@ const Header = () => {
                                                         fontFamily: '"Poppins", "Roboto", sans-serif',
                                                         fontSize: '14px',
                                                         fontWeight: 600,
-                                                        color: '#2F7A32'
+                                                        color: '#C9A84C'
                                                     }
                                                 }}
                                             />
-                                            {mobileSubmenu === 'account' ? <ExpandLess sx={{ color: '#2F7A32' }} /> : <ExpandMore sx={{ color: '#2F7A32' }} />}
+                                            {mobileSubmenu === 'account' ? <ExpandLess sx={{ color: '#C9A84C' }} /> : <ExpandMore sx={{ color: '#C9A84C' }} />}
                                         </StyledListItemButton>
                                         <Collapse in={mobileSubmenu === 'account'} timeout="auto" unmountOnExit sx={{ width: '100%' }}>
                                             <List component="div" disablePadding>
@@ -691,7 +691,7 @@ const Header = () => {
                                                         sx={{ pl: 4 }}
                                                         onClick={() => handleNavigation(subItem.path)}
                                                     >
-                                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, color: '#2F7A32' }}>
+                                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, color: '#C9A84C' }}>
                                                             {subItem.icon}
                                                             <ListItemText
                                                                 primary={subItem.name}
@@ -699,8 +699,8 @@ const Header = () => {
                                                                     '& .MuiTypography-root': {
                                                                         fontFamily: '"Poppins", "Roboto", sans-serif',
                                                                         fontSize: '13px',
-                                                                        fontWeight: 400,
-                                                                        color: isActive(subItem.path) ? '#F7931E' : '#2F7A32'
+                                                                        fontWeight: 500,
+                                                                        color: isActive(subItem.path) ? '#C9A84C' : '#C9A84C'
                                                                     }
                                                                 }}
                                                             />
@@ -711,7 +711,7 @@ const Header = () => {
                                                     sx={{ pl: 4 }}
                                                     onClick={() => handleNavigation('/my-account')}
                                                 >
-                                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, color: '#2F7A32' }}>
+                                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, color: '#C9A84C' }}>
                                                         <DashboardIcon fontSize="small" />
                                                         <ListItemText
                                                             primary="Dashboard Home"
@@ -719,8 +719,8 @@ const Header = () => {
                                                                 '& .MuiTypography-root': {
                                                                     fontFamily: '"Poppins", "Roboto", sans-serif',
                                                                     fontSize: '13px',
-                                                                    fontWeight: 400,
-                                                                    color: isActive('/my-account') ? '#F7931E' : '#2F7A32'
+                                                                    fontWeight: 500,
+                                                                    color: isActive('/my-account') ? '#C9A84C' : '#C9A84C'
                                                                 }
                                                             }}
                                                         />
@@ -821,8 +821,8 @@ const Header = () => {
                                             sx: {
                                                 mt: 1.5,
                                                 minWidth: '180px',
-                                                boxShadow: '0px 10px 40px rgba(0,0,0,0.1)',
-                                                border: '1px solid #E6E6E6',
+                                                boxShadow: '0px 10px 40px rgba(0,0,0,0.6)',
+                                                border: '1px solid rgba(201,168,76,0.2)',
                                                 borderRadius: '12px',
                                                 overflow: 'visible',
                                                 '&:before': {
@@ -833,11 +833,11 @@ const Header = () => {
                                                     left: 24,
                                                     width: 10,
                                                     height: 10,
-                                                    bgcolor: 'background.paper',
+                                                    bgcolor: '#1A1A1A',
                                                     transform: 'translateY(-50%) rotate(45deg)',
                                                     zIndex: 0,
-                                                    borderTop: '1px solid #E6E6E6',
-                                                    borderLeft: '1px solid #E6E6E6',
+                                                    borderTop: '1px solid rgba(201,168,76,0.2)',
+                                                    borderLeft: '1px solid rgba(201,168,76,0.2)',
                                                 },
                                             }
                                         }
@@ -852,13 +852,13 @@ const Header = () => {
                                                 fontFamily: '"Poppins", "Roboto", sans-serif',
                                                 fontSize: '14px',
                                                 fontWeight: 500,
-                                                color: isActive(item.path) ? '#F7931E' : '#2F7A32',
+                                                color: isActive(item.path) ? '#C9A84C' : '#C9A84C',
                                                 borderRadius: '8px',
                                                 py: 1,
                                                 px: 1.5,
                                                 '&:hover': {
-                                                    backgroundColor: 'rgba(10, 122, 47, 0.08)',
-                                                    color: '#0A7A2F',
+                                                    backgroundColor: 'rgba(201,168,76,0.1)',
+                                                    color: '#C9A84C',
                                                 }
                                             }}
                                         >
@@ -896,7 +896,7 @@ const Header = () => {
                                             startIcon={
                                                 <Avatar
                                                     src={userData?.profileImage || undefined}
-                                                    sx={{ width: 24, height: 24, bgcolor: 'rgba(255,255,255,0.3)', fontSize: 12, fontWeight: 700 }}
+                                                    sx={{ width: 24, height: 24, bgcolor: 'rgba(201,168,76,0.25)', fontSize: 12, fontWeight: 700 }}
                                                 >
                                                     {!userData?.profileImage && getUserInitials()}
                                                 </Avatar>
@@ -929,8 +929,8 @@ const Header = () => {
                                                 elevation: 0,
                                                 sx: {
                                                     mt: 1.5,
-                                                    boxShadow: '0px 10px 40px rgba(0,0,0,0.12)',
-                                                    border: '1px solid #E6E6E6',
+                                                    boxShadow: '0px 10px 40px rgba(0,0,0,0.7)',
+                                                    border: '1px solid rgba(201,168,76,0.2)',
                                                     borderRadius: '12px',
                                                     overflow: 'visible',
                                                     '&:before': {
@@ -941,11 +941,11 @@ const Header = () => {
                                                         right: 28,
                                                         width: 10,
                                                         height: 10,
-                                                        bgcolor: 'background.paper',
+                                                        bgcolor: '#1A1A1A',
                                                         transform: 'translateY(-50%) rotate(45deg)',
                                                         zIndex: 0,
-                                                        borderTop: '1px solid #E6E6E6',
-                                                        borderLeft: '1px solid #E6E6E6',
+                                                        borderTop: '1px solid rgba(201,168,76,0.2)',
+                                                        borderLeft: '1px solid rgba(201,168,76,0.2)',
                                                     },
                                                 }
                                             }
@@ -959,13 +959,13 @@ const Header = () => {
                                                     fontFamily: '"Poppins", "Roboto", sans-serif',
                                                     fontSize: '14px',
                                                     fontWeight: 500,
-                                                    color: '#2F7A32',
+                                                    color: '#C9A84C',
                                                     borderRadius: '4px',
                                                     gap: 1.5,
                                                     py: 1.2,
                                                     '&:hover': {
-                                                        backgroundColor: 'rgba(247, 147, 30, 0.08)',
-                                                        color: '#F7931E',
+                                                        backgroundColor: 'rgba(201,168,76,0.1)',
+                                                        color: '#C9A84C',
                                                     }
                                                 }}
                                             >
@@ -988,7 +988,7 @@ const Header = () => {
                                                         fontFamily: '"Poppins", "Roboto", sans-serif',
                                                         fontSize: '14px',
                                                         fontWeight: 500,
-                                                        color: '#2F7A32',
+                                                        color: '#C9A84C',
                                                         borderRadius: '8px',
                                                         gap: 2,
                                                         py: 1.2,
@@ -997,15 +997,15 @@ const Header = () => {
                                                         display: 'flex',
                                                         alignItems: 'center',
                                                         '&:hover': {
-                                                            backgroundColor: 'rgba(10, 122, 47, 0.08)',
-                                                            color: '#0A7A2F',
+                                                            backgroundColor: 'rgba(201,168,76,0.1)',
+                                                            color: '#C9A84C',
                                                             '& .MuiSvgIcon-root': {
-                                                                color: '#0A7A2F',
+                                                                color: '#C9A84C',
                                                             }
                                                         },
                                                         '& .MuiSvgIcon-root': {
                                                             fontSize: '20px',
-                                                            color: '#4B9B50',
+                                                            color: '#C9A84C',
                                                             transition: 'color 0.2s',
                                                         }
                                                     }}
@@ -1027,7 +1027,7 @@ const Header = () => {
                                                 py: 1.2,
                                                 px: 1.5,
                                                 mt: 0.5,
-                                                borderTop: '1px solid #F1F1F1',
+                                                borderTop: '1px solid rgba(201,168,76,0.2)',
                                                 '&:hover': {
                                                     backgroundColor: 'rgba(211, 47, 47, 0.08)',
                                                 },
@@ -1093,8 +1093,8 @@ const Header = () => {
                                             sx: {
                                                 mt: 1.5,
                                                 minWidth: '180px',
-                                                boxShadow: '0px 10px 40px rgba(0,0,0,0.1)',
-                                                border: '1px solid #E6E6E6',
+                                                boxShadow: '0px 10px 40px rgba(0,0,0,0.6)',
+                                                border: '1px solid rgba(201,168,76,0.2)',
                                                 borderRadius: '12px',
                                                 overflow: 'visible',
                                                 '&:before': {
@@ -1105,11 +1105,11 @@ const Header = () => {
                                                     left: 24,
                                                     width: 10,
                                                     height: 10,
-                                                    bgcolor: 'background.paper',
+                                                    bgcolor: '#1A1A1A',
                                                     transform: 'translateY(-50%) rotate(45deg)',
                                                     zIndex: 0,
-                                                    borderTop: '1px solid #E6E6E6',
-                                                    borderLeft: '1px solid #E6E6E6',
+                                                    borderTop: '1px solid rgba(201,168,76,0.2)',
+                                                    borderLeft: '1px solid rgba(201,168,76,0.2)',
                                                 },
                                             }
                                         }
@@ -1124,13 +1124,13 @@ const Header = () => {
                                                 fontFamily: '"Poppins", "Roboto", sans-serif',
                                                 fontSize: '14px',
                                                 fontWeight: 500,
-                                                color: isActive(item.path) ? '#F7931E' : '#2F7A32',
+                                                color: isActive(item.path) ? '#C9A84C' : '#C9A84C',
                                                 borderRadius: '8px',
                                                 py: 1,
                                                 px: 1.5,
                                                 '&:hover': {
-                                                    backgroundColor: 'rgba(10, 122, 47, 0.08)',
-                                                    color: '#0A7A2F',
+                                                    backgroundColor: 'rgba(201,168,76,0.1)',
+                                                    color: '#C9A84C',
                                                 }
                                             }}
                                         >
@@ -1158,7 +1158,7 @@ const Header = () => {
                                 aria-label="open drawer"
                                 edge="start"
                                 onClick={handleDrawerToggle}
-                                sx={{ color: '#2F7A32' }}
+                                sx={{ color: '#C9A84C' }}
                             >
                                 <MenuIcon fontSize="large" />
                             </IconButton>
@@ -1180,7 +1180,7 @@ const Header = () => {
                     }}
                     sx={{
                         display: { xs: 'block', lg: 'none' },
-                        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 280 },
+                        '& .MuiDrawer-paper': { boxSizing: 'border-box', width: 280, backgroundColor: '#111111' },
                     }}
                 >
                     {drawer}

@@ -13,14 +13,14 @@ import {
 
 // Lazy load section components
 const HeroSection = React.lazy(() => import('./HomeComponents/HeroSection'));
-const RechargeSection = React.lazy(() => import('./HomeComponents/RechargeSection'));
+// const RechargeSection = React.lazy(() => import('./HomeComponents/RechargeSection'));
 const AboutSection = React.lazy(() => import('./HomeComponents/AboutSection'));
 const WhyChooseSection = React.lazy(() => import('./HomeComponents/WhyChooseSection'));
 const ProductsCarousel = React.lazy(() => import('./HomeComponents/ProductsCarousel'));
 const BusinessOpportunity = React.lazy(() => import('./HomeComponents/BusinessOpportunity'));
 const TrainingSection = React.lazy(() => import('./HomeComponents/TrainingSection'));
 const NewsSection = React.lazy(() => import('./HomeComponents/NewsSection'));
-const ContactFormSection = React.lazy(() => import('./HomeComponents/ContactFormSection'));
+// const ContactFormSection = React.lazy(() => import('./HomeComponents/ContactFormSection'));
 
 import ProductDetailsModal from '../components/ProductDetailsModal';
 import PaymentMethodModal from '../components/PaymentMethodModal';
@@ -29,8 +29,8 @@ import { rechargePlans } from '../data/rechargePlans';
 
 // Simple loading fallback
 const SectionLoader = () => (
-    <div className="w-full py-20 flex items-center justify-center bg-zinc-900/50">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#C9A84C]"></div>
+    <div className="w-full py-10 flex items-center justify-center bg-[#0D0D0D]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#C8A96A]"></div>
     </div>
 );
 
@@ -73,21 +73,21 @@ const HomePage = () => {
     // Hero slides data
     const heroSlides = [
         {
-            image: "https://images.unsplash.com/photo-1521791136064-7986c2920216?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080&q=80",
+            image: "/hero4.jpeg",
             title: "Welcome to Sanyukt Parivaar & Rich Life Pvt.Ltd.",
-            subtitle: "A Trusted & Fast-Growing Multi-Level Marketing Company",
+            subtitle: "A Trusted & Fast-Growing Multi-Level Marketing Plateform",
             description: "Sanyukt Parivaar & Rich Life Pvt.Ltd. is a people-driven direct selling organization committed to empowering individuals with sustainable income opportunities. Through our transparent MLM business model and high-quality products, we help ordinary people build extraordinary futures."
         },
         {
-            image: "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080&q=80",
+            image: "/hero5.jpeg",
             title: "Welcome to Sanyukt Parivaar & Rich Life Pvt.Ltd.",
-            subtitle: "A Trusted & Fast-Growing Multi-Level Marketing Company",
+            subtitle: "A Trusted & Fast-Growing Multi-Level Marketing Plateform",
             description: "Sanyukt Parivaar & Rich Life Pvt.Ltd. is a people-driven direct selling organization committed to empowering individuals with sustainable income opportunities. Through our transparent MLM business model and high-quality products, we help ordinary people build extraordinary futures."
         },
         {
-            image: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080&q=80",
+            image: "/hero4.jpeg",
             title: "Welcome to Sanyukt Parivaar & Rich Life Pvt.Ltd.",
-            subtitle: "A Trusted & Fast-Growing Multi-Level Marketing Company",
+            subtitle: "A Trusted & Fast-Growing Multi-Level Marketing Plateform",
             description: "Sanyukt Parivaar & Rich Life Pvt.Ltd. is a people-driven direct selling organization committed to empowering individuals with sustainable income opportunities. Through our transparent MLM business model and high-quality products, we help ordinary people build extraordinary futures."
         }
     ];
@@ -512,7 +512,7 @@ const HomePage = () => {
 
 
     return (
-        <div className="min-h-screen bg-zinc-900 font-sans">
+        <div className="min-h-screen bg-[#0D0D0D] font-sans">
             <React.Suspense fallback={<SectionLoader />}>
                 <HeroSection
                     currentSlide={currentSlide}
@@ -523,27 +523,45 @@ const HomePage = () => {
                     handleNavigation={handleNavigation}
                 />
 
-                <RechargeSection
-                    mobileNumber={mobileNumber}
-                    setMobileNumber={setMobileNumber}
-                    operator={operator}
-                    setOperator={setOperator}
-                    amount={amount}
-                    setAmount={setAmount}
-                    operators={operators}
-                    openPlanPopup={openPlanPopup}
-                    handleRecharge={handleRecharge}
-                    isLoggedIn={isLoggedIn}
-                />
+                {/* </RechargeSection> */}
+
+                <div className="w-full flex items-center justify-center gap-2 sm:gap-5 my-1 sm:my-2 px-4 sm:px-5">
+                    <div className="hidden sm:block flex-1 max-w-[120px] h-px bg-gradient-to-r from-transparent via-[#b88a44] to-transparent" />
+
+                    <span
+                        className="text-center text-lg sm:text-xl md:text-[28px] italic font-medium text-[#d4a64a] leading-tight"
+                        style={{ fontFamily: '"Cormorant Garamond", serif' }}
+                    >
+                        Create a Life You Love with Your Family!
+                    </span>
+
+                    <div className="hidden sm:block flex-1 max-w-[120px] h-px bg-gradient-to-r from-transparent via-[#b88a44] to-transparent" />
+                </div>
 
                 <AboutSection
                     aboutImage={aboutImage}
                     teamImages={teamImages}
                 />
 
+                <div className="luxury-divider"><span>WHY CHOOSE US</span></div>
+
                 <WhyChooseSection
                     whyChoosePoints={whyChoosePoints}
                 />
+
+                <div className="w-full flex items-center justify-center gap-2 sm:gap-5 my-1 sm:my-2 px-4 sm:px-5">
+                    <div className="hidden sm:block flex-1 max-w-[120px] h-px bg-gradient-to-r from-transparent via-[#b88a44] to-transparent" />
+
+                    <span
+                        className="text-center text-lg sm:text-xl md:text-[28px] italic font-medium text-[#d4a64a] leading-tight"
+                        style={{ fontFamily: '"Cormorant Garamond", serif' }}
+                    >
+                        Join Our Community!
+                    </span>
+
+                    <div className="hidden sm:block flex-1 max-w-[120px] h-px bg-gradient-to-r from-transparent via-[#b88a44] to-transparent" />
+                </div>
+                <div className="luxury-divider"><span>OUR PRODUCTS</span></div>
 
                 <ProductsCarousel
                     products={products}
@@ -558,28 +576,32 @@ const HomePage = () => {
                     handleNavigation={handleNavigation}
                 />
 
+                <div className="luxury-divider"><span>OPPORTUNITY</span></div>
+
                 <BusinessOpportunity
                     businessHighlights={businessHighlights}
                     businessImage={businessImage}
                     handleNavigation={handleNavigation}
                 />
 
+                <div className="luxury-divider"><span>SANYUKT PARIVAAR</span></div>
+
                 {/* Mid CTA Strip */}
-                <section className="py-8 bg-[#C9A84C]" >
-                    <div className="container mx-auto px-4">
-                        <div className="flex flex-col md:flex-row items-center justify-between gap-3">
-                            <h3 className="text-base md:text-lg font-bold text-zinc-100 text-center md:text-left">
-                                We Are One of the Fastest Growing Direct Selling Companies
-                            </h3>
-                            <button
-                                onClick={() => handleNavigation('/contact')}
-                                className="px-4 py-2 bg-zinc-900 text-[#C9A84C] font-semibold rounded-lg hover:bg-zinc-800 transform hover:-translate-y-1 transition-all shadow-md whitespace-nowrap text-xs"
-                            >
-                                CONTACT NOW
-                            </button>
-                        </div>
+                <section className="py-2 px-4">
+                    <div className="max-w-5xl mx-auto luxury-box p-3 md:p-4 flex flex-col md:flex-row items-center justify-between gap-4">
+                        <h3 className="text-xs md:text-md font-serif font-bold text-[#F5E6C8] text-center md:text-left uppercase tracking-widest">
+                            One of India's Fastest Growing <br /> Direct Selling Companies
+                        </h3>
+                        <button
+                            onClick={() => handleNavigation('/contact')}
+                            className="luxury-button"
+                        >
+                            Contact Now
+                        </button>
                     </div>
                 </section>
+
+                <div className="luxury-divider"><span>Sanyukt Parivaar TRAINING</span></div>
 
                 <TrainingSection
                     supportItems={supportItems}
@@ -589,26 +611,29 @@ const HomePage = () => {
 
                 <NewsSection />
 
-                <ContactFormSection
+                {/* <ContactFormSection
                     contactForm={contactForm}
                     setContactForm={setContactForm}
                     handleContactSubmit={handleContactSubmit}
                     contactSubmitting={contactSubmitting}
                     contactSuccess={contactSuccess}
-                />
+                /> */}
+
+                <div className="luxury-divider"><span>OUR VISION</span></div>
 
                 {/* Final Trust Section */}
-                <section className="py-12 md:py-16 bg-[#E8F5E9]" >
-                    <div className="container mx-auto px-4 text-center">
-                        <h2 className="text-xl md:text-2xl font-bold mb-2 text-[#C9A84C]">
-                            Together We Grow, Together We Prosper
+                <section className="py-4 bg-[#0D0D0D] relative overflow-hidden" >
+                    <div className="container mx-auto px-4 text-center relative z-10">
+                        <h2 className="text-lg md:text-2xl font-serif font-bold mb-1 text-[#C8A96A] uppercase tracking-widest">
+                            Together We Grow, <span className="text-[#F5E6C8]">Together We Prosper</span>
                         </h2>
-                        <p className="text-sm mb-4 max-w-2xl mx-auto text-zinc-300">
-                            At Sanyukt Parivaar & Rich Life Pvt.Ltd., we don't just build income - we build people, confidence, and a better future.
+                        <div className="w-16 h-[1px] bg-[#C8A96A]/40 mx-auto mb-2"></div>
+                        <p className="text-[10px] md:text-xs font-light mb-4 max-w-2xl mx-auto text-[#F5E6C8]/60 uppercase tracking-tight">
+                            We don't just build income - we build people, confidence, and a better future.
                         </p>
                         <button
-                            onClick={() => handleNavigation('/register')}
-                            className="inline-block px-4 py-2 bg-[#C9A84C] text-zinc-100 font-semibold rounded-lg hover:bg-[#A07830] transform hover:-translate-y-1 transition-all shadow-md text-sm"
+                            onClick={() => handleNavigation('/registation')}
+                            className="luxury-button px-8 py-2.5 text-[10px]"
                         >
                             Join Sanyukt Parivaar Today
                         </button>
@@ -639,10 +664,12 @@ const HomePage = () => {
 
             {/* Cart Notification */}
             {showCartNotification && (
-                <div className="fixed bottom-4 right-4 z-50 animate-fadeInUp">
-                    <div className="bg-[#C9A84C] text-zinc-100 px-4 py-3 rounded-lg shadow-lg flex items-center gap-3">
-                        <Check className="w-5 h-5" />
-                        <span>{addedToCartProduct} added to cart!</span>
+                <div className="fixed bottom-8 right-8 z-50 animate-fadeInUp">
+                    <div className="bg-[#C8A96A] text-[#0D0D0D] px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-4 glass-morphism border border-white/20">
+                        <div className="w-8 h-8 rounded-full bg-[#0D0D0D] flex items-center justify-center text-[#C8A96A]">
+                            <Check className="w-5 h-5" />
+                        </div>
+                        <span className="font-bold text-sm tracking-tight">{addedToCartProduct} added to cart!</span>
                     </div>
                 </div>
             )}

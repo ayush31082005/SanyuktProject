@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Calendar, TrendingUp, TrendingDown, Wallet } from 'lucide-react';
+import { ArrowLeft, Calendar, TrendingUp, TrendingDown, Wallet, RefreshCw } from 'lucide-react';
 import api from '../../api';
 
 const DailyClosingReport = () => {
@@ -13,9 +13,6 @@ const DailyClosingReport = () => {
         totalCredits: 0, totalDebits: 0
     });
 
-    const headerRef = useRef(null);
-    const cardsRef = useRef([]);
-
     const fetchData = async () => {
         try {
             setLoading(true);
@@ -25,7 +22,7 @@ const DailyClosingReport = () => {
             });
             if (res.data.success) setData(res.data);
         } catch (err) {
-            setError('Data load karne mein error aaya.');
+            setError('System synchronization failed.');
         } finally {
             setLoading(false);
         }
@@ -33,90 +30,92 @@ const DailyClosingReport = () => {
 
     useEffect(() => { fetchData(); }, [selectedDate]);
 
-    useEffect(() => {
-        if (headerRef.current) headerRef.current.classList.add('animate-slideDown');
-        const cardObserver = new IntersectionObserver((entries) => {
-            entries.forEach((entry, index) => {
-                if (entry.isIntersecting) {
-                    setTimeout(() => entry.target.classList.add('animate-slideUp-visible'), index * 100);
-                    cardObserver.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1 });
-        cardsRef.current.forEach((card) => { if (card) cardObserver.observe(card); });
-    }, []);
-
     const cards = [
-        { label: 'Opening Balance', value: data.openingBalance, badge: 'Opening', icon: Wallet, color: 'green', iconClass: 'icon-pulse' },
-        { label: 'Closing Balance', value: data.closingBalance, badge: 'Closing', icon: Wallet, color: 'green', iconClass: 'icon-bounce' },
-        { label: 'Total Credits', value: data.totalCredits, badge: 'Credits', icon: TrendingUp, color: 'green', iconClass: 'icon-pulse' },
-        { label: 'Total Debits', value: data.totalDebits, badge: 'Debits', icon: TrendingDown, color: 'red', iconClass: '' },
+        { label: 'OPENING LIQUIDITY', value: data.openingBalance, badge: 'Origin', icon: Wallet, color: '#C8A96A' },
+        { label: 'CLOSING LIQUIDITY', value: data.closingBalance, badge: 'Terminal', icon: Wallet, color: '#C8A96A' },
+        { label: 'TOTAL INFLOW', value: data.totalCredits, badge: 'Credits', icon: TrendingUp, color: '#10b981' },
+        { label: 'TOTAL OUTFLOW', value: data.totalDebits, badge: 'Debits', icon: TrendingDown, color: '#ef4444' },
     ];
 
     return (
-        <div className="p-4 md:p-6 max-w-7xl mx-auto bg-gray-50 min-h-screen">
+        <div className="min-h-screen bg-[#0D0D0D] text-[#F5E6C8] selection:bg-[#C8A96A]/30">
             {/* Header */}
-            <div ref={headerRef} className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6 opacity-0">
-                <button onClick={() => navigate('/my-account/wallet')}
-                    className="p-2 hover:bg-gray-100 rounded-lg transition-all duration-300 hover:scale-110 w-fit group active:scale-95">
-                    <ArrowLeft className="w-5 h-5 text-gray-600 group-hover:-translate-x-1 transition-transform duration-300" />
-                </button>
-                <div>
-                    <h1 className="text-2xl md:text-3xl font-black text-gray-800">Daily Closing Report</h1>
-                    <p className="text-sm text-gray-500 mt-1">End of day wallet summary and statistics</p>
-                </div>
-            </div>
-
-            {/* Date Selector */}
-            <div className="bg-white p-4 rounded-xl border border-gray-200 mb-6">
-                <div className="flex items-center gap-3">
-                    <Calendar className="w-5 h-5 text-green-600" />
-                    <input type="date" value={selectedDate}
-                        onChange={(e) => setSelectedDate(e.target.value)}
-                        className="px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500" />
-                </div>
-            </div>
-
-            {/* Cards */}
-            {loading ? (
-                <div className="flex justify-center items-center py-16">
-                    <div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
-                </div>
-            ) : error ? (
-                <div className="text-center py-16">
-                    <p className="text-red-500 mb-3">{error}</p>
-                    <button onClick={fetchData} className="px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-bold">Retry</button>
-                </div>
-            ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {cards.map((card, i) => (
-                        <div key={i} ref={(el) => (cardsRef.current[i] = el)}
-                            className="bg-white p-4 sm:p-5 rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 opacity-0">
-                            <div className="flex items-center justify-between mb-2">
-                                <card.icon className={`w-8 h-8 text-${card.color}-600 ${card.iconClass}`} />
-                                <span className={`text-xs font-bold text-${card.color}-700 bg-${card.color}-50 px-2 py-1 rounded-full border border-${card.color}-200`}>
-                                    {card.badge}
-                                </span>
-                            </div>
-                            <p className="text-xl sm:text-2xl font-black text-gray-800">
-                                ₹{card.value?.toLocaleString() || 0}
-                            </p>
-                            <p className="text-xs text-gray-500 mt-1">{card.label}</p>
+            <div className="bg-[#0D0D0D] border-b border-[#C8A96A]/20 sticky top-0 z-30">
+                <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <button onClick={() => navigate('/my-account/wallet')}
+                            className="p-1.5 hover:bg-[#C8A96A]/10 rounded-lg transition text-[#C8A96A]">
+                            <ArrowLeft className="w-5 h-5" />
+                        </button>
+                        <div>
+                            <h1 className="text-lg font-serif font-bold text-[#F5E6C8] tracking-widest uppercase">Closing Audit</h1>
+                            <p className="text-[8px] font-black text-[#C8A96A]/40 uppercase tracking-[0.3em]">Snapshot • Integrity Verified</p>
                         </div>
-                    ))}
+                    </div>
+                    <button onClick={fetchData} className="p-2 luxury-box border-[#C8A96A]/20 hover:bg-[#C8A96A]/5 transition text-[#C8A96A]">
+                        <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+                    </button>
                 </div>
-            )}
+            </div>
 
-            <style>{`
-                @keyframes slideDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
-                @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-                @keyframes pulseIcon { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
-                @keyframes bounceIcon { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-                .animate-slideDown { animation: slideDown 0.6s ease-out forwards; }
-                .animate-slideUp-visible { animation: slideUp 0.6s ease-out forwards; }
-                .icon-pulse { animation: pulseIcon 2s ease-in-out infinite; }
-                .icon-bounce { animation: bounceIcon 2s ease-in-out infinite; }
-            `}</style>
+            <div className="max-w-7xl mx-auto px-4 py-8">
+                {/* Date Selector */}
+                <div className="luxury-box p-3 bg-[#1A1A1A] border-[#C8A96A]/10 mb-8 max-w-sm">
+                    <div className="flex items-center gap-3">
+                        <Calendar className="w-4 h-4 text-[#C8A96A]/40" />
+                        <div className="flex flex-col flex-1">
+                            <span className="text-[8px] font-black text-[#C8A96A]/40 uppercase tracking-[0.2em] mb-1">Audit Dimension</span>
+                            <input type="date" value={selectedDate}
+                                onChange={(e) => setSelectedDate(e.target.value)}
+                                className="bg-transparent border-none text-[11px] font-black uppercase tracking-widest text-[#F5E6C8] p-0 outline-none cursor-pointer [color-scheme:dark]" />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Content */}
+                {loading ? (
+                    <div className="flex flex-col items-center justify-center py-24 grayscale opacity-50">
+                        <RefreshCw className="w-8 h-8 animate-spin text-[#C8A96A] mb-4" />
+                        <span className="text-[10px] font-black text-[#C8A96A] uppercase tracking-widest">Reconstructing State...</span>
+                    </div>
+                ) : error ? (
+                    <div className="text-center py-20 px-4">
+                        <p className="text-red-400 font-bold mb-4 uppercase text-[10px] tracking-widest">{error}</p>
+                        <button onClick={fetchData} className="px-5 py-2 border border-[#C8A96A]/20 text-[#C8A96A] text-[9px] font-black uppercase tracking-widest hover:bg-[#C8A96A]/5 transition">Try Refresh</button>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        {cards.map((card, i) => (
+                            <div key={i} className="luxury-box p-5 bg-[#1A1A1A] border-[#C8A96A]/10 group hover:border-[#C8A96A]/40 transition-all shadow-2xl">
+                                <div className="flex items-center justify-between mb-3">
+                                    <div className="p-2 border border-[#C8A96A]/10 bg-[#0D0D0D] text-[#C8A96A]/60 group-hover:text-[#C8A96A] transition-colors">
+                                        <card.icon className="w-5 h-5" />
+                                    </div>
+                                    <div className="px-2 py-0.5 border border-[#C8A96A]/20 text-[8px] font-black text-[#C8A96A] uppercase tracking-widest">
+                                        {card.badge}
+                                    </div>
+                                </div>
+                                <p className="text-3xl font-serif font-bold text-[#F5E6C8] tracking-tight">
+                                    ₹{card.value?.toLocaleString() || 0}
+                                </p>
+                                <p className="text-[9px] font-black text-[#C8A96A]/30 uppercase tracking-[0.2em] mt-1 group-hover:text-[#C8A96A]/50 transition-colors">
+                                    {card.label}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+                {/* Audit Seal */}
+                <div className="mt-20 flex flex-col items-center grayscale opacity-10">
+                    <div className="w-16 h-16 border-2 border-[#C8A96A] rounded-full flex items-center justify-center mb-4">
+                        <div className="w-12 h-12 border border-[#C8A96A] rounded-full flex items-center justify-center">
+                            <span className="text-[8px] font-black">CERT</span>
+                        </div>
+                    </div>
+                    <p className="text-[9px] font-black uppercase tracking-[0.5em]">Lattice Protocol • Verified Audit</p>
+                </div>
+            </div>
         </div>
     );
 };

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     ArrowLeft, Download, Search,
-    TrendingDown, AlertCircle, FileText
+    TrendingDown, AlertCircle, FileText, RefreshCw, Filter, ChevronRight
 } from 'lucide-react';
 import api from '../../api';
 
@@ -19,11 +19,6 @@ const DeductionReport = () => {
     });
     const [deductions, setDeductions] = useState([]);
 
-    const headerRef = useRef(null);
-    const cardsRef = useRef([]);
-    const tableRef = useRef(null);
-    const rowsRef = useRef([]);
-
     const fetchData = async () => {
         try {
             setLoading(true);
@@ -36,7 +31,7 @@ const DeductionReport = () => {
                 setDeductions(res.data.deductions);
             }
         } catch (err) {
-            setError('Data load karne mein error aaya. Dobara try karein.');
+            setError('Synchronization of deduction ledger failed.');
         } finally {
             setLoading(false);
         }
@@ -49,158 +44,162 @@ const DeductionReport = () => {
         return () => clearTimeout(timer);
     }, [searchTerm]);
 
-    useEffect(() => {
-        if (headerRef.current) headerRef.current.classList.add('animate-slideDown');
-        const cardObserver = new IntersectionObserver((entries) => {
-            entries.forEach((entry, index) => {
-                if (entry.isIntersecting) {
-                    setTimeout(() => entry.target.classList.add('animate-slideUp-visible'), index * 100);
-                    cardObserver.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1 });
-        cardsRef.current.forEach((card) => { if (card) cardObserver.observe(card); });
-    }, []);
-
     const formatDate = (dateStr) => {
         if (!dateStr) return '-';
-        return new Date(dateStr).toLocaleDateString('en-IN');
+        return new Date(dateStr).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
     };
 
     return (
-        <div className="p-4 md:p-6 max-w-7xl mx-auto bg-gray-50 min-h-screen">
+        <div className="min-h-screen bg-[#0D0D0D] text-[#F5E6C8] selection:bg-[#C8A96A]/30">
             {/* Header */}
-            <div ref={headerRef} className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6 opacity-0">
-                <button onClick={() => navigate('/my-account/wallet')}
-                    className="p-2 hover:bg-gray-100 rounded-lg transition-all duration-300 hover:scale-110 w-fit group active:scale-95">
-                    <ArrowLeft className="w-5 h-5 text-gray-600 group-hover:-translate-x-1 transition-transform duration-300" />
-                </button>
-                <div>
-                    <h1 className="text-2xl md:text-3xl font-black text-gray-800">Deduction Report</h1>
-                    <p className="text-sm text-gray-500 mt-1">View all deductions from your wallet</p>
-                </div>
-            </div>
-
-            {/* Summary Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
-                {[
-                    { label: 'All Deductions', value: summary.totalDeductions, badge: 'Total', icon: TrendingDown },
-                    { label: 'TDS & Service Tax', value: summary.taxDeductions, badge: 'Tax', icon: FileText },
-                    { label: 'Processing Fees', value: summary.feeDeductions, badge: 'Fees', icon: AlertCircle },
-                    { label: 'Admin Charges', value: summary.adminDeductions, badge: 'Admin', icon: FileText },
-                    { label: 'Pending Deductions', value: summary.pendingDeductions, badge: 'Pending', icon: AlertCircle },
-                ].map((card, i) => (
-                    <div key={i} ref={(el) => (cardsRef.current[i] = el)}
-                        className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 opacity-0">
-                        <div className="flex items-center justify-between mb-2">
-                            <card.icon className="w-6 h-6 text-green-600" />
-                            <span className="text-xs font-bold text-green-700 bg-green-50 px-2 py-1 rounded-full border border-green-200">{card.badge}</span>
-                        </div>
-                        <p className="text-xl font-black text-gray-800">₹{card.value?.toLocaleString() || 0}</p>
-                        <p className="text-xs text-gray-500 mt-1">{card.label}</p>
-                    </div>
-                ))}
-            </div>
-
-            {/* Filters */}
-            <div className="bg-white p-4 rounded-xl border border-gray-200 mb-6">
-                <div className="flex flex-wrap gap-3 items-center justify-between">
-                    <div className="flex flex-wrap gap-3">
-                        <select value={dateRange} onChange={(e) => setDateRange(e.target.value)}
-                            className="px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white">
-                            <option value="thisMonth">This Month</option>
-                            <option value="lastMonth">Last Month</option>
-                            <option value="last3Months">Last 3 Months</option>
-                        </select>
-                        <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}
-                            className="px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white">
-                            <option value="All Types">All Types</option>
-                            <option value="Tax">Tax Deductions</option>
-                            <option value="Fee">Processing Fees</option>
-                            <option value="Admin">Admin Charges</option>
-                        </select>
-                        <div className="relative">
-                            <input type="text" placeholder="Search by reference..."
-                                value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
-                                className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 w-64" />
-                            <Search className="w-4 h-4 text-gray-400 absolute left-3 top-3" />
+            <div className="bg-[#0D0D0D] border-b border-[#C8A96A]/20 sticky top-0 z-30">
+                <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <button onClick={() => navigate('/my-account/wallet')}
+                            className="p-1.5 hover:bg-[#C8A96A]/10 rounded-lg transition text-[#C8A96A]">
+                            <ArrowLeft className="w-5 h-5" />
+                        </button>
+                        <div>
+                            <h1 className="text-lg font-serif font-bold text-[#F5E6C8] tracking-widest uppercase">Deduction Registry</h1>
+                            <p className="text-[8px] font-black text-[#C8A96A]/40 uppercase tracking-[0.3em]">Compliance & Protocol Fees</p>
                         </div>
                     </div>
-                    <button className="px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-bold hover:bg-green-700 transition-all duration-300 flex items-center gap-2 shadow-sm hover:shadow-lg active:scale-95">
-                        <Download className="w-4 h-4" /> Download Report
+                    <button onClick={fetchData} className="p-2 luxury-box border-[#C8A96A]/20 hover:bg-[#C8A96A]/5 transition text-[#C8A96A]">
+                        <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
                     </button>
                 </div>
             </div>
 
-            {/* Table */}
-            <div ref={tableRef} className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
-                {loading ? (
-                    <div className="flex justify-center items-center py-16">
-                        <div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin"></div>
-                    </div>
-                ) : error ? (
-                    <div className="text-center py-16">
-                        <p className="text-red-500 mb-3">{error}</p>
-                        <button onClick={fetchData} className="px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-bold">Retry</button>
-                    </div>
-                ) : deductions.length === 0 ? (
-                    <div className="text-center py-16 text-gray-400">
-                        <TrendingDown className="w-12 h-12 mx-auto mb-3 opacity-30" />
-                        <p className="font-medium">No deductions found</p>
-                    </div>
-                ) : (
-                    <div className="overflow-x-auto">
-                        <table className="w-full min-w-[800px]">
-                            <thead className="bg-gray-50 border-b border-gray-200">
-                                <tr>
-                                    {['Date', 'Description', 'Reference', 'Type', 'Amount', 'Status', 'Action'].map(h => (
-                                        <th key={h} className="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs font-black text-gray-500 uppercase">{h}</th>
-                                    ))}
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-200">
-                                {deductions.map((d, index) => (
-                                    <tr key={d._id} ref={(el) => (rowsRef.current[index] = el)}
-                                        className="hover:bg-gray-50 transition-all duration-300">
-                                        <td className="px-4 sm:px-6 py-3 sm:py-4 text-sm text-gray-800 whitespace-nowrap">{formatDate(d.createdAt)}</td>
-                                        <td className="px-4 sm:px-6 py-3 sm:py-4 text-sm font-medium text-gray-800">{d.description}</td>
-                                        <td className="px-4 sm:px-6 py-3 sm:py-4 text-sm text-gray-600 whitespace-nowrap">{d.referenceNo}</td>
-                                        <td className="px-4 sm:px-6 py-3 sm:py-4">
-                                            <span className={`px-3 py-1 rounded-full text-xs font-bold ${d.type === 'Tax' ? 'bg-green-100 text-green-700 border border-green-200' :
-                                                d.type === 'Fee' ? 'bg-blue-100 text-blue-700 border border-blue-200' :
-                                                    'bg-purple-100 text-purple-700 border border-purple-200'}`}>
-                                                {d.type}
-                                            </span>
-                                        </td>
-                                        <td className="px-4 sm:px-6 py-3 sm:py-4">
-                                            <span className="text-sm font-bold text-red-600">-₹{d.amount?.toLocaleString()}</span>
-                                        </td>
-                                        <td className="px-4 sm:px-6 py-3 sm:py-4">
-                                            <span className={`px-3 py-1 rounded-full text-xs font-bold ${d.status === 'Processed' ? 'bg-green-100 text-green-700 border border-green-200' : 'bg-yellow-100 text-yellow-700 border border-yellow-200'}`}>
-                                                {d.status}
-                                            </span>
-                                        </td>
-                                        <td className="px-4 sm:px-6 py-3 sm:py-4">
-                                            <button className="text-green-600 hover:text-green-700 text-sm font-bold transition-all duration-300 hover:translate-x-1">
-                                                View Details
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                )}
-            </div>
+            <div className="max-w-7xl mx-auto px-4 py-6">
+                {/* Summary Cards */}
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
+                    {[
+                        { label: 'GROSS DEDUCTIONS', value: summary.totalDeductions, badge: 'Total', icon: TrendingDown },
+                        { label: 'GOVERNMENT LEVY', value: summary.taxDeductions, badge: 'Tax', icon: FileText },
+                        { label: 'LATTICE FEES', value: summary.feeDeductions, badge: 'Fees', icon: AlertCircle },
+                        { label: 'ADMIN OVERHEAD', value: summary.adminDeductions, badge: 'Admin', icon: FileText },
+                        { label: 'PENDING VERIFY', value: summary.pendingDeductions, badge: 'Hold', icon: RefreshCw },
+                    ].map((card, i) => (
+                        <div key={i} className="luxury-box p-3 bg-[#1A1A1A] border-[#C8A96A]/10 group hover:border-[#C8A96A]/40 transition-all">
+                            <div className="flex items-center justify-between mb-2">
+                                <card.icon className="w-3.5 h-3.5 text-[#C8A96A]/40 group-hover:text-[#C8A96A] transition-colors" />
+                                <div className="px-2 py-0.5 border border-[#C8A96A]/10 text-[7px] font-black text-[#C8A96A] uppercase tracking-tighter">{card.badge}</div>
+                            </div>
+                            <p className="text-base font-serif font-bold text-[#F5E6C8]">₹{card.value?.toLocaleString() || 0}</p>
+                            <p className="text-[8px] font-black text-[#C8A96A]/30 uppercase tracking-widest mt-0.5">{card.label}</p>
+                        </div>
+                    ))}
+                </div>
 
-            <style>{`
-                @keyframes slideDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
-                @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-                @keyframes slideLeft { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
-                .animate-slideDown { animation: slideDown 0.6s ease-out forwards; }
-                .animate-slideUp-visible { animation: slideUp 0.6s ease-out forwards; }
-                .animate-slideLeft-visible { animation: slideLeft 0.6s ease-out forwards; }
-            `}</style>
+                {/* Filters */}
+                <div className="luxury-box p-3 bg-[#1A1A1A] border-[#C8A96A]/10 mb-6 font-black uppercase text-[9px] tracking-widest text-[#C8A96A]/60 shadow-xl">
+                    <div className="flex flex-col md:flex-row gap-3 items-center justify-between">
+                        <div className="flex flex-wrap gap-2 w-full md:w-auto">
+                            <div className="flex items-center gap-2 px-3 py-1.5 bg-[#0D0D0D] border border-[#C8A96A]/10 text-[#C8A96A]">
+                                <Filter size={12} strokeWidth={3} />
+                                <span>CRITERIA:</span>
+                            </div>
+                            <select value={dateRange} onChange={(e) => setDateRange(e.target.value)}
+                                className="px-3 py-1.5 bg-[#0D0D0D] border border-[#C8A96A]/20 text-[#F5E6C8] outline-none focus:border-[#C8A96A] transition cursor-pointer">
+                                <option value="thisMonth">Current Epoch</option>
+                                <option value="lastMonth">Previous Epoch</option>
+                                <option value="last3Months">90-Day Range</option>
+                            </select>
+                            <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}
+                                className="px-3 py-1.5 bg-[#0D0D0D] border border-[#C8A96A]/20 text-[#F5E6C8] outline-none focus:border-[#C8A96A] transition cursor-pointer">
+                                <option value="All Types">All Protocols</option>
+                                <option value="Tax">Government Levy</option>
+                                <option value="Fee">Protocol Fees</option>
+                                <option value="Admin">Admin Overhead</option>
+                            </select>
+                            <div className="relative flex-1 md:w-64">
+                                <input type="text" placeholder="MANIFEST REF..."
+                                    value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}
+                                    className="w-full pl-9 pr-4 py-1.5 bg-[#0D0D0D] border border-[#C8A96A]/20 text-[#F5E6C8] outline-none focus:border-[#C8A96A] transition placeholder:text-[#C8A96A]/10" />
+                                <Search className="w-3 h-3 absolute left-3 top-2.5 text-[#C8A96A]/20" />
+                            </div>
+                        </div>
+                        <button className="w-full md:w-auto px-5 py-1.5 bg-[#C8A96A] text-[#0D0D0D] text-[10px] shadow-lg hover:shadow-[#C8A96A]/20 transition-all flex items-center justify-center gap-2">
+                            <Download className="w-3.5 h-3.5" strokeWidth={3} /> EXPORT LEDGER
+                        </button>
+                    </div>
+                </div>
+
+                {/* Table */}
+                <div className="luxury-box bg-[#1A1A1A] border-[#C8A96A]/10 overflow-hidden shadow-2xl animate-fade-in">
+                    {loading ? (
+                        <div className="flex flex-col items-center justify-center py-24 grayscale opacity-50">
+                            <RefreshCw className="w-8 h-8 animate-spin text-[#C8A96A] mb-4" />
+                            <span className="text-[10px] font-black text-[#C8A96A] uppercase tracking-widest">Compiling Registry Data...</span>
+                        </div>
+                    ) : error ? (
+                        <div className="text-center py-20 px-4">
+                            <p className="text-red-400 font-bold mb-4 uppercase text-[10px] tracking-widest">{error}</p>
+                            <button onClick={fetchData} className="px-5 py-2 border border-[#C8A96A]/20 text-[#C8A96A] text-[9px] font-black uppercase tracking-widest hover:bg-[#C8A96A]/5 transition">Restore Sync</button>
+                        </div>
+                    ) : deductions.length === 0 ? (
+                        <div className="text-center py-24 px-4 opacity-30 grayscale">
+                            <TrendingDown className="w-16 h-16 mx-auto mb-4 text-[#C8A96A]" strokeWidth={1} />
+                            <p className="text-[10px] font-black text-[#C8A96A] uppercase tracking-[0.3em]">Zero Deduction Vectors Identified</p>
+                        </div>
+                    ) : (
+                        <div className="overflow-x-auto">
+                            <table className="w-full border-collapse">
+                                <thead>
+                                    <tr className="bg-[#0D0D0D] border-b border-[#C8A96A]/10">
+                                        {['TIMESTAMP', 'PROTOCOL DESC', 'REF ID', 'CATEGORY', 'ADJUSTMENT', 'STATUS', 'VERIFY'].map(h => (
+                                            <th key={h} className="px-6 py-4 text-left text-[9px] font-black text-[#C8A96A]/40 uppercase tracking-[0.2em]">{h}</th>
+                                        ))}
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-[#C8A96A]/5">
+                                    {deductions.map((d) => (
+                                        <tr key={d._id} className="group hover:bg-[#C8A96A]/[0.02] transition-colors">
+                                            <td className="px-6 py-4 text-[10px] font-bold text-[#F5E6C8]">
+                                                {formatDate(d.createdAt)}
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <p className="text-[10px] font-black uppercase text-[#F5E6C8]/80 tracking-wide">{d.description}</p>
+                                                <p className="text-[8px] font-medium text-[#C8A96A]/30 mt-0.5 tracking-[0.1em]">SYSTEM DEDUCTION</p>
+                                            </td>
+                                            <td className="px-6 py-4 text-[10px] font-mono text-[#C8A96A]/60 group-hover:text-[#C8A96A] transition-colors uppercase">
+                                                {d.referenceNo}
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <div className={`inline-flex px-2 py-0.5 text-[8px] font-black uppercase tracking-widest border border-current ${
+                                                    d.type === 'Tax' ? 'text-green-500' :
+                                                    d.type === 'Fee' ? 'text-[#C8A96A]' : 'text-purple-500'
+                                                }`}>
+                                                    {d.type}
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4 text-sm font-black text-red-500">
+                                                -₹{d.amount?.toLocaleString()}
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-[9px] font-black uppercase tracking-widest border ${
+                                                    d.status === 'Processed' ? 'text-green-500 border-green-500/20 bg-green-500/5' : 'text-yellow-500 border-yellow-500/20 bg-yellow-500/5'
+                                                }`}>
+                                                    {d.status}
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <button className="text-[9px] font-black text-[#C8A96A]/40 hover:text-[#C8A96A] flex items-center gap-1 transition-all uppercase tracking-widest">
+                                                    Audit <ChevronRight size={10} strokeWidth={3} />
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+                </div>
+
+                <p className="text-center text-[8px] font-black text-[#C8A96A]/10 uppercase tracking-[0.6em] mt-16 pb-8">
+                    Lattice Financial Integrity • End of Ledger
+                </p>
+            </div>
         </div>
     );
 };

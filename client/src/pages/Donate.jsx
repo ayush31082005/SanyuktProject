@@ -20,6 +20,7 @@ const Donate = () => {
     const [isProcessing, setIsProcessing] = useState(false);
     const [paymentSuccess, setPaymentSuccess] = useState(false);
     const [transactionDetails, setTransactionDetails] = useState(null);
+    const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
     useEffect(() => {
         const fetchBeneficiary = async () => {
@@ -85,15 +86,18 @@ const Donate = () => {
                         });
 
                         if (verifyData.success) {
-                            window.alert("Thank you for your kindness! Your donation to Sanyukt Parivaar & Rich Life has been successfully received.");
-                            toast.success("Thank you for your kindness!", { id: verifyToast });
+                            toast.success("Payment Successful! Thank you for your kindness!", { id: verifyToast });
                             setTransactionDetails({
                                 id: response.razorpay_payment_id,
                                 amount: amount,
                                 date: new Date().toLocaleString(),
                                 beneficiary: beneficiary ? beneficiary.userName : "Sanyukt Parivaar Mission"
                             });
-                            setPaymentSuccess(true);
+                            setShowSuccessAlert(true);
+                            setTimeout(() => {
+                                setShowSuccessAlert(false);
+                                setPaymentSuccess(true);
+                            }, 3000);
                         } else {
                             toast.error("Payment verification failed", { id: verifyToast });
                         }
@@ -130,6 +134,65 @@ const Donate = () => {
             </div>
         );
     }
+
+    // Styled success alert overlay
+    const SuccessAlert = () => (
+        <AnimatePresence>
+            {showSuccessAlert && (
+                <motion.div
+                    initial={{ opacity: 0, y: -80 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -80 }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                    style={{
+                        position: 'fixed',
+                        top: '80px',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        zIndex: 9999,
+                        width: '90%',
+                        maxWidth: '480px',
+                    }}
+                >
+                    <div style={{
+                        background: 'linear-gradient(135deg, #1a1a1a 0%, #0D0D0D 100%)',
+                        border: '1.5px solid #C8A96A',
+                        borderRadius: '20px',
+                        padding: '20px 28px',
+                        boxShadow: '0 20px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(200,169,106,0.15)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '16px',
+                    }}>
+                        {/* Icon */}
+                        <div style={{
+                            width: '48px', height: '48px', flexShrink: 0,
+                            background: 'rgba(200,169,106,0.15)',
+                            border: '1.5px solid #C8A96A',
+                            borderRadius: '50%',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        }}>
+                            <CheckCircle2 size={26} color="#C8A96A" />
+                        </div>
+                        {/* Text */}
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                            <p style={{ margin: 0, fontFamily: '"Inter", sans-serif', fontWeight: 800, fontSize: '15px', color: '#C8A96A', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+                                Payment Successful
+                            </p>
+                            <p style={{ margin: '4px 0 0', fontFamily: '"Inter", sans-serif', fontSize: '12px', color: 'rgba(245,230,200,0.7)', fontWeight: 500 }}>
+                                ₹{transactionDetails?.amount} donated successfully. Thank you! 🙏
+                            </p>
+                        </div>
+                        {/* Close */}
+                        <button
+                            onClick={() => setShowSuccessAlert(false)}
+                            style={{ background: 'none', border: 'none', color: 'rgba(200,169,106,0.5)', cursor: 'pointer', fontSize: '18px', lineHeight: 1, padding: '4px' }}
+                        >✕</button>
+                    </div>
+                </motion.div>
+            )}
+        </AnimatePresence>
+    );
 
     if (paymentSuccess) {
         return (
@@ -183,6 +246,7 @@ const Donate = () => {
 
     return (
         <div className="min-h-screen bg-white font-sans selection:bg-[#0A7A2F] selection:text-white">
+            <SuccessAlert />
             {/* Navigation Placeholder */}
             <div className="h-16 border-b border-gray-100 flex items-center px-6 justify-between bg-white sticky top-0 z-50">
                 <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/')}>

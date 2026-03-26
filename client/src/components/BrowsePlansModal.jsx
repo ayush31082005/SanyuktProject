@@ -30,36 +30,36 @@ const BrowsePlansModal = ({
                     initial={{ opacity: 0, scale: 0.95, y: 20 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                    className="bg-white rounded-[32px] w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl border border-white/20"
+                    className="bg-[#1A1A1A] rounded-[32px] w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl border border-[#C8A96A]/20"
                 >
                     {/* Header */}
-                    <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                    <div className="p-6 border-b border-[#C8A96A]/10 flex justify-between items-center bg-[#0D0D0D]">
                         <div>
-                            <h3 className="text-xl font-black text-gray-900 uppercase tracking-wider">
+                            <h3 className="text-xl font-serif font-bold text-[#F5E6C8] uppercase tracking-wider">
                                 {operator ? `${operator} Plans` : 'Recharge Plans'}
                             </h3>
-                            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1 italic">
+                            <p className="text-[10px] text-[#C8A96A] font-bold uppercase tracking-widest mt-1 italic">
                                 Select a plan to continue
                             </p>
                         </div>
                         <button 
                             onClick={onClose} 
-                            className="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors"
+                            className="w-10 h-10 rounded-xl bg-[#0D0D0D] border border-[#C8A96A]/20 flex items-center justify-center text-[#C8A96A] hover:bg-[#C8A96A] hover:text-[#0D0D0D] transition-colors"
                         >
                             <X className="w-5 h-5" />
                         </button>
                     </div>
 
                     {/* Search & Categories */}
-                    <div className="p-6 space-y-4 bg-white sticky top-0 z-10 border-b border-gray-50">
+                    <div className="p-6 space-y-4 bg-[#1A1A1A] sticky top-0 z-10 border-b border-[#C8A96A]/10">
                         <div className="relative">
-                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-300" />
+                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#C8A96A]/50" />
                             <input 
                                 type="text"
                                 placeholder="Search by amount or description..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-2xl text-sm focus:ring-2 focus:ring-[#0A7A2F] outline-none transition-all placeholder:text-gray-300 font-medium"
+                                className="w-full pl-12 pr-4 py-3 bg-[#0D0D0D] border border-[#C8A96A]/20 rounded-2xl text-sm focus:border-[#C8A96A] outline-none transition-all placeholder:text-[#F5E6C8]/20 text-[#F5E6C8] font-medium"
                             />
                         </div>
 
@@ -68,10 +68,10 @@ const BrowsePlansModal = ({
                                 <button
                                     key={cat}
                                     onClick={() => setActiveCategory(cat)}
-                                    className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap ${
+                                    className={`px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all whitespace-nowrap border ${
                                         activeCategory === cat 
-                                            ? 'bg-[#0A7A2F] text-white shadow-lg shadow-green-900/20' 
-                                            : 'bg-gray-50 text-gray-400 hover:bg-gray-100'
+                                            ? 'bg-gradient-to-r from-[#C8A96A] to-[#D4AF37] text-[#0D0D0D] border-[#C8A96A] shadow-lg shadow-gold-900/20' 
+                                            : 'bg-[#0D0D0D] text-[#C8A96A] border-[#C8A96A]/20 hover:bg-[#C8A96A]/10'
                                     }`}
                                 >
                                     {cat}
@@ -91,30 +91,30 @@ const BrowsePlansModal = ({
                                         onSelect(plan.amount);
                                         onClose();
                                     }}
-                                    className="w-full text-left bg-white border border-gray-100 rounded-2xl p-5 hover:border-[#0A7A2F] hover:shadow-lg transition-all group flex items-center gap-6"
+                                    className="w-full text-left bg-[#1A1A1A] border border-[#C8A96A]/10 rounded-2xl p-5 hover:border-[#C8A96A] transition-all group flex items-center gap-6"
                                 >
-                                    <div className="flex flex-col items-center justify-center bg-green-50 rounded-2xl p-3 min-w-[80px]">
-                                        <span className="text-2xl font-black text-[#0A7A2F]">₹{plan.amount}</span>
-                                        <span className="text-[9px] font-black text-[#0A7A2F] uppercase tracking-tighter">View Detail</span>
+                                    <div className="flex flex-col items-center justify-center bg-[#C8A96A]/10 rounded-2xl p-3 min-w-[80px] border border-[#C8A96A]/20">
+                                        <span className="text-2xl font-bold text-[#C8A96A]">₹{plan.amount}</span>
+                                        <span className="text-[9px] font-bold text-[#C8A96A] uppercase tracking-tighter">View Detail</span>
                                     </div>
 
                                     <div className="flex-1 space-y-2">
                                         <div className="flex items-center gap-4">
-                                            <div className="flex items-center gap-1.5 text-[10px] font-black text-gray-400 uppercase tracking-widest">
-                                                <Clock className="w-3 h-3" />
+                                            <div className="flex items-center gap-1.5 text-[10px] font-bold text-[#F5E6C8]/40 uppercase tracking-widest">
+                                                <Clock className="w-3 h-3 text-[#C8A96A]" />
                                                 {plan.validity}
                                             </div>
-                                            <div className="flex items-center gap-1.5 text-[10px] font-black text-[#F7931E] uppercase tracking-widest">
+                                            <div className="flex items-center gap-1.5 text-[10px] font-bold text-[#C8A96A] uppercase tracking-widest">
                                                 <Database className="w-3 h-3" />
                                                 {plan.data}
                                             </div>
                                         </div>
-                                        <p className="text-sm font-bold text-gray-800 line-clamp-2 leading-snug">
+                                        <p className="text-sm font-medium text-[#F5E6C8]/70 line-clamp-2 leading-snug">
                                             {plan.description}
                                         </p>
                                     </div>
 
-                                    <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-[#0A7A2F] transition-colors" />
+                                    <ChevronRight className="w-5 h-5 text-[#C8A96A]/30 group-hover:text-[#C8A96A] transition-colors" />
                                 </motion.button>
                             ))
                         ) : (

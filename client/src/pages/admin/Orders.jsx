@@ -56,17 +56,17 @@ const AdminOrders = () => {
 
     const getStatusChip = (status) => {
         const statusConfig = {
-            pending: { color: 'warning', label: 'Pending' },
-            processing: { color: 'info', label: 'Processing' },
-            shipped: { color: 'primary', label: 'Shipped' },
-            reached_store: { color: 'secondary', label: 'Reached Store' },
-            out_for_delivery: { color: 'info', label: 'Out for Delivery' },
-            delivered: { color: 'success', label: 'Delivered' },
-            cancelled: { color: 'error', label: 'Cancelled' },
-            backorder: { color: 'error', label: 'Backorder' }
+            pending: { bg: 'rgba(212,175,55,0.2)', color: '#D4AF37', label: 'Pending' },
+            processing: { bg: 'rgba(100,149,237,0.2)', color: '#6495ED', label: 'Processing' },
+            shipped: { bg: 'rgba(200,169,106,0.3)', color: '#C8A96A', label: 'Shipped' },
+            reached_store: { bg: 'rgba(186,85,211,0.2)', color: '#BA55D3', label: 'Reached Store' },
+            out_for_delivery: { bg: 'rgba(32,178,170,0.2)', color: '#20B2AA', label: 'Out for Delivery' },
+            delivered: { bg: 'rgba(46,139,87,0.3)', color: '#8FBC8F', label: 'Delivered' },
+            cancelled: { bg: 'rgba(239,68,68,0.2)', color: '#ef4444', label: 'Cancelled' },
+            backorder: { bg: 'rgba(239,68,68,0.2)', color: '#ef4444', label: 'Backorder' }
         };
-        const config = statusConfig[status] || { color: 'default', label: status };
-        return <Chip label={config.label} color={config.color} size="small" sx={{ fontWeight: 600 }} />;
+        const config = statusConfig[status] || { bg: 'rgba(245,230,200,0.1)', color: '#F5E6C8', label: status };
+        return <Chip label={config.label} sx={{ bgcolor: config.bg, color: config.color, fontWeight: 700, fontFamily: 'sans-serif', border: `1px solid ${config.color}40`, padding: '0 4px', fontSize: '0.75rem', height: '24px' }} />;
     };
 
     const filteredOrders = orders.filter(order => {
@@ -77,35 +77,58 @@ const AdminOrders = () => {
     });
 
     return (
-        <Box sx={{ p: 4 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-                <Typography variant="h4" fontWeight="bold" sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                    <ShoppingBag size={32} className="text-green-600" />
+        <Box sx={{ p: { xs: 2, md: 4 }, bgcolor: '#0D0D0D', minHeight: '100vh', fontFamily: 'sans-serif' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 5, flexWrap: 'wrap', gap: 2 }}>
+                <Typography variant="h4" sx={{ display: 'flex', alignItems: 'center', gap: 2, fontWeight: 800, color: '#F5E6C8', fontFamily: 'serif', letterSpacing: '-0.5px' }}>
+                    <div style={{ padding: '10px', background: '#121212', borderRadius: '12px', border: '1px solid rgba(200,169,106,0.3)', display: 'flex', color: '#C8A96A' }}>
+                        <ShoppingBag size={28} strokeWidth={1.5} />
+                    </div>
                     Order Management
                 </Typography>
-                <Button variant="contained" startIcon={<RotateCcw />} onClick={fetchOrders} sx={{ bgcolor: '#0A7A2F', '&:hover': { bgcolor: '#086325' } }}>
+                <Button variant="outlined" startIcon={<RotateCcw size={16} />} onClick={fetchOrders} sx={{ color: '#C8A96A', borderColor: 'rgba(200,169,106,0.5)', '&:hover': { bgcolor: 'rgba(200,169,106,0.1)', borderColor: '#C8A96A' }, fontWeight: 700, borderRadius: '8px', padding: '8px 20px', textTransform: 'uppercase', letterSpacing: '1px', fontSize: '11px' }}>
                     Refresh
                 </Button>
             </Box>
 
             {/* Filters */}
-            <Paper sx={{ p: 2, mb: 4, display: 'flex', gap: 2, alignItems: 'center', borderRadius: '12px' }}>
+            <Paper sx={{ p: 3, mb: 4, display: 'flex', gap: 3, alignItems: 'center', borderRadius: '16px', bgcolor: '#121212', border: '1px solid rgba(200,169,106,0.2)', flexWrap: 'wrap', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}>
                 <TextField
                     placeholder="Search by Order ID or User..."
                     size="small"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    sx={{ flexGrow: 1 }}
+                    sx={{ 
+                        flexGrow: 1, 
+                        minWidth: '250px',
+                        '& .MuiOutlinedInput-root': {
+                            color: '#F5E6C8',
+                            bgcolor: '#0D0D0D',
+                            '& fieldset': { borderColor: 'rgba(200,169,106,0.3)', borderRadius: '10px' },
+                            '&:hover fieldset': { borderColor: 'rgba(200,169,106,0.6)' },
+                            '&.Mui-focused fieldset': { borderColor: '#C8A96A', borderWidth: '1px' },
+                        },
+                        '& .MuiInputBase-input::placeholder': { color: 'rgba(245,230,200,0.3)', opacity: 1 }
+                    }}
                     InputProps={{
-                        startAdornment: <Search size={18} className="text-gray-400 mr-2" />
+                        startAdornment: <Search size={18} color="rgba(200,169,106,0.6)" style={{ marginRight: 10 }} />
                     }}
                 />
-                <FormControl size="small" sx={{ minWidth: 150 }}>
-                    <InputLabel>Status</InputLabel>
+                <FormControl size="small" sx={{ minWidth: 200 }}>
+                    <InputLabel sx={{ color: 'rgba(200,169,106,0.8)', '&.Mui-focused': { color: '#C8A96A' } }}>Status</InputLabel>
                     <Select
                         value={statusFilter}
                         label="Status"
                         onChange={(e) => setStatusFilter(e.target.value)}
+                        sx={{ 
+                            color: '#F5E6C8',
+                            bgcolor: '#0D0D0D',
+                            borderRadius: '10px',
+                            '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(200,169,106,0.3)' },
+                            '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(200,169,106,0.6)' },
+                            '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#C8A96A', borderWidth: '1px' },
+                            '& .MuiSvgIcon-root': { color: '#C8A96A' }
+                        }}
+                        MenuProps={{ PaperProps: { sx: { bgcolor: '#121212', border: '1px solid rgba(200,169,106,0.2)', color: '#F5E6C8' } } }}
                     >
                         <MenuItem value="all">All Orders</MenuItem>
                         <MenuItem value="pending">Pending</MenuItem>
@@ -120,86 +143,109 @@ const AdminOrders = () => {
                 </FormControl>
             </Paper>
 
-            <TableContainer component={Paper} sx={{ borderRadius: '12px', overflow: 'hidden' }}>
+            <TableContainer component={Paper} sx={{ borderRadius: '16px', overflow: 'hidden', bgcolor: '#121212', border: '1px solid rgba(200,169,106,0.2)', boxShadow: '0 20px 40px rgba(0,0,0,0.6)' }}>
                 <Table>
-                    <TableHead sx={{ bgcolor: '#f8f9fa' }}>
+                    <TableHead sx={{ bgcolor: '#0a0a0a', borderBottom: '2px solid rgba(200,169,106,0.2)' }}>
                         <TableRow>
-                            <TableCell sx={{ fontWeight: 'bold' }}>Order ID</TableCell>
-                            <TableCell sx={{ fontWeight: 'bold' }}>Customer</TableCell>
-                            <TableCell sx={{ fontWeight: 'bold' }}>Product</TableCell>
-                            <TableCell sx={{ fontWeight: 'bold' }}>Total</TableCell>
-                            <TableCell sx={{ fontWeight: 'bold' }}>Status</TableCell>
-                            <TableCell sx={{ fontWeight: 'bold' }}>Date</TableCell>
-                            <TableCell sx={{ fontWeight: 'bold' }} align="center">Actions</TableCell>
+                            <TableCell sx={{ fontWeight: 800, color: '#C8A96A', textTransform: 'uppercase', letterSpacing: '1px', fontSize: '11px', borderBottom: 'none', py: 2.5 }}>Order ID</TableCell>
+                            <TableCell sx={{ fontWeight: 800, color: '#C8A96A', textTransform: 'uppercase', letterSpacing: '1px', fontSize: '11px', borderBottom: 'none' }}>Customer</TableCell>
+                            <TableCell sx={{ fontWeight: 800, color: '#C8A96A', textTransform: 'uppercase', letterSpacing: '1px', fontSize: '11px', borderBottom: 'none' }}>Product</TableCell>
+                            <TableCell sx={{ fontWeight: 800, color: '#C8A96A', textTransform: 'uppercase', letterSpacing: '1px', fontSize: '11px', borderBottom: 'none' }}>Total</TableCell>
+                            <TableCell sx={{ fontWeight: 800, color: '#C8A96A', textTransform: 'uppercase', letterSpacing: '1px', fontSize: '11px', borderBottom: 'none' }}>Status</TableCell>
+                            <TableCell sx={{ fontWeight: 800, color: '#C8A96A', textTransform: 'uppercase', letterSpacing: '1px', fontSize: '11px', borderBottom: 'none' }}>Date</TableCell>
+                            <TableCell sx={{ fontWeight: 800, color: '#C8A96A', textTransform: 'uppercase', letterSpacing: '1px', fontSize: '11px', borderBottom: 'none' }} align="center">Actions</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {filteredOrders.map((order) => (
-                            <TableRow key={order._id} hover>
-                                <TableCell sx={{ fontWeight: 600 }}>#{order._id.slice(-8).toUpperCase()}</TableCell>
-                                <TableCell>{order.user?.name || 'Customer'}</TableCell>
-                                <TableCell>{order.product?.name || 'Product'}</TableCell>
-                                <TableCell sx={{ fontWeight: 'bold', color: '#0A7A2F' }}>₹{order.total?.toFixed(2)}</TableCell>
-                                <TableCell>{getStatusChip(order.status)}</TableCell>
-                                <TableCell>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
-                                <TableCell align="center">
-                                    <IconButton size="small" color="primary" onClick={() => { setSelectedOrder(order); setOpenDetail(true); }}>
-                                        <Eye size={18} />
-                                    </IconButton>
-                                    <IconButton size="small" color="secondary" onClick={() => { setSelectedOrder(order); setNewStatus(order.status); setOpenStatusUpdate(true); }}>
-                                        <Edit size={18} />
-                                    </IconButton>
+                        {filteredOrders.length === 0 ? (
+                            <TableRow>
+                                <TableCell colSpan={7} align="center" sx={{ py: 8, borderBottom: 'none' }}>
+                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: 0.5 }}>
+                                        <Package size={48} color="#C8A96A" style={{ marginBottom: 16 }} />
+                                        <Typography sx={{ color: '#F5E6C8', fontFamily: 'serif', fontSize: '18px' }}>No Orders Found</Typography>
+                                    </div>
                                 </TableCell>
                             </TableRow>
-                        ))}
+                        ) : (
+                            filteredOrders.map((order) => (
+                                <TableRow key={order._id} hover sx={{ '&:hover': { bgcolor: 'rgba(200,169,106,0.03) !important' }, transition: 'background-color 0.2s' }}>
+                                    <TableCell sx={{ fontWeight: 700, color: '#F5E6C8', borderBottom: '1px solid rgba(200,169,106,0.1)' }}>#{order._id.slice(-8).toUpperCase()}</TableCell>
+                                    <TableCell sx={{ color: 'rgba(245,230,200,0.8)', borderBottom: '1px solid rgba(200,169,106,0.1)' }}>{order.user?.name || 'Customer'}</TableCell>
+                                    <TableCell sx={{ color: 'rgba(245,230,200,0.8)', borderBottom: '1px solid rgba(200,169,106,0.1)', maxWidth: '200px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{order.product?.name || 'Product'}</TableCell>
+                                    <TableCell sx={{ fontWeight: 700, color: '#10b981', borderBottom: '1px solid rgba(200,169,106,0.1)' }}>₹{order.total?.toFixed(2)}</TableCell>
+                                    <TableCell sx={{ borderBottom: '1px solid rgba(200,169,106,0.1)' }}>{getStatusChip(order.status)}</TableCell>
+                                    <TableCell sx={{ color: 'rgba(245,230,200,0.6)', fontSize: '12px', borderBottom: '1px solid rgba(200,169,106,0.1)' }}>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
+                                    <TableCell align="center" sx={{ borderBottom: '1px solid rgba(200,169,106,0.1)' }}>
+                                        <IconButton size="small" onClick={() => { setSelectedOrder(order); setOpenDetail(true); }} sx={{ color: 'rgba(200,169,106,0.7)', '&:hover': { color: '#C8A96A', bgcolor: 'rgba(200,169,106,0.1)' }, mr: 1 }}>
+                                            <Eye size={18} />
+                                        </IconButton>
+                                        <IconButton size="small" onClick={() => { setSelectedOrder(order); setNewStatus(order.status); setOpenStatusUpdate(true); }} sx={{ color: 'rgba(200,169,106,0.7)', '&:hover': { color: '#C8A96A', bgcolor: 'rgba(200,169,106,0.1)' } }}>
+                                            <Edit size={18} />
+                                        </IconButton>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        )}
                     </TableBody>
                 </Table>
             </TableContainer>
 
             {/* Order Details Dialog */}
-            <Dialog open={openDetail} onClose={() => setOpenDetail(false)} maxWidth="md" fullWidth>
-                <DialogTitle sx={{ fontWeight: 'bold', borderBottom: '1px solid #eee' }}>
-                    Order Details - #{selectedOrder?._id?.slice(-8).toUpperCase()}
+            <Dialog 
+                open={openDetail} 
+                onClose={() => setOpenDetail(false)} 
+                maxWidth="md" 
+                fullWidth
+                PaperProps={{
+                    sx: { bgcolor: '#121212', borderRadius: '16px', border: '1px solid rgba(200,169,106,0.3)', color: '#F5E6C8', backgroundImage: 'none', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.9)' }
+                }}
+            >
+                <DialogTitle sx={{ fontWeight: 800, borderBottom: '1px solid rgba(200,169,106,0.15)', pb: 2, pt: 3, display: 'flex', alignItems: 'center', gap: 2, fontFamily: 'serif', fontSize: '22px' }}>
+                    <div style={{ padding: '8px', background: 'rgba(200,169,106,0.1)', borderRadius: '8px', display: 'flex', color: '#C8A96A' }}>
+                        <Package size={20} />
+                    </div>
+                    Order Details <span style={{ color: 'rgba(245,230,200,0.4)', fontWeight: 400, fontSize: '18px' }}>#{selectedOrder?._id?.slice(-8).toUpperCase()}</span>
                 </DialogTitle>
-                <DialogContent>
+                <DialogContent sx={{ p: 4 }}>
                     {selectedOrder && (
-                        <Box sx={{ py: 2 }}>
-                            <div className="grid grid-cols-2 gap-6">
+                        <Box sx={{ py: 1 }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '32px' }}>
                                 <div>
-                                    <Typography variant="subtitle2" color="primary" gutterBottom>Customer Info</Typography>
-                                    <Typography variant="body2"><strong>Name:</strong> {selectedOrder.user?.name}</Typography>
-                                    <Typography variant="body2"><strong>Email:</strong> {selectedOrder.user?.email}</Typography>
-                                    <Typography variant="body2"><strong>Phone:</strong> {selectedOrder.shippingInfo?.phone}</Typography>
+                                    <Typography variant="subtitle2" sx={{ color: '#C8A96A', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px', fontSize: '11px', mb: 2 }}>Customer Info</Typography>
+                                    <Typography variant="body2" sx={{ color: '#F5E6C8', mb: 1 }}><strong>Name:</strong> <span style={{ color: 'rgba(245,230,200,0.7)' }}>{selectedOrder.user?.name}</span></Typography>
+                                    <Typography variant="body2" sx={{ color: '#F5E6C8', mb: 1 }}><strong>Email:</strong> <span style={{ color: 'rgba(245,230,200,0.7)' }}>{selectedOrder.user?.email}</span></Typography>
+                                    <Typography variant="body2" sx={{ color: '#F5E6C8', mb: 1 }}><strong>Phone:</strong> <span style={{ color: 'rgba(245,230,200,0.7)' }}>{selectedOrder.shippingInfo?.phone}</span></Typography>
                                 </div>
                                 <div>
-                                    <Typography variant="subtitle2" color="primary" gutterBottom>Shipping Info</Typography>
-                                    <Typography variant="body2">{selectedOrder.shippingInfo?.address}</Typography>
-                                    <Typography variant="body2">{selectedOrder.shippingInfo?.city}, {selectedOrder.shippingInfo?.state} - {selectedOrder.shippingInfo?.pincode}</Typography>
+                                    <Typography variant="subtitle2" sx={{ color: '#C8A96A', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px', fontSize: '11px', mb: 2 }}>Shipping Info</Typography>
+                                    <Typography variant="body2" sx={{ color: 'rgba(245,230,200,0.7)', mb: 1, lineHeight: 1.6 }}>{selectedOrder.shippingInfo?.address}</Typography>
+                                    <Typography variant="body2" sx={{ color: 'rgba(245,230,200,0.7)', mb: 1 }}>{selectedOrder.shippingInfo?.city}, {selectedOrder.shippingInfo?.state}</Typography>
+                                    <Typography variant="body2" sx={{ color: 'rgba(245,230,200,0.7)', mb: 1 }}>{selectedOrder.shippingInfo?.pincode}</Typography>
                                 </div>
                                 <div>
-                                    <Typography variant="subtitle2" color="primary" gutterBottom>Payment Info</Typography>
-                                    <Typography variant="body2"><strong>Method:</strong> <span className="uppercase">{selectedOrder.paymentMethod}</span></Typography>
-                                    <Typography variant="body2"><strong>Status:</strong> {getStatusChip(selectedOrder.status)}</Typography>
+                                    <Typography variant="subtitle2" sx={{ color: '#C8A96A', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px', fontSize: '11px', mb: 2 }}>Payment Info</Typography>
+                                    <Typography variant="body2" sx={{ color: '#F5E6C8', mb: 1.5 }}><strong>Method:</strong> <span style={{ color: 'rgba(245,230,200,0.7)', textTransform: 'uppercase' }}>{selectedOrder.paymentMethod}</span></Typography>
+                                    <Typography variant="body2" sx={{ color: '#F5E6C8', display: 'flex', alignItems: 'center', gap: 1 }}><strong>Status:</strong> {getStatusChip(selectedOrder.status)}</Typography>
                                 </div>
                                 <div>
-                                    <Typography variant="subtitle2" color="primary" gutterBottom>Order Info</Typography>
-                                    <Typography variant="body2"><strong>Total:</strong> ₹{selectedOrder.total?.toFixed(2)}</Typography>
-                                    <Typography variant="body2"><strong>Date:</strong> {new Date(selectedOrder.createdAt).toLocaleString()}</Typography>
+                                    <Typography variant="subtitle2" sx={{ color: '#C8A96A', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px', fontSize: '11px', mb: 2 }}>Order Info</Typography>
+                                    <Typography variant="body2" sx={{ color: '#F5E6C8', mb: 1 }}><strong>Total:</strong> <span style={{ color: '#10b981', fontWeight: 700 }}>₹{selectedOrder.total?.toFixed(2)}</span></Typography>
+                                    <Typography variant="body2" sx={{ color: '#F5E6C8', mb: 1 }}><strong>Date:</strong> <span style={{ color: 'rgba(245,230,200,0.7)' }}>{new Date(selectedOrder.createdAt).toLocaleString()}</span></Typography>
                                 </div>
                             </div>
 
-                            <Box sx={{ mt: 4 }}>
-                                <Typography variant="subtitle1" fontWeight="bold" gutterBottom>Tracking History</Typography>
-                                <div className="space-y-3">
+                            <Box sx={{ mt: 6, pt: 4, borderTop: '1px solid rgba(200,169,106,0.1)' }}>
+                                <Typography variant="subtitle1" sx={{ color: '#F5E6C8', fontWeight: 700, fontFamily: 'serif', fontSize: '20px', mb: 3 }}>Tracking History</Typography>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                                     {selectedOrder.tracking?.map((item, idx) => (
-                                        <div key={idx} className="flex gap-4 items-start p-3 bg-gray-50 rounded-lg">
-                                            <div className="p-2 bg-green-100 rounded-full">
-                                                <Clock size={16} className="text-green-700" />
+                                        <div key={idx} style={{ display: 'flex', gap: '16px', alignItems: 'flex-start', padding: '16px', background: 'rgba(200,169,106,0.03)', borderRadius: '12px', border: '1px solid rgba(200,169,106,0.1)' }}>
+                                            <div style={{ padding: '8px', background: 'rgba(200,169,106,0.1)', borderRadius: '50%', border: '1px solid rgba(200,169,106,0.2)' }}>
+                                                <Clock size={16} color="#C8A96A" />
                                             </div>
                                             <div>
-                                                <Typography variant="body2" fontWeight="bold" sx={{ textTransform: 'capitalize' }}>{item.status.replace('_', ' ')}</Typography>
-                                                <Typography variant="caption" color="textSecondary">{new Date(item.timestamp).toLocaleString()}</Typography>
-                                                <Typography variant="body2" sx={{ mt: 0.5 }}>{item.message}</Typography>
+                                                <Typography variant="body1" sx={{ fontWeight: 700, color: '#C8A96A', textTransform: 'capitalize', mb: 0.5 }}>{item.status.replace(/_/g, ' ')}</Typography>
+                                                <Typography variant="caption" sx={{ color: 'rgba(245,230,200,0.4)', fontSize: '11px', display: 'block', mb: 1 }}>{new Date(item.timestamp).toLocaleString()}</Typography>
+                                                <Typography variant="body2" sx={{ color: 'rgba(245,230,200,0.8)', lineHeight: 1.5 }}>{item.message}</Typography>
                                             </div>
                                         </div>
                                     ))}
@@ -208,8 +254,8 @@ const AdminOrders = () => {
                         </Box>
                     )}
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setOpenDetail(false)}>Close</Button>
+                <DialogActions sx={{ p: 3, borderTop: '1px solid rgba(200,169,106,0.1)' }}>
+                    <Button onClick={() => setOpenDetail(false)} sx={{ color: '#C8A96A', fontWeight: 700, letterSpacing: '1px', fontSize: '11px' }}>Close</Button>
                 </DialogActions>
             </Dialog>
 
@@ -218,25 +264,32 @@ const AdminOrders = () => {
                 open={openStatusUpdate} 
                 onClose={() => setOpenStatusUpdate(false)}
                 PaperProps={{
-                    sx: { borderRadius: '24px', p: 1, minWidth: 450 }
+                    sx: { borderRadius: '20px', p: 1, minWidth: { xs: 300, sm: 450 }, bgcolor: '#121212', border: '1px solid rgba(200,169,106,0.3)', color: '#F5E6C8', backgroundImage: 'none', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.9)' }
                 }}
             >
-                <DialogTitle sx={{ fontWeight: 900, textTransform: 'uppercase', tracking: '0.05em', pb: 1 }}>
+                <DialogTitle sx={{ fontWeight: 700, fontFamily: 'serif', pb: 1, pt: 3, fontSize: '24px' }}>
                     Update Order Status
                 </DialogTitle>
                 <DialogContent>
-                    <Typography variant="caption" sx={{ fontWeight: 700, color: 'text.secondary', mb: 3, display: 'block', textTransform: 'uppercase', tracking: '0.1em' }}>
+                    <Typography variant="caption" sx={{ fontWeight: 700, color: 'rgba(245,230,200,0.5)', mb: 4, display: 'block', textTransform: 'uppercase', letterSpacing: '1px' }}>
                         Transition order to a new phase
                     </Typography>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 1 }}>
                         <FormControl fullWidth variant="outlined">
-                            <InputLabel id="status-select-label">New Status</InputLabel>
+                            <InputLabel id="status-select-label-2" sx={{ color: 'rgba(200,169,106,0.8)', '&.Mui-focused': { color: '#C8A96A' } }}>New Status</InputLabel>
                             <Select
-                                labelId="status-select-label"
+                                labelId="status-select-label-2"
                                 value={newStatus}
                                 label="New Status"
                                 onChange={(e) => setNewStatus(e.target.value)}
-                                sx={{ borderRadius: '14px', fontWeight: 600 }}
+                                sx={{ 
+                                    borderRadius: '12px', fontWeight: 600, color: '#F5E6C8', bgcolor: '#0D0D0D',
+                                    '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(200,169,106,0.3)' },
+                                    '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(200,169,106,0.6)' },
+                                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#C8A96A', borderWidth: '1px' },
+                                    '& .MuiSvgIcon-root': { color: '#C8A96A' }
+                                }}
+                                MenuProps={{ PaperProps: { sx: { bgcolor: '#121212', border: '1px solid rgba(200,169,106,0.2)', color: '#F5E6C8' } } }}
                             >
                                 <MenuItem value="pending">Pending</MenuItem>
                                 <MenuItem value="processing">Processing</MenuItem>
@@ -257,29 +310,36 @@ const AdminOrders = () => {
                             onChange={(e) => setStatusMessage(e.target.value)}
                             placeholder="e.g., Package has arrived at local hub..."
                             InputProps={{
-                                sx: { borderRadius: '14px' }
+                                sx: { 
+                                    borderRadius: '12px', color: '#F5E6C8', bgcolor: '#0D0D0D',
+                                    '& fieldset': { borderColor: 'rgba(200,169,106,0.3)' },
+                                    '&:hover fieldset': { borderColor: 'rgba(200,169,106,0.6)' },
+                                    '&.Mui-focused fieldset': { borderColor: '#C8A96A', borderWidth: '1px' },
+                                }
                             }}
+                            InputLabelProps={{ sx: { color: 'rgba(200,169,106,0.8)', '&.Mui-focused': { color: '#C8A96A' } } }}
                         />
                     </Box>
                 </DialogContent>
-                <DialogActions sx={{ px: 3, pb: 2 }}>
+                <DialogActions sx={{ px: 3, pb: 3 }}>
                     <Button 
                         onClick={() => setOpenStatusUpdate(false)}
-                        sx={{ color: 'text.secondary', fontWeight: 700, textTransform: 'uppercase', px: 3 }}
+                        sx={{ color: '#C8A96A', fontWeight: 700, textTransform: 'uppercase', px: 3, fontSize: '11px', letterSpacing: '1px' }}
                     >
                         Cancel
                     </Button>
                     <Button 
                         onClick={handleUpdateStatus} 
-                        variant="contained" 
+                        variant="outlined" 
                         sx={{ 
-                            bgcolor: '#0A7A2F', 
-                            borderRadius: '12px',
-                            fontWeight: 800,
+                            color: '#C8A96A', borderColor: 'rgba(200,169,106,0.5)',
+                            borderRadius: '8px',
+                            fontWeight: 700,
                             textTransform: 'uppercase',
                             px: 4,
-                            '&:hover': { bgcolor: '#086325' },
-                            boxShadow: '0 4px 14px 0 rgba(10, 122, 47, 0.39)'
+                            fontSize: '11px',
+                            letterSpacing: '1px',
+                            '&:hover': { bgcolor: 'rgba(200,169,106,0.1)', borderColor: '#C8A96A' },
                         }}
                     >
                         Update Phase

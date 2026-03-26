@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import api, { API_URL } from "../api"
+import { Image as ImageIcon, X, ChevronLeft, ChevronRight, Camera } from 'lucide-react'
 
 function Gallery() {
     const [gallery, setGallery] = useState([])
@@ -49,327 +50,145 @@ function Gallery() {
 
     if (loading) {
         return (
-            <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f0fdf4' }}>
-                <div style={{ textAlign: 'center' }}>
-                    <div style={{
-                        width: 56, height: 56, borderRadius: '50%',
-                        border: '4px solid #bbf7d0', borderTopColor: '#16a34a',
-                        animation: 'spin 0.8s linear infinite', margin: '0 auto 16px'
-                    }} />
-                    <p style={{ color: '#15803d', fontWeight: 600, fontSize: 16 }}>Loading gallery...</p>
-                    <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+            <div className="min-h-screen bg-[#0D0D0D] flex items-center justify-center">
+                <div className="text-center">
+                    <div className="w-14 h-14 rounded-full border-4 border-[#C8A96A]/20 border-t-[#C8A96A] animate-spin mx-auto mb-4" />
+                    <p className="text-[#C8A96A] font-black text-xs uppercase tracking-[0.2em] animate-pulse">Loading Gallery...</p>
                 </div>
             </div>
         )
     }
 
     return (
-        <div style={{ minHeight: '100vh', background: '#ffffff', fontFamily: 'Georgia, serif' }}>
-            <style>{`
-                @keyframes fadeUp {
-                    from { opacity: 0; transform: translateY(24px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
-                @keyframes fadeIn {
-                    from { opacity: 0; }
-                    to { opacity: 1; }
-                }
-                @keyframes scaleIn {
-                    from { opacity: 0; transform: scale(0.94); }
-                    to { opacity: 1; transform: scale(1); }
-                }
-                .gallery-card {
-                    animation: fadeUp 0.5s ease forwards;
-                    opacity: 0;
-                    cursor: pointer;
-                    border-radius: 12px;
-                    overflow: hidden;
-                    background: #fff;
-                    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-                    transition: box-shadow 0.3s ease, transform 0.3s ease;
-                    position: relative;
-                }
-                .gallery-card:hover {
-                    box-shadow: 0 8px 32px rgba(22,163,74,0.18);
-                    transform: translateY(-4px);
-                }
-                .gallery-card img {
-                    width: 100%;
-                    height: 220px;
-                    object-fit: cover;
-                    display: block;
-                    transition: transform 0.5s ease;
-                }
-                .gallery-card:hover img {
-                    transform: scale(1.06);
-                }
-                .card-overlay {
-                    position: absolute;
-                    inset: 0;
-                    background: linear-gradient(to top, rgba(5,46,22,0.75) 0%, transparent 55%);
-                    opacity: 0;
-                    transition: opacity 0.3s ease;
-                    display: flex;
-                    align-items: flex-end;
-                    padding: 16px;
-                }
-                .gallery-card:hover .card-overlay {
-                    opacity: 1;
-                }
-                .zoom-btn {
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%) scale(0.8);
-                    background: rgba(255,255,255,0.92);
-                    border-radius: 50%;
-                    width: 44px;
-                    height: 44px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    opacity: 0;
-                    transition: opacity 0.3s ease, transform 0.3s ease;
-                }
-                .gallery-card:hover .zoom-btn {
-                    opacity: 1;
-                    transform: translate(-50%, -50%) scale(1);
-                }
-                .badge {
-                    position: absolute;
-                    top: 10px;
-                    right: 10px;
-                    background: rgba(255,255,255,0.92);
-                    color: #15803d;
-                    font-size: 11px;
-                    font-weight: 700;
-                    padding: 3px 10px;
-                    border-radius: 99px;
-                    font-family: sans-serif;
-                    letter-spacing: 0.5px;
-                }
-                .lightbox-nav {
-                    position: absolute;
-                    top: 50%;
-                    transform: translateY(-50%);
-                    background: rgba(255,255,255,0.15);
-                    border: none;
-                    color: white;
-                    width: 48px;
-                    height: 48px;
-                    border-radius: 50%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    cursor: pointer;
-                    transition: background 0.2s;
-                    backdrop-filter: blur(4px);
-                }
-                .lightbox-nav:hover { background: rgba(255,255,255,0.3); }
-            `}</style>
-
+        <div className="bg-[#0D0D0D] font-sans text-[#F5E6C8] selection:bg-[#C8A96A]/30">
             {/* Hero Header */}
-            <div style={{
-                background: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%)',
-                borderBottom: '1px solid #d1fae5',
-                padding: '60px 24px 48px',
-                textAlign: 'center',
-                animation: 'fadeIn 0.6s ease'
-            }}>
-                <div style={{
-                    display: 'inline-block',
-                    background: '#dcfce7',
-                    border: '1px solid #86efac',
-                    color: '#15803d',
-                    fontSize: 12,
-                    fontWeight: 700,
-                    letterSpacing: 2,
-                    padding: '5px 16px',
-                    borderRadius: 99,
-                    marginBottom: 18,
-                    fontFamily: 'sans-serif',
-                    textTransform: 'uppercase'
-                }}>Our Memories</div>
+            <div className="relative py-10 md:py-12 px-6 text-center border-b border-[#C8A96A]/10 bg-[#121212] overflow-hidden">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(200,169,106,0.05)_0%,transparent_70%)] pointer-events-none"></div>
+                <div className="absolute top-0 right-0 w-96 h-96 bg-[#C8A96A]/5 rounded-full blur-[120px] pointer-events-none"></div>
+                <div className="absolute bottom-0 left-0 w-72 h-72 bg-[#C8A96A]/5 rounded-full blur-[100px] pointer-events-none"></div>
 
-                <h1 style={{
-                    fontSize: 'clamp(36px, 5vw, 58px)',
-                    fontWeight: 800,
-                    color: '#052e16',
-                    margin: '0 0 12px',
-                    letterSpacing: '-1px',
-                    lineHeight: 1.1
-                }}>Beautiful Moments</h1>
-
-                <div style={{ width: 48, height: 3, background: '#16a34a', borderRadius: 99, margin: '0 auto 16px' }} />
-
-                <p style={{
-                    color: '#4b7a5a',
-                    fontSize: 17,
-                    maxWidth: 480,
-                    margin: '0 auto',
-                    fontFamily: 'sans-serif',
-                    lineHeight: 1.6
-                }}>
-                    Explore our collection of cherished memories and events
-                </p>
-
-                {gallery.length > 0 && (
-                    <div style={{
-                        marginTop: 24,
-                        display: 'inline-flex',
-                        gap: 24,
-                        background: 'white',
-                        border: '1px solid #d1fae5',
-                        borderRadius: 12,
-                        padding: '10px 24px',
-                        fontFamily: 'sans-serif'
-                    }}>
-                        <span style={{ color: '#15803d', fontWeight: 700, fontSize: 15 }}>
-                            {gallery.length} <span style={{ color: '#6b7280', fontWeight: 400 }}>Photos</span>
-                        </span>
+                <div className="relative z-10">
+                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#121212] border border-[#C8A96A]/30 text-[#C8A96A] text-[10px] font-black uppercase tracking-[0.3em] mb-6 shadow-[0_0_15px_rgba(200,169,106,0.1)]">
+                        <Camera size={14} className="text-[#C8A96A]" strokeWidth={2.5} />
+                        Our Memories
                     </div>
-                )}
+
+                    <h1 className="text-3xl md:text-5xl font-serif font-bold text-[#F5E6C8] mb-3 tracking-tight uppercase">
+                        Beautiful <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C8A96A] to-[#D4AF37]">Moments</span>
+                    </h1>
+
+                    <div className="w-12 h-1 bg-gradient-to-r from-[#C8A96A] to-[#D4AF37] mx-auto rounded-full mb-3"></div>
+
+                    <p className="text-[#F5E6C8] text-[11px] md:text-xs font-black uppercase tracking-widest max-w-xl mx-auto leading-relaxed mb-4 italic opacity-60">
+                        Explore our curated collection of cherished memories, milestones, and prestigious events
+                    </p>
+
+                    {gallery.length > 0 && (
+                        <div className="inline-flex items-center gap-3 px-6 py-3 rounded-xl bg-[#0D0D0D] border border-[#C8A96A]/20 shadow-lg">
+                            <span className="text-[#C8A96A] font-black text-xl">{gallery.length}</span>
+                            <span className="text-[#F5E6C8]/50 text-[10px] uppercase font-bold tracking-widest">Photographs</span>
+                        </div>
+                    )}
+                </div>
             </div>
 
             {/* Gallery Grid */}
-            <div style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 24px' }}>
+            <div className="max-w-7xl mx-auto px-6 py-6 relative z-10">
                 {gallery.length === 0 ? (
-                    <div style={{
-                        textAlign: 'center', padding: '80px 24px',
-                        animation: 'fadeIn 0.6s ease'
-                    }}>
-                        <div style={{
-                            width: 80, height: 80, borderRadius: '50%',
-                            background: '#f0fdf4', border: '2px dashed #86efac',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            margin: '0 auto 20px'
-                        }}>
-                            <svg width="36" height="36" fill="none" stroke="#16a34a" strokeWidth="1.5" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                        </div>
-                        <h3 style={{ fontSize: 22, fontWeight: 700, color: '#1f2937', marginBottom: 8 }}>No Images Yet</h3>
-                        <p style={{ color: '#9ca3af', fontFamily: 'sans-serif' }}>Gallery will appear here once admin adds photos.</p>
+                    <div className="text-center py-12 bg-[#121212] rounded-2xl border border-[#C8A96A]/10">
+                        <Camera size={32} strokeWidth={1} className="text-[#C8A96A]/30 mx-auto mb-2" />
+                        <h3 className="text-lg font-serif text-[#F5E6C8] mb-1">No Images Yet</h3>
+                        <p className="text-[#F5E6C8]/40 text-xs">Our gallery is currently being curated. Check back soon.</p>
                     </div>
                 ) : (
-                    <div style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
-                        gap: 20
-                    }}>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                         {gallery.map((item, index) => (
                             <div
                                 key={item._id || index}
-                                className="gallery-card"
-                                style={{ animationDelay: `${index * 70}ms` }}
+                                className="group relative bg-[#121212] rounded-xl overflow-hidden border border-[#C8A96A]/20 cursor-pointer hover:border-[#C8A96A]/50 transition-all duration-500 hover:shadow-[0_10px_30px_rgba(200,169,106,0.15)] hover:-translate-y-1 block animate-fade-in-up"
+                                style={{ animationDelay: `${index * 50}ms` }}
                                 onClick={() => openLightbox(item, index)}
                             >
-                                <img
-                                    src={getImageUrl(item)}
-                                    alt={item.title || `Gallery ${index + 1}`}
-                                    loading="lazy"
-                                    onError={(e) => {
-                                        e.target.style.background = '#f0fdf4'
-                                        e.target.src = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='220' viewBox='0 0 260 220'%3E%3Crect width='260' height='220' fill='%23f0fdf4'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%2386efac' font-size='14'%3EImage not found%3C/text%3E%3C/svg%3E`
-                                    }}
-                                />
-                                <div className="card-overlay">
-                                    <div style={{ color: 'white', display: 'flex', flexDirection: 'column' }}>
-                                        <span style={{ fontSize: 13, fontFamily: 'sans-serif', fontWeight: 700 }}>{item.title}</span>
-                                        <span style={{ fontSize: 11, fontFamily: 'sans-serif', fontWeight: 500, opacity: 0.8 }}>Click to view</span>
+                                <div className="aspect-[4/3] bg-[#0D0D0D] overflow-hidden relative">
+                                    <img
+                                        src={getImageUrl(item)}
+                                        alt={item.title || `Gallery ${index + 1}`}
+                                        loading="lazy"
+                                        className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 opacity-80 group-hover:opacity-100"
+                                        onError={(e) => {
+                                            e.target.onerror = null;
+                                            e.target.src = "https://via.placeholder.com/400x300/121212/C8A96A?text=Missing+Image"
+                                        }}
+                                    />
+                                    
+                                    {/* Overlay */}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-[#0D0D0D] via-[#0D0D0D]/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                                        <span className="text-[#F5E6C8] font-bold text-sm mb-1 font-serif line-clamp-1 translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                                            {item.title}
+                                        </span>
+                                        <span className="text-[#C8A96A] text-[10px] font-black uppercase tracking-widest translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-75">
+                                            Click to view full size
+                                        </span>
+                                    </div>
+                                    
+                                    {/* Number Badge */}
+                                    <div className="absolute top-3 right-3 bg-[#0D0D0D]/80 backdrop-blur-md border border-[#C8A96A]/30 text-[#C8A96A] text-[9px] font-black px-2 py-1 rounded uppercase tracking-widest shadow-lg">
+                                        #{index + 1}
                                     </div>
                                 </div>
-                                <div className="zoom-btn">
-                                    <svg width="18" height="18" fill="none" stroke="#15803d" strokeWidth="2" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7" />
-                                    </svg>
-                                </div>
-                                <div className="badge">#{index + 1}</div>
+                                <div className="h-1 w-full bg-gradient-to-r from-[#C8A96A] to-[#D4AF37] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
                             </div>
                         ))}
                     </div>
                 )}
             </div>
 
-            {/* Lightbox */}
+            {/* Lightbox / Modal */}
             {selectedImage && (
                 <div
                     onClick={closeLightbox}
-                    style={{
-                        position: 'fixed', inset: 0,
-                        background: 'rgba(0,0,0,0.95)',
-                        zIndex: 1000,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        padding: 24,
-                        animation: 'fadeIn 0.2s ease'
-                    }}
+                    className="fixed inset-0 bg-[#0D0D0D]/95 backdrop-blur-xl z-[1000] flex items-center justify-center p-4 md:p-8 animate-fade-in"
                 >
                     <div
                         onClick={e => e.stopPropagation()}
-                        style={{
-                            position: 'relative',
-                            maxWidth: '90vw',
-                            maxHeight: '88vh',
-                            animation: 'scaleIn 0.25s ease'
-                        }}
+                        className="relative max-w-5xl w-full max-h-screen flex flex-col items-center animate-scale-in"
                     >
-                        <img
-                            src={getImageUrl(selectedImage)}
-                            alt="Gallery full"
-                            style={{
-                                maxWidth: '90vw',
-                                maxHeight: '85vh',
-                                objectFit: 'contain',
-                                borderRadius: 10,
-                                display: 'block'
-                            }}
-                        />
-
-                        {/* Counter and Title */}
-                        <div style={{
-                            position: 'absolute', bottom: -50, left: '50%',
-                            transform: 'translateX(-50%)',
-                            color: 'white',
-                            textAlign: 'center',
-                            fontFamily: 'sans-serif', fontSize: 14
-                        }}>
-                            <div style={{ fontWeight: 700, marginBottom: 4 }}>{selectedImage.title}</div>
-                            <div style={{ opacity: 0.6, fontSize: 12 }}>{selectedIndex + 1} / {gallery.length}</div>
+                        <div className="relative w-full rounded-xl overflow-hidden shadow-2xl border border-[#C8A96A]/20 bg-[#121212]">
+                            <img
+                                src={getImageUrl(selectedImage)}
+                                alt="Gallery full"
+                                className="w-full max-h-[85vh] object-contain block mx-auto py-4"
+                            />
+                        </div>
+                        
+                        {/* Title and Counter */}
+                        <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 text-center w-full">
+                            <h3 className="text-[#F5E6C8] font-serif font-bold text-lg md:text-xl mb-1">{selectedImage.title}</h3>
+                            <p className="text-[#C8A96A]/60 font-mono text-sm">{selectedIndex + 1} / {gallery.length}</p>
                         </div>
                     </div>
 
-                    {/* Prev */}
-                    <button className="lightbox-nav" onClick={prevImage} style={{ left: 16 }}>
-                        <svg width="20" height="20" fill="none" stroke="white" strokeWidth="2.5" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-                        </svg>
+                    {/* Navigation Buttons */}
+                    <button 
+                        onClick={prevImage} 
+                        className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-[#121212]/80 border border-[#C8A96A]/30 text-[#C8A96A] flex items-center justify-center hover:bg-[#C8A96A] hover:text-[#0D0D0D] transition-all duration-300 backdrop-blur-md"
+                    >
+                        <ChevronLeft size={24} strokeWidth={2.5} />
                     </button>
 
-                    {/* Next */}
-                    <button className="lightbox-nav" onClick={nextImage} style={{ right: 16 }}>
-                        <svg width="20" height="20" fill="none" stroke="white" strokeWidth="2.5" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                        </svg>
+                    <button 
+                        onClick={nextImage} 
+                        className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-[#121212]/80 border border-[#C8A96A]/30 text-[#C8A96A] flex items-center justify-center hover:bg-[#C8A96A] hover:text-[#0D0D0D] transition-all duration-300 backdrop-blur-md"
+                    >
+                        <ChevronRight size={24} strokeWidth={2.5} />
                     </button>
 
-                    {/* Close */}
+                    {/* Close Button */}
                     <button
                         onClick={closeLightbox}
-                        style={{
-                            position: 'fixed', top: 20, right: 20,
-                            background: 'rgba(255,255,255,0.12)',
-                            border: 'none', color: 'white',
-                            width: 40, height: 40, borderRadius: '50%',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            cursor: 'pointer', backdropFilter: 'blur(4px)',
-                            transition: 'background 0.2s'
-                        }}
+                        className="absolute top-4 right-4 md:top-8 md:right-8 w-12 h-12 rounded-full bg-[#121212]/80 border border-[#C8A96A]/30 text-[#F5E6C8] flex items-center justify-center hover:bg-red-900/80 hover:text-red-400 hover:border-red-500/50 transition-all duration-300 backdrop-blur-md"
                     >
-                        <svg width="18" height="18" fill="none" stroke="white" strokeWidth="2.5" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
+                        <X size={24} strokeWidth={2.5} />
                     </button>
                 </div>
             )}

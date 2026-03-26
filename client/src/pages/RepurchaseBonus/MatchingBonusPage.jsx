@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-    ArrowLeft, TrendingUp, Zap, Shield, Star, Activity,
-    BarChart2, ArrowLeftRight, Clock, Info, CheckCircle, AlertCircle
+    ArrowLeft, ArrowRight, TrendingUp, Zap, Shield, Star, Activity,
+    BarChart2, ArrowLeftRight, Clock, Info, CheckCircle, CheckCircle2, 
+    AlertCircle, X, PackageSearch, Loader2
 } from 'lucide-react';
 import api from '../../api';
 import toast from 'react-hot-toast';
@@ -11,75 +12,76 @@ import toast from 'react-hot-toast';
 // ─── Config per package type ─────────────────────────────────────────────────
 const CONFIG = {
     silver: {
-        label: 'Silver Matching',
+        label: 'Silver Yield',
         packageKey: '599',
         price: '₹599',
         bv: '250 BV',
         pv: '0.25 PV',
         capping: '₹2,000',
         icon: Shield,
-        color: 'from-slate-400 to-slate-600',
-        glow: 'shadow-slate-200',
-        text: 'text-slate-600',
-        bg: 'bg-slate-50',
-        accentBg: 'bg-slate-500',
+        color: 'from-[#1A1A1A] to-[#0D0D0D]',
+        glow: 'shadow-gold-900/10',
+        text: 'text-[#C8A96A]',
+        bg: 'bg-[#0D0D0D]',
+        accentBg: 'bg-[#C8A96A]',
         emoji: '🥈',
     },
     gold: {
-        label: 'Gold Matching',
+        label: 'Gold Yield',
         packageKey: '1299',
         price: '₹1,299',
         bv: '500 BV',
         pv: '0.5 PV',
         capping: '₹4,000',
         icon: Star,
-        color: 'from-yellow-400 to-amber-600',
-        glow: 'shadow-yellow-100',
-        text: 'text-amber-600',
-        bg: 'bg-amber-50',
-        accentBg: 'bg-amber-500',
+        color: 'from-[#C8A96A]/20 to-[#0D0D0D]',
+        glow: 'shadow-[#C8A96A]/20',
+        text: 'text-[#D4AF37]',
+        bg: 'bg-[#0D0D0D]',
+        accentBg: 'bg-[#D4AF37]',
         emoji: '🥇',
     },
     diamond: {
-        label: 'Diamond Matching',
+        label: 'Diamond Yield',
         packageKey: '2699',
         price: '₹2,699',
         bv: '1000 BV',
         pv: '1 PV',
         capping: '₹10,000',
         icon: Zap,
-        color: 'from-orange-400 to-red-600',
-        glow: 'shadow-orange-100',
-        text: 'text-orange-600',
-        bg: 'bg-orange-50',
-        accentBg: 'bg-orange-500',
+        color: 'from-[#D4AF37]/30 to-[#0D0D0D]',
+        glow: 'shadow-[#D4AF37]/30',
+        text: 'text-[#C8A96A]',
+        bg: 'bg-[#0D0D0D]',
+        accentBg: 'bg-[#C8A96A]',
         emoji: '💎',
     },
 };
 
 // ─── Sub-Components ──────────────────────────────────────────────────────────
 
-const StatCard = ({ label, value, icon: Icon, badge, color, delay }) => (
+const StatCard = ({ label, value, icon: Icon, badge, delay }) => (
     <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay, duration: 0.5 }}
-        className="bg-white/70 backdrop-blur-xl border border-white/40 rounded-[2rem] p-6 shadow-xl shadow-slate-200/50 flex flex-col justify-between hover:scale-[1.02] transition-transform"
+        className="luxury-box p-6 flex flex-col justify-between hover:scale-[1.02] transition-all group"
     >
         <div className="flex items-center justify-between mb-4">
-            <div className={`p-3 rounded-2xl bg-gradient-to-br ${color} text-white shadow-lg`}>
-                <Icon className="w-6 h-6" />
+            <div className={`w-10 h-10 rounded-xl bg-[#0D0D0D] border border-[#C8A96A]/20 flex items-center justify-center text-[#C8A96A] group-hover:border-[#C8A96A]/60 transition-colors`}>
+                <Icon className="w-5 h-5" strokeWidth={1.5} />
             </div>
             {badge && (
-                <span className="px-3 py-1 rounded-full bg-slate-100 text-[10px] font-black text-slate-500 uppercase tracking-widest border border-slate-200">
+                <span className="px-2.5 py-0.5 rounded-full bg-[#C8A96A]/5 text-[7px] font-black text-[#C8A96A] uppercase tracking-[0.2em] border border-[#C8A96A]/20">
                     {badge}
                 </span>
             )}
         </div>
         <div>
-            <p className="text-3xl font-black text-slate-800 tracking-tight mb-1">{value}</p>
-            <p className="text-xs font-bold text-slate-400 uppercase tracking-[0.1em]">{label}</p>
+            <p className="text-2xl font-serif font-bold text-[#F5E6C8] tracking-tight mb-1">{value}</p>
+            <p className="text-[9px] font-black text-[#C8A96A]/40 uppercase tracking-[0.2em]">{label}</p>
         </div>
+        <div className="absolute top-0 right-0 w-16 h-16 bg-[#C8A96A]/5 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
     </motion.div>
 );
 
@@ -87,63 +89,63 @@ const TransactionDetailModal = ({ isOpen, onClose, transaction, cfg }) => {
     if (!transaction) return null;
 
     const details = [
-        { label: 'Transaction ID', value: `#MB-${transaction._id.slice(-8)}`, icon: Shield },
-        { label: 'Date & Time', value: new Date(transaction.date).toLocaleString('en-IN', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }), icon: Clock },
-        { label: 'Matched Volume', value: `${transaction.matchedPV} PV`, icon: ArrowLeftRight },
-        { label: 'Bonus Amount', value: `₹${transaction.bonusAmount.toLocaleString()}`, icon: TrendingUp },
-        { label: 'Description', value: transaction.description || 'Matching bonus for binary tree volume.', icon: Info },
+        { label: 'Transaction Hash', value: `#MB-${transaction._id.slice(-8)}`, icon: Shield },
+        { label: 'Timestamp', value: new Date(transaction.date).toLocaleString('en-IN', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }), icon: Clock },
+        { label: 'Matched Yield', value: `${transaction.matchedPV} PV`, icon: ArrowLeftRight },
+        { label: 'Bonus Accrued', value: `₹${transaction.bonusAmount.toLocaleString()}`, icon: TrendingUp },
+        { label: 'Manifest', value: transaction.description || 'Matching bonus for binary lattice volume.', icon: Info },
     ];
 
     return (
         <AnimatePresence>
             {isOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+                        className="absolute inset-0"
                     />
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                        initial={{ opacity: 0, scale: 0.95, y: 30 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                        className="relative w-full max-w-lg bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border border-slate-100"
+                        exit={{ opacity: 0, scale: 0.95, y: 30 }}
+                        className="relative w-full max-w-md luxury-box shadow-2xl overflow-hidden"
                     >
                         <div className={`h-32 bg-gradient-to-br ${cfg.color} p-8 flex items-end justify-between relative`}>
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 blur-2xl rounded-full -mr-16 -mt-16" />
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-[#C8A96A]/10 blur-2xl rounded-full -mr-12 -mt-12" />
                             <div className="relative z-10">
-                                <p className="text-white/70 text-[10px] font-black uppercase tracking-widest mb-1">Transaction Success</p>
-                                <h2 className="text-3xl font-black text-white tracking-tight leading-none">₹{transaction.bonusAmount.toLocaleString()}</h2>
+                                <p className="text-[#F5E6C8]/60 text-[9px] font-black uppercase tracking-[0.3em] mb-1">Settlement Verified</p>
+                                <h2 className="text-4xl font-serif font-bold text-[#F5E6C8] tracking-tighter leading-none">₹{transaction.bonusAmount.toLocaleString()}</h2>
                             </div>
-                            <button onClick={onClose} className="absolute top-6 right-6 w-10 h-10 bg-white/20 hover:bg-white/30 backdrop-blur rounded-xl flex items-center justify-center text-white transition">
-                                <ArrowLeft className="w-5 h-5 rotate-90" />
+                            <button onClick={onClose} className="absolute top-6 right-6 w-10 h-10 border border-[#C8A96A]/20 flex items-center justify-center rounded-full hover:bg-[#C8A96A]/10 transition">
+                                <X className="w-4 h-4 text-[#C8A96A]" />
                             </button>
                         </div>
-                        <div className="p-8">
-                            <div className="space-y-6">
+                        <div className="p-8 space-y-6">
+                            <div className="space-y-4">
                                 {details.map((item, idx) => (
-                                    <div key={idx} className="flex items-start gap-4">
-                                        <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 shrink-0 border border-slate-100">
-                                            <item.icon className="w-5 h-5" />
+                                    <div key={idx} className="flex items-start gap-5 group">
+                                        <div className="w-10 h-10 rounded-xl bg-[#0D0D0D] border border-[#C8A96A]/10 flex items-center justify-center text-[#C8A96A]/40 group-hover:text-[#C8A96A] group-hover:border-[#C8A96A]/40 transition-all shrink-0">
+                                            <item.icon className="w-4 h-4" strokeWidth={1.5} />
                                         </div>
                                         <div>
-                                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{item.label}</p>
-                                            <p className="text-sm font-bold text-slate-700 leading-relaxed">{item.value}</p>
+                                            <p className="text-[8px] font-black text-[#C8A96A]/40 uppercase tracking-[0.2em] mb-0.5">{item.label}</p>
+                                            <p className="text-xs font-bold text-[#F5E6C8] leading-relaxed italic">{item.value}</p>
                                         </div>
                                     </div>
                                 ))}
                             </div>
                             
-                            <div className="mt-10 flex gap-3">
-                                <div className="flex-1 flex items-center gap-2 px-4 py-3 bg-green-50 rounded-2xl border border-green-100">
-                                    <CheckCircle className="w-4 h-4 text-green-500" />
-                                    <span className="text-xs font-black text-green-700 uppercase tracking-widest">Credited to Wallet</span>
+                            <div className="pt-6 flex items-center gap-3">
+                                <div className="flex-1 flex items-center gap-3 px-5 py-3 bg-[#C8A96A]/5 border border-[#C8A96A]/20 rounded-2px">
+                                    <CheckCircle className="w-3.5 h-3.5 text-[#C8A96A]" strokeWidth={2.5} />
+                                    <span className="text-[9px] font-black text-[#C8A96A] uppercase tracking-[0.2em]">Credited to Vault</span>
                                 </div>
                                 <button
                                     onClick={onClose}
-                                    className="px-8 py-3 bg-slate-800 text-white rounded-2xl font-black uppercase text-xs tracking-widest shadow-xl shadow-slate-200 hover:bg-slate-900 transition active:scale-95"
+                                    className="luxury-button h-12 px-8 text-xs"
                                 >
                                     Dismiss
                                 </button>
@@ -183,31 +185,27 @@ const MatchingBonusPage = ({ type }) => {
     }, [type]);
 
     if (loading) return (
-        <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
+        <div className="min-h-screen flex items-center justify-center bg-[#0D0D0D]">
             <div className="text-center">
-                <motion.div 
-                    animate={{ rotate: 360 }}
-                    transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
-                    className={`w-14 h-14 border-4 border-slate-200 border-t-green-500 rounded-full mb-6`} 
-                />
-                <p className="text-slate-400 font-bold uppercase text-[10px] tracking-[0.2em] animate-pulse">Syncing data...</p>
+                <Loader2 className="w-10 h-10 text-[#C8A96A] animate-spin mx-auto mb-4" />
+                <p className="text-[#C8A96A]/40 text-[10px] font-black uppercase tracking-[0.2em]">Synchronizing Records...</p>
             </div>
         </div>
     );
 
     if (error) return (
-        <div className="min-h-screen flex items-center justify-center p-6 bg-[#F8FAFC]">
+        <div className="min-h-screen flex items-center justify-center p-6 bg-[#0D0D0D]">
             <motion.div 
-                initial={{ opacity: 0, scale: 0.9 }}
+                initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="bg-white rounded-[2.5rem] p-10 text-center shadow-2xl shadow-slate-200 border border-slate-100 max-w-md w-full"
+                className="luxury-box p-12 text-center max-w-md w-full shadow-gold-900/20 shadow-2xl"
             >
-                <div className="w-20 h-20 bg-red-50 rounded-3xl flex items-center justify-center mx-auto mb-6 text-red-500">
-                    <AlertCircle className="w-10 h-10" />
+                <div className="w-20 h-20 bg-[#C8A96A]/5 border border-[#C8A96A]/10 rounded-full flex items-center justify-center mx-auto mb-8 text-[#C8A96A]">
+                    <AlertCircle className="w-10 h-10" strokeWidth={1} />
                 </div>
-                <h2 className="text-2xl font-black text-slate-800 mb-2 uppercase tracking-tight">Access Denied</h2>
-                <p className="text-slate-500 font-medium mb-8 leading-relaxed">{error}</p>
-                <button onClick={() => navigate(-1)} className="w-full py-4 rounded-2xl bg-slate-800 text-white font-black uppercase text-sm tracking-widest shadow-xl transition-all active:scale-95">Go Back</button>
+                <h2 className="text-2xl font-serif font-bold text-[#F5E6C8] mb-4 uppercase tracking-widest leading-tight">Access Denied</h2>
+                <p className="text-[#F5E6C8]/40 font-medium mb-10 leading-relaxed italic text-sm">{error}</p>
+                <button onClick={() => navigate(-1)} className="luxury-button w-full h-14">Return to Sanctuary</button>
             </motion.div>
         </div>
     );
@@ -230,7 +228,7 @@ const MatchingBonusPage = ({ type }) => {
     const cappingPct = cappingLimit > 0 ? Math.min((cappingUsed / cappingLimit) * 100, 100) : 0;
 
     return (
-        <div className="min-h-screen bg-[#F8FAFC] pb-20">
+        <div className="min-h-screen bg-[#0D0D0D] pb-24 font-sans selection:bg-[#C8A96A]/30">
             {/* ── Detail Modal ── */}
             <TransactionDetailModal 
                 isOpen={!!selectedTx} 
@@ -239,71 +237,68 @@ const MatchingBonusPage = ({ type }) => {
                 cfg={cfg}
             />
 
-            {/* ── Background Blobs ── */}
-            <div className="fixed inset-0 pointer-events-none -overflow-hidden">
-                <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-green-400/5 blur-[120px] rounded-full" />
-                <div className="absolute bottom-[20%] left-[-5%] w-[400px] h-[400px] bg-blue-400/5 blur-[120px] rounded-full" />
-            </div>
+            {/* ── Header Decoration ── */}
+            <div className="absolute top-0 left-0 w-full h-[300px] bg-gradient-to-b from-[#C8A96A]/5 to-transparent pointer-events-none" />
 
             <div className="relative z-10 p-4 md:p-8 max-w-7xl mx-auto">
                 {/* ── Header ── */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-12">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-12">
                     <div className="flex items-center gap-6">
                         <motion.button 
                             whileHover={{ x: -4 }}
                             onClick={() => navigate(-1)}
-                            className="w-12 h-12 rounded-2xl bg-white border border-slate-200 flex items-center justify-center shadow-sm text-slate-400 hover:text-slate-600 transition"
+                            className="w-12 h-12 rounded-full border border-[#C8A96A]/20 bg-[#C8A96A]/5 flex items-center justify-center text-[#C8A96A] hover:bg-[#C8A96A]/10 transition"
                         >
                             <ArrowLeft className="w-5 h-5" />
                         </motion.button>
                         <div>
-                            <div className="flex items-center gap-2 mb-1">
-                                <span className="text-2xl">{cfg.emoji}</span>
-                                <h1 className="text-3xl md:text-4xl font-black text-slate-800 uppercase tracking-tighter leading-none">{cfg.label}</h1>
+                            <div className="flex items-center gap-3 mb-1">
+                                <span className="text-2xl filter grayscale opacity-50">{cfg.emoji}</span>
+                                <h1 className="text-3xl md:text-4xl font-serif font-bold text-[#F5E6C8] uppercase tracking-tight leading-none">{cfg.label}</h1>
                             </div>
-                            <p className="text-xs md:text-sm text-slate-400 font-bold uppercase tracking-[0.2em]">{cfg.price} Package · Daily Cap {cfg.capping}</p>
+                            <p className="text-[9px] md:text-xs text-[#C8A96A]/60 font-black uppercase tracking-[0.4em]">{cfg.price} Package · Daily Cap {cfg.capping}</p>
                         </div>
                     </div>
-                    <div className="flex items-center gap-2 px-6 py-4 bg-white/50 backdrop-blur rounded-[2rem] border border-white max-w-fit shadow-lg shadow-slate-100/50">
-                        <div className={`p-2 rounded-xl bg-gradient-to-br ${cfg.color} text-white`}>
-                            <Icon className="w-5 h-5" />
+                    <div className="luxury-box px-6 py-4 flex items-center gap-4 shadow-gold-900/20">
+                        <div className={`p-3 bg-[#0D0D0D] border border-[#C8A96A]/20 rounded-2xl text-[#C8A96A]`}>
+                            <Icon className="w-5 h-5" strokeWidth={1.5} />
                         </div>
                         <div>
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-tight">Current Status</p>
-                            <p className={`text-sm font-black ${userHasPackage ? 'text-green-600' : 'text-slate-400'} uppercase`}>
-                                {userHasPackage ? 'Fully Active ✓' : 'Inactive'}
+                            <p className="text-[9px] font-black text-[#C8A96A]/40 uppercase tracking-[0.3em] leading-tight mb-1">Elevation Status</p>
+                            <p className={`text-xs font-bold ${userHasPackage ? 'text-[#C8A96A]' : 'text-white/20'} uppercase tracking-widest`}>
+                                {userHasPackage ? 'Fully Manifested' : 'Pending Activation'}
                             </p>
                         </div>
                     </div>
                 </div>
 
                 {/* ── Main Stats Dashboard ── */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12 text-slate-800">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12 text-[#F5E6C8]">
                     {/* Primary Large Card */}
                     <motion.div 
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        className={`md:col-span-2 relative overflow-hidden bg-gradient-to-br ${cfg.color} rounded-[2.5rem] p-8 text-white shadow-2xl ${cfg.glow}`}
+                        className={`md:col-span-2 relative luxury-box p-8 overflow-hidden shadow-gold-900/20 shadow-2xl transition-all duration-700 hover:shadow-gold-900/40`}
                     >
-                        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 blur-3xl rounded-full -mr-20 -mt-20" />
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-[#C8A96A]/5 blur-[80px] rounded-full -mr-16 -mt-16 -z-10" />
                         <div className="relative z-10 h-full flex flex-col justify-between">
-                            <div className="flex justify-between items-start mb-10">
+                            <div className="flex justify-between items-start mb-8">
                                 <div>
-                                    <p className="text-xs font-bold text-white/70 uppercase tracking-[0.2em] mb-1">Personal PV Balance</p>
-                                    <h4 className="text-5xl font-black tracking-tight">{personalPV.toLocaleString()} <span className="text-lg text-white/60">PV</span></h4>
+                                    <p className="text-[9px] font-black text-[#C8A96A]/40 uppercase tracking-[0.3em] mb-1">Internal Merit Balance</p>
+                                    <h4 className="text-5xl font-serif font-bold tracking-tighter text-[#F5E6C8]">{personalPV.toLocaleString()} <span className="text-lg text-[#C8A96A]/60 font-sans">PV</span></h4>
                                 </div>
-                                <div className="p-4 bg-white/20 backdrop-blur-md rounded-3xl border border-white/20">
-                                    <Icon className="w-8 h-8" />
+                                <div className="p-4 bg-[#0D0D0D] border border-[#C8A96A]/20 rounded-2xl shadow-2xl">
+                                    <Icon className="w-8 h-8 text-[#C8A96A]" strokeWidth={1} />
                                 </div>
                             </div>
                             <div className="grid grid-cols-2 gap-4">
-                                <div className="bg-white/10 backdrop-blur rounded-2xl p-4 border border-white/10">
-                                    <p className="text-[10px] text-white/60 uppercase tracking-widest font-black mb-1">Carry Forward</p>
-                                    <p className="text-xl font-black">{carryForwardBV.toLocaleString()} <span className="text-xs opacity-60">BV</span></p>
+                                <div className="bg-[#0D0D0D] border border-[#C8A96A]/10 rounded-xl p-5 hover:border-[#C8A96A]/30 transition-colors">
+                                    <p className="text-[8px] text-[#C8A96A]/40 uppercase tracking-widest font-black mb-1">Carry Yield</p>
+                                    <p className="text-xl font-bold text-[#F5E6C8]">{carryForwardBV.toLocaleString()} <span className="text-[10px] opacity-40 font-medium">BV</span></p>
                                 </div>
-                                <div className="bg-white/10 backdrop-blur rounded-2xl p-4 border border-white/10">
-                                    <p className="text-[10px] text-white/60 uppercase tracking-widest font-black mb-1">Matched Bonus</p>
-                                    <p className="text-xl font-black">{matchedPV.toLocaleString()} <span className="text-xs opacity-60">PV</span></p>
+                                <div className="bg-[#0D0D0D] border border-[#C8A96A]/10 rounded-xl p-5 hover:border-[#C8A96A]/30 transition-colors">
+                                    <p className="text-[8px] text-[#C8A96A]/40 uppercase tracking-widest font-black mb-1">Matched Accumulation</p>
+                                    <p className="text-xl font-bold text-[#F5E6C8]">{matchedPV.toLocaleString()} <span className="text-[10px] opacity-40 font-medium">PV</span></p>
                                 </div>
                             </div>
                         </div>
@@ -311,10 +306,10 @@ const MatchingBonusPage = ({ type }) => {
 
                     {/* Secondary Stat Cards */}
                     <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <StatCard delay={0.1} label="Total Earnings" value={`₹${totalEarned.toLocaleString()}`} icon={TrendingUp} badge="All-Time" color="from-green-500 to-emerald-700" />
-                        <StatCard delay={0.2} label="Earnings Today" value={`₹${todayEarned.toLocaleString()}`} icon={Activity} badge="Live" color="from-blue-500 to-indigo-700" />
-                        <StatCard delay={0.3} label="This Month" value={`₹${thisMonth.toLocaleString()}`} icon={BarChart2} badge="Active" color="from-violet-500 to-purple-700" />
-                        <StatCard delay={0.4} label="Binary Matched" value={`${matchedPV} PV`} icon={ArrowLeftRight} badge="Volume" color="from-orange-500 to-amber-700" />
+                        <StatCard delay={0.1} label="Cumulative Yield" value={`₹${totalEarned.toLocaleString()}`} icon={TrendingUp} badge="Manifested" />
+                        <StatCard delay={0.2} label="Diurnal Output" value={`₹${todayEarned.toLocaleString()}`} icon={Activity} badge="Live" />
+                        <StatCard delay={0.3} label="Lunar Cycle Total" value={`₹${thisMonth.toLocaleString()}`} icon={BarChart2} badge="Active" />
+                        <StatCard delay={0.4} label="Binary Lattice Match" value={`${matchedPV} PV`} icon={ArrowLeftRight} badge="Lattice" />
                     </div>
                 </div>
 
@@ -326,44 +321,44 @@ const MatchingBonusPage = ({ type }) => {
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="bg-white rounded-[2.5rem] p-8 shadow-xl shadow-slate-200/60 border border-slate-100 flex flex-col"
+                        className="luxury-box p-8 flex flex-col shadow-gold-900/20 shadow-2xl"
                     >
-                        <div className="flex items-center gap-3 mb-8">
-                            <div className="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center text-green-600">
-                                <Zap className="w-6 h-6" />
+                        <div className="flex items-center gap-4 mb-8">
+                            <div className="w-10 h-10 bg-[#0D0D0D] border border-[#C8A96A]/20 rounded-2xl flex items-center justify-center text-[#C8A96A]">
+                                <Zap className="w-5 h-5" strokeWidth={1} />
                             </div>
-                            <h3 className="text-lg font-black text-slate-800 uppercase tracking-tight">Earnings Capping</h3>
+                            <h3 className="text-lg font-serif font-bold text-[#F5E6C8] uppercase tracking-widest">Earning Ceiling</h3>
                         </div>
                         <div className="flex-1 flex flex-col justify-center">
-                            <div className="relative w-40 h-40 mx-auto mb-8">
+                            <div className="relative w-40 h-40 mx-auto mb-10">
                                 <svg className="w-full h-full rotate-[-90deg]">
-                                    <circle cx="80" cy="80" r="70" fill="none" stroke="#F1F5F9" strokeWidth="12" />
+                                    <circle cx="80" cy="80" r="72" fill="none" stroke="#C8A96A" strokeOpacity="0.05" strokeWidth="6" />
                                     <motion.circle 
-                                        cx="80" cy="80" r="70" fill="none" stroke="#10B981" strokeWidth="12" 
-                                        strokeDasharray="440"
-                                        initial={{ strokeDashoffset: 440 }}
-                                        whileInView={{ strokeDashoffset: 440 - (440 * cappingPct) / 100 }}
+                                        cx="80" cy="80" r="72" fill="none" stroke="#C8A96A" strokeWidth="6" 
+                                        strokeDasharray="452"
+                                        initial={{ strokeDashoffset: 452 }}
+                                        whileInView={{ strokeDashoffset: 452 - (452 * cappingPct) / 100 }}
                                         transition={{ duration: 1.5, ease: "easeOut" }}
                                         strokeLinecap="round"
                                     />
                                 </svg>
                                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                    <span className="text-3xl font-black text-slate-800 tracking-tighter">{cappingPct.toFixed(0)}%</span>
-                                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Utilized</span>
+                                    <span className="text-3xl font-serif font-bold text-[#F5E6C8] tracking-tighter">{cappingPct.toFixed(0)}%</span>
+                                    <span className="text-[8px] font-black text-[#C8A96A]/40 uppercase tracking-[0.3em] mt-1">Utilized</span>
                                 </div>
                             </div>
                             <div className="space-y-4">
-                                <div className="flex justify-between items-center text-sm">
-                                    <span className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Today Used</span>
-                                    <span className="text-slate-800 font-black">₹{cappingUsed.toLocaleString()}</span>
+                                <div className="flex justify-between items-center text-xs">
+                                    <span className="text-[#C8A96A]/40 font-black uppercase tracking-[0.2em] text-[8px]">Manifested Today</span>
+                                    <span className="text-[#F5E6C8] font-bold">₹{cappingUsed.toLocaleString()}</span>
                                 </div>
-                                <div className="flex justify-between items-center text-sm">
-                                    <span className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Daily Limit</span>
-                                    <span className="text-slate-800 font-black">₹{cappingLimit.toLocaleString()}</span>
+                                <div className="flex justify-between items-center text-xs">
+                                    <span className="text-[#C8A96A]/40 font-black uppercase tracking-[0.2em] text-[8px]">Diurnal Limit</span>
+                                    <span className="text-[#F5E6C8] font-bold">₹{cappingLimit.toLocaleString()}</span>
                                 </div>
-                                <div className="pt-4 border-t border-slate-100 flex justify-between items-center">
-                                    <span className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Remaining</span>
-                                    <span className="text-green-600 font-black">₹{Math.max(0, cappingLimit - todayEarned).toLocaleString()}</span>
+                                <div className="pt-4 border-t border-[#C8A96A]/10 flex justify-between items-center">
+                                    <span className="text-[#C8A96A]/40 font-black uppercase tracking-[0.2em] text-[8px]">Available Ceiling</span>
+                                    <span className="text-[#C8A96A] font-bold">₹{Math.max(0, cappingLimit - todayEarned).toLocaleString()}</span>
                                 </div>
                             </div>
                         </div>
@@ -374,36 +369,36 @@ const MatchingBonusPage = ({ type }) => {
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="lg:col-span-2 bg-white rounded-[2.5rem] p-8 shadow-xl shadow-slate-200/60 border border-slate-100"
+                        className="lg:col-span-2 luxury-box p-8 shadow-gold-900/20 shadow-2xl"
                     >
-                        <div className="flex items-center gap-3 mb-8">
-                            <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600">
-                                <ArrowLeftRight className="w-6 h-6" />
+                        <div className="flex items-center gap-4 mb-8">
+                            <div className="w-10 h-10 bg-[#0D0D0D] border border-[#C8A96A]/20 rounded-2xl flex items-center justify-center text-[#C8A96A]">
+                                <ArrowLeftRight className="w-5 h-5" strokeWidth={1} />
                             </div>
-                            <h3 className="text-lg font-black text-slate-800 uppercase tracking-tight">Binary Team Strength</h3>
+                            <h3 className="text-lg font-serif font-bold text-[#F5E6C8] uppercase tracking-widest">Lattice Symmetry</h3>
                         </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-12">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
                             {/* Left Leg */}
                             <div className="relative">
                                 <div className="flex justify-between items-end mb-4">
                                     <div>
-                                        <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">Left Leg</p>
-                                        <h4 className="text-2xl font-black text-slate-800">{leftBV.toLocaleString()} <span className="text-xs text-slate-400">BV</span></h4>
+                                        <p className="text-[9px] text-[#C8A96A]/40 font-black uppercase tracking-[0.2em] mb-1">Lateral Node (L)</p>
+                                        <h4 className="text-2xl font-bold text-[#F5E6C8] tracking-tight">{leftBV.toLocaleString()} <span className="text-[10px] text-[#C8A96A]/40 font-medium">BV</span></h4>
                                     </div>
-                                    <span className="text-xs font-bold text-slate-300">{(leftBV / Math.max(leftBV + rightBV, 1) * 100).toFixed(0)}%</span>
+                                    <span className="text-[9px] font-black text-[#C8A96A]/30 tracking-widest">{(leftBV / Math.max(leftBV + rightBV, 1) * 100).toFixed(0)}%</span>
                                 </div>
-                                <div className="h-4 w-full bg-slate-100 rounded-full overflow-hidden">
+                                <div className="h-1.5 w-full bg-[#C8A96A]/5 rounded-full overflow-hidden border border-[#C8A96A]/10">
                                     <motion.div 
                                         initial={{ width: 0 }}
                                         whileInView={{ width: `${(leftBV / Math.max(leftBV + rightBV, 1)) * 100}%` }}
                                         transition={{ duration: 1, delay: 0.5 }}
-                                        className={`h-full bg-gradient-to-r from-blue-400 to-blue-600 rounded-full`}
+                                        className={`h-full bg-gradient-to-r from-[#C8A96A]/20 to-[#C8A96A] rounded-full`}
                                     />
                                 </div>
-                                <div className="mt-8 p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-2">Recommendation</p>
-                                    <p className="text-xs font-medium text-slate-600">
-                                        {leftBV < rightBV ? "Focus on increasing Left leg volume to unlock more matching bonuses." : "Left leg is performing well. Maintain momentum."}
+                                <div className="mt-6 p-5 bg-[#0D0D0D] rounded-xl border border-[#C8A96A]/10">
+                                    <p className="text-[8px] font-black text-[#C8A96A]/40 uppercase tracking-[0.2em] mb-1">Strategic Insight</p>
+                                    <p className="text-[10px] font-medium text-[#F5E6C8]/60 italic leading-relaxed">
+                                        {leftBV < rightBV ? "Cultivate lateral node (L) to maximize binary manifest." : "Lateral performance is optimal. Sustain node integrity."}
                                     </p>
                                 </div>
                             </div>
@@ -411,37 +406,37 @@ const MatchingBonusPage = ({ type }) => {
                             <div className="relative">
                                 <div className="flex justify-between items-end mb-4">
                                     <div>
-                                        <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">Right Leg</p>
-                                        <h4 className="text-2xl font-black text-slate-800">{rightBV.toLocaleString()} <span className="text-xs text-slate-400">BV</span></h4>
+                                        <p className="text-[9px] text-[#C8A96A]/40 font-black uppercase tracking-[0.2em] mb-1">Lateral Node (R)</p>
+                                        <h4 className="text-2xl font-bold text-[#F5E6C8] tracking-tight">{rightBV.toLocaleString()} <span className="text-[10px] text-[#C8A96A]/40 font-medium">BV</span></h4>
                                     </div>
-                                    <span className="text-xs font-bold text-slate-300">{(rightBV / Math.max(leftBV + rightBV, 1) * 100).toFixed(0)}%</span>
+                                    <span className="text-[9px] font-black text-[#C8A96A]/30 tracking-widest">{(rightBV / Math.max(leftBV + rightBV, 1) * 100).toFixed(0)}%</span>
                                 </div>
-                                <div className="h-4 w-full bg-slate-100 rounded-full overflow-hidden">
+                                <div className="h-1.5 w-full bg-[#C8A96A]/5 rounded-full overflow-hidden border border-[#C8A96A]/10">
                                     <motion.div 
                                         initial={{ width: 0 }}
                                         whileInView={{ width: `${(rightBV / Math.max(leftBV + rightBV, 1)) * 100}%` }}
                                         transition={{ duration: 1, delay: 0.5 }}
-                                        className={`h-full bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-full`}
+                                        className={`h-full bg-gradient-to-r from-[#C8A96A]/20 to-[#C8A96A] rounded-full`}
                                     />
                                 </div>
-                                <div className="mt-8 p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-2">Recommendation</p>
-                                    <p className="text-xs font-medium text-slate-600">
-                                        {rightBV < leftBV ? "Focus on increasing Right leg volume to unlock more matching bonuses." : "Right leg is performing well. Maintain momentum."}
+                                <div className="mt-6 p-5 bg-[#0D0D0D] rounded-xl border border-[#C8A96A]/10">
+                                    <p className="text-[8px] font-black text-[#C8A96A]/40 uppercase tracking-[0.2em] mb-1">Strategic Insight</p>
+                                    <p className="text-[10px] font-medium text-[#F5E6C8]/60 italic leading-relaxed">
+                                        {rightBV < leftBV ? "Cultivate lateral node (R) to maximize binary manifest." : "Lateral performance is optimal. Sustain node integrity."}
                                     </p>
                                 </div>
                             </div>
                         </div>
-                        <div className="mt-10 pt-8 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-6">
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center text-slate-400">
-                                    <Info className="w-5 h-5" />
+                        <div className="mt-10 pt-8 border-t border-[#C8A96A]/10 flex flex-col sm:flex-row items-center justify-between gap-6">
+                            <div className="flex items-center gap-4">
+                                <div className="w-10 h-10 rounded-xl bg-[#0D0D0D] border border-[#C8A96A]/10 flex items-center justify-center text-[#C8A96A]/40">
+                                    <Info className="w-5 h-5" strokeWidth={1.5} />
                                 </div>
-                                <p className="text-xs text-slate-400 font-medium">Binary volumes are updated in real-time as users join your network.</p>
+                                <p className="text-[9px] text-[#C8A96A]/40 font-bold uppercase tracking-widest italic leading-relaxed">Network lattice updates in real-time correlation.</p>
                             </div>
                             <div className="text-center sm:text-right">
-                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Carry Forward Volume</p>
-                                <p className="text-xl font-black text-slate-800">{carryForwardBV.toLocaleString()} <span className="text-sm font-medium">BV</span></p>
+                                <p className="text-[9px] font-black text-[#C8A96A]/40 uppercase tracking-[0.3em] mb-1">Carry Manifest</p>
+                                <p className="text-xl font-serif font-bold text-[#F5E6C8]">{carryForwardBV.toLocaleString()} <span className="text-xs font-sans font-medium text-[#C8A96A]/60 tracking-tight">BV</span></p>
                             </div>
                         </div>
                     </motion.div>
@@ -452,42 +447,42 @@ const MatchingBonusPage = ({ type }) => {
                     initial={{ opacity: 0, y: 40 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="bg-white rounded-[2.5rem] shadow-2xl shadow-slate-200 border border-slate-100 overflow-hidden"
+                    className="luxury-box shadow-gold-900/20 shadow-2xl overflow-hidden"
                 >
-                    <div className="px-8 py-8 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                        <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 bg-slate-800 rounded-2xl flex items-center justify-center text-white">
-                                <Clock className="w-6 h-6" />
+                    <div className="px-8 py-6 border-b border-[#C8A96A]/10 flex flex-col sm:flex-row sm:items-center justify-between gap-5 bg-[#121212]">
+                        <div className="flex items-center gap-4">
+                            <div className="w-12 h-12 bg-[#0D0D0D] border border-[#C8A96A]/20 rounded-2xl flex items-center justify-center text-[#C8A96A]">
+                                <Clock className="w-6 h-6" strokeWidth={1} />
                             </div>
                             <div>
-                                <h3 className="text-lg font-black text-slate-800 uppercase tracking-tight">Matching Log</h3>
-                                <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">{history.length} Recent Transactions</p>
+                                <h3 className="text-lg font-serif font-bold text-[#F5E6C8] uppercase tracking-widest">Yield Chronicles</h3>
+                                <p className="text-[9px] text-[#C8A96A]/40 font-black uppercase tracking-[0.2em] mt-0.5">{history.length} Manifested Cycles</p>
                             </div>
                         </div>
-                        <div className="flex items-center gap-2 px-6 py-3 bg-slate-50 rounded-2xl border border-slate-100">
-                            <Activity className="w-4 h-4 text-green-500" />
-                            <span className="text-xs font-bold text-slate-600 uppercase tracking-wider uppercase">Live Sync Active</span>
+                        <div className="flex items-center gap-3 px-5 py-1.5 rounded-full border border-[#C8A96A]/20 bg-[#C8A96A]/5">
+                            <Activity className="w-3.5 h-3.5 text-[#C8A96A] animate-pulse" />
+                            <span className="text-[7px] font-black text-[#C8A96A] uppercase tracking-[0.3em]">Quantum Sync Active</span>
                         </div>
                     </div>
 
                     <div className="overflow-x-auto">
-                        <table className="w-full min-w-[800px]">
-                            <thead className="bg-slate-50/50">
+                        <table className="w-full min-w-[800px] border-collapse">
+                            <thead className="bg-[#121212] border-b border-[#C8A96A]/10">
                                 <tr>
-                                    {['Transaction ID', 'Date', 'Matched Volume', 'Bonus Earned', 'Status', 'Action'].map(h => (
-                                        <th key={h} className="px-8 py-6 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{h}</th>
+                                    {['Identifier', 'Timestamp', 'Matched Volume', 'Bonus Accrued', 'Manifest Status', 'Details'].map(h => (
+                                        <th key={h} className="px-8 py-5 text-left text-[8px] font-black text-[#C8A96A]/40 uppercase tracking-[0.3em]">{h}</th>
                                     ))}
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-slate-100">
+                            <tbody className="divide-y divide-[#C8A96A]/5">
                                 {history.length === 0 ? (
                                     <tr>
-                                        <td colSpan="6" className="px-8 py-20 text-center">
-                                            <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-300">
-                                                <Clock className="w-8 h-8" />
+                                        <td colSpan="6" className="px-8 py-24 text-center">
+                                            <div className="w-16 h-16 bg-[#C8A96A]/5 border border-[#C8A96A]/10 rounded-full flex items-center justify-center mx-auto mb-5 text-[#C8A96A]/20">
+                                                <Clock className="w-8 h-8" strokeWidth={1} />
                                             </div>
-                                            <p className="text-slate-500 font-black uppercase text-xs tracking-widest mt-4">No records found</p>
-                                            <p className="text-xs text-slate-400 mt-1">Start growing your binary tree to see transactions here.</p>
+                                            <p className="text-xs font-serif font-bold text-[#F5E6C8] uppercase tracking-widest mb-1">Chronicles Empty</p>
+                                            <p className="text-[9px] text-[#C8A96A]/40 font-black uppercase tracking-[0.2em]">Initiate network expansion to manifest yields.</p>
                                         </td>
                                     </tr>
                                 ) : (
@@ -495,33 +490,36 @@ const MatchingBonusPage = ({ type }) => {
                                         <tr 
                                             key={row._id} 
                                             onClick={() => setSelectedTx(row)}
-                                            className="hover:bg-slate-50/50 transition-colors cursor-pointer group"
+                                            className="hover:bg-[#C8A96A]/5 transition-colors cursor-pointer group"
                                         >
                                             <td className="px-8 py-6">
-                                                <span className="text-xs font-black text-slate-600 font-mono tracking-tight uppercase">#MB-{row._id.slice(-8)}</span>
+                                                <span className="text-[9px] font-black text-[#F5E6C8]/60 tracking-wider">#MB-{row._id.slice(-8).toUpperCase()}</span>
                                             </td>
-                                            <td className="px-8 py-6 text-sm font-bold text-slate-500">
-                                                {new Date(row.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                                            <td className="px-8 py-6">
+                                                <div className="flex flex-col">
+                                                    <span className="text-xs font-bold text-[#F5E6C8]">{new Date(row.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
+                                                    <span className="text-[8px] text-[#C8A96A]/40 font-black uppercase tracking-widest mt-0.5">{new Date(row.date).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</span>
+                                                </div>
                                             </td>
                                             <td className="px-8 py-6">
                                                 <div className="flex items-center gap-2">
-                                                    <div className={`w-2 h-2 rounded-full ${cfg.accentBg}`} />
-                                                    <span className="text-sm font-black text-slate-800">{row.matchedPV} PV</span>
+                                                    <div className={`w-1.5 h-1.5 rounded-full ${cfg.accentBg}`} />
+                                                    <span className="text-xs font-bold text-[#F5E6C8]">{row.matchedPV} PV</span>
                                                 </div>
                                             </td>
                                             <td className="px-8 py-6">
-                                                <span className="text-lg font-black text-emerald-600 tracking-tight">+ ₹{row.bonusAmount.toLocaleString()}</span>
+                                                <span className="text-base font-serif font-bold text-[#C8A96A] tracking-tighter">₹{row.bonusAmount.toLocaleString()}</span>
                                             </td>
                                             <td className="px-8 py-6">
-                                                <div className="flex items-center gap-2 px-3 py-1 bg-green-50 text-green-600 rounded-full border border-green-100 w-fit">
-                                                    <CheckCircle className="w-3 h-3" />
-                                                    <span className="text-[10px] font-black uppercase tracking-widest">Credited</span>
+                                                <div className="flex items-center gap-2 px-3 py-1 bg-[#C8A96A]/10 text-[#C8A96A] rounded-full border border-[#C8A96A]/30 w-fit">
+                                                    <CheckCircle className="w-2.5 h-2.5" />
+                                                    <span className="text-[7px] font-black uppercase tracking-widest">Credited</span>
                                                 </div>
                                             </td>
-                                            <td className="px-8 py-6">
-                                                <button className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 group-hover:text-slate-800 transition-colors">
-                                                    View Details
-                                                    <ArrowLeft className="w-3 h-3 rotate-180" />
+                                            <td className="px-8 py-6 text-right">
+                                                <button className="flex items-center gap-2.5 text-[8px] font-black uppercase tracking-widest text-[#C8A96A]/40 group-hover:text-[#C8A96A] transition-all">
+                                                    Inspect
+                                                    <ArrowRight className="w-2.5 h-2.5" />
                                                 </button>
                                             </td>
                                         </tr>

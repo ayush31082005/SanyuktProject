@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../../api";
 import { motion } from "framer-motion";
-import { Building2, User, Phone, MapPin, Key, Plus, Eye, EyeOff, Copy, CheckCircle } from "lucide-react";
+import { Building2, Plus, Eye, EyeOff, Copy, CheckCircle } from "lucide-react";
 
 const AdminFranchise = () => {
     const [form, setForm] = useState({
@@ -99,19 +99,24 @@ const AdminFranchise = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-8 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-7xl mx-auto">
+        <div className="min-h-screen bg-[#0D0D0D] font-sans text-[#F5E6C8] selection:bg-[#C8A96A]/30 py-8 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+            {/* Background elements */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[#C8A96A]/5 rounded-full blur-[100px] pointer-events-none"></div>
+
+            <div className="max-w-7xl mx-auto relative z-10">
                 {/* Header */}
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="mb-8"
                 >
-                    <h1 className="text-3xl md:text-4xl font-bold text-gray-800 flex items-center gap-3">
-                        <Building2 className="w-8 h-8 text-blue-600" />
-                        Admin Franchise Panel
+                    <h1 className="text-3xl md:text-4xl font-serif font-bold text-[#F5E6C8] tracking-tight flex items-center gap-3">
+                        <div className="p-3 bg-[#0D0D0D] rounded-xl border border-[#C8A96A]/20 text-[#C8A96A]">
+                            <Building2 className="w-6 h-6" />
+                        </div>
+                        <span className="text-[#F5E6C8]">Admin Franchise Panel</span>
                     </h1>
-                    <p className="text-gray-600 mt-2">Manage your franchise partners</p>
+                    <p className="text-[#F5E6C8]/40 mt-2 text-sm font-medium">Manage your franchise partners</p>
                 </motion.div>
 
                 {/* Add Franchise Form */}
@@ -119,17 +124,17 @@ const AdminFranchise = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.1 }}
-                    className="bg-white rounded-2xl shadow-xl p-6 md:p-8 mb-8 border border-gray-100"
+                    className="luxury-box p-6 md:p-8 mb-8 shadow-2xl"
                 >
-                    <h2 className="text-xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
-                        <Plus className="w-5 h-5 text-green-600" />
+                    <h2 className="text-xl font-serif font-bold text-[#F5E6C8] tracking-tight mb-6 flex items-center gap-2">
+                        <Plus className="w-5 h-5 text-[#C8A96A]" />
                         Add New Franchise
                     </h2>
 
                     <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Franchise ID */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-[10px] font-black uppercase tracking-widest text-[#C8A96A] mb-2">
                                 Franchise ID
                             </label>
                             <input
@@ -137,7 +142,7 @@ const AdminFranchise = () => {
                                 name="franchiseId"
                                 value={form.franchiseId}
                                 onChange={handleChange}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                                className="w-full bg-[#0D0D0D] border border-[#C8A96A]/20 rounded-xl px-4 py-3 text-[#F5E6C8] placeholder:text-[#F5E6C8]/20 focus:border-[#C8A96A] outline-none transition-all font-medium text-sm"
                                 placeholder="Enter Franchise ID"
                                 required
                             />
@@ -145,7 +150,7 @@ const AdminFranchise = () => {
 
                         {/* Name */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-[10px] font-black uppercase tracking-widest text-[#C8A96A] mb-2">
                                 Franchise Name
                             </label>
                             <input
@@ -153,7 +158,7 @@ const AdminFranchise = () => {
                                 name="name"
                                 value={form.name}
                                 onChange={handleChange}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                                className="w-full bg-[#0D0D0D] border border-[#C8A96A]/20 rounded-xl px-4 py-3 text-[#F5E6C8] placeholder:text-[#F5E6C8]/20 focus:border-[#C8A96A] outline-none transition-all font-medium text-sm"
                                 placeholder="Enter Name"
                                 required
                             />
@@ -161,7 +166,7 @@ const AdminFranchise = () => {
 
                         {/* Mobile */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-[10px] font-black uppercase tracking-widest text-[#C8A96A] mb-2">
                                 Mobile Number
                             </label>
                             <input
@@ -169,7 +174,7 @@ const AdminFranchise = () => {
                                 name="mobile"
                                 value={form.mobile}
                                 onChange={handleChange}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                                className="w-full bg-[#0D0D0D] border border-[#C8A96A]/20 rounded-xl px-4 py-3 text-[#F5E6C8] placeholder:text-[#F5E6C8]/20 focus:border-[#C8A96A] outline-none transition-all font-medium text-sm"
                                 placeholder="Enter Mobile"
                                 required
                             />
@@ -177,7 +182,7 @@ const AdminFranchise = () => {
 
                         {/* Address */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-[10px] font-black uppercase tracking-widest text-[#C8A96A] mb-2">
                                 Address
                             </label>
                             <input
@@ -185,7 +190,7 @@ const AdminFranchise = () => {
                                 name="address"
                                 value={form.address}
                                 onChange={handleChange}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                                className="w-full bg-[#0D0D0D] border border-[#C8A96A]/20 rounded-xl px-4 py-3 text-[#F5E6C8] placeholder:text-[#F5E6C8]/20 focus:border-[#C8A96A] outline-none transition-all font-medium text-sm"
                                 placeholder="Enter Address"
                                 required
                             />
@@ -193,7 +198,7 @@ const AdminFranchise = () => {
 
                         {/* Password */}
                         <div className="md:col-span-2">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-[10px] font-black uppercase tracking-widest text-[#C8A96A] mb-2">
                                 Password
                             </label>
                             <input
@@ -201,7 +206,7 @@ const AdminFranchise = () => {
                                 name="password"
                                 value={form.password}
                                 onChange={handleChange}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                                className="w-full bg-[#0D0D0D] border border-[#C8A96A]/20 rounded-xl px-4 py-3 text-[#F5E6C8] placeholder:text-[#F5E6C8]/20 focus:border-[#C8A96A] outline-none transition-all font-medium text-sm"
                                 placeholder="Enter Password"
                                 required
                             />
@@ -212,11 +217,11 @@ const AdminFranchise = () => {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 px-6 rounded-lg font-semibold hover:from-blue-700 hover:to-blue-800 transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                className="w-full luxury-button flex items-center justify-center gap-2 !py-4"
                             >
                                 {loading ? (
                                     <>
-                                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                        <div className="w-5 h-5 border-2 border-[#C8A96A] border-t-transparent rounded-full animate-spin"></div>
                                         Adding...
                                     </>
                                 ) : (
@@ -232,27 +237,27 @@ const AdminFranchise = () => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.2 }}
-                    className="bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-gray-100"
+                    className="luxury-box p-6 md:p-8 shadow-2xl"
                 >
-                    <h3 className="text-xl font-semibold text-gray-800 mb-6">
+                    <h3 className="text-xl font-serif font-bold text-[#F5E6C8] tracking-tight mb-6">
                         Franchise List (Admin Only)
                     </h3>
 
                     <div className="overflow-x-auto">
-                        <table className="w-full">
+                        <table className="w-full text-left border-collapse">
                             <thead>
-                                <tr className="bg-gray-50">
-                                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">ID</th>
-                                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">Name</th>
-                                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">Mobile</th>
-                                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">Address</th>
-                                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-600">Password</th>
+                                <tr className="bg-[#0D0D0D] border-b border-[#C8A96A]/30">
+                                    <th className="p-5 text-[10px] font-black text-[#C8A96A] uppercase tracking-[0.2em] whitespace-nowrap">ID</th>
+                                    <th className="p-5 text-[10px] font-black text-[#C8A96A] uppercase tracking-[0.2em] whitespace-nowrap">Name</th>
+                                    <th className="p-5 text-[10px] font-black text-[#C8A96A] uppercase tracking-[0.2em] whitespace-nowrap">Mobile</th>
+                                    <th className="p-5 text-[10px] font-black text-[#C8A96A] uppercase tracking-[0.2em] whitespace-nowrap">Address</th>
+                                    <th className="p-5 text-[10px] font-black text-[#C8A96A] uppercase tracking-[0.2em] whitespace-nowrap">Password</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {list.length === 0 ? (
                                     <tr>
-                                        <td colSpan="5" className="px-4 py-8 text-center text-gray-500">
+                                        <td colSpan="5" className="p-16 text-center text-[#F5E6C8]/40 font-medium">
                                             No franchises found
                                         </td>
                                     </tr>
@@ -263,20 +268,20 @@ const AdminFranchise = () => {
                                             initial={{ opacity: 0, y: 20 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             transition={{ delay: index * 0.05 }}
-                                            className="border-t border-gray-100 hover:bg-gray-50 transition"
+                                            className="border-b border-[#C8A96A]/10 hover:bg-[#C8A96A]/[0.02] transition-colors"
                                         >
-                                            <td className="px-4 py-3 text-sm text-gray-800">{item.franchiseId}</td>
-                                            <td className="px-4 py-3 text-sm text-gray-800">{item.name}</td>
-                                            <td className="px-4 py-3 text-sm text-gray-800">{item.mobile}</td>
-                                            <td className="px-4 py-3 text-sm text-gray-800">{item.address}</td>
-                                            <td className="px-4 py-3 text-sm">
-                                                <div className="flex items-center gap-2">
-                                                    <span className="font-mono text-gray-600">
+                                            <td className="p-5 text-sm font-bold text-[#F5E6C8]">{item.franchiseId}</td>
+                                            <td className="p-5 text-sm text-[#F5E6C8]/70">{item.name}</td>
+                                            <td className="p-5 text-sm text-[#F5E6C8]/70">{item.mobile}</td>
+                                            <td className="p-5 text-sm text-[#F5E6C8]/70">{item.address}</td>
+                                            <td className="p-5 text-sm">
+                                                <div className="flex items-center gap-3">
+                                                    <span className="font-mono text-[#F5E6C8]/70">
                                                         {showPasswords[item._id] ? item.password : "••••••••"}
                                                     </span>
                                                     <button
                                                         onClick={() => togglePassword(item._id)}
-                                                        className="text-gray-400 hover:text-blue-600 transition"
+                                                        className="text-[#C8A96A]/60 hover:text-[#C8A96A] transition-colors"
                                                     >
                                                         {showPasswords[item._id] ?
                                                             <EyeOff className="w-4 h-4" /> :
@@ -285,10 +290,10 @@ const AdminFranchise = () => {
                                                     </button>
                                                     <button
                                                         onClick={() => copyToClipboard(item.password, item._id)}
-                                                        className="text-gray-400 hover:text-green-600 transition"
+                                                        className={`transition-colors ${copied === item._id ? 'text-green-500' : 'text-[#C8A96A]/60 hover:text-[#C8A96A]'} `}
                                                     >
                                                         {copied === item._id ?
-                                                            <CheckCircle className="w-4 h-4 text-green-500" /> :
+                                                            <CheckCircle className="w-4 h-4" /> :
                                                             <Copy className="w-4 h-4" />
                                                         }
                                                     </button>
@@ -302,9 +307,9 @@ const AdminFranchise = () => {
                     </div>
 
                     {/* Stats */}
-                    <div className="mt-6 pt-6 border-t border-gray-200">
-                        <p className="text-sm text-gray-600">
-                            Total Franchises: <span className="font-semibold">{list.length}</span>
+                    <div className="mt-8 pt-6 border-t border-[#C8A96A]/10">
+                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#F5E6C8]/40">
+                            Total Franchises: <span className="font-bold text-[#C8A96A]">{list.length}</span>
                         </p>
                     </div>
                 </motion.div>

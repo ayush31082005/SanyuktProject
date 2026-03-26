@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import api, { API_URL } from "../api"
+import { Calendar, MapPin, Clock, Tag, X, ChevronRight, Bookmark } from 'lucide-react'
 
 function Events() {
     const [events, setEvents] = useState([])
@@ -25,7 +26,7 @@ function Events() {
         if (!dateString) return null
         try {
             const date = new Date(dateString)
-            return date.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })
+            return date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })
         } catch { return dateString }
     }
 
@@ -42,147 +43,61 @@ function Events() {
 
     const getImageUrl = (filename) => `${API_URL}/uploads/events/${filename}`
 
+    // Mapping categories to the dark theme styles (Using gold and muted dark variants instead of bright pastel colors)
     const categoryColors = {
-        Meeting: { bg: '#dbeafe', text: '#1d4ed8', border: '#bfdbfe' },
-        Celebration: { bg: '#fef3c7', text: '#d97706', border: '#fde68a' },
-        Workshop: { bg: '#f3e8ff', text: '#7c3aed', border: '#e9d5ff' },
-        Festival: { bg: '#fce7f3', text: '#be185d', border: '#fbcfe8' },
-        Other: { bg: '#f0fdf4', text: '#15803d', border: '#bbf7d0' },
+        Meeting: { bg: 'bg-[#1e1a2d]', text: 'text-[#a78bfa]', border: 'border-[#8b5cf6]/30' },
+        Celebration: { bg: 'bg-[#292317]', text: 'text-[#D4AF37]', border: 'border-[#C8A96A]/30' },
+        Workshop: { bg: 'bg-[#1a232c]', text: 'text-[#38bdf8]', border: 'border-[#0ea5e9]/30' },
+        Festival: { bg: 'bg-[#2a1720]', text: 'text-[#f472b6]', border: 'border-[#db2777]/30' },
+        Other: { bg: 'bg-[#121212]', text: 'text-[#C8A96A]', border: 'border-[#C8A96A]/30' },
     }
 
     if (loading) {
         return (
-            <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f0fdf4' }}>
-                <div style={{ textAlign: 'center' }}>
-                    <div style={{
-                        width: 56, height: 56, borderRadius: '50%',
-                        border: '4px solid #bbf7d0', borderTopColor: '#16a34a',
-                        animation: 'spin 0.8s linear infinite', margin: '0 auto 16px'
-                    }} />
-                    <p style={{ color: '#15803d', fontWeight: 600, fontSize: 16, fontFamily: 'sans-serif' }}>Loading events...</p>
-                    <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+            <div className="min-h-screen bg-[#0D0D0D] flex items-center justify-center">
+                <div className="text-center">
+                    <div className="w-14 h-14 rounded-full border-4 border-[#C8A96A]/20 border-t-[#C8A96A] animate-spin mx-auto mb-4" />
+                    <p className="text-[#C8A96A] font-black text-xs uppercase tracking-[0.2em] animate-pulse">Loading Events...</p>
                 </div>
             </div>
         )
     }
 
     return (
-        <div style={{ minHeight: '100vh', background: '#ffffff', fontFamily: 'Georgia, serif' }}>
-            <style>{`
-                @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-                @keyframes fadeUp {
-                    from { opacity: 0; transform: translateY(28px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
-                @keyframes scaleIn {
-                    from { opacity: 0; transform: scale(0.96); }
-                    to { opacity: 1; transform: scale(1); }
-                }
-                .event-card {
-                    background: #fff;
-                    border: 1px solid #e5e7eb;
-                    border-radius: 16px;
-                    overflow: hidden;
-                    animation: fadeUp 0.5s ease forwards;
-                    opacity: 0;
-                    transition: box-shadow 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
-                    cursor: pointer;
-                }
-                .event-card:hover {
-                    box-shadow: 0 12px 40px rgba(22,163,74,0.15);
-                    transform: translateY(-5px);
-                    border-color: #86efac;
-                }
-                .event-card img {
-                    width: 100%;
-                    height: 200px;
-                    object-fit: cover;
-                    transition: transform 0.5s ease;
-                }
-                .event-card:hover img { transform: scale(1.05); }
-                .img-wrap { overflow: hidden; position: relative; }
-                .img-overlay {
-                    position: absolute; inset: 0;
-                    background: linear-gradient(to top, rgba(5,46,22,0.6) 0%, transparent 50%);
-                }
-                .detail-btn {
-                    display: flex; align-items: center; gap: 6px;
-                    color: #15803d; font-weight: 600; font-size: 14px;
-                    font-family: sans-serif;
-                    background: none; border: none; cursor: pointer;
-                    padding: 0; transition: gap 0.2s ease;
-                }
-                .event-card:hover .detail-btn { gap: 10px; }
-                .modal-overlay {
-                    position: fixed; inset: 0;
-                    background: rgba(0,0,0,0.6);
-                    z-index: 1000;
-                    display: flex; align-items: center; justify-content: center;
-                    padding: 24px;
-                    animation: fadeIn 0.2s ease;
-                    backdrop-filter: blur(4px);
-                }
-                .modal-box {
-                    background: white; border-radius: 20px;
-                    max-width: 580px; width: 100%;
-                    overflow: hidden; animation: scaleIn 0.25s ease;
-                    max-height: 90vh; overflow-y: auto;
-                }
-                .tag {
-                    display: inline-flex; align-items: center; gap: 5px;
-                    padding: 4px 12px; border-radius: 99px;
-                    font-size: 12px; font-weight: 600; font-family: sans-serif;
-                }
-            `}</style>
+        <div className="bg-[#0D0D0D] font-sans text-[#F5E6C8] selection:bg-[#C8A96A]/30 relative">
+            {/* Ambient Background Effects */}
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#C8A96A]/5 rounded-full blur-[150px] pointer-events-none"></div>
+            <div className="absolute top-[40%] left-0 w-[300px] h-[300px] bg-[#C8A96A]/5 rounded-full blur-[120px] pointer-events-none"></div>
 
             {/* Header */}
-            <div style={{
-                background: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%)',
-                borderBottom: '1px solid #d1fae5',
-                padding: '60px 24px 48px',
-                textAlign: 'center',
-                animation: 'fadeIn 0.6s ease'
-            }}>
-                <div style={{
-                    display: 'inline-block',
-                    background: '#dcfce7', border: '1px solid #86efac',
-                    color: '#15803d', fontSize: 11, fontWeight: 700,
-                    letterSpacing: 2, padding: '5px 16px', borderRadius: 99,
-                    marginBottom: 18, fontFamily: 'sans-serif', textTransform: 'uppercase'
-                }}>Upcoming & Recent</div>
+            <div className="relative py-10 md:py-12 px-6 text-center border-b border-[#C8A96A]/10 bg-[#121212]/80 backdrop-blur-sm z-10">
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#0D0D0D] border border-[#C8A96A]/30 text-[#C8A96A] text-[10px] font-black uppercase tracking-[0.3em] mb-6 shadow-[0_0_15px_rgba(200,169,106,0.1)]">
+                    <Calendar size={14} className="text-[#C8A96A]" strokeWidth={2.5} />
+                    Upcoming & Recent
+                </div>
 
-                <h1 style={{
-                    fontSize: 'clamp(34px, 5vw, 56px)',
-                    fontWeight: 800, color: '#052e16',
-                    margin: '0 0 12px', letterSpacing: '-1px', lineHeight: 1.1
-                }}>Our Seminars & Events</h1>
+                <h1 className="text-3xl md:text-5xl font-serif font-bold text-[#F5E6C8] mb-3 tracking-tight uppercase">
+                    Our Seminars & <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C8A96A] to-[#D4AF37]">Events</span>
+                </h1>
 
-                <div style={{ width: 48, height: 3, background: '#16a34a', borderRadius: 99, margin: '0 auto 16px' }} />
+                <div className="w-12 h-1 bg-gradient-to-r from-[#C8A96A] to-[#D4AF37] mx-auto rounded-full mb-3"></div>
 
-                <p style={{
-                    color: '#4b7a5a', fontSize: 16, maxWidth: 460,
-                    margin: '0 auto', fontFamily: 'sans-serif', lineHeight: 1.6
-                }}>
-                    Join us for exciting events, workshops and celebrations
+                <p className="text-[#F5E6C8] text-[11px] md:text-xs font-black uppercase tracking-widest max-w-xl mx-auto leading-relaxed mb-6 italic opacity-60">
+                    Join us for exclusive seminars, prestigious celebrations, and insightful workshops designed for growth and networking.
                 </p>
 
                 {/* Stats */}
                 {events.length > 0 && (
-                    <div style={{
-                        marginTop: 28,
-                        display: 'inline-flex', gap: 32,
-                        background: 'white', border: '1px solid #d1fae5',
-                        borderRadius: 12, padding: '12px 28px',
-                        fontFamily: 'sans-serif'
-                    }}>
+                    <div className="inline-flex flex-wrap justify-center gap-6 md:gap-12 bg-[#0D0D0D] border border-[#C8A96A]/20 rounded-2xl p-4 md:py-4 md:px-10 shadow-xl shrink-0 mx-auto max-w-full">
                         {[
                             { label: 'Total Events', val: events.length },
                             { label: 'Scheduled', val: events.filter(e => e.date).length },
                             { label: 'With Location', val: events.filter(e => e.location).length },
                         ].map((s, i) => (
-                            <div key={i} style={{ textAlign: 'center' }}>
-                                <div style={{ fontSize: 22, fontWeight: 800, color: '#052e16' }}>{s.val}</div>
-                                <div style={{ fontSize: 11, color: '#6b7280', fontWeight: 500, letterSpacing: 0.5 }}>{s.label}</div>
+                            <div key={i} className="text-center relative">
+                                {i !== 0 && <div className="hidden md:block absolute -left-6 md:-left-6 top-1/2 -translate-y-1/2 w-px h-8 bg-[#C8A96A]/20"></div>}
+                                <div className="text-2xl md:text-3xl font-serif font-bold text-[#C8A96A] mb-1">{s.val}</div>
+                                <div className="text-[9px] text-[#F5E6C8]/50 uppercase font-black tracking-widest">{s.label}</div>
                             </div>
                         ))}
                     </div>
@@ -190,143 +105,87 @@ function Events() {
             </div>
 
             {/* Events Grid */}
-            <div style={{ maxWidth: 1200, margin: '0 auto', padding: '48px 24px' }}>
+            <div className="max-w-7xl mx-auto px-6 py-6 relative z-10">
                 {events.length === 0 ? (
-                    <div style={{ textAlign: 'center', padding: '80px 24px', animation: 'fadeIn 0.6s ease' }}>
-                        <div style={{
-                            width: 80, height: 80, borderRadius: '50%',
-                            background: '#f0fdf4', border: '2px dashed #86efac',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            margin: '0 auto 20px'
-                        }}>
-                            <svg width="36" height="36" fill="none" stroke="#16a34a" strokeWidth="1.5" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                        </div>
-                        <h3 style={{ fontSize: 22, fontWeight: 700, color: '#1f2937', marginBottom: 8 }}>No Events Yet</h3>
-                        <p style={{ color: '#9ca3af', fontFamily: 'sans-serif' }}>Events will appear here once admin adds them.</p>
+                    <div className="text-center py-24 bg-[#121212] rounded-2xl border border-[#C8A96A]/10">
+                        <Calendar size={48} strokeWidth={1} className="text-[#C8A96A]/30 mx-auto mb-4" />
+                        <h3 className="text-xl font-serif text-[#F5E6C8] mb-2">No Events Scheduled</h3>
+                        <p className="text-[#F5E6C8]/40 text-sm">Please check back later for upcoming seminars and events.</p>
                     </div>
                 ) : (
-                    <div style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-                        gap: 24
-                    }}>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {events.map((item, index) => {
-                            const catStyle = categoryColors[item.category] || categoryColors.Other
+                            const catStyle = categoryColors[item.category] || categoryColors.Other;
                             return (
                                 <div
                                     key={item._id || index}
-                                    className="event-card"
-                                    style={{ animationDelay: `${index * 100}ms` }}
+                                    className="group flex flex-col bg-[#121212] border border-[#C8A96A]/20 rounded-xl overflow-hidden cursor-pointer hover:border-[#C8A96A]/50 hover:shadow-[0_10px_30px_rgba(200,169,106,0.15)] hover:-translate-y-1 transition-all duration-500"
                                     onClick={() => setSelectedEvent(item)}
                                 >
-                                    {/* Image */}
-                                    <div className="img-wrap">
+                                    {/* Image Section */}
+                                    <div className="relative h-56 overflow-hidden bg-[#0D0D0D] border-b border-[#C8A96A]/10">
                                         <img
                                             src={getImageUrl(item.image)}
                                             alt={item.title}
+                                            className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700"
                                             onError={(e) => {
-                                                e.target.src = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='200' viewBox='0 0 320 200'%3E%3Crect width='320' height='200' fill='%23f0fdf4'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%2386efac' font-size='13' font-family='sans-serif'%3EEvent Image%3C/text%3E%3C/svg%3E`
+                                                e.target.onerror = null;
+                                                e.target.src = "https://via.placeholder.com/400x250/121212/C8A96A?text=Event+Visual"
                                             }}
                                         />
-                                        <div className="img-overlay" />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-[#0D0D0D] via-transparent to-transparent opacity-80"></div>
 
-                                        {/* Date badge */}
-                                        {item.date && (
-                                            <div style={{
-                                                position: 'absolute', top: 12, left: 12,
-                                                background: 'rgba(255,255,255,0.95)',
-                                                borderRadius: 10, padding: '5px 12px',
-                                                display: 'flex', alignItems: 'center', gap: 5,
-                                                fontFamily: 'sans-serif', fontSize: 12,
-                                                fontWeight: 600, color: '#15803d'
-                                            }}>
-                                                <svg width="13" height="13" fill="#16a34a" viewBox="0 0 20 20">
-                                                    <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
-                                                </svg>
-                                                {formatDate(item.date)}
+                                        {/* Date Badge */}
+                                        <div className="absolute top-4 left-4 bg-[#0D0D0D]/80 backdrop-blur-md border border-[#C8A96A]/30 rounded-lg px-3 py-1.5 flex items-center gap-2 shadow-lg">
+                                            <Calendar size={12} className="text-[#C8A96A]" strokeWidth={2.5} />
+                                            <span className="text-xs font-mono font-bold text-[#F5E6C8]">{item.date ? formatDate(item.date) : "TBD"}</span>
+                                        </div>
+
+                                        {/* Category Badge */}
+                                        {item.category && (
+                                            <div className={`absolute top-4 right-4 ${catStyle.bg} border ${catStyle.border} rounded px-2 py-1 shadow-lg`}>
+                                                <span className={`text-[9px] font-black uppercase tracking-widest ${catStyle.text}`}>{item.category}</span>
                                             </div>
                                         )}
-
-                                        {!item.date && (
-                                            <div style={{
-                                                position: 'absolute', top: 12, left: 12,
-                                                background: 'rgba(255,255,255,0.85)',
-                                                borderRadius: 10, padding: '5px 12px',
-                                                fontFamily: 'sans-serif', fontSize: 11,
-                                                fontWeight: 600, color: '#9ca3af'
-                                            }}>Date TBD</div>
-                                        )}
-
-                                        {/* Category */}
-                                        {item.category && (
-                                            <div style={{
-                                                position: 'absolute', top: 12, right: 12,
-                                                background: catStyle.bg,
-                                                border: `1px solid ${catStyle.border}`,
-                                                color: catStyle.text,
-                                                borderRadius: 99, padding: '4px 12px',
-                                                fontFamily: 'sans-serif', fontSize: 11, fontWeight: 700
-                                            }}>{item.category}</div>
-                                        )}
                                     </div>
 
-                                    {/* Content */}
-                                    <div style={{ padding: '20px 20px 16px' }}>
-                                        <h3 style={{
-                                            fontSize: 18, fontWeight: 700,
-                                            color: '#111827', margin: '0 0 8px',
-                                            lineHeight: 1.3
-                                        }}>{item.title}</h3>
+                                    {/* Content Section */}
+                                    <div className="flex flex-col flex-1 p-4 md:p-5">
+                                        <h3 className="text-lg font-serif font-bold text-[#F5E6C8] mb-2 leading-tight line-clamp-2 group-hover:text-[#C8A96A] transition-colors uppercase">
+                                            {item.title}
+                                        </h3>
+                                        
+                                        <p className="text-[#F5E6C8] text-xs font-bold leading-relaxed mb-4 line-clamp-2 opacity-60">
+                                            {item.content}
+                                        </p>
 
-                                        <p style={{
-                                            color: '#6b7280', fontSize: 14, lineHeight: 1.6,
-                                            fontFamily: 'sans-serif', margin: '0 0 14px',
-                                            display: '-webkit-box',
-                                            WebkitLineClamp: 2,
-                                            WebkitBoxOrient: 'vertical',
-                                            overflow: 'hidden'
-                                        }}>{item.content}</p>
-
-                                        {/* Meta tags */}
-                                        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 14 }}>
+                                        {/* Metadata Row */}
+                                        <div className="mt-auto flex flex-wrap gap-3 mb-6">
                                             {item.time && (
-                                                <span className="tag" style={{ background: '#f0fdf4', color: '#15803d', border: '1px solid #bbf7d0' }}>
-                                                    <svg width="11" height="11" fill="none" stroke="#16a34a" strokeWidth="2" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                    </svg>
-                                                    {formatTime(item.time)}
-                                                </span>
+                                                <div className="flex items-center gap-1.5 bg-[#0D0D0D] border border-[#C8A96A]/10 rounded px-2 py-1 text-[#F5E6C8]/70">
+                                                    <Clock size={12} className="text-[#C8A96A]" />
+                                                    <span className="text-[10px] font-mono font-bold uppercase">{formatTime(item.time)}</span>
+                                                </div>
                                             )}
                                             {item.location && (
-                                                <span className="tag" style={{ background: '#f0fdf4', color: '#15803d', border: '1px solid #bbf7d0' }}>
-                                                    <svg width="11" height="11" fill="none" stroke="#16a34a" strokeWidth="2" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                                    </svg>
-                                                    {item.location}
-                                                </span>
-                                            )}
-                                            {!item.time && !item.location && (
-                                                <span style={{ fontSize: 12, color: '#d1d5db', fontFamily: 'sans-serif', fontStyle: 'italic' }}>No additional details</span>
+                                                <div className="flex items-center gap-1.5 bg-[#0D0D0D] border border-[#C8A96A]/10 rounded px-2 py-1 text-[#F5E6C8]/70">
+                                                    <MapPin size={12} className="text-[#C8A96A]" />
+                                                    <span className="text-[10px] uppercase font-bold tracking-wider">{item.location}</span>
+                                                </div>
                                             )}
                                         </div>
 
-                                        <div style={{ borderTop: '1px solid #f3f4f6', paddingTop: 14 }}>
-                                            <button className="detail-btn">
+                                        {/* Action */}
+                                        <div className="pt-3 border-t border-[#C8A96A]/10 flex items-center justify-between">
+                                            <span className="text-[10px] font-black uppercase tracking-widest text-[#C8A96A] group-hover:text-[#D4AF37] transition-colors">
                                                 View Details
-                                                <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                                                </svg>
-                                            </button>
+                                            </span>
+                                            <div className="w-7 h-7 rounded-full bg-[#C8A96A]/10 border border-[#C8A96A]/30 flex items-center justify-center group-hover:bg-[#C8A96A] group-hover:text-[#0D0D0D] transition-all">
+                                                <ChevronRight size={14} strokeWidth={2.5} className="group-hover:translate-x-0.5 transition-transform" />
+                                            </div>
                                         </div>
                                     </div>
-
-                                    {/* Bottom bar */}
-                                    <div style={{ height: 3, background: 'linear-gradient(90deg, #16a34a, #4ade80)', transform: 'scaleX(0)', transformOrigin: 'left', transition: 'transform 0.4s ease' }}
-                                        onMouseEnter={e => e.currentTarget.style.transform = 'scaleX(1)'}
-                                        onMouseLeave={e => e.currentTarget.style.transform = 'scaleX(0)'}
-                                    />
+                                    <div className="h-1 w-full bg-gradient-to-r from-[#C8A96A] to-[#D4AF37] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
                                 </div>
                             )
                         })}
@@ -336,81 +195,96 @@ function Events() {
 
             {/* Event Detail Modal */}
             {selectedEvent && (
-                <div className="modal-overlay" onClick={() => setSelectedEvent(null)}>
-                    <div className="modal-box" onClick={e => e.stopPropagation()}>
+                <div 
+                    className="fixed inset-0 bg-[#0D0D0D]/90 backdrop-blur-md z-[1000] flex items-center justify-center p-4 md:p-8 animate-fade-in"
+                    onClick={() => setSelectedEvent(null)}
+                >
+                    <div 
+                        className="relative bg-[#121212] border border-[#C8A96A]/30 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden shadow-2xl animate-scale-in flex flex-col"
+                        onClick={e => e.stopPropagation()}
+                    >
+                        {/* Close Button Top */}
+                        <button
+                            onClick={() => setSelectedEvent(null)}
+                            className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-[#0D0D0D]/60 backdrop-blur-sm border border-[#C8A96A]/30 text-[#F5E6C8] flex items-center justify-center hover:bg-red-900/80 hover:text-red-400 hover:border-red-500/50 transition-all shadow-lg"
+                        >
+                            <X size={20} strokeWidth={2.5} />
+                        </button>
+
                         {/* Modal Image */}
-                        <div style={{ position: 'relative' }}>
+                        <div className="relative h-64 shrink-0 bg-[#0D0D0D] border-b border-[#C8A96A]/20">
                             <img
                                 src={getImageUrl(selectedEvent.image)}
                                 alt={selectedEvent.title}
-                                style={{ width: '100%', height: 240, objectFit: 'cover', display: 'block' }}
+                                className="w-full h-full object-cover opacity-80"
                                 onError={(e) => {
-                                    e.target.style.background = '#f0fdf4'
-                                    e.target.src = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='580' height='240' viewBox='0 0 580 240'%3E%3Crect width='580' height='240' fill='%23f0fdf4'/%3E%3C/svg%3E`
+                                    e.target.src = "https://via.placeholder.com/600x300/121212/C8A96A?text=Event+Visual"
                                 }}
                             />
-                            <button
-                                onClick={() => setSelectedEvent(null)}
-                                style={{
-                                    position: 'absolute', top: 12, right: 12,
-                                    background: 'rgba(0,0,0,0.5)', border: 'none',
-                                    color: 'white', width: 36, height: 36,
-                                    borderRadius: '50%', display: 'flex',
-                                    alignItems: 'center', justifyContent: 'center',
-                                    cursor: 'pointer'
-                                }}
-                            >
-                                <svg width="16" height="16" fill="none" stroke="white" strokeWidth="2.5" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-transparent to-transparent"></div>
+                            
+                            {/* Title overlay */}
+                            <div className="absolute bottom-6 left-6 right-6">
+                                {selectedEvent.category && (() => {
+                                    const cStyle = categoryColors[selectedEvent.category] || categoryColors.Other;
+                                    return (
+                                        <div className={`inline-block mb-3 ${cStyle.bg} border ${cStyle.border} rounded px-3 py-1`}>
+                                            <span className={`text-[10px] font-black uppercase tracking-widest ${cStyle.text}`}>{selectedEvent.category}</span>
+                                        </div>
+                                    )
+                                })()}
+                                <h2 className="text-2xl md:text-3xl font-serif font-bold text-[#F5E6C8] leading-tight drop-shadow-md">
+                                    {selectedEvent.title}
+                                </h2>
+                            </div>
                         </div>
 
-                        {/* Modal Content */}
-                        <div style={{ padding: '24px 28px 28px' }}>
-                            {selectedEvent.category && (
-                                <div style={{
-                                    display: 'inline-block', marginBottom: 12,
-                                    background: (categoryColors[selectedEvent.category] || categoryColors.Other).bg,
-                                    color: (categoryColors[selectedEvent.category] || categoryColors.Other).text,
-                                    border: `1px solid ${(categoryColors[selectedEvent.category] || categoryColors.Other).border}`,
-                                    borderRadius: 99, padding: '4px 14px',
-                                    fontSize: 11, fontWeight: 700, fontFamily: 'sans-serif'
-                                }}>{selectedEvent.category}</div>
-                            )}
-
-                            <h2 style={{ fontSize: 24, fontWeight: 800, color: '#111827', margin: '0 0 12px', lineHeight: 1.2 }}>
-                                {selectedEvent.title}
-                            </h2>
-
-                            <p style={{ color: '#4b5563', fontSize: 15, lineHeight: 1.7, fontFamily: 'sans-serif', marginBottom: 20 }}>
-                                {selectedEvent.content}
-                            </p>
-
-                            {/* Details grid */}
-                            <div style={{
-                                display: 'grid', gridTemplateColumns: '1fr 1fr',
-                                gap: 12, background: '#f9fafb',
-                                borderRadius: 12, padding: 16
-                            }}>
+                        {/* Modal Body */}
+                        <div className="p-6 md:p-8 overflow-y-auto custom-scrollbar">
+                            
+                            {/* Meta Grid */}
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                                 {[
-                                    { icon: '📅', label: 'Date', val: formatDate(selectedEvent.date) || 'TBD' },
-                                    { icon: '⏰', label: 'Time', val: formatTime(selectedEvent.time) || 'TBD' },
-                                    { icon: '📍', label: 'Location', val: selectedEvent.location || 'TBD' },
-                                    { icon: '🏷️', label: 'Category', val: selectedEvent.category || 'General' },
+                                    { icon: <Calendar size={16} />, label: 'Date', val: formatDate(selectedEvent.date) || 'TBD' },
+                                    { icon: <Clock size={16} />, label: 'Time', val: formatTime(selectedEvent.time) || 'TBD' },
+                                    { icon: <MapPin size={16} />, label: 'Location', val: selectedEvent.location || 'TBD' },
+                                    { icon: <Tag size={16} />, label: 'Category', val: selectedEvent.category || 'General' },
                                 ].map((d, i) => (
-                                    <div key={i} style={{ fontFamily: 'sans-serif' }}>
-                                        <div style={{ fontSize: 11, color: '#9ca3af', fontWeight: 600, marginBottom: 2, textTransform: 'uppercase', letterSpacing: 0.5 }}>
-                                            {d.icon} {d.label}
-                                        </div>
-                                        <div style={{ fontSize: 14, fontWeight: 600, color: '#1f2937' }}>{d.val}</div>
+                                    <div key={i} className="bg-[#0D0D0D] border border-[#C8A96A]/10 rounded-xl p-4 flex flex-col items-center justify-center text-center">
+                                        <div className="text-[#C8A96A] mb-2">{d.icon}</div>
+                                        <div className="text-[9px] text-[#F5E6C8]/40 uppercase font-black tracking-widest mb-1">{d.label}</div>
+                                        <div className="text-[11px] font-bold text-[#F5E6C8]">{d.val}</div>
                                     </div>
                                 ))}
                             </div>
+
+                            <h3 className="text-sm font-bold text-[#C8A96A] uppercase tracking-widest mb-4 flex items-center gap-2 border-b border-[#C8A96A]/10 pb-2">
+                                <Bookmark size={14}/> Event Overview
+                            </h3>
+                            <p className="text-[#F5E6C8]/70 text-sm md:text-base leading-relaxed whitespace-pre-line">
+                                {selectedEvent.content}
+                            </p>
                         </div>
                     </div>
                 </div>
             )}
+
+            {/* Global custom styles specifically for this page */}
+            <style jsx>{`
+                .custom-scrollbar::-webkit-scrollbar {
+                    width: 6px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-track {
+                    background: #0D0D0D; 
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb {
+                    background: #C8A96A; 
+                    border-radius: 10px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                    background: #D4AF37; 
+                }
+            `}</style>
         </div>
     )
 }

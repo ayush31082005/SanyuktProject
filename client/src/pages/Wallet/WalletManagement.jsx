@@ -23,13 +23,13 @@ const CrownIcon = ({ className }) => (
 const TDS_RATE = 0.05;
 const PROCESSING_RATE = 0.02;
 const QUICK_TOPUP_AMOUNTS = [
-    { value: 599, label: 'Silver', icon: Award, color: '#94A3B8' },
-    { value: 1299, label: 'Gold', icon: Award, color: '#F7931E' },
-    { value: 2699, label: 'Diamond', icon: Award, color: '#0A7A2F' },
-    { value: 500, label: 'Quick', icon: Zap, color: '#64748B' },
-    { value: 1000, label: 'Value', icon: TrendingUp, color: '#64748B' },
-    { value: 2000, label: 'Premium', icon: Sparkles, color: '#64748B' },
-    { value: 5000, label: 'Elite', icon: CrownIcon, color: '#64748B' },
+    { value: 599, label: 'Silver', icon: Award, color: '#C8A96A' },
+    { value: 1299, label: 'Gold', icon: Award, color: '#C8A96A' },
+    { value: 2699, label: 'Diamond', icon: Award, color: '#C8A96A' },
+    { value: 500, label: 'Quick', icon: Zap, color: '#C8A96A' },
+    { value: 1000, label: 'Value', icon: TrendingUp, color: '#C8A96A' },
+    { value: 2000, label: 'Premium', icon: Sparkles, color: '#C8A96A' },
+    { value: 5000, label: 'Elite', icon: CrownIcon, color: '#C8A96A' },
 ];
 
 // ── Tooltip Component ─────────────────────────────────────────────────────
@@ -46,10 +46,10 @@ const Tooltip = ({ text, children }) => {
                         initial={{ opacity: 0, y: 5 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 5 }}
-                        className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1.5 bg-gray-800 text-white text-xs rounded-lg whitespace-nowrap z-50"
+                        className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1.5 bg-[#1A1A1A] border border-[#C8A96A]/20 text-[#F5E6C8] text-xs rounded-lg whitespace-nowrap z-50 shadow-2xl"
                     >
                         {text}
-                        <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-800"></div>
+                        <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-[#1A1A1A]"></div>
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -82,106 +82,92 @@ const ConfirmWithdrawalModal = ({ data, onConfirm, onCancel, loading }) => {
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onCancel} />
             <motion.div
                 initial={{ opacity: 0, scale: 0.95, y: 10 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden"
+                className="relative luxury-box w-full max-w-md overflow-hidden bg-[#0D0D0D] shadow-2xl"
             >
-                <div className="px-6 py-5 bg-gradient-to-r from-[#0A7A2F] to-[#0e8a37] text-white">
+                <div className="px-6 py-5 bg-[#1A1A1A] border-b border-[#C8A96A]/20 text-[#C8A96A]">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <div className="p-2 bg-white/20 rounded-xl">
-                                <Receipt className="w-5 h-5" />
+                            <div className="p-2 bg-[#C8A96A]/10 rounded-xl">
+                                <Receipt className="w-5 h-5 text-[#C8A96A]" />
                             </div>
-                            <h2 className="text-lg font-bold">Confirm Withdrawal</h2>
+                            <h2 className="text-lg font-serif font-bold uppercase tracking-widest">Confirm Withdrawal</h2>
                         </div>
-                        <button onClick={onCancel} className="p-1.5 hover:bg-white/20 rounded-lg transition">
+                        <button onClick={onCancel} className="p-1.5 hover:bg-[#C8A96A]/10 rounded-lg transition text-[#C8A96A]/60">
                             <X className="w-5 h-5" />
                         </button>
                     </div>
                 </div>
 
-                <div className="p-6">
-                    <div className="flex items-center gap-3 mb-6 p-3 bg-gray-50 rounded-xl border border-gray-200">
-                        <div className={`p-2.5 rounded-xl ${method === 'Bank Transfer' ? 'bg-blue-100' : 'bg-purple-100'}`}>
+                <div className="p-6 bg-[#0D0D0D]">
+                    <div className="flex items-center gap-3 mb-6 p-3 bg-[#1A1A1A] rounded-xl border border-[#C8A96A]/10">
+                        <div className={`p-2.5 rounded-xl bg-[#C8A96A]/5 border border-[#C8A96A]/20`}>
                             {method === 'Bank Transfer'
-                                ? <Building2 className="w-5 h-5 text-blue-600" />
-                                : <Smartphone className="w-5 h-5 text-purple-600" />
+                                ? <Building2 className="w-5 h-5 text-[#C8A96A]" />
+                                : <Smartphone className="w-5 h-5 text-[#C8A96A]" />
                             }
                         </div>
                         <div className="flex-1">
-                            <p className="text-sm font-medium text-gray-500">Withdrawal Method</p>
-                            <p className="font-bold text-gray-800">{method}</p>
+                            <p className="text-[10px] font-black text-[#C8A96A]/40 uppercase tracking-widest leading-none mb-1">Method</p>
+                            <p className="font-bold text-[#F5E6C8]">{method}</p>
                         </div>
                         {method === 'Bank Transfer' && (
                             <div className="text-right">
-                                <p className="text-xs text-gray-500">{bankName}</p>
-                                <p className="text-sm font-mono font-bold text-gray-700">
-                                    xxxx{accountNumber?.slice(-4)}
+                                <p className="text-[10px] text-[#C8A96A]/40 font-black uppercase tracking-widest mb-1">{bankName}</p>
+                                <p className="text-sm font-mono font-bold text-[#C8A96A]">
+                                    ****{accountNumber?.slice(-4)}
                                 </p>
                             </div>
                         )}
                         {method === 'UPI' && (
                             <div className="text-right">
-                                <p className="text-xs text-gray-500">UPI ID</p>
-                                <p className="text-sm font-mono font-bold text-gray-700">{upiId}</p>
+                                <p className="text-[10px] text-[#C8A96A]/40 font-black uppercase tracking-widest mb-1">UPI ID</p>
+                                <p className="text-sm font-mono font-bold text-[#C8A96A]">{upiId}</p>
                             </div>
                         )}
                     </div>
 
-                    <div className="bg-gradient-to-br from-gray-50 to-white rounded-xl p-5 mb-5 border border-gray-200">
-                        <h3 className="text-sm font-bold text-gray-700 mb-4">Amount Breakdown</h3>
+                    <div className="bg-[#1A1A1A] rounded-xl p-5 mb-5 border border-[#C8A96A]/10">
+                        <h3 className="text-[10px] font-black text-[#C8A96A]/40 uppercase tracking-[0.2em] mb-4">Amount Breakdown</h3>
                         <div className="space-y-3">
                             <div className="flex justify-between items-center">
-                                <span className="text-sm text-gray-600">Withdrawal Amount</span>
-                                <span className="font-bold text-gray-800">₹{amount.toLocaleString('en-IN')}</span>
+                                <span className="text-sm text-[#F5E6C8]/60 font-medium">Withdrawal Amount</span>
+                                <span className="font-bold text-[#F5E6C8]">₹{amount.toLocaleString('en-IN')}</span>
                             </div>
                             <div className="flex justify-between items-center">
                                 <div className="flex items-center gap-1">
-                                    <span className="text-sm text-red-600">TDS (5%)</span>
-                                    <Tooltip text="Tax Deducted at Source">
-                                        <HelpCircle className="w-3.5 h-3.5 text-gray-400" />
-                                    </Tooltip>
+                                    <span className="text-sm text-[#C8A96A]/60">TDS (5%)</span>
                                 </div>
-                                <span className="font-bold text-red-600">- ₹{tds.toLocaleString('en-IN')}</span>
+                                <span className="font-bold text-[#C8A96A]">- ₹{tds.toLocaleString('en-IN')}</span>
                             </div>
                             <div className="flex justify-between items-center">
                                 <div className="flex items-center gap-1">
-                                    <span className="text-sm text-orange-600">Processing Fee (2%)</span>
-                                    <Tooltip text="Platform processing charges">
-                                        <HelpCircle className="w-3.5 h-3.5 text-gray-400" />
-                                    </Tooltip>
+                                    <span className="text-sm text-[#C8A96A]/60">Processing Fee (2%)</span>
                                 </div>
-                                <span className="font-bold text-orange-600">- ₹{fee.toLocaleString('en-IN')}</span>
+                                <span className="font-bold text-[#C8A96A]">- ₹{fee.toLocaleString('en-IN')}</span>
                             </div>
-                            <div className="border-t border-gray-200 pt-3 mt-2">
+                            <div className="border-t border-[#C8A96A]/10 pt-3 mt-2">
                                 <div className="flex justify-between items-center">
-                                    <span className="text-sm font-bold text-gray-700">Net Payable</span>
-                                    <span className="text-2xl font-bold text-[#0A7A2F]">₹{net.toLocaleString('en-IN')}</span>
+                                    <span className="text-xs font-black text-[#C8A96A]/40 uppercase tracking-widest">Net Payable</span>
+                                    <span className="text-2xl font-serif font-bold text-[#C8A96A]">₹{net.toLocaleString('en-IN')}</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 mb-5">
+                    <div className="bg-[#C8A96A]/5 border border-[#C8A96A]/20 rounded-xl p-4 mb-5">
                         <div className="flex gap-3">
-                            <Info className="w-5 h-5 text-[#F7931E] shrink-0" />
+                            <Info className="w-5 h-5 text-[#C8A96A] shrink-0" />
                             <div>
-                                <p className="text-sm font-bold text-gray-800 mb-1">Important Information</p>
-                                <ul className="text-xs text-gray-600 space-y-1">
-                                    <li className="flex items-start gap-1.5">
-                                        <span className="text-[#F7931E]">•</span>
-                                        Amount will be deducted from wallet immediately
-                                    </li>
-                                    <li className="flex items-start gap-1.5">
-                                        <span className="text-[#F7931E]">•</span>
-                                        Processing takes 24-48 hours after admin approval
-                                    </li>
-                                    <li className="flex items-start gap-1.5">
-                                        <span className="text-[#F7931E]">•</span>
-                                        You'll receive SMS/email confirmation
-                                    </li>
+                                <p className="text-[10px] font-black text-[#C8A96A] uppercase tracking-widest mb-1">Important Information</p>
+                                <ul className="text-[9px] text-[#F5E6C8]/60 space-y-1 font-medium italic">
+                                    <li className="flex items-start gap-1.5">• Amount will be deducted from wallet immediately</li>
+                                    <li className="flex items-start gap-1.5">• Processing takes 24-48 hours after admin approval</li>
+                                    <li className="flex items-start gap-1.5">• You'll receive SMS/email confirmation</li>
                                 </ul>
                             </div>
                         </div>
@@ -189,11 +175,11 @@ const ConfirmWithdrawalModal = ({ data, onConfirm, onCancel, loading }) => {
 
                     <div className="flex gap-3">
                         <button onClick={onCancel} disabled={loading}
-                            className="flex-1 py-3.5 rounded-xl border-2 border-gray-200 text-gray-700 font-bold text-sm hover:bg-gray-50 transition disabled:opacity-50">
+                            className="flex-1 py-3.5 rounded-xl border border-[#C8A96A]/20 text-[#C8A96A]/60 font-bold text-[10px] uppercase tracking-widest hover:bg-[#C8A96A]/5 transition disabled:opacity-50">
                             Cancel
                         </button>
                         <button onClick={onConfirm} disabled={loading}
-                            className="flex-1 py-3.5 rounded-xl bg-gradient-to-r from-[#0A7A2F] to-[#0e8a37] text-white font-bold text-sm hover:shadow-lg hover:shadow-green-200 transition flex items-center justify-center gap-2 disabled:opacity-60">
+                            className="flex-1 py-3.5 rounded-xl bg-gradient-to-r from-[#C8A96A] to-[#D4AF37] text-[#0D0D0D] font-black text-[10px] uppercase tracking-[0.2em] hover:shadow-lg hover:shadow-[#C8A96A]/20 transition flex items-center justify-center gap-2 disabled:opacity-60">
                             {loading ? (
                                 <>
                                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -499,12 +485,12 @@ const WalletManagement = ({ defaultTab = 'topup' }) => {
 
     const getStatusColor = (status) => {
         switch (status?.toLowerCase()) {
-            case 'approved': return 'bg-green-100 text-[#0A7A2F] border-green-200';
-            case 'pending': return 'bg-orange-100 text-[#F7931E] border-orange-200';
-            case 'rejected': return 'bg-red-100 text-red-600 border-red-200';
-            case 'processing': return 'bg-blue-100 text-blue-600 border-blue-200';
-            case 'success': return 'bg-green-100 text-[#0A7A2F] border-green-200';
-            default: return 'bg-gray-100 text-gray-600 border-gray-200';
+            case 'approved': return 'bg-green-100/10 text-green-500 border-green-500/20';
+            case 'pending': return 'bg-orange-100/10 text-orange-500 border-orange-500/20';
+            case 'rejected': return 'bg-red-100/10 text-red-500 border-red-500/20';
+            case 'processing': return 'bg-blue-100/10 text-blue-500 border-blue-500/20';
+            case 'success': return 'bg-green-100/10 text-green-500 border-green-500/20';
+            default: return 'bg-gray-100/10 text-gray-500 border-gray-500/20';
         }
     };
 
@@ -512,21 +498,21 @@ const WalletManagement = ({ defaultTab = 'topup' }) => {
     const renderTopupTab = () => (
         <div className="space-y-6">
             {/* Quick Topup Amounts */}
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-4 gap-3">
                 {QUICK_TOPUP_AMOUNTS.map(({ value, label, icon: Icon, color }) => (
                     <button
                         key={value}
                         onClick={() => setTopupAmount(String(value))}
-                        className={`relative p-3 rounded-xl border-2 transition-all group ${parsedTopupAmount === value
-                            ? 'border-[#0A7A2F] bg-green-50'
-                            : 'border-gray-200 hover:border-[#F7931E] hover:bg-orange-50'
+                        className={`relative p-3 luxury-box transition-all group ${parsedTopupAmount === value
+                            ? 'border-[#C8A96A] bg-[#C8A96A]/10 shadow-[0_0_15px_rgba(200,169,106,0.1)]'
+                            : 'hover:border-[#C8A96A]/40 hover:bg-[#C8A96A]/5'
                             }`}
                     >
                         <div className="flex flex-col items-center">
-                            <Icon className={`w-4 h-4 mb-1 ${parsedTopupAmount === value ? 'text-[#0A7A2F]' : 'text-gray-400 group-hover:text-[#F7931E]'
+                            <Icon className={`w-3.5 h-3.5 mb-1.5 ${parsedTopupAmount === value ? 'text-[#C8A96A]' : 'text-[#C8A96A]/40 group-hover:text-[#C8A96A]'
                                 }`} />
-                            <span className="text-xs font-medium text-gray-600">{label}</span>
-                            <span className="text-sm font-bold text-gray-800">₹{value}</span>
+                            <span className="text-[8px] font-black text-[#C8A96A]/30 uppercase tracking-[0.2em] group-hover:text-[#C8A96A]/60">{label}</span>
+                            <span className="text-sm font-bold text-[#F5E6C8]">₹{value}</span>
                         </div>
                     </button>
                 ))}
@@ -534,25 +520,23 @@ const WalletManagement = ({ defaultTab = 'topup' }) => {
 
             {/* Amount Input */}
             <div>
-                <label className="block text-sm font-medium text-gray-600 mb-2">Enter Amount (₹)</label>
-                <div className={`flex items-center border-2 rounded-xl transition-all ${topupAmount && !isTopupValid
-                    ? 'border-red-300 bg-red-50'
-                    : topupAmount && isTopupValid
-                        ? 'border-[#0A7A2F] bg-green-50'
-                        : 'border-gray-200 hover:border-[#0A7A2F]'
+                <label className="block text-[9px] font-black text-[#C8A96A]/40 uppercase tracking-[0.3em] mb-3 ml-1 text-center">Enter Capital Amount</label>
+                <div className={`flex items-center luxury-box bg-[#0D0D0D] transition-all ${topupAmount && !isTopupValid
+                    ? 'border-red-900/50 bg-red-950/20'
+                    : 'border-[#C8A96A]/20 hover:border-[#C8A96A]/60'
                     }`}>
-                    <span className="pl-4 text-gray-500">₹</span>
+                    <span className={`pl-6 font-serif font-bold text-2xl ${topupAmount ? 'text-[#C8A96A]' : 'text-[#C8A96A]/20'}`}>₹</span>
                     <input
                         type="text"
                         inputMode="numeric"
-                        placeholder="Minimum ₹100"
+                        placeholder="MIN ₹100"
                         value={topupAmount}
                         onChange={(e) => setTopupAmount(e.target.value.replace(/[^0-9]/g, ''))}
-                        className="w-full p-4 bg-transparent outline-none text-xl font-semibold"
+                        className="w-full p-6 bg-transparent outline-none text-3xl font-serif font-bold text-[#F5E6C8] placeholder:text-[#C8A96A]/10 placeholder:font-sans placeholder:text-sm placeholder:tracking-widest"
                     />
                     {topupAmount && (
-                        <button onClick={() => setTopupAmount('')} className="pr-4 text-gray-400 hover:text-gray-600">
-                            ✕
+                        <button onClick={() => setTopupAmount('')} className="pr-6 text-[#C8A96A]/40 hover:text-[#C8A96A]">
+                            <X className="w-5 h-5" />
                         </button>
                     )}
                 </div>
@@ -570,34 +554,33 @@ const WalletManagement = ({ defaultTab = 'topup' }) => {
 
             {/* Payment Methods */}
             <div>
-                <p className="text-sm font-medium text-gray-600 mb-3">Payment Method</p>
-                <div className="flex flex-wrap gap-2">
+                <p className="text-[9px] font-black text-[#C8A96A]/40 uppercase tracking-[0.3em] mb-4 ml-1 text-center">Proprietary Gateway</p>
+                <div className="flex flex-wrap justify-center gap-3">
                     {paymentMethods.map(({ id, label, icon: Icon }) => (
                         <button
                             key={id}
                             onClick={() => setSelectedPaymentMethod(id)}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-xl border-2 transition-all ${selectedPaymentMethod === id
-                                ? 'border-[#0A7A2F] bg-green-50 text-[#0A7A2F]'
-                                : 'border-gray-200 text-gray-600 hover:border-gray-300'
+                            className={`flex items-center gap-2 px-5 py-2.5 transition-all border ${selectedPaymentMethod === id
+                                ? 'bg-[#C8A96A]/10 border-[#C8A96A] text-[#C8A96A]'
+                                : 'bg-[#0D0D0D] border-[#C8A96A]/10 text-[#C8A96A]/40 hover:border-[#C8A96A]/40'
                                 }`}
                         >
-                            <Icon className="w-4 h-4" />
-                            <span className="text-sm font-medium">{label}</span>
+                            <Icon className="w-3.5 h-3.5" strokeWidth={1.5} />
+                            <span className="text-[9px] font-black uppercase tracking-widest">{label}</span>
                         </button>
                     ))}
                 </div>
             </div>
 
-            {/* New Balance Preview */}
             {isTopupValid && (
                 <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-gradient-to-r from-[#0A7A2F]/10 to-[#F7931E]/10 rounded-xl p-4 border border-[#0A7A2F]/20"
+                    className="p-5 border border-[#C8A96A]/20 bg-gradient-to-r from-[#C8A96A]/5 to-[#D4AF37]/5"
                 >
                     <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-600">Balance after top-up:</span>
-                        <span className="text-2xl font-bold text-[#0A7A2F]">
+                        <span className="text-[10px] font-black text-[#C8A96A]/40 uppercase tracking-[0.2em]">Manifested Vault Balance</span>
+                        <span className="text-2xl font-serif font-bold text-[#C8A96A]">
                             ₹{(walletBalance + parsedTopupAmount).toLocaleString('en-IN')}
                         </span>
                     </div>
@@ -608,20 +591,20 @@ const WalletManagement = ({ defaultTab = 'topup' }) => {
             <button
                 onClick={handleTopup}
                 disabled={!isTopupValid || processingTopup}
-                className={`w-full py-4 rounded-xl font-bold text-lg transition-all flex items-center justify-center gap-3 ${isTopupValid && !processingTopup
-                    ? 'bg-gradient-to-r from-[#0A7A2F] to-[#0e8a37] text-white hover:shadow-lg hover:shadow-green-200 hover:scale-[1.02] active:scale-[0.98]'
-                    : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                className={`w-full h-16 transition-all flex items-center justify-center gap-4 ${isTopupValid && !processingTopup
+                    ? 'bg-gradient-to-r from-[#C8A96A] to-[#D4AF37] text-[#0D0D0D] font-black uppercase tracking-[0.3em] text-xs hover:shadow-gold-900/40 hover:-translate-y-1'
+                    : 'bg-[#1A1A1A] border border-[#C8A96A]/10 text-[#C8A96A]/10 cursor-not-allowed font-black uppercase tracking-[0.3em] text-xs'
                     }`}
             >
                 {processingTopup ? (
                     <>
                         <Loader2 className="w-5 h-5 animate-spin" />
-                        Processing Payment...
+                        Initiating Secure Transfer...
                     </>
                 ) : (
                     <>
-                        <Plus className="w-5 h-5" />
-                        Add ₹{isTopupValid ? parsedTopupAmount.toLocaleString('en-IN') : 'Money'} to Wallet
+                        <Zap className="w-5 h-5" />
+                        Execute ₹{isTopupValid ? parsedTopupAmount.toLocaleString('en-IN') : 'Deposit'}
                     </>
                 )}
             </button>
@@ -631,48 +614,46 @@ const WalletManagement = ({ defaultTab = 'topup' }) => {
     const renderWithdrawTab = () => (
         <div className="space-y-6">
             {/* Quick Withdraw Amounts */}
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap justify-center gap-3">
                 {[500, 1000, 2000, 5000].map(a => (
                     <button
                         key={a}
                         onClick={() => setWithdrawAmount(String(Math.min(a, walletBalance)))}
-                        className={`px-4 py-2 rounded-xl border-2 transition-all ${parsedWithdrawAmount === a
-                            ? 'border-[#0A7A2F] bg-green-50 text-[#0A7A2F]'
-                            : 'border-gray-200 text-gray-600 hover:border-[#F7931E] hover:bg-orange-50'
+                        className={`px-5 py-2 transition-all border ${parsedWithdrawAmount === a
+                            ? 'bg-[#C8A96A]/10 border-[#C8A96A] text-[#C8A96A]'
+                            : 'bg-[#0D0D0D] border-[#C8A96A]/10 text-[#C8A96A]/40 hover:border-[#C8A96A]/40'
                             }`}
                     >
-                        ₹{a.toLocaleString('en-IN')}
+                        <span className="text-[10px] font-black tracking-widest uppercase">₹{a.toLocaleString('en-IN')}</span>
                     </button>
                 ))}
                 <button
                     onClick={() => setWithdrawAmount(String(walletBalance))}
-                    className="px-4 py-2 rounded-xl border-2 border-[#0A7A2F] bg-[#0A7A2F] text-white hover:bg-[#0e8a37] transition-all"
+                    className="px-5 py-2 bg-gradient-to-r from-[#C8A96A] to-[#D4AF37] text-[#0D0D0D] hover:shadow-gold-900/40 transition-all font-black text-[10px] uppercase tracking-widest"
                 >
-                    Max
+                    Liquidate All
                 </button>
             </div>
 
             {/* Amount Input */}
             <div>
-                <label className="block text-sm font-medium text-gray-600 mb-2">Enter Amount (₹)</label>
-                <div className={`flex items-center border-2 rounded-xl transition-all ${withdrawAmount && !isWithdrawValid
-                    ? 'border-red-300 bg-red-50'
-                    : withdrawAmount && isWithdrawValid
-                        ? 'border-[#0A7A2F] bg-green-50'
-                        : 'border-gray-200 hover:border-[#0A7A2F]'
+                <label className="block text-[9px] font-black text-[#C8A96A]/40 uppercase tracking-[0.3em] mb-3 ml-1 text-center">Enter Liquidation Amount</label>
+                <div className={`flex items-center luxury-box bg-[#0D0D0D] transition-all ${withdrawAmount && !isWithdrawValid
+                    ? 'border-red-900/50 bg-red-950/20'
+                    : 'border-[#C8A96A]/20 hover:border-[#C8A96A]/60'
                     }`}>
-                    <span className="pl-4 text-gray-500">₹</span>
+                    <span className={`pl-6 font-serif font-bold text-2xl ${withdrawAmount ? 'text-[#C8A96A]' : 'text-[#C8A96A]/20'}`}>₹</span>
                     <input
                         type="text"
                         inputMode="numeric"
-                        placeholder="Minimum ₹500"
+                        placeholder="MIN ₹500"
                         value={withdrawAmount}
                         onChange={(e) => setWithdrawAmount(e.target.value.replace(/[^0-9]/g, ''))}
-                        className="w-full p-4 bg-transparent outline-none text-xl font-semibold"
+                        className="w-full p-6 bg-transparent outline-none text-3xl font-serif font-bold text-[#F5E6C8] placeholder:text-[#C8A96A]/10 placeholder:font-sans placeholder:text-sm placeholder:tracking-widest"
                     />
                     {withdrawAmount && (
-                        <button onClick={() => setWithdrawAmount('')} className="pr-4 text-gray-400 hover:text-gray-600">
-                            ✕
+                        <button onClick={() => setWithdrawAmount('')} className="pr-6 text-[#C8A96A]/40 hover:text-[#C8A96A]">
+                            <X className="w-5 h-5" />
                         </button>
                     )}
                 </div>
@@ -693,26 +674,26 @@ const WalletManagement = ({ defaultTab = 'topup' }) => {
                 <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-gradient-to-r from-gray-50 to-white rounded-xl p-4 border border-gray-200"
+                    className="p-5 border border-[#C8A96A]/10 bg-[#1A1A1A]"
                 >
-                    <h3 className="text-sm font-bold text-gray-700 mb-3">Amount Breakdown</h3>
-                    <div className="space-y-2">
-                        <div className="flex justify-between text-sm">
-                            <span className="text-gray-600">Withdrawal Amount</span>
-                            <span className="font-bold text-gray-800">₹{parsedWithdrawAmount.toLocaleString('en-IN')}</span>
+                    <h3 className="text-[10px] font-black text-[#C8A96A]/40 uppercase tracking-[0.2em] mb-4 text-center">Settlement Structure</h3>
+                    <div className="space-y-3">
+                        <div className="flex justify-between text-xs">
+                            <span className="text-[#F5E6C8]/60 font-medium">Liquidation Gross</span>
+                            <span className="font-bold text-[#F5E6C8]">₹{parsedWithdrawAmount.toLocaleString('en-IN')}</span>
                         </div>
-                        <div className="flex justify-between text-sm">
-                            <span className="text-red-600">TDS (5%)</span>
-                            <span className="font-bold text-red-600">- ₹{tds.toLocaleString('en-IN')}</span>
+                        <div className="flex justify-between text-xs font-medium">
+                            <span className="text-[#C8A96A]/60 italic">TDS Withheld (5%)</span>
+                            <span className="font-bold text-[#C8A96A]">- ₹{tds.toLocaleString('en-IN')}</span>
                         </div>
-                        <div className="flex justify-between text-sm">
-                            <span className="text-orange-600">Processing Fee (2%)</span>
-                            <span className="font-bold text-orange-600">- ₹{fee.toLocaleString('en-IN')}</span>
+                        <div className="flex justify-between text-xs font-medium">
+                            <span className="text-[#C8A96A]/60 italic">Management Fee (2%)</span>
+                            <span className="font-bold text-[#C8A96A]">- ₹{fee.toLocaleString('en-IN')}</span>
                         </div>
-                        <div className="border-t border-gray-200 pt-2 mt-2">
+                        <div className="border-t border-[#C8A96A]/10 pt-4 mt-2">
                             <div className="flex justify-between items-center">
-                                <span className="font-bold text-gray-700">Net Payable</span>
-                                <span className="text-xl font-bold text-[#0A7A2F]">₹{net.toLocaleString('en-IN')}</span>
+                                <span className="text-[10px] font-black text-[#C8A96A]/40 uppercase tracking-widest">Net Settlement</span>
+                                <span className="text-3xl font-serif font-bold text-[#C8A96A]">₹{net.toLocaleString('en-IN')}</span>
                             </div>
                         </div>
                     </div>
@@ -721,115 +702,103 @@ const WalletManagement = ({ defaultTab = 'topup' }) => {
 
             {/* Withdrawal Method Selection */}
             <div>
-                <p className="text-sm font-medium text-gray-600 mb-3">Select Withdrawal Method</p>
-                <div className="grid grid-cols-2 gap-3">
+                <p className="text-[9px] font-black text-[#C8A96A]/40 uppercase tracking-[0.3em] mb-4 ml-1 text-center">Settlement Channel</p>
+                <div className="grid grid-cols-2 gap-4">
                     {[
-                        { id: 'Bank Transfer', icon: Building2, label: 'Bank Transfer', sub: 'NEFT/IMPS' },
-                        { id: 'UPI', icon: Smartphone, label: 'UPI', sub: 'Instant Transfer' },
+                        { id: 'Bank Transfer', icon: Building2, label: 'Standard Bank', sub: 'NEFT/IMPS' },
+                        { id: 'UPI', icon: Smartphone, label: 'Instant UPI', sub: 'Lattice Verify' },
                     ].map(({ id, icon: Icon, label, sub }) => (
                         <button
                             key={id}
                             onClick={() => setWithdrawMethod(id)}
-                            className={`p-4 rounded-xl border-2 transition-all ${withdrawMethod === id
-                                ? 'border-[#0A7A2F] bg-green-50'
-                                : 'border-gray-200 hover:border-gray-300'
+                            className={`p-5 transition-all border relative overflow-hidden group ${withdrawMethod === id
+                                ? 'bg-[#C8A96A]/5 border-[#C8A96A]'
+                                : 'bg-[#0D0D0D] border-[#C8A96A]/10 hover:border-[#C8A96A]/40'
                                 }`}
                         >
-                            <div className={`p-2 rounded-lg ${withdrawMethod === id ? 'bg-blue-50' : 'bg-gray-100'} w-fit mb-3`}>
-                                <Icon className={`w-5 h-5 ${withdrawMethod === id ? 'text-blue-600' : 'text-gray-500'}`} />
+                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 transition-colors ${withdrawMethod === id ? 'bg-[#C8A96A] text-[#0D0D0D]' : 'bg-[#1A1A1A] text-[#C8A96A]/40'}`}>
+                                <Icon className="w-5 h-5" strokeWidth={1.5} />
                             </div>
-                            <p className={`font-bold mb-1 ${withdrawMethod === id ? 'text-[#0A7A2F]' : 'text-gray-700'}`}>
+                            <p className={`text-xs font-bold uppercase tracking-widest mb-1 ${withdrawMethod === id ? 'text-[#C8A96A]' : 'text-[#F5E6C8]/60'}`}>
                                 {label}
                             </p>
-                            <p className="text-xs text-gray-500">{sub}</p>
+                            <p className="text-[10px] font-medium text-[#C8A96A]/30 italic">{sub}</p>
+                            {withdrawMethod === id && (
+                                <div className="absolute top-0 right-0 p-2">
+                                    <div className="w-2 h-2 rounded-full bg-[#C8A96A] shadow-[0_0_8px_#C8A96A]" />
+                                </div>
+                            )}
                         </button>
                     ))}
                 </div>
             </div>
 
-            {/* Bank Transfer Fields */}
-            <AnimatePresence>
+            <AnimatePresence mode="wait">
                 {withdrawMethod === 'Bank Transfer' && (
                     <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 10 }}
-                        className="space-y-4"
+                        key="bank"
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="space-y-4 overflow-hidden"
                     >
                         <div>
-                            <label className="block text-sm font-medium text-gray-600 mb-1">Bank Name</label>
+                            <label className="block text-[10px] font-black text-[#C8A96A]/40 uppercase tracking-widest mb-1.5 ml-1">Bank Institution</label>
                             <input
                                 type="text"
                                 value={bankName}
                                 onChange={(e) => setBankName(e.target.value)}
-                                placeholder="e.g. State Bank of India"
-                                className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#0A7A2F] outline-none transition"
+                                placeholder="E.G. RESERVE BANK OF INDIA"
+                                className="w-full p-4 bg-[#0D0D0D] border-b-2 border-[#C8A96A]/20 focus:border-[#C8A96A] outline-none transition text-[#F5E6C8] text-sm uppercase tracking-wider"
                             />
                         </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-600 mb-1">Account Number</label>
-                            <input
-                                type="text"
-                                value={accountNumber}
-                                onChange={(e) => setAccountNumber(e.target.value.replace(/[^0-9]/g, ''))}
-                                placeholder="Enter account number"
-                                className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#0A7A2F] outline-none transition"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-600 mb-1">Confirm Account Number</label>
-                            <input
-                                type="text"
-                                value={confirmAccount}
-                                onChange={(e) => setConfirmAccount(e.target.value.replace(/[^0-9]/g, ''))}
-                                placeholder="Re-enter account number"
-                                className={`w-full p-3 border-2 rounded-xl outline-none transition ${confirmAccount && accountNumber !== confirmAccount
-                                    ? 'border-red-300 bg-red-50'
-                                    : 'border-gray-200 focus:border-[#0A7A2F]'
-                                    }`}
-                            />
-                            {confirmAccount && accountNumber !== confirmAccount && (
-                                <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
-                                    <AlertCircle className="w-3 h-3" /> Account numbers do not match
-                                </p>
-                            )}
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-600 mb-1">IFSC Code</label>
-                            <input
-                                type="text"
-                                value={ifscCode}
-                                onChange={(e) => setIfscCode(e.target.value.toUpperCase())}
-                                placeholder="e.g. SBIN0001234"
-                                className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#0A7A2F] outline-none transition uppercase"
-                            />
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-[10px] font-black text-[#C8A96A]/40 uppercase tracking-widest mb-1.5 ml-1">Vault Number</label>
+                                <input
+                                    type="text"
+                                    value={accountNumber}
+                                    onChange={(e) => setAccountNumber(e.target.value.replace(/[^0-9]/g, ''))}
+                                    placeholder="0000 0000 0000"
+                                    className="w-full p-4 bg-[#0D0D0D] border-b-2 border-[#C8A96A]/20 focus:border-[#C8A96A] outline-none transition text-[#F5E6C8] text-sm font-mono tracking-[0.2em]"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-[10px] font-black text-[#C8A96A]/40 uppercase tracking-widest mb-1.5 ml-1">Routing Code</label>
+                                <input
+                                    type="text"
+                                    value={ifscCode}
+                                    onChange={(e) => setIfscCode(e.target.value.toUpperCase())}
+                                    placeholder="IFSC0000000"
+                                    className="w-full p-4 bg-[#0D0D0D] border-b-2 border-[#C8A96A]/20 focus:border-[#C8A96A] outline-none transition text-[#F5E6C8] text-sm font-mono uppercase tracking-[0.2em]"
+                                />
+                            </div>
                         </div>
                     </motion.div>
                 )}
-            </AnimatePresence>
 
-            {/* UPI Field */}
-            <AnimatePresence>
                 {withdrawMethod === 'UPI' && (
                     <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 10 }}
+                        key="upi"
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="overflow-hidden"
                     >
-                        <label className="block text-sm font-medium text-gray-600 mb-1">UPI ID</label>
+                        <label className="block text-[10px] font-black text-[#C8A96A]/40 uppercase tracking-widest mb-1.5 ml-1">UPI Identifier</label>
                         <input
                             type="text"
                             value={upiId}
                             onChange={(e) => setUpiId(e.target.value)}
-                            placeholder="e.g. name@okaxis"
-                            className={`w-full p-3 border-2 rounded-xl outline-none transition ${upiId && !isUpiValid
-                                ? 'border-red-300 bg-red-50'
-                                : 'border-gray-200 focus:border-[#0A7A2F]'
+                            placeholder="IDENTIFIER@UPI"
+                            className={`w-full p-4 bg-[#0D0D0D] border-b-2 outline-none transition font-mono text-sm tracking-wider ${upiId && !isUpiValid
+                                ? 'border-red-900 text-red-400'
+                                : 'border-[#C8A96A]/20 focus:border-[#C8A96A] text-[#F5E6C8]'
                                 }`}
                         />
                         {upiId && !isUpiValid && (
-                            <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
-                                <AlertCircle className="w-3 h-3" /> Please enter a valid UPI ID
+                            <p className="text-[10px] text-red-500 mt-2 flex items-center gap-1 font-bold italic">
+                                <AlertCircle className="w-3 h-3" /> Input hash mismatch. Verify UPI ID.
                             </p>
                         )}
                     </motion.div>
@@ -840,13 +809,13 @@ const WalletManagement = ({ defaultTab = 'topup' }) => {
             <button
                 onClick={() => setShowWithdrawConfirm(true)}
                 disabled={!canWithdraw}
-                className={`w-full py-4 rounded-xl font-bold text-lg transition-all flex items-center justify-center gap-3 ${canWithdraw
-                    ? 'bg-gradient-to-r from-[#0A7A2F] to-[#0e8a37] text-white hover:shadow-lg hover:shadow-green-200 hover:scale-[1.02] active:scale-[0.98]'
-                    : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                className={`w-full h-16 transition-all flex items-center justify-center gap-4 ${canWithdraw
+                    ? 'bg-gradient-to-r from-[#C8A96A] to-[#D4AF37] text-[#0D0D0D] font-black uppercase tracking-[0.3em] text-xs hover:shadow-gold-900/40 hover:-translate-y-1'
+                    : 'bg-[#1A1A1A] border border-[#C8A96A]/10 text-[#C8A96A]/10 cursor-not-allowed font-black uppercase tracking-[0.3em] text-xs'
                     }`}
             >
                 <Receipt className="w-5 h-5" />
-                Submit Withdrawal Request
+                Manifest Liquidation Request
             </button>
         </div>
     );
@@ -875,549 +844,221 @@ const WalletManagement = ({ defaultTab = 'topup' }) => {
                 )}
             </AnimatePresence>
 
-            <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-                <div className="max-w-7xl mx-auto px-4 py-6 md:py-8">
-
-                    {/* Header with Breadcrumb */}
-                    <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="mb-6"
-                    >
-                        <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
-                            <button
-                                onClick={() => navigate('/my-account')}
-                                className="hover:text-[#0A7A2F] transition-colors"
-                            >
-                                My Account
+            <div className="min-h-screen bg-[#0D0D0D] pb-12 font-sans selection:bg-[#C8A96A]/30">
+                {/* Header */}
+                <div className="bg-[#0D0D0D] border-b border-[#C8A96A]/20 sticky top-0 z-30">
+                    <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                            <button onClick={() => navigate(-1)} className="p-2 hover:bg-[#C8A96A]/10 rounded-xl transition text-[#C8A96A]">
+                                <ArrowLeft className="w-6 h-6" />
                             </button>
-                            <span>›</span>
-                            <span className="text-[#0A7A2F] font-medium">Wallet Management</span>
+                            <h1 className="text-xl font-serif font-bold text-[#F5E6C8] tracking-widest uppercase">Vault Management</h1>
                         </div>
+                        <button
+                            onClick={fetchWalletData}
+                            className="flex items-center gap-2 px-3 py-1.5 luxury-box border-[#C8A96A]/20 transition-all hover:bg-[#C8A96A]/5"
+                        >
+                            <RefreshCw className={`w-3.5 h-3.5 text-[#C8A96A] ${loadingBalance ? 'animate-spin' : ''}`} />
+                            <span className="text-[10px] font-black text-[#C8A96A] uppercase tracking-widest">Update</span>
+                        </button>
+                    </div>
+                </div>
 
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-4">
-                                <button
-                                    onClick={() => navigate(-1)}
-                                    className="p-2 hover:bg-white rounded-xl transition-all group"
-                                >
-                                    <ArrowLeft className="w-5 h-5 text-gray-600 group-hover:text-[#0A7A2F] group-hover:-translate-x-1 transition-all" />
-                                </button>
-                                <div>
-                                    <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
-                                        Wallet Management
-                                    </h1>
-                                    <p className="text-sm text-gray-500 mt-1">
-                                        Add money to your wallet or withdraw funds
-                                    </p>
-                                </div>
-                            </div>
+                <div className="max-w-7xl mx-auto px-4 mt-8">
+                    {/* Breadcrumb */}
+                    <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] mb-8">
+                        <button onClick={() => navigate('/my-account')} className="text-[#C8A96A]/40 hover:text-[#C8A96A]">Account</button>
+                        <span className="text-[#C8A96A]/20">/</span>
+                        <span className="text-[#C8A96A]">Vault</span>
+                    </div>
 
-                            <button
-                                onClick={fetchWalletData}
-                                className="flex items-center gap-2 px-3 py-2 bg-white rounded-xl border border-gray-200 hover:border-[#0A7A2F] transition-all group"
-                            >
-                                <RefreshCw className={`w-4 h-4 text-gray-500 group-hover:text-[#0A7A2F] transition-all ${loadingBalance ? 'animate-spin' : 'group-hover:rotate-180'}`} />
-                                <span className="text-sm text-gray-600 group-hover:text-[#0A7A2F]">Refresh</span>
-                            </button>
-                        </div>
-                    </motion.div>
-
-                    {/* Success Messages */}
-                    <AnimatePresence>
-                        {lastTopup && (
-                            <motion.div
-                                initial={{ opacity: 0, y: -20, scale: 0.95 }}
-                                animate={{ opacity: 1, y: 0, scale: 1 }}
-                                exit={{ opacity: 0, y: -20, scale: 0.95 }}
-                                className="mb-6 bg-gradient-to-r from-[#0A7A2F] to-[#0e8a37] rounded-2xl p-5 text-white shadow-xl shadow-green-200/50"
-                            >
-                                <div className="flex items-start gap-4">
-                                    <div className="p-3 bg-white/20 rounded-xl">
-                                        <CheckCircle className="w-6 h-6" />
-                                    </div>
-                                    <div className="flex-1">
-                                        <h3 className="font-bold text-lg mb-1">
-                                            ₹{lastTopup.amount.toLocaleString('en-IN')} Added Successfully!
-                                        </h3>
-                                        <p className="text-white/90 text-sm mb-2">Ref: {lastTopup.refNo}</p>
-                                        <div className="flex gap-3">
-                                            <button
-                                                onClick={() => navigate('/packages')}
-                                                className="px-4 py-2 bg-white text-[#0A7A2F] rounded-xl font-semibold text-sm hover:bg-gray-100 transition-all"
-                                            >
-                                                View Packages
-                                            </button>
-                                            <button
-                                                onClick={() => setLastTopup(null)}
-                                                className="px-4 py-2 bg-white/20 text-white rounded-xl font-semibold text-sm hover:bg-white/30 transition-all"
-                                            >
-                                                Dismiss
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </motion.div>
-                        )}
-
-                        {lastWithdrawal && (
-                            <motion.div
-                                initial={{ opacity: 0, y: -20, scale: 0.95 }}
-                                animate={{ opacity: 1, y: 0, scale: 1 }}
-                                exit={{ opacity: 0, y: -20, scale: 0.95 }}
-                                className="mb-6 bg-gradient-to-r from-[#F7931E] to-[#e07d0e] rounded-2xl p-5 text-white shadow-xl shadow-orange-200/50"
-                            >
-                                <div className="flex items-start gap-4">
-                                    <div className="p-3 bg-white/20 rounded-xl">
-                                        <Receipt className="w-6 h-6" />
-                                    </div>
-                                    <div className="flex-1">
-                                        <h3 className="font-bold text-lg mb-1">
-                                            Withdrawal Request Submitted!
-                                        </h3>
-                                        <p className="text-white/90 text-sm mb-2">Ref: {lastWithdrawal.refNo}</p>
-                                        <div className="flex gap-3">
-                                            <button
-                                                onClick={() => navigate('/my-account/wallet/withdrawal-history')}
-                                                className="px-4 py-2 bg-white text-[#F7931E] rounded-xl font-semibold text-sm hover:bg-gray-100 transition-all"
-                                            >
-                                                View History
-                                            </button>
-                                            <button
-                                                onClick={() => setLastWithdrawal(null)}
-                                                className="px-4 py-2 bg-white/20 text-white rounded-xl font-semibold text-sm hover:bg-white/30 transition-all"
-                                            >
-                                                Dismiss
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-
-                    {/* Main Grid */}
-                    <div className="grid lg:grid-cols-3 gap-6">
-                        {/* Left Column - Wallet Balance & Actions */}
-                        <div className="lg:col-span-2 space-y-6">
-                            {/* Wallet Balance Card */}
+                    <div className="grid lg:grid-cols-3 gap-8">
+                        {/* Left Column */}
+                        <div className="lg:col-span-2 space-y-8">
+                            {/* Balance Card */}
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                className="bg-gradient-to-br from-[#0A7A2F] to-[#0e8a37] rounded-2xl p-6 text-white shadow-xl relative overflow-hidden"
+                                className="luxury-box p-8 relative overflow-hidden group"
                             >
-                                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16" />
-                                <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full translate-y-12 -translate-x-12" />
-
-                                <div className="relative">
-                                    <div className="flex items-center justify-between mb-4">
-                                        <div className="flex items-center gap-3">
-                                            <div className="p-3 bg-white/20 rounded-xl">
-                                                <Wallet className="w-6 h-6" />
-                                            </div>
-                                            <div>
-                                                <p className="text-white/70 text-sm font-medium">Current Balance</p>
-                                                {loadingBalance ? (
-                                                    <div className="flex items-center gap-2 mt-1">
-                                                        <Loader2 className="w-4 h-4 animate-spin" />
-                                                        <span className="text-sm">Loading...</span>
-                                                    </div>
-                                                ) : (
-                                                    <p className="text-3xl font-bold">₹{walletBalance.toLocaleString('en-IN')}</p>
-                                                )}
-                                            </div>
+                                <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
+                                    <Shield className="w-32 h-32 text-[#C8A96A]" strokeWidth={1} />
+                                </div>
+                                
+                                <div className="relative z-10">
+                                    <div className="flex items-center gap-2 mb-4">
+                                        <div className="w-8 h-8 rounded-lg bg-[#C8A96A]/10 flex items-center justify-center text-[#C8A96A]">
+                                            <Wallet className="w-4 h-4" />
                                         </div>
-
-                                        <div className="text-right">
-                                            <p className="text-white/70 text-xs">Lifetime</p>
-                                            <p className="text-lg font-semibold">₹{(walletBalance + 2500).toLocaleString('en-IN')}</p>
+                                        <span className="text-[10px] font-black text-[#C8A96A]/60 uppercase tracking-[0.3em]">Institutional Grade Liquidity</span>
+                                    </div>
+                                    
+                                    <div className="flex items-baseline gap-4 mb-8">
+                                        <span className="text-6xl font-serif font-bold text-[#F5E6C8] tracking-tighter">
+                                            ₹{walletBalance.toLocaleString('en-IN')}
+                                        </span>
+                                        <div className="p-1 px-2 border border-[#C8A96A]/20 bg-[#C8A96A]/5 text-[10px] font-black text-[#C8A96A] uppercase tracking-widest">
+                                            Live Ledger
                                         </div>
                                     </div>
 
-                                    <div className="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-white/20">
-                                        <div className="text-center">
-                                            <div className="text-xs font-medium bg-white/20 px-2 py-1 rounded-lg mb-1">
-                                                Silver
-                                            </div>
-                                            <div className="text-sm font-bold">₹599</div>
+                                    <div className="grid grid-cols-3 gap-4 border-t border-[#C8A96A]/10 pt-8">
+                                        <div>
+                                            <p className="text-[8px] font-black text-[#C8A96A]/30 uppercase tracking-[0.2em] mb-1">Total Manifested</p>
+                                            <p className="text-xl font-bold text-[#F5E6C8]">₹{totalDeposits.toLocaleString('en-IN')}</p>
                                         </div>
-                                        <div className="text-center">
-                                            <div className="text-xs font-medium bg-[#F7931E] px-2 py-1 rounded-lg mb-1">
-                                                Gold
-                                            </div>
-                                            <div className="text-sm font-bold">₹1,299</div>
+                                        <div>
+                                            <p className="text-[8px] font-black text-[#C8A96A]/30 uppercase tracking-[0.2em] mb-1">Total Liquidated</p>
+                                            <p className="text-xl font-bold text-[#F5E6C8]">₹{totalWithdrawals.toLocaleString('en-IN')}</p>
                                         </div>
-                                        <div className="text-center">
-                                            <div className="text-xs font-medium bg-emerald-600 px-2 py-1 rounded-lg mb-1">
-                                                Diamond
-                                            </div>
-                                            <div className="text-sm font-bold">₹2,699</div>
+                                        <div className="text-right">
+                                            <p className="text-[8px] font-black text-[#C8A96A]/30 uppercase tracking-[0.2em] mb-1">Lifetime Flow</p>
+                                            <p className="text-xl font-bold text-[#C8A96A]">₹{(totalDeposits + totalWithdrawals).toLocaleString('en-IN')}</p>
                                         </div>
                                     </div>
                                 </div>
                             </motion.div>
 
-                            {/* Tab Navigation */}
-                            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-                                <div className="flex border-b border-gray-200">
-                                    <button
-                                        onClick={() => setActiveTab('topup')}
-                                        className={`flex-1 py-4 px-6 font-bold text-sm transition-all relative ${activeTab === 'topup'
-                                            ? 'text-[#0A7A2F]'
-                                            : 'text-gray-500 hover:text-gray-700'
-                                            }`}
-                                    >
-                                        <div className="flex items-center justify-center gap-2">
-                                            <Plus className="w-4 h-4" />
-                                            Add Money
-                                        </div>
-                                        {activeTab === 'topup' && (
-                                            <motion.div
-                                                layoutId="activeTab"
-                                                className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#0A7A2F]"
-                                            />
-                                        )}
-                                    </button>
-                                    <button
-                                        onClick={() => setActiveTab('withdraw')}
-                                        className={`flex-1 py-4 px-6 font-bold text-sm transition-all relative ${activeTab === 'withdraw'
-                                            ? 'text-[#0A7A2F]'
-                                            : 'text-gray-500 hover:text-gray-700'
-                                            }`}
-                                    >
-                                        <div className="flex items-center justify-center gap-2">
-                                            <TrendingDown className="w-4 h-4" />
-                                            Withdraw
-                                        </div>
-                                        {activeTab === 'withdraw' && (
-                                            <motion.div
-                                                layoutId="activeTab"
-                                                className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#0A7A2F]"
-                                            />
-                                        )}
-                                    </button>
-                                </div>
-
-                                <div className="p-6">
-                                    {activeTab === 'topup' ? renderTopupTab() : renderWithdrawTab()}
-                                </div>
+                            {/* Navigation Tabs */}
+                            <div className="luxury-box p-1.5 flex gap-2">
+                                <button
+                                    onClick={() => setActiveTab('topup')}
+                                    className={`flex-1 py-4 px-6 font-black text-[10px] uppercase tracking-[0.3em] transition-all relative ${activeTab === 'topup' ? 'text-[#0D0D0D]' : 'text-[#C8A96A]/40 hover:text-[#C8A96A]'}`}
+                                >
+                                    {activeTab === 'topup' && (
+                                        <motion.div layoutId="activeTabMain" className="absolute inset-0 bg-gradient-to-r from-[#C8A96A] to-[#D4AF37]" />
+                                    )}
+                                    <span className="relative z-10 flex items-center justify-center gap-2">
+                                        <Plus className="w-3.5 h-3.5" strokeWidth={3} />
+                                        Capital Ingress
+                                    </span>
+                                </button>
+                                <button
+                                    onClick={() => setActiveTab('withdraw')}
+                                    className={`flex-1 py-4 px-6 font-black text-[10px] uppercase tracking-[0.3em] transition-all relative ${activeTab === 'withdraw' ? 'text-[#0D0D0D]' : 'text-[#C8A96A]/40 hover:text-[#C8A96A]'}`}
+                                >
+                                    {activeTab === 'withdraw' && (
+                                        <motion.div layoutId="activeTabMain" className="absolute inset-0 bg-gradient-to-r from-[#C8A96A] to-[#D4AF37]" />
+                                    )}
+                                    <span className="relative z-10 flex items-center justify-center gap-2">
+                                        <TrendingDown className="w-3.5 h-3.5" strokeWidth={3} />
+                                        Liquid Egress
+                                    </span>
+                                </button>
                             </div>
+
+                            <motion.div 
+                                layout
+                                className="luxury-box p-8 min-h-[400px]"
+                            >
+                                {activeTab === 'topup' ? renderTopupTab() : renderWithdrawTab()}
+                            </motion.div>
 
                             {/* Recent Transactions */}
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.1 }}
-                                className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm"
-                            >
-                                <div className="flex items-center justify-between mb-4">
-                                    <h3 className="font-bold text-gray-800">Recent Transactions</h3>
-                                    <button
-                                        onClick={() => navigate('/my-account/transactions')}
-                                        className="text-sm text-[#0A7A2F] hover:text-[#F7931E] font-medium flex items-center gap-1"
-                                    >
-                                        View All
-                                        <ChevronRight className="w-4 h-4" />
+                            <div className="luxury-box p-8">
+                                <div className="flex items-center justify-between mb-8">
+                                    <div>
+                                        <h3 className="text-lg font-serif font-bold text-[#F5E6C8] uppercase tracking-widest">Transaction Ledger</h3>
+                                        <p className="text-[10px] font-black text-[#C8A96A]/40 uppercase tracking-[0.2em] mt-1">Institutional Audit Trail</p>
+                                    </div>
+                                    <button onClick={() => navigate('/my-account/transactions')} className="text-[10px] font-black text-[#C8A96A] uppercase tracking-[0.2em] flex items-center gap-2 group">
+                                        Full Ledger
+                                        <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                                     </button>
                                 </div>
 
                                 {loadingTransactions ? (
-                                    <div className="flex justify-center py-8">
-                                        <Loader2 className="w-6 h-6 animate-spin text-[#0A7A2F]" />
+                                    <div className="flex flex-col items-center justify-center py-20 grayscale opacity-50">
+                                        <RefreshCw className="w-8 h-8 animate-spin text-[#C8A96A] mb-4" />
+                                        <span className="text-[10px] font-black text-[#C8A96A] uppercase tracking-widest">Syncing Data...</span>
                                     </div>
                                 ) : recentTransactions.length > 0 ? (
-                                    <div className="space-y-3">
+                                    <div className="space-y-4">
                                         {recentTransactions.map((tx, idx) => (
-                                            <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all">
-                                                <div className="flex items-center gap-3">
-                                                    <div className={`p-2 rounded-lg ${tx.type === 'credit' ? 'bg-green-100' : 'bg-orange-100'
-                                                        }`}>
-                                                        {tx.type === 'credit' ? (
-                                                            <TrendingUp className="w-4 h-4 text-[#0A7A2F]" />
-                                                        ) : (
-                                                            <TrendingDown className="w-4 h-4 text-[#F7931E]" />
-                                                        )}
+                                            <div key={idx} className="flex items-center justify-between p-4 bg-[#1A1A1A] border border-[#C8A96A]/5 hover:border-[#C8A96A]/20 transition-all">
+                                                <div className="flex items-center gap-4">
+                                                    <div className={`w-10 h-10 flex items-center justify-center ${tx.type === 'credit' ? 'bg-green-950/30 text-green-500' : 'bg-red-950/30 text-red-500'}`}>
+                                                        {tx.type === 'credit' ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
                                                     </div>
                                                     <div>
-                                                        <p className="text-sm font-medium text-gray-800">{tx.description}</p>
-                                                        <p className="text-xs text-gray-500">{formatDate(tx.date)}</p>
+                                                        <p className="text-xs font-bold text-[#F5E6C8] uppercase tracking-wider">{tx.description}</p>
+                                                        <p className="text-[9px] font-medium text-[#C8A96A]/40 mt-0.5">{formatDate(tx.date)}</p>
                                                     </div>
                                                 </div>
                                                 <div className="text-right">
-                                                    <span className={`font-bold ${tx.type === 'credit' ? 'text-[#0A7A2F]' : 'text-[#F7931E]'
-                                                        }`}>
-                                                        {tx.type === 'credit' ? '+' : '-'}₹{tx.amount}
-                                                    </span>
-                                                    <p className={`text-xs ${getStatusColor(tx.status)} px-2 py-0.5 rounded-full mt-1`}>
-                                                        {tx.status}
+                                                    <p className={`text-sm font-black ${tx.type === 'credit' ? 'text-green-500' : 'text-red-500'}`}>
+                                                        {tx.type === 'credit' ? '+' : '-'} ₹{tx.amount.toLocaleString('en-IN')}
                                                     </p>
+                                                    <span className={`text-[8px] font-black uppercase tracking-widest mt-1 inline-block px-1.5 py-0.5 ${getStatusColor(tx.status)}`}>
+                                                        {tx.status}
+                                                    </span>
                                                 </div>
                                             </div>
                                         ))}
                                     </div>
                                 ) : (
-                                    <div className="text-center py-8">
-                                        <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
-                                            <Receipt className="w-8 h-8 text-gray-400" />
-                                        </div>
-                                        <p className="text-gray-600 font-medium">No transactions yet</p>
-                                        <p className="text-xs text-gray-400 mt-1">
-                                            Your transactions will appear here
-                                        </p>
+                                    <div className="text-center py-20 border-2 border-dashed border-[#C8A96A]/10">
+                                        <Receipt className="w-12 h-12 text-[#C8A96A]/10 mx-auto mb-4" strokeWidth={1} />
+                                        <p className="text-[10px] font-black text-[#C8A96A]/40 uppercase tracking-widest">No Activity Records Found</p>
                                     </div>
                                 )}
-                            </motion.div>
+                            </div>
                         </div>
 
-                        {/* Right Column - Info & History */}
-                        <div className="space-y-6">
-                            {/* Quick Stats */}
-                            <motion.div
-                                initial={{ opacity: 0, x: 20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm"
-                            >
-                                <h3 className="font-bold text-gray-800 mb-4">Quick Stats</h3>
+                        {/* Right Column */}
+                        <div className="space-y-8">
+                            {/* Settlement Insight */}
+                            <div className="luxury-box p-6 bg-gradient-to-br from-[#1A1A1A] to-[#0D0D0D]">
+                                <h3 className="text-[10px] font-black text-[#C8A96A] uppercase tracking-[0.3em] mb-6 flex items-center gap-2">
+                                    <Shield className="w-3 h-3 text-[#D4AF37]" />
+                                    Vault Parameters
+                                </h3>
                                 <div className="space-y-4">
-                                    <div>
-                                        <p className="text-sm text-gray-500 mb-1">Total Deposits</p>
-                                        <p className="text-2xl font-bold text-[#0A7A2F]">₹{totalDeposits.toLocaleString('en-IN')}</p>
+                                    <div className="flex justify-between items-end border-b border-[#C8A96A]/5 pb-3">
+                                        <span className="text-[9px] font-black text-[#C8A96A]/40 uppercase tracking-widest">Floor Liquidation</span>
+                                        <span className="text-sm font-bold text-[#F5E6C8]">₹500</span>
                                     </div>
-                                    <div>
-                                        <p className="text-sm text-gray-500 mb-1">Total Withdrawals</p>
-                                        <p className="text-2xl font-bold text-[#F7931E]">₹{totalWithdrawals.toLocaleString('en-IN')}</p>
+                                    <div className="flex justify-between items-end border-b border-[#C8A96A]/5 pb-3">
+                                        <span className="text-[9px] font-black text-[#C8A96A]/40 uppercase tracking-widest">Ceiling Liquidation</span>
+                                        <span className="text-sm font-bold text-[#F5E6C8]">₹50,000</span>
                                     </div>
-                                    <div className="pt-3 border-t border-gray-100">
-                                        <p className="text-sm text-gray-500 mb-1">Net Balance</p>
-                                        <p className="text-xl font-bold text-gray-800">₹{walletBalance.toLocaleString('en-IN')}</p>
-                                    </div>
-                                </div>
-                            </motion.div>
-
-                            {/* Recent Withdrawals */}
-                            <motion.div
-                                initial={{ opacity: 0, x: 20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: 0.05 }}
-                                className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm"
-                            >
-                                <div className="flex items-center justify-between mb-4">
-                                    <h3 className="font-bold text-gray-800">Recent Withdrawals</h3>
-                                    <button
-                                        onClick={() => navigate('/my-account/wallet/withdrawal-history')}
-                                        className="text-sm text-[#0A7A2F] hover:text-[#F7931E] font-medium flex items-center gap-1"
-                                    >
-                                        View All
-                                        <ChevronRight className="w-4 h-4" />
-                                    </button>
-                                </div>
-
-                                {loadingWithdrawals ? (
-                                    <div className="flex justify-center py-8">
-                                        <Loader2 className="w-6 h-6 animate-spin text-[#0A7A2F]" />
-                                    </div>
-                                ) : withdrawalHistory.length > 0 ? (
-                                    <div className="space-y-3">
-                                        {withdrawalHistory.map((withdrawal, idx) => (
-                                            <div
-                                                key={idx}
-                                                className="p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all cursor-pointer"
-                                                onClick={() => navigate(`/my-account/wallet/withdrawal/${withdrawal._id}`)}
-                                            >
-                                                <div className="flex items-center justify-between mb-2">
-                                                    <span className="text-xs font-mono text-gray-500">
-                                                        {withdrawal.referenceNo?.slice(-8) || `WID${idx + 1}`}
-                                                    </span>
-                                                    <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${getStatusColor(withdrawal.status)}`}>
-                                                        {withdrawal.status || 'Pending'}
-                                                    </span>
-                                                </div>
-                                                <div className="flex items-center justify-between">
-                                                    <div>
-                                                        <p className="text-sm font-bold text-gray-800">
-                                                            ₹{withdrawal.amount?.toLocaleString('en-IN')}
-                                                        </p>
-                                                        <p className="text-xs text-gray-500 flex items-center gap-1 mt-1">
-                                                            <Calendar className="w-3 h-3" />
-                                                            {formatDate(withdrawal.createdAt)}
-                                                        </p>
-                                                    </div>
-                                                    <div className="text-right">
-                                                        <p className="text-xs text-gray-500">Net</p>
-                                                        <p className="text-sm font-bold text-[#0A7A2F]">
-                                                            ₹{withdrawal.netAmount?.toLocaleString('en-IN')}
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                ) : (
-                                    <div className="text-center py-8">
-                                        <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
-                                            <Receipt className="w-8 h-8 text-gray-400" />
-                                        </div>
-                                        <p className="text-gray-600 font-medium">No withdrawals yet</p>
-                                        <p className="text-xs text-gray-400 mt-1">
-                                            Your withdrawal history will appear here
-                                        </p>
-                                    </div>
-                                )}
-                            </motion.div>
-
-                            {/* Information Cards */}
-                            <motion.div
-                                initial={{ opacity: 0, x: 20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: 0.1 }}
-                                className="space-y-3"
-                            >
-                                {/* Withdrawal Limits Card */}
-                                <div className="bg-gradient-to-br from-[#0A7A2F]/5 to-[#F7931E]/5 rounded-2xl p-5 border border-[#0A7A2F]/10">
-                                    <div className="flex items-center gap-3 mb-3">
-                                        <div className="p-2 bg-[#0A7A2F]/10 rounded-lg">
-                                            <Shield className="w-5 h-5 text-[#0A7A2F]" />
-                                        </div>
-                                        <h4 className="font-bold text-gray-800">Withdrawal Limits</h4>
-                                    </div>
-                                    <div className="space-y-2 text-sm">
-                                        <div className="flex justify-between">
-                                            <span className="text-gray-600">Minimum Amount</span>
-                                            <span className="font-bold text-gray-800">₹500</span>
-                                        </div>
-                                        <div className="flex justify-between">
-                                            <span className="text-gray-600">Maximum per transaction</span>
-                                            <span className="font-bold text-gray-800">₹50,000</span>
-                                        </div>
-                                        <div className="flex justify-between">
-                                            <span className="text-gray-600">Daily Limit</span>
-                                            <span className="font-bold text-gray-800">₹1,00,000</span>
-                                        </div>
+                                    <div className="flex justify-between items-end">
+                                        <span className="text-[9px] font-black text-[#C8A96A]/40 uppercase tracking-widest">SLA Turnaround</span>
+                                        <span className="text-sm font-bold text-[#C8A96A]">12-24 Hours</span>
                                     </div>
                                 </div>
+                            </div>
 
-                                {/* Processing Times Card */}
-                                <div className="bg-white rounded-2xl border border-gray-200 p-5">
-                                    <div className="flex items-center gap-3 mb-3">
-                                        <div className="p-2 bg-orange-100 rounded-lg">
-                                            <Clock className="w-5 h-5 text-[#F7931E]" />
-                                        </div>
-                                        <h4 className="font-bold text-gray-800">Processing Times</h4>
+                            {/* Trust Footer */}
+                            <div className="grid grid-cols-2 gap-4">
+                                {[
+                                    { icon: Shield, label: 'RBI COMPLIANT' },
+                                    { icon: Lock, label: 'AES-256 SECURE' },
+                                    { icon: Clock, label: '24/7 PRIORITY' },
+                                    { icon: CheckCircle, label: 'VERIFIED' }
+                                ].map((item, idx) => (
+                                    <div key={idx} className="luxury-box p-4 text-center group hover:border-[#C8A96A]/40 transition-colors">
+                                        <item.icon className="w-4 h-4 text-[#C8A96A]/40 mx-auto mb-2 group-hover:text-[#C8A96A] transition-colors" />
+                                        <p className="text-[8px] font-black text-[#C8A96A]/30 uppercase tracking-widest group-hover:text-[#C8A96A]/60">{item.label}</p>
                                     </div>
-                                    <div className="space-y-2">
-                                        <div className="flex items-center justify-between">
-                                            <span className="text-sm text-gray-600">Bank Transfer</span>
-                                            <span className="text-sm font-bold text-gray-800">24-48 hours</span>
-                                        </div>
-                                        <div className="flex items-center justify-between">
-                                            <span className="text-sm text-gray-600">UPI Transfer</span>
-                                            <span className="text-sm font-bold text-gray-800">12-24 hours</span>
-                                        </div>
-                                    </div>
-                                </div>
+                                ))}
+                            </div>
 
-                                {/* Tax Information Card */}
-                                <div className="bg-white rounded-2xl border border-gray-200 p-5">
-                                    <div className="flex items-center gap-3 mb-3">
-                                        <div className="p-2 bg-purple-100 rounded-lg">
-                                            <FileText className="w-5 h-5 text-purple-600" />
-                                        </div>
-                                        <h4 className="font-bold text-gray-800">Tax Information</h4>
-                                    </div>
-                                    <div className="space-y-2 text-sm">
-                                        <div className="flex items-start gap-2">
-                                            <div className="w-1.5 h-1.5 rounded-full bg-[#F7931E] mt-1.5"></div>
-                                            <p className="text-gray-600">
-                                                <span className="font-bold">TDS (5%):</span> Tax Deducted at Source
-                                            </p>
-                                        </div>
-                                        <div className="flex items-start gap-2">
-                                            <div className="w-1.5 h-1.5 rounded-full bg-[#F7931E] mt-1.5"></div>
-                                            <p className="text-gray-600">
-                                                <span className="font-bold">Processing Fee (2%):</span> Platform charges
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Help Card */}
-                                <div className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-5 border border-gray-200">
-                                    <div className="flex items-center gap-3 mb-3">
-                                        <div className="p-2 bg-blue-100 rounded-lg">
-                                            <HelpCircle className="w-5 h-5 text-blue-600" />
-                                        </div>
-                                        <h4 className="font-bold text-gray-800">Need Help?</h4>
-                                    </div>
-                                    <p className="text-sm text-gray-600 mb-3">
-                                        Having issues with wallet transactions?
-                                    </p>
-                                    <button
-                                        onClick={() => navigate('/contact')}
-                                        className="w-full py-2.5 bg-[#0A7A2F] text-white rounded-xl text-sm font-medium hover:bg-[#0e8a37] transition-all"
-                                    >
-                                        Contact Support
-                                    </button>
-                                </div>
-                            </motion.div>
-
-                            {/* Referral Card */}
-                            <motion.div
-                                initial={{ opacity: 0, x: 20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: 0.15 }}
-                                className="bg-gradient-to-r from-[#0A7A2F] to-[#F7931E] rounded-2xl p-6 text-white shadow-lg"
-                            >
-                                <div className="flex items-center gap-3 mb-3">
-                                    <div className="p-2 bg-white/20 rounded-lg">
-                                        <Users className="w-5 h-5" />
-                                    </div>
-                                    <h4 className="font-bold">Refer & Earn</h4>
-                                </div>
-                                <p className="text-sm text-white/90 mb-4">
-                                    Invite friends and earn ₹100 for each referral
-                                </p>
+                            {/* Help Call */}
+                            <div className="p-1 luxury-box bg-gradient-to-r from-[#C8A96A] to-[#D4AF37]">
                                 <button
-                                    onClick={() => navigate('/referral')}
-                                    className="w-full py-2.5 bg-white text-[#0A7A2F] rounded-xl font-medium hover:bg-gray-100 transition-all"
+                                    onClick={() => navigate('/contact')}
+                                    className="w-full py-4 bg-[#0D0D0D] text-[#C8A96A] hover:bg-transparent hover:text-[#0D0D0D] transition-all font-black text-[10px] uppercase tracking-[0.3em]"
                                 >
-                                    Share Referral Link
+                                    Concierge Support
                                 </button>
-                            </motion.div>
+                            </div>
                         </div>
                     </div>
 
-                    {/* Trust Badges Footer */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2 }}
-                        className="mt-8 grid grid-cols-4 gap-4"
-                    >
-                        {[
-                            { icon: Shield, label: 'RBI Guidelines', sub: 'Compliant' },
-                            { icon: Lock, label: '256-bit SSL', sub: 'Encrypted' },
-                            { icon: Clock, label: '24/7 Support', sub: 'Always here' },
-                            { icon: CheckCircle, label: 'Verified', sub: 'KYC Required' },
-                        ].map((item, idx) => (
-                            <div key={idx} className="text-center">
-                                <div className="inline-flex p-2 bg-gray-100 rounded-lg mb-2">
-                                    <item.icon className="w-4 h-4 text-[#0A7A2F]" />
-                                </div>
-                                <p className="text-xs font-bold text-gray-700">{item.label}</p>
-                                <p className="text-[10px] text-gray-500">{item.sub}</p>
-                            </div>
-                        ))}
-                    </motion.div>
-
-                    {/* Footer Note */}
-                    <motion.p
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.25 }}
-                        className="text-center text-xs text-gray-400 mt-6"
-                    >
-                        All transactions are secure and encrypted. For any issues, contact our support team.
-                    </motion.p>
+                    <p className="text-center text-[9px] font-black text-[#C8A96A]/20 uppercase tracking-[0.4em] mt-12 pb-8">
+                        Lattice Protocol • Secure • Encrypted • Private
+                    </p>
                 </div>
             </div>
         </>

@@ -36,7 +36,7 @@ const SectionHeader = ({ title, subtitle, icon: Icon }) => (
                 </div>
             )}
             <div>
-                <h2 className="text-[14px] font-black text-slate-900 uppercase tracking-[0.15em] leading-none mb-1">
+                <h2 className="text-[14px] font-black text-[#C8A96A] uppercase tracking-[0.15em] leading-none mb-1">
                     {title}
                 </h2>
                 {subtitle && (
@@ -53,36 +53,36 @@ const SectionHeader = ({ title, subtitle, icon: Icon }) => (
 const ModernWalletCard = ({ title, value, color, icon: Icon, progress, showCurrency = true }) => (
     <motion.div
         variants={cardVariants}
-        className="bg-white rounded-2xl p-5 shadow-[0_8px_30px_rgb(0,0,0,0.02)] border border-slate-50 flex flex-col relative overflow-hidden group hover:shadow-xl hover:shadow-slate-200/40 transition-all duration-300"
+        className="bg-[#1A1A1A] rounded-2xl p-5 shadow-[0_8px_30px_rgb(0,0,0,0.5)] border border-white/5 flex flex-col relative overflow-hidden group hover:shadow-xl hover:shadow-black/40 transition-all duration-300"
     >
         <div className="flex justify-between items-start mb-6">
-            <div className={`p-3 rounded-xl shadow-sm group-hover:scale-110 transition-transform duration-300`} style={{ backgroundColor: `${color}10`, color: color }}>
+            <div className={`p-3 rounded-xl shadow-sm group-hover:scale-110 transition-transform duration-300`} style={{ backgroundColor: `${color || '#C8A96A'}10`, color: color || '#C8A96A' }}>
                 {Icon && <Icon size={20} />}
             </div>
             <div className="flex flex-col items-end">
-                <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest leading-none mb-1">Status</span>
+                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none mb-1">Status</span>
                 <div className="flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                    <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Active</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#C8A96A]"></span>
+                    <span className="text-[10px] font-black text-[#C8A96A] uppercase tracking-widest">Active</span>
                 </div>
             </div>
         </div>
 
         <div className="flex flex-col gap-1">
-            <h3 className="text-[11px] font-black text-slate-500 uppercase tracking-widest">{title}</h3>
+            <h3 className="text-[11px] font-black text-slate-400 uppercase tracking-widest">{title}</h3>
             <div className="flex items-baseline gap-1.5">
-                {showCurrency && <span className="text-xl font-black text-slate-400">₹</span>}
-                <span className="text-3xl font-black text-slate-900 tracking-tighter">{value !== undefined ? value : "0"}</span>
+                {showCurrency && <span className="text-xl font-black text-slate-500">₹</span>}
+                <span className="text-3xl font-black text-white tracking-tighter">{value !== undefined ? value : "0"}</span>
             </div>
         </div>
         {progress !== undefined && (
-            <div className="relative h-1.5 w-full bg-slate-100 rounded-full mt-4 overflow-hidden">
+            <div className="relative h-1 w-full bg-white/5 rounded-none mt-4 overflow-hidden">
                 <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${Math.min(100, Math.max(0, progress))}%` }}
                     transition={{ duration: 1.5, ease: "easeOut" }}
-                    className="absolute top-0 left-0 h-full rounded-full"
-                    style={{ backgroundColor: color }}
+                    className="absolute top-0 left-0 h-full rounded-none"
+                    style={{ backgroundColor: color || '#C8A96A' }}
                 ></motion.div>
             </div>
         )}
@@ -117,37 +117,37 @@ const PerformanceMetric = ({ title, value, icon: Icon, color, trend }) => (
 const BusinessMatrixCard = ({ title, lValue, rValue, icon: Icon }) => (
     <motion.div
         variants={cardVariants}
-        className="bg-white rounded-2xl p-4 shadow-sm border border-slate-50 flex flex-col relative overflow-hidden group h-full"
+        className="bg-[#1A1A1A] rounded-2xl p-4 shadow-sm border border-white/5 flex flex-col relative overflow-hidden group h-full"
     >
         <div className="flex items-center gap-3 mb-4">
-            <div className={`p-2.5 rounded-xl bg-emerald-50 text-emerald-600 shadow-sm group-hover:scale-105 transition-transform`}>
+            <div className={`p-2.5 rounded-xl bg-[#C8A96A]/10 text-[#C8A96A] shadow-sm group-hover:scale-105 transition-transform`}>
                 {Icon && <Icon size={16} />}
             </div>
-            <h3 className="text-[10px] font-black text-slate-600 uppercase tracking-widest leading-snug line-clamp-2 flex-1">
+            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-snug line-clamp-2 flex-1">
                 {title}
             </h3>
         </div>
 
         <div className="grid grid-cols-2 gap-2 mt-auto">
-            <div className="bg-slate-50/80 rounded-xl p-2.5 flex flex-col gap-0.5 group-hover:bg-white group-hover:shadow-sm transition-all border border-transparent group-hover:border-slate-100">
-                <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Left</span>
-                <span className="text-xl font-black text-slate-900 tracking-tight leading-none">{lValue !== undefined ? lValue : 0}</span>
+            <div className="bg-white/5 rounded-xl p-2.5 flex flex-col gap-0.5 group-hover:bg-[#C8A96A]/10 transition-all border border-transparent group-hover:border-[#C8A96A]/20">
+                <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Left</span>
+                <span className="text-xl font-black text-white tracking-tight leading-none">{lValue !== undefined ? lValue : 0}</span>
             </div>
-            <div className="bg-slate-50/80 rounded-xl p-2.5 flex flex-col items-end gap-0.5 group-hover:bg-white group-hover:shadow-sm transition-all border border-transparent group-hover:border-slate-100">
-                <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest text-right">Right</span>
-                <span className="text-xl font-black text-slate-900 tracking-tight leading-none">{rValue !== undefined ? rValue : 0}</span>
+            <div className="bg-white/5 rounded-xl p-2.5 flex flex-col items-end gap-0.5 group-hover:bg-[#C8A96A]/10 transition-all border border-transparent group-hover:border-[#C8A96A]/20">
+                <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest text-right">Right</span>
+                <span className="text-xl font-black text-white tracking-tight leading-none">{rValue !== undefined ? rValue : 0}</span>
             </div>
         </div>
 
-        <div className={`absolute bottom-0 left-0 h-1 w-full bg-[#0A7A2F] opacity-40`}></div>
+        <div className={`absolute bottom-0 left-0 h-1 w-full bg-[#C8A96A] opacity-30`}></div>
     </motion.div>
 );
 
 const recentActivities = [
-    { id: 1, user: "Saurabh Mehra", action: "achieved Silver Rank", time: "10:24 AM", date: "Today", icon: Award, color: "bg-emerald-50 text-emerald-600" },
-    { id: 2, user: "Priya Sharma", action: "joined the network", time: "09:12 AM", date: "Today", icon: UserCheck, color: "bg-orange-50 text-orange-600" },
-    { id: 3, user: "John Doe", action: "purchased Household Pack", time: "Yesterday", date: "Yesterday", icon: ShoppingBag, color: "bg-blue-50 text-blue-600" },
-    { id: 4, user: "Amit Kumar", action: "earned Matching Bonus", time: "Yesterday", date: "Yesterday", icon: Zap, color: "bg-yellow-50 text-yellow-600" }
+    { id: 1, user: "Saurabh Mehra", action: "achieved Silver Rank", time: "10:24 AM", date: "Today", icon: Award, color: "bg-[#C8A96A]/10 text-[#C8A96A]" },
+    { id: 2, user: "Priya Sharma", action: "joined the network", time: "09:12 AM", date: "Today", icon: UserCheck, color: "bg-orange-500/10 text-orange-500" },
+    { id: 3, user: "John Doe", action: "purchased Household Pack", time: "Yesterday", date: "Yesterday", icon: ShoppingBag, color: "bg-blue-500/10 text-blue-500" },
+    { id: 4, user: "Amit Kumar", action: "earned Matching Bonus", time: "Yesterday", date: "Yesterday", icon: Zap, color: "bg-[#C8A96A]/20 text-[#C8A96A]" }
 ];
 
 const DashboardOverview = () => {
@@ -184,14 +184,14 @@ const DashboardOverview = () => {
     }, []);
 
     if (loading) return (
-        <div className="min-h-screen flex items-center justify-center bg-[#f8faff]">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-500"></div>
+        <div className="min-h-screen flex items-center justify-center bg-[#0D0D0D]">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#C8A96A]"></div>
         </div>
     );
     if (!userData) return null;
 
     return (
-        <div className="max-w-[1600px] mx-auto px-6 pb-12 pt-0 bg-[#f8faff] min-h-screen font-['Inter',sans-serif]">
+        <div className="max-w-[1600px] mx-auto px-6 pb-12 pt-0 bg-[#0D0D0D] min-h-screen font-['Inter',sans-serif] text-white">
             <div className="mb-8">
                 <ProfileBanner userData={userData} />
             </div>
@@ -209,20 +209,20 @@ const DashboardOverview = () => {
                         <ModernWalletCard
                             title="Wallet Balance"
                             value={Number(stats?.walletBalance || 0).toFixed(2)}
-                            color="#0A7A2F"
+                            color="#C8A96A"
                             icon={Wallet}
                         />
                         <ModernWalletCard
                             title="Total PV"
                             value={Number(stats?.pv || 0).toString()}
-                            color="#F7931E"
+                            color="#C8A96A"
                             icon={CreditCard}
                             showCurrency={false}
                         />
                         <ModernWalletCard
                             title="Total BV"
                             value={Number(stats?.bv || 0).toString()}
-                            color="#0A7A2F"
+                            color="#C8A96A"
                             icon={PieChart}
                             showCurrency={false}
                         />
@@ -239,21 +239,21 @@ const DashboardOverview = () => {
                                 title="Right Count"
                                 value={Number(stats?.totalRight || 0).toString()}
                                 icon={Users}
-                                color="#0A7A2F"
+                                color="#C8A96A"
                                 showCurrency={false}
                             />
                             <ModernWalletCard
                                 title="Active Directs"
                                 value={Number(stats?.directCount || 0).toString()}
                                 icon={UserCheck}
-                                color="#F7931E"
+                                color="#C8A96A"
                                 showCurrency={false}
                             />
                             <ModernWalletCard
                                 title="Total Downline"
                                 value={Number(stats?.totalDownline || 0).toString()}
                                 icon={TrendingUp}
-                                color="#0A7A2F"
+                                color="#C8A96A"
                                 showCurrency={false}
                             />
                             <ModernWalletCard
@@ -265,19 +265,19 @@ const DashboardOverview = () => {
                             />
                         </div>
 
-                        <div className="mt-4 p-6 bg-[#083d1c] rounded-[2rem] text-white flex items-center justify-between shadow-xl shadow-slate-200">
+                        <div className="mt-4 p-6 bg-[#1A1A1A] rounded-[2rem] text-white flex items-center justify-between shadow-xl shadow-black/40 border border-[#C8A96A]/20">
                             <div className="flex items-center gap-4">
-                                <div className="p-3 bg-white/10 rounded-2xl">
-                                    <ShoppingBag size={24} className="text-[#F7931E]" />
+                                <div className="p-3 bg-white/5 rounded-2xl border border-white/5">
+                                    <ShoppingBag size={24} className="text-[#C8A96A]" />
                                 </div>
                                 <div className="flex flex-col">
-                                    <span className="text-[11px] font-black text-green-200/60 uppercase tracking-widest">Total Product Purchases</span>
+                                    <span className="text-[11px] font-black text-slate-500 uppercase tracking-widest">Total Product Purchases</span>
                                     <h4 className="text-3xl font-black tracking-tighter">₹ {Number(stats?.productPurchases || 0).toLocaleString()}</h4>
                                 </div>
                             </div>
                             <button
                                 onClick={() => navigate('/my-account/orders')}
-                                className="px-6 py-3 bg-[#F7931E] hover:bg-orange-500 rounded-xl text-xs font-black uppercase tracking-widest transition-colors shadow-lg shadow-orange-900/20"
+                                className="px-6 py-3 bg-[#C8A96A] hover:bg-[#D4AF37] text-[#0D0D0D] rounded-xl text-xs font-black uppercase tracking-widest transition-colors shadow-lg shadow-[#C8A96A]/20"
                             >
                                 View Details
                             </button>
@@ -293,7 +293,7 @@ const DashboardOverview = () => {
                                 title="Today PV Points"
                                 value={`${Number(stats?.dailyPV?.current || 0)} / ${Number(stats?.dailyPV?.target || 320)}`}
                                 icon={Zap}
-                                color="#F7931E"
+                                color="#C8A96A"
                                 showCurrency={false}
                                 progress={(Number(stats?.dailyPV?.current || 0) / Number(stats?.dailyPV?.target || 320)) * 100}
                             />
@@ -301,7 +301,7 @@ const DashboardOverview = () => {
                                 title="Total PV Points"
                                 value={`${Number(stats?.lifetimePV?.current || 0)} / ${Number(stats?.lifetimePV?.target || 10200)}`}
                                 icon={Trophy}
-                                color="#0A7A2F"
+                                color="#C8A96A"
                                 showCurrency={false}
                                 progress={(Number(stats?.lifetimePV?.current || 0) / Number(stats?.lifetimePV?.target || 10200)) * 100}
                             />
@@ -369,11 +369,11 @@ const DashboardOverview = () => {
                     <SectionHeader title="Recent Activity" subtitle="Network Live Updates" icon={Activity} />
                     <motion.div
                         variants={cardVariants}
-                        className="bg-white rounded-[2rem] p-4 shadow-[0_20px_60px_rgb(0,0,0,0.03)] border border-slate-100 overflow-hidden relative h-[380px]"
+                        className="bg-[#1A1A1A] rounded-[2rem] p-4 shadow-[0_20px_60px_rgb(0,0,0,0.5)] border border-white/5 overflow-hidden relative h-[380px]"
                     >
                         {/* Gradient Masks for seamless feel */}
-                        <div className="absolute top-0 left-0 w-full h-12 bg-gradient-to-b from-white to-transparent z-10"></div>
-                        <div className="absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-white to-transparent z-10"></div>
+                        <div className="absolute top-0 left-0 w-full h-12 bg-gradient-to-b from-[#1A1A1A] to-transparent z-10"></div>
+                        <div className="absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-[#1A1A1A] to-transparent z-10"></div>
 
                         <motion.div
                             animate={{
@@ -392,15 +392,15 @@ const DashboardOverview = () => {
                                 return (
                                     <div
                                         key={`${item.id}-${index}`}
-                                        className={`flex items-center justify-between py-5 px-6 group cursor-pointer hover:bg-slate-50/80 transition-all border-b border-slate-50`}
+                                        className={`flex items-center justify-between py-5 px-6 group cursor-pointer hover:bg-white/5 transition-all border-b border-white/5`}
                                     >
                                         <div className="flex items-center gap-5">
                                             <div className={`shrink-0 w-11 h-11 rounded-2xl flex items-center justify-center ${item.color} shadow-sm group-hover:scale-105 transition-transform`}>
                                                 <Icon size={20} />
                                             </div>
                                             <div className="flex flex-col">
-                                                <div className="text-[14px] font-black text-slate-900 leading-tight">
-                                                    {item.user} <span className="font-semibold text-slate-500">{item.action}</span>
+                                                <div className="text-[14px] font-black text-white leading-tight">
+                                                    {item.user} <span className="font-semibold text-slate-400">{item.action}</span>
                                                 </div>
                                                 <div className="text-[10px] font-black text-slate-400 mt-1 uppercase tracking-widest group-hover:text-[#0A7A2F] transition-colors">
                                                     Activity Log ID: #REF-{item.id}024
@@ -424,15 +424,15 @@ const DashboardOverview = () => {
                 </div>
 
                 {/* --- FOOTER --- */}
-                <div className="mt-10 pt-10 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-6">
-                    <div className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] flex items-center gap-8">
-                        <div>System Log: <span className="text-slate-900">Online</span></div>
-                        <div className="hidden md:block w-1.5 h-1.5 rounded-full bg-slate-200"></div>
-                        <div className="hidden md:block">Update Frequency: <span className="text-slate-900">Real-time</span></div>
+                <div className="mt-10 pt-10 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6">
+                    <div className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] flex items-center gap-8">
+                        <div>System Log: <span className="text-[#C8A96A]">Online</span></div>
+                        <div className="hidden md:block w-1.5 h-1.5 rounded-full bg-slate-800"></div>
+                        <div className="hidden md:block">Update Frequency: <span className="text-white">Real-time</span></div>
                     </div>
                     <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-widest">
-                        <span className="text-slate-400">Powered by</span>
-                        <span className="text-[#0A7A2F] bg-green-50 px-3 py-1.5 rounded-lg border border-green-100/50">Sanyukt Executive</span>
+                        <span className="text-slate-600">Powered by</span>
+                        <span className="text-[#C8A96A] bg-[#C8A96A]/5 px-3 py-1.5 rounded-lg border border-[#C8A96A]/10">Sanyukt Executive</span>
                     </div>
                 </div>
             </motion.div>

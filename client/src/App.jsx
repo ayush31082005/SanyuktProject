@@ -21,7 +21,7 @@ const App = () => {
     <>
       <Toaster position="top-center" reverseOrder={false} />
       {!isAdminRoute && <Header />}
-      <Box sx={{ pt: !isAdminRoute ? { xs: '60px', md: '70px' } : 0 }}>
+      <Box sx={{ pt: !isAdminRoute ? { xs: '80px', md: '110px' } : 0 }}>
         <MainRoutes />
       </Box>
       {!isAdminRoute && !isAccountRoute && <Footer />}

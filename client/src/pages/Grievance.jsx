@@ -67,7 +67,7 @@ const GrievancePage = () => {
                         description: "Your grievance is being processed"
                     });
                 } catch (err) {
-                    setStatusError("❌ Ticket not found");
+                    setStatusError("âŒ Ticket not found");
                 }
             };
             fetchStatus();
@@ -124,10 +124,10 @@ const GrievancePage = () => {
                 message: formData.message
             });
 
-            // 🎫 Ticket show
+            // ðŸŽ« Ticket show
             setSnackbar({
                 open: true,
-                message: "🎫 Your grievance has been submitted! Ticket Number: " + res.data.ticket,
+                message: "ðŸŽ« Your grievance has been submitted! Ticket Number: " + res.data.ticket,
                 severity: 'success'
             });
 
@@ -145,7 +145,7 @@ const GrievancePage = () => {
             });
 
         } catch (err) {
-            setError("❌ Server error, try again");
+            setError("âŒ Server error, try again");
         }
     };
     const handleStatusCheck = async (e) => {
@@ -173,7 +173,7 @@ const GrievancePage = () => {
             });
 
         } catch (err) {
-            setStatusError("❌ Ticket not found");
+            setStatusError("âŒ Ticket not found");
             setStatusResult(null);
         }
     };
@@ -189,19 +189,19 @@ const GrievancePage = () => {
     };
 
     return (
-        <div className="bg-[#F8FAF5] font-sans min-h-screen">
+        <div className="bg-[#0D0D0D] font-sans min-h-screen">
             {/* Hero Banner */}
-            <header className="relative h-[200px] bg-cover bg-center"
-                style={{ backgroundImage: "url('https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')" }}>
-                <div className="absolute inset-0 bg-black/65"></div>
-                <div className="relative h-full flex flex-col items-center justify-center text-center px-4">
-                    <h1 className="text-4xl md:text-5xl font-bold text-white mb-3 animate-fade-in">
+            <header className="relative min-h-[180px] md:min-h-[220px] bg-cover bg-center border-b border-[#C8A96A]/20 flex items-center justify-center pt-8 pb-4"
+                style={{ backgroundImage: "url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070')" }}>
+                <div className="absolute inset-0 bg-[#0D0D0D]/80 backdrop-blur-sm"></div>
+                <div className="relative flex flex-col items-center justify-center text-center px-4">
+                    <h1 className="text-4xl md:text-5xl font-serif font-bold text-[#C8A96A] mb-3 animate-fade-in drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
                         Grievance
                     </h1>
-                    <div className="flex items-center text-white/90 text-sm md:text-base flex-wrap justify-center">
-                        <Link to="/" className="hover:text-white transition-colors">Home</Link>
+                    <div className="flex items-center text-[#F5E6C8]/60 text-xs md:text-sm flex-wrap justify-center font-bold tracking-[0.2em] uppercase">
+                        <Link to="/" className="hover:text-[#C8A96A] transition-colors">Home</Link>
                         <ChevronRight className="w-4 h-4 mx-2" />
-                        <span className="text-white">Grievance</span>
+                        <span className="text-[#C8A96A]">Grievance</span>
                     </div>
                 </div>
             </header>
@@ -212,15 +212,15 @@ const GrievancePage = () => {
                     {/* Left Column - Guidelines and Nodal Office */}
                     <div className="lg:col-span-1 space-y-6">
                         {/* Guidelines Card */}
-                        <div className="bg-white rounded-[14px] shadow-lg overflow-hidden animate-slide-right">
-                            <div className="bg-[#B8FFB8] p-4 text-[#0A7A2F]">
-                                <h2 className="text-xl font-bold flex items-center gap-2">
+                        <div className="luxury-box bg-[#1A1A1A] overflow-hidden animate-slide-right">
+                            <div className="bg-[#252525] border-b border-[#C8A96A]/20 p-4">
+                                <h2 className="text-base font-serif font-bold text-[#C8A96A] flex items-center gap-2 uppercase tracking-widest">
                                     <FileText className="w-5 h-5" />
                                     Guidelines
                                 </h2>
                             </div>
                             <div className="p-6">
-                                <ol className="space-y-4 list-decimal list-inside text-[#222222] text-sm">
+                                <ol className="space-y-4 list-decimal list-inside text-[#F5E6C8]/70 text-sm">
                                     <li className="leading-relaxed animate-fade-in">
                                         Customer / Distributor can make Grievances in either of the mentioned modes - Calls / Written Application / Email / Walk-in / Online Grievance Cell, etc.
                                     </li>
@@ -235,35 +235,35 @@ const GrievancePage = () => {
                         </div>
 
                         {/* Nodal Office Contact Details */}
-                        <div className="bg-white rounded-[14px] shadow-lg overflow-hidden animate-slide-right animation-delay-200">
-                            <div className="bg-[#F8D7A8] p-4 text-[#F7931E]">
-                                <h2 className="text-xl font-bold flex items-center gap-2">
+                        <div className="luxury-box bg-[#1A1A1A] overflow-hidden animate-slide-right animation-delay-200">
+                            <div className="bg-[#252525] border-b border-[#C8A96A]/20 p-4">
+                                <h2 className="text-base font-serif font-bold text-[#C8A96A] flex items-center gap-2 uppercase tracking-widest">
                                     <UserCircle className="w-5 h-5" />
-                                    Our Nodal Office Contact Details
+                                    Nodal Office Contact
                                 </h2>
                             </div>
-                            <div className="p-6 space-y-4">
-                                <div className="flex items-start gap-3 p-3 bg-[#F8FAF5] rounded-lg">
-                                    <User className="w-5 h-5 text-[#B8FFB8] mt-0.5" />
+                            <div className="p-6 space-y-3">
+                                <div className="flex items-start gap-3 p-3 bg-[#0D0D0D] border border-[#C8A96A]/10">
+                                    <User className="w-5 h-5 text-[#C8A96A] mt-0.5" />
                                     <div>
-                                        <span className="font-bold text-[#222222]">Name:</span>
-                                        <span className="text-[#222222] ml-2">Mr. Prabhat Kumar Verma</span>
+                                        <span className="font-bold text-[#C8A96A] text-xs uppercase tracking-widest">Name:</span>
+                                        <span className="text-[#F5E6C8]/80 ml-2 text-sm">Mr. Prabhat Kumar Verma</span>
                                     </div>
                                 </div>
 
-                                <div className="flex items-start gap-3 p-3 bg-[#F8FAF5] rounded-lg">
-                                    <Phone className="w-5 h-5 text-[#B8FFB8] mt-0.5" />
+                                <div className="flex items-start gap-3 p-3 bg-[#0D0D0D] border border-[#C8A96A]/10">
+                                    <Phone className="w-5 h-5 text-[#C8A96A] mt-0.5" />
                                     <div>
-                                        <span className="font-bold text-[#222222]">Mobile Number:</span>
-                                        <span className="text-[#222222] ml-2">+91 78803 70057</span>
+                                        <span className="font-bold text-[#C8A96A] text-xs uppercase tracking-widest">Mobile:</span>
+                                        <span className="text-[#F5E6C8]/80 ml-2 text-sm">+91 78803 70057</span>
                                     </div>
                                 </div>
 
-                                <div className="flex items-start gap-3 p-3 bg-[#F8FAF5] rounded-lg">
-                                    <Mail className="w-5 h-5 text-[#B8FFB8] mt-0.5" />
+                                <div className="flex items-start gap-3 p-3 bg-[#0D0D0D] border border-[#C8A96A]/10">
+                                    <Mail className="w-5 h-5 text-[#C8A96A] mt-0.5" />
                                     <div>
-                                        <span className="font-bold text-[#222222]">Email ID:</span>
-                                        <span className="text-[#222222] ml-2">support@sanyuktparivaar.com</span>
+                                        <span className="font-bold text-[#C8A96A] text-xs uppercase tracking-widest">Email:</span>
+                                        <span className="text-[#F5E6C8]/80 ml-2 text-sm">support@sanyuktparivaar.com</span>
                                     </div>
                                 </div>
                             </div>
@@ -272,9 +272,9 @@ const GrievancePage = () => {
 
                     {/* Right Column - Grievance Form */}
                     <div className="lg:col-span-2">
-                        <div className="bg-white rounded-[14px] shadow-lg overflow-hidden animate-slide-left">
-                            <div className="bg-[#B8FFB8] p-4 text-[#0A7A2F]">
-                                <h2 className="text-xl font-bold flex items-center gap-2">
+                        <div className="luxury-box bg-[#1A1A1A] overflow-hidden animate-slide-left">
+                            <div className="bg-[#252525] border-b border-[#C8A96A]/20 p-4">
+                                <h2 className="text-base font-serif font-bold text-[#C8A96A] flex items-center gap-2 uppercase tracking-widest">
                                     <MessageSquare className="w-5 h-5" />
                                     Submit Grievance
                                 </h2>
@@ -282,10 +282,10 @@ const GrievancePage = () => {
 
                             <div className="p-6 md:p-8">
                                 {isSubmitted && (
-                                    <div className="mb-6 bg-green-50 border-l-4 border-[#B8FFB8] p-4 rounded-r-lg animate-slide-up">
+                                    <div className="mb-6 bg-[#0D0D0D] border-l-4 border-l-[#C8A96A] p-4 animate-slide-up">
                                         <div className="flex items-center gap-3">
-                                            <CheckCircle className="w-5 h-5 text-[#B8FFB8]" />
-                                            <p className="text-[#0A7A2F] text-sm">
+                                            <CheckCircle className="w-5 h-5 text-[#C8A96A]" />
+                                            <p className="text-[#F5E6C8]/80 text-sm">
                                                 Your grievance has been submitted successfully! A unique track ID will be sent to your email and mobile.
                                             </p>
                                         </div>
@@ -293,10 +293,10 @@ const GrievancePage = () => {
                                 )}
 
                                 {error && (
-                                    <div className="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg animate-slide-up">
+                                    <div className="mb-6 bg-[#3B2F2F] border-l-4 border-l-red-500 p-4 animate-slide-up">
                                         <div className="flex items-center gap-3">
-                                            <AlertCircle className="w-5 h-5 text-red-500" />
-                                            <p className="text-red-700 text-sm">{error}</p>
+                                            <AlertCircle className="w-5 h-5 text-red-400" />
+                                            <p className="text-red-400 text-sm">{error}</p>
                                         </div>
                                     </div>
                                 )}
@@ -304,7 +304,7 @@ const GrievancePage = () => {
                                 <form onSubmit={handleSubmit} className="space-y-5">
                                     {/* Direct Seller ID */}
                                     <div className="space-y-1">
-                                        <label className="block text-sm font-bold text-[#222222]">
+                                        <label className="block text-xs font-bold text-[#C8A96A] uppercase tracking-widest">
                                             Direct Seller ID
                                         </label>
                                         <input
@@ -313,13 +313,13 @@ const GrievancePage = () => {
                                             value={formData.directSellerId}
                                             onChange={handleChange}
                                             placeholder="Enter Direct Seller ID"
-                                            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B8FFB8] focus:border-transparent transition-all"
+                                            className="w-full px-4 py-2.5 bg-[#0D0D0D] border border-[#C8A96A]/20 text-[#F5E6C8] focus:outline-none focus:border-[#C8A96A] focus:ring-1 focus:ring-[#C8A96A]/30 transition-all placeholder:text-[#F5E6C8]/20"
                                         />
                                     </div>
 
                                     {/* Name */}
                                     <div className="space-y-1">
-                                        <label className="block text-sm font-bold text-[#222222]">
+                                        <label className="block text-xs font-bold text-[#C8A96A] uppercase tracking-widest">
                                             Name
                                         </label>
                                         <input
@@ -328,14 +328,14 @@ const GrievancePage = () => {
                                             value={formData.name}
                                             onChange={handleChange}
                                             placeholder="Your Name"
-                                            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B8FFB8] focus:border-transparent transition-all"
+                                            className="w-full px-4 py-2.5 bg-[#0D0D0D] border border-[#C8A96A]/20 text-[#F5E6C8] focus:outline-none focus:border-[#C8A96A] focus:ring-1 focus:ring-[#C8A96A]/30 transition-all placeholder:text-[#F5E6C8]/20"
                                         />
                                     </div>
 
                                     {/* Mobile No. * */}
                                     <div className="space-y-1">
-                                        <label className="block text-sm font-bold text-[#222222]">
-                                            Mobile No. <span className="text-red-500">*</span>
+                                        <label className="block text-xs font-bold text-[#C8A96A] uppercase tracking-widest">
+                                            Mobile No. <span className="text-red-400">*</span>
                                         </label>
                                         <input
                                             type="tel"
@@ -344,14 +344,14 @@ const GrievancePage = () => {
                                             onChange={handleChange}
                                             placeholder="Enter 10-digit mobile number"
                                             required
-                                            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B8FFB8] focus:border-transparent transition-all"
+                                            className="w-full px-4 py-2.5 bg-[#0D0D0D] border border-[#C8A96A]/20 text-[#F5E6C8] focus:outline-none focus:border-[#C8A96A] focus:ring-1 focus:ring-[#C8A96A]/30 transition-all placeholder:text-[#F5E6C8]/20"
                                         />
                                     </div>
 
                                     {/* Email Id * */}
                                     <div className="space-y-1">
-                                        <label className="block text-sm font-bold text-[#222222]">
-                                            Email Id <span className="text-red-500">*</span>
+                                        <label className="block text-xs font-bold text-[#C8A96A] uppercase tracking-widest">
+                                            Email Id <span className="text-red-400">*</span>
                                         </label>
                                         <input
                                             type="email"
@@ -360,36 +360,36 @@ const GrievancePage = () => {
                                             onChange={handleChange}
                                             placeholder="your.email@example.com"
                                             required
-                                            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B8FFB8] focus:border-transparent transition-all"
+                                            className="w-full px-4 py-2.5 bg-[#0D0D0D] border border-[#C8A96A]/20 text-[#F5E6C8] focus:outline-none focus:border-[#C8A96A] focus:ring-1 focus:ring-[#C8A96A]/30 transition-all placeholder:text-[#F5E6C8]/20"
                                         />
                                     </div>
 
                                     {/* Category * */}
                                     <div className="space-y-1">
-                                        <label className="block text-sm font-bold text-[#222222]">
-                                            Category <span className="text-red-500">*</span>
+                                        <label className="block text-xs font-bold text-[#C8A96A] uppercase tracking-widest">
+                                            Category <span className="text-red-400">*</span>
                                         </label>
                                         <select
                                             name="category"
                                             value={formData.category}
                                             onChange={handleChange}
                                             required
-                                            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B8FFB8] focus:border-transparent transition-all bg-white"
+                                            className="w-full px-4 py-2.5 bg-[#0D0D0D] border border-[#C8A96A]/20 text-[#F5E6C8] focus:outline-none focus:border-[#C8A96A] focus:ring-1 focus:ring-[#C8A96A]/30 transition-all"
                                         >
-                                            <option value="">Select Category</option>
-                                            <option value="Billing">Billing</option>
-                                            <option value="Product">Product</option>
-                                            <option value="Delivery">Delivery</option>
-                                            <option value="Payment">Payment</option>
-                                            <option value="Technical">Technical</option>
-                                            <option value="Other">Other</option>
+                                            <option value="" className="bg-[#1A1A1A]">Select Category</option>
+                                            <option value="Billing" className="bg-[#1A1A1A]">Billing</option>
+                                            <option value="Product" className="bg-[#1A1A1A]">Product</option>
+                                            <option value="Delivery" className="bg-[#1A1A1A]">Delivery</option>
+                                            <option value="Payment" className="bg-[#1A1A1A]">Payment</option>
+                                            <option value="Technical" className="bg-[#1A1A1A]">Technical</option>
+                                            <option value="Other" className="bg-[#1A1A1A]">Other</option>
                                         </select>
                                     </div>
 
                                     {/* Subject * */}
                                     <div className="space-y-1">
-                                        <label className="block text-sm font-bold text-[#222222]">
-                                            Subject <span className="text-red-500">*</span>
+                                        <label className="block text-xs font-bold text-[#C8A96A] uppercase tracking-widest">
+                                            Subject <span className="text-red-400">*</span>
                                         </label>
                                         <input
                                             type="text"
@@ -398,14 +398,14 @@ const GrievancePage = () => {
                                             onChange={handleChange}
                                             placeholder="Enter subject"
                                             required
-                                            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B8FFB8] focus:border-transparent transition-all"
+                                            className="w-full px-4 py-2.5 bg-[#0D0D0D] border border-[#C8A96A]/20 text-[#F5E6C8] focus:outline-none focus:border-[#C8A96A] focus:ring-1 focus:ring-[#C8A96A]/30 transition-all placeholder:text-[#F5E6C8]/20"
                                         />
                                     </div>
 
                                     {/* Message * */}
                                     <div className="space-y-1">
-                                        <label className="block text-sm font-bold text-[#222222]">
-                                            Message <span className="text-red-500">*</span>
+                                        <label className="block text-xs font-bold text-[#C8A96A] uppercase tracking-widest">
+                                            Message <span className="text-red-400">*</span>
                                         </label>
                                         <textarea
                                             name="message"
@@ -414,17 +414,17 @@ const GrievancePage = () => {
                                             placeholder="Type your message here..."
                                             required
                                             rows="4"
-                                            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B8FFB8] focus:border-transparent transition-all resize-none"
+                                            className="w-full px-4 py-2.5 bg-[#0D0D0D] border border-[#C8A96A]/20 text-[#F5E6C8] focus:outline-none focus:border-[#C8A96A] focus:ring-1 focus:ring-[#C8A96A]/30 transition-all resize-none placeholder:text-[#F5E6C8]/20"
                                         ></textarea>
                                     </div>
 
                                     {/* Submit Button */}
                                     <button
                                         type="submit"
-                                        className="w-full bg-[#B8FFB8] hover:bg-[#B8FFB8]/90 text-[#0A7A2F] font-bold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg flex items-center justify-center gap-2 group"
+                                        className="luxury-button w-full py-3 flex items-center justify-center gap-2 group"
                                     >
                                         <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                                        Submit
+                                        <span className="font-bold text-xs tracking-[0.2em] uppercase">Submit Grievance</span>
                                     </button>
                                 </form>
                             </div>
@@ -434,23 +434,23 @@ const GrievancePage = () => {
 
                 {/* Check Grievance Status Section */}
                 <div className="mt-8">
-                    <div className="bg-white rounded-[14px] shadow-lg overflow-hidden animate-slide-up">
-                        <div className="bg-[#B8FFB8] p-4 text-[#0A7A2F]">
-                            <h2 className="text-xl font-bold flex items-center gap-2">
+                    <div className="luxury-box bg-[#1A1A1A] overflow-hidden animate-slide-up">
+                        <div className="bg-[#252525] border-b border-[#C8A96A]/20 p-4">
+                            <h2 className="text-base font-serif font-bold text-[#C8A96A] flex items-center gap-2 uppercase tracking-widest">
                                 <ExternalLink className="w-5 h-5" />
                                 Check Grievance Status
                             </h2>
                         </div>
                         <div className="p-6 md:p-8">
-                            <p className="text-[#222222] mb-4">
+                            <p className="text-[#F5E6C8]/70 mb-4 text-sm leading-relaxed">
                                 Dear Customer / Distributor, You can check Grievance Status online at anytime. Please use following link to check current status.
                             </p>
                             <div className="flex justify-center mt-4">
                                 <button
                                     onClick={() => setShowStatusModal(true)}
-                                    className="inline-flex items-center gap-2 bg-[#F7931E] hover:bg-[#F7931E]/90 text-white font-bold py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg group"
+                                    className="luxury-button inline-flex items-center gap-2 px-8 py-3 group"
                                 >
-                                    Check Grievance Status
+                                    <span className="font-bold text-xs tracking-[0.2em] uppercase">Check Grievance Status</span>
                                     <ExternalLink className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                                 </button>
                             </div>
@@ -461,19 +461,19 @@ const GrievancePage = () => {
 
             {/* Grievance Status Check Modal */}
             {showStatusModal && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 animate-fade-in">
-                    <div className="bg-white rounded-[14px] shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto animate-slide-up">
+                <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4 animate-fade-in backdrop-blur-sm">
+                    <div className="luxury-box bg-[#1A1A1A] max-w-md w-full max-h-[90vh] overflow-y-auto animate-slide-up">
                         {/* Modal Header */}
-                        <div className="bg-[#B8FFB8] p-4 text-[#0A7A2F] flex justify-between items-center sticky top-0">
-                            <h3 className="text-xl font-bold flex items-center gap-2">
+                        <div className="bg-[#252525] border-b border-[#C8A96A]/20 p-4 flex justify-between items-center sticky top-0">
+                            <h3 className="text-base font-serif font-bold text-[#C8A96A] flex items-center gap-2 uppercase tracking-widest">
                                 <Ticket className="w-5 h-5" />
                                 Check Grievance Status
                             </h3>
                             <button
                                 onClick={closeModal}
-                                className="hover:bg-[#0A7A2F]/10 p-1 rounded-full transition-colors"
+                                className="hover:bg-[#C8A96A]/10 p-1 border border-transparent hover:border-[#C8A96A]/20 transition-colors"
                             >
-                                <X className="w-6 h-6" />
+                                <X className="w-6 h-6 text-[#C8A96A]" />
                             </button>
                         </div>
 
@@ -482,43 +482,35 @@ const GrievancePage = () => {
                             {statusResult ? (
                                 // Status Result Display
                                 <div className="space-y-4">
-                                    <div className="bg-green-50 border-l-4 border-[#B8FFB8] p-4 rounded-r-lg">
+                                    <div className="bg-[#0D0D0D] border-l-4 border-l-[#C8A96A] p-4">
                                         <div className="flex items-center gap-2">
-                                            <CheckCircle className="w-5 h-5 text-[#B8FFB8]" />
-                                            <h4 className="font-bold text-[#0A7A2F]">Grievance Status Found</h4>
+                                            <CheckCircle className="w-5 h-5 text-[#C8A96A]" />
+                                            <h4 className="font-bold text-[#C8A96A] text-xs uppercase tracking-widest">Grievance Status Found</h4>
                                         </div>
                                     </div>
 
-                                    <div className="space-y-3">
-                                        <div className="flex justify-between p-3 bg-[#F8FAF5] rounded-lg">
-                                            <span className="font-bold text-[#222222]">Ticket Number:</span>
-                                            <span className="text-[#222222]">{statusResult.ticketNumber}</span>
-                                        </div>
-                                        <div className="flex justify-between p-3 bg-[#F8FAF5] rounded-lg">
-                                            <span className="font-bold text-[#222222]">Current Status:</span>
-                                            <span className="text-[#F7931E] font-bold">{statusResult.status}</span>
-                                        </div>
-                                        <div className="flex justify-between p-3 bg-[#F8FAF5] rounded-lg">
-                                            <span className="font-bold text-[#222222]">Submitted Date:</span>
-                                            <span className="text-[#222222]">{statusResult.submittedDate}</span>
-                                        </div>
-                                        <div className="flex justify-between p-3 bg-[#F8FAF5] rounded-lg">
-                                            <span className="font-bold text-[#222222]">Last Updated:</span>
-                                            <span className="text-[#222222]">{statusResult.lastUpdated}</span>
-                                        </div>
-                                        <div className="flex justify-between p-3 bg-[#F8FAF5] rounded-lg">
-                                            <span className="font-bold text-[#222222]">Department:</span>
-                                            <span className="text-[#222222]">{statusResult.department}</span>
-                                        </div>
-                                        <div className="p-3 bg-[#F8FAF5] rounded-lg">
-                                            <span className="font-bold text-[#222222] block mb-1">Description:</span>
-                                            <p className="text-[#222222] text-sm">{statusResult.description}</p>
+                                    <div className="space-y-2">
+                                        {[
+                                            { label: 'Ticket Number', value: statusResult.ticketNumber },
+                                            { label: 'Current Status', value: statusResult.status, highlight: true },
+                                            { label: 'Submitted Date', value: statusResult.submittedDate },
+                                            { label: 'Last Updated', value: statusResult.lastUpdated },
+                                            { label: 'Department', value: statusResult.department },
+                                        ].map((row) => (
+                                            <div key={row.label} className="flex justify-between p-3 bg-[#0D0D0D] border border-[#C8A96A]/10">
+                                                <span className="font-bold text-[#C8A96A] text-xs uppercase tracking-widest">{row.label}:</span>
+                                                <span className={`text-sm font-bold ${row.highlight ? 'text-[#C8A96A]' : 'text-[#F5E6C8]/80'}`}>{row.value}</span>
+                                            </div>
+                                        ))}
+                                        <div className="p-3 bg-[#0D0D0D] border border-[#C8A96A]/10">
+                                            <span className="font-bold text-[#C8A96A] text-xs uppercase tracking-widest block mb-1">Description:</span>
+                                            <p className="text-[#F5E6C8]/70 text-sm">{statusResult.description}</p>
                                         </div>
                                     </div>
 
                                     <button
                                         onClick={closeModal}
-                                        className="w-full bg-[#B8FFB8] hover:bg-[#B8FFB8]/90 text-[#0A7A2F] font-bold py-3 rounded-lg transition-colors mt-4"
+                                        className="luxury-button w-full py-3 mt-4 font-bold text-xs tracking-[0.2em] uppercase"
                                     >
                                         Close
                                     </button>
@@ -527,64 +519,38 @@ const GrievancePage = () => {
                                 // Status Check Form
                                 <form onSubmit={handleStatusCheck} className="space-y-4">
                                     {statusError && (
-                                        <div className="bg-red-50 border-l-4 border-red-500 p-3 rounded-r-lg">
-                                            <p className="text-red-700 text-sm flex items-center gap-2">
+                                        <div className="bg-[#3B2F2F] border-l-4 border-l-red-500 p-3">
+                                            <p className="text-red-400 text-sm flex items-center gap-2">
                                                 <AlertCircle className="w-4 h-4" />
                                                 {statusError}
                                             </p>
                                         </div>
                                     )}
 
-                                    {/* Direct Seller ID */}
-                                    <div className="space-y-1">
-                                        <label className="block text-sm font-bold text-[#222222]">
-                                            Direct Seller ID
-                                        </label>
-                                        <input
-                                            type="text"
-                                            name="directSellerId"
-                                            value={statusFormData.directSellerId}
-                                            onChange={handleStatusChange}
-                                            placeholder="Enter Direct Seller ID"
-                                            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B8FFB8] focus:border-transparent transition-all"
-                                        />
-                                    </div>
+                                    {[
+                                        { label: 'Direct Seller ID', name: 'directSellerId', type: 'text', placeholder: 'Enter Direct Seller ID', required: false },
+                                        { label: 'Name', name: 'name', type: 'text', placeholder: 'Your Name', required: false },
+                                        { label: 'Ticket Number *', name: 'ticketNumber', type: 'text', placeholder: 'Enter Your Ticket Number', required: true },
+                                    ].map((field) => (
+                                        <div key={field.name} className="space-y-1">
+                                            <label className="block text-xs font-bold text-[#C8A96A] uppercase tracking-widest">
+                                                {field.label}
+                                            </label>
+                                            <input
+                                                type={field.type}
+                                                name={field.name}
+                                                value={statusFormData[field.name]}
+                                                onChange={handleStatusChange}
+                                                placeholder={field.placeholder}
+                                                required={field.required}
+                                                className="w-full px-4 py-2.5 bg-[#0D0D0D] border border-[#C8A96A]/20 text-[#F5E6C8] focus:outline-none focus:border-[#C8A96A] focus:ring-1 focus:ring-[#C8A96A]/30 transition-all placeholder:text-[#F5E6C8]/20"
+                                            />
+                                        </div>
+                                    ))}
 
-                                    {/* Name */}
-                                    <div className="space-y-1">
-                                        <label className="block text-sm font-bold text-[#222222]">
-                                            Name
-                                        </label>
-                                        <input
-                                            type="text"
-                                            name="name"
-                                            value={statusFormData.name}
-                                            onChange={handleStatusChange}
-                                            placeholder="Your Name"
-                                            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B8FFB8] focus:border-transparent transition-all"
-                                        />
-                                    </div>
-
-                                    {/* Ticket Number * */}
-                                    <div className="space-y-1">
-                                        <label className="block text-sm font-bold text-[#222222]">
-                                            Ticket Number <span className="text-red-500">*</span>
-                                        </label>
-                                        <input
-                                            type="text"
-                                            name="ticketNumber"
-                                            value={statusFormData.ticketNumber}
-                                            onChange={handleStatusChange}
-                                            placeholder="Enter Your Ticket Number"
-                                            required
-                                            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B8FFB8] focus:border-transparent transition-all"
-                                        />
-                                    </div>
-
-                                    {/* Check Status Button */}
                                     <button
                                         type="submit"
-                                        className="w-full bg-[#F7931E] hover:bg-[#F7931E]/90 text-white font-bold py-3 rounded-lg transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg mt-4"
+                                        className="luxury-button w-full py-3 mt-4 font-bold text-xs tracking-[0.2em] uppercase"
                                     >
                                         Check Status
                                     </button>
@@ -592,7 +558,7 @@ const GrievancePage = () => {
                                     <button
                                         type="button"
                                         onClick={closeModal}
-                                        className="w-full bg-gray-200 hover:bg-gray-300 text-[#222222] font-bold py-3 rounded-lg transition-colors mt-2"
+                                        className="w-full py-3 bg-[#252525] hover:bg-[#333] border border-[#C8A96A]/10 hover:border-[#C8A96A]/30 text-[#F5E6C8]/60 font-bold text-xs uppercase tracking-widest transition-all mt-2"
                                     >
                                         Cancel
                                     </button>
@@ -616,12 +582,13 @@ const GrievancePage = () => {
                     variant="filled"
                     sx={{
                         width: '100%',
-                        borderRadius: '16px',
+                        borderRadius: '0px',
                         fontWeight: 800,
-                        boxShadow: '0 8px 30px rgba(247,147,30,0.25)',
-                        bgcolor: '#f7931e',
-                        color: 'white',
-                        '& .MuiAlert-icon': { color: 'white' }
+                        boxShadow: '0 8px 30px rgba(200,169,106,0.2)',
+                        bgcolor: '#1A1A1A',
+                        color: '#C8A96A',
+                        border: '1px solid rgba(200,169,106,0.3)',
+                        '& .MuiAlert-icon': { color: '#C8A96A' }
                     }}
                 >
                     {snackbar.message}
@@ -632,3 +599,4 @@ const GrievancePage = () => {
 };
 
 export default GrievancePage;
+

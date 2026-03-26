@@ -37,16 +37,19 @@ import { useNavigate } from 'react-router-dom';
 
 // Main Header Styling (Sticky, Full width, 80px desktop, 60px mobile)
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
-    backgroundColor: '#0A0A0A',
-    boxShadow: '0 2px 10px rgba(0,0,0,0.5)',
-    borderBottom: '1px solid rgba(201,168,76,0.3)',
+    backgroundColor: '#0D0D0D',
+    backdropFilter: 'blur(20px)',
+    boxShadow: '0 10px 40px rgba(0, 0, 0, 0.6)',
+    borderBottom: '1px solid rgba(200, 169, 106, 0.4)',
+    minHeight: '60px',
     height: '60px',
     justifyContent: 'center',
     position: 'fixed',
     top: 0,
     zIndex: 1100,
     [theme.breakpoints.up('md')]: {
-        height: '70px',
+        minHeight: '80px',
+        height: '80px',
     },
 }));
 
@@ -57,12 +60,16 @@ const LogoContainer = styled(Box)(({ theme }) => ({
     gap: '8px',
     cursor: 'pointer',
     maxWidth: '220px',
+    flexShrink: 0,
     [theme.breakpoints.up('md')]: {
         gap: '12px',
         maxWidth: '350px',
     },
     [theme.breakpoints.up('lg')]: {
-        maxWidth: '400px',
+        maxWidth: '380px',
+    },
+    [theme.breakpoints.up('xl')]: {
+        maxWidth: '450px',
     },
 }));
 
@@ -79,14 +86,15 @@ const LogoImage = styled('img')(({ theme }) => ({
 }));
 
 const LogoMain = styled('span')(({ theme }) => ({
-    fontFamily: '"Poppins", "Roboto", sans-serif',
+    fontFamily: '"Playfair Display", serif',
     fontWeight: 700,
-    fontSize: '0.75rem',
-    color: '#C9A84C',
+    fontSize: '0.85rem',
+    color: '#C8A96A',
     whiteSpace: 'normal',
     lineHeight: 1.2,
+    letterSpacing: '0.02em',
     [theme.breakpoints.up('md')]: {
-        fontSize: '0.85rem',
+        fontSize: '0.95rem',
         whiteSpace: 'nowrap',
     },
     [theme.breakpoints.up('lg')]: {
@@ -95,138 +103,124 @@ const LogoMain = styled('span')(({ theme }) => ({
 }));
 
 const LogoTagline = styled('span')(({ theme }) => ({
-    fontFamily: '"Poppins", "Roboto", sans-serif',
+    fontFamily: '"Inter", sans-serif',
     fontSize: '0.6rem',
-    fontWeight: 700,
-    color: '#C9A84C',
+    fontWeight: 500,
+    color: '#F5E6C8',
     whiteSpace: 'normal',
-    letterSpacing: '0.02em',
+    letterSpacing: '0.05em',
+    textTransform: 'uppercase',
+    opacity: 0.9,
     [theme.breakpoints.up('md')]: {
-        fontSize: '0.75rem',
+        fontSize: '0.7rem',
         whiteSpace: 'nowrap',
     },
     [theme.breakpoints.up('lg')]: {
-        fontSize: '0.85rem',
+        fontSize: '0.75rem',
     },
 }));
 
 // NavButton with exact styling
 const NavButton = styled(Button)(({ theme }) => ({
-    fontFamily: '"Poppins", "Roboto", sans-serif',
-    fontSize: '15px',
-    fontWeight: 500,
-    color: '#C9A84C',
-    textTransform: 'none',
+    fontFamily: '"Inter", sans-serif',
+    fontSize: '11px',
+    fontWeight: 700,
+    color: '#F5E6C8',
+    textTransform: 'uppercase',
+    letterSpacing: '0.05em',
     padding: '4px 8px',
     minWidth: 'auto',
     whiteSpace: 'nowrap',
+    borderRadius: '2px',
     '&:hover': {
-        color: '#C9A84C',
-        backgroundColor: 'transparent',
+        color: '#C8A96A',
+        backgroundColor: 'rgba(200, 169, 106, 0.05)',
     },
     '&.active': {
-        color: '#C9A84C',
+        color: '#C8A96A',
+        borderBottom: '1px solid #C8A96A',
     },
-    transition: 'color 0.2s ease-in-out',
-    [theme.breakpoints.up('xl')]: {
-        fontSize: '17px',
-        padding: '6px 12px',
-    },
+    transition: 'all 0.3s ease',
 }));
 
 // Register Button (#C9A84C, White text)
 const RegisterButton = styled(Button)(({ theme }) => ({
-    fontFamily: '"Poppins", "Roboto", sans-serif',
-    fontSize: '15px',
-    fontWeight: 600,
-    backgroundColor: '#C9A84C',
-    color: '#0A0A0A',
-    padding: '6px 14px',
-    borderRadius: '4px',
-    textTransform: 'none',
-    whiteSpace: 'nowrap',
+    className: 'luxury-button',
+    fontFamily: '"Inter", sans-serif',
+    fontSize: '11px',
+    fontWeight: 700,
+    border: '1px solid #C8A96A',
+    color: '#0D0D0D',
+    background: '#C8A96A',
+    padding: '6px 12px',
+    borderRadius: '2px',
+    textTransform: 'uppercase',
+    letterSpacing: '0.05em',
     '&:hover': {
-        backgroundColor: '#A07830',
-        boxShadow: '0 4px 12px rgba(201,168,76,0.3)',
+        background: '#F5E6C8',
+        borderColor: '#F5E6C8',
     },
-    transition: 'all 0.2s ease-in-out',
-    [theme.breakpoints.up('xl')]: {
-        fontSize: '16px',
-        padding: '8px 20px',
-    },
+    transition: 'all 0.3s ease',
 }));
 
-// Login Button (Transparent, #C9A84C Border)
 const LoginButton = styled(Button)(({ theme }) => ({
-    fontFamily: '"Poppins", "Roboto", sans-serif',
-    fontSize: '15px',
-    fontWeight: 600,
+    fontFamily: '"Inter", sans-serif',
+    fontSize: '11px',
+    fontWeight: 700,
     backgroundColor: 'transparent',
-    border: '1px solid #C9A84C',
-    color: '#C9A84C',
-    padding: '6px 14px',
-    borderRadius: '4px',
-    textTransform: 'none',
-    whiteSpace: 'nowrap',
+    border: '1px solid rgba(200, 169, 106, 0.5)',
+    color: '#C8A96A',
+    padding: '6px 12px',
+    borderRadius: '2px',
+    textTransform: 'uppercase',
+    letterSpacing: '0.05em',
     '&:hover': {
-        backgroundColor: 'rgba(201,168,76,0.06)',
-        boxShadow: '0 4px 12px rgba(201,168,76,0.3)',
+        backgroundColor: 'rgba(200, 169, 106, 0.1)',
+        borderColor: '#C8A96A',
     },
-    transition: 'all 0.2s ease-in-out',
-    [theme.breakpoints.up('xl')]: {
-        fontSize: '16px',
-        padding: '8px 20px',
-    },
+    transition: 'all 0.3s ease',
 }));
 
 // My Account Button (Yellow/Orange theme color)
 const MyAccountButton = styled(Button)(({ theme }) => ({
-    fontFamily: '"Poppins", "Roboto", sans-serif',
-    fontSize: '15px',
-    fontWeight: 600,
-    backgroundColor: '#C9A84C',
-    color: '#0A0A0A',
-    padding: '5px 16px',
-    borderRadius: '8px',
-    textTransform: 'none',
+    fontFamily: '"Inter", sans-serif',
+    fontSize: '11px',
+    fontWeight: 700,
+    background: '#C8A96A',
+    color: '#0D0D0D',
+    padding: '6px 12px',
+    borderRadius: '2px',
+    textTransform: 'uppercase',
+    letterSpacing: '0.05em',
     whiteSpace: 'nowrap',
     display: 'flex',
     alignItems: 'center',
-    gap: '6px',
+    gap: '8px',
     '&:hover': {
-        backgroundColor: '#A07830',
-        boxShadow: '0 4px 12px rgba(201,168,76,0.3)',
+        background: '#F5E6C8',
     },
-    transition: 'all 0.2s ease-in-out',
-    [theme.breakpoints.up('xl')]: {
-        fontSize: '16px',
-        padding: '6px 20px',
-    },
+    transition: 'all 0.3s ease',
 }));
 
 // Admin Dashboard Button (Orange/Different color - for admins)
 const AdminDashboardButton = styled(Button)(({ theme }) => ({
-    fontFamily: '"Poppins", "Roboto", sans-serif',
-    fontSize: '15px',
-    fontWeight: 600,
-    backgroundColor: '#C9A84C',
-    color: '#0A0A0A',
-    padding: '5px 16px',
-    borderRadius: '8px',
-    textTransform: 'none',
+    fontFamily: '"Inter", sans-serif',
+    fontSize: '11px',
+    fontWeight: 700,
+    background: '#C8A96A',
+    color: '#0D0D0D',
+    padding: '6px 12px',
+    borderRadius: '2px',
+    textTransform: 'uppercase',
+    letterSpacing: '0.05em',
     whiteSpace: 'nowrap',
     display: 'flex',
     alignItems: 'center',
-    gap: '6px',
+    gap: '8px',
     '&:hover': {
-        backgroundColor: '#A07830',
-        boxShadow: '0 4px 12px rgba(201,168,76,0.3)',
+        background: '#F5E6C8',
     },
-    transition: 'all 0.2s ease-in-out',
-    [theme.breakpoints.up('xl')]: {
-        fontSize: '16px',
-        padding: '6px 20px',
-    },
+    transition: 'all 0.3s ease',
 }));
 
 // Logout Menu Item
@@ -243,9 +237,9 @@ const LogoutMenuItem = styled(MenuItem)({
 // Regular List item for mobile drawer
 const StyledListItemButton = styled(ListItemButton)({
     '&:hover': {
-        backgroundColor: 'rgba(201,168,76,0.1)',
+        backgroundColor: 'rgba(200, 169, 106, 0.1)',
         '& .MuiListItemText-primary': {
-            color: '#C9A84C',
+            color: '#C8A96A',
         },
     },
     transition: 'all 0.2s ease-in-out',
@@ -498,10 +492,10 @@ const Header = () => {
                     {!logoError && (
                         <LogoImage src="/logo.png" alt="Sanyukt Parivaar Logo" onError={handleLogoError} />
                     )}
-                    <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', lineHeight: 1.2 }}>
-                        <LogoMain>Sanyukt Parivaar <span style={{ fontSize: '0.8rem' }}>&</span> Rich Life</LogoMain>
+                    {/* <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', lineHeight: 1.2 }}>
+                        <LogoMain>Sanyukt Parivaar <span style={{ fontSize: '0.9rem' }}>&</span> Rich Life</LogoMain>
                         <LogoTagline>Together We Grow, Together We Prosper</LogoTagline>
-                    </Box>
+                    </Box> */}
                 </LogoContainer>
             </Box>
 
@@ -516,7 +510,7 @@ const Header = () => {
                                     fontFamily: '"Poppins", "Roboto", sans-serif',
                                     fontSize: '14px',
                                     fontWeight: 500,
-                                    color: isActive('/') ? '#C9A84C' : '#C9A84C'
+                                    color: isActive('/') ? '#C8A96A' : '#C8A96A'
                                 }
                             }}
                         />
@@ -533,11 +527,11 @@ const Header = () => {
                                     fontFamily: '"Poppins", "Roboto", sans-serif',
                                     fontSize: '14px',
                                     fontWeight: 500,
-                                    color: isCompanyActive() ? '#C9A84C' : '#C9A84C'
+                                    color: isCompanyActive() ? '#C8A96A' : '#C8A96A'
                                 }
                             }}
                         />
-                        {mobileSubmenu === 'company' ? <ExpandLess sx={{ color: '#C9A84C' }} /> : <ExpandMore sx={{ color: '#C9A84C' }} />}
+                        {mobileSubmenu === 'company' ? <ExpandLess sx={{ color: '#C8A96A' }} /> : <ExpandMore sx={{ color: '#C8A96A' }} />}
                     </StyledListItemButton>
                     <Collapse in={mobileSubmenu === 'company'} timeout="auto" unmountOnExit sx={{ width: '100%' }}>
                         <List component="div" disablePadding>
@@ -554,7 +548,7 @@ const Header = () => {
                                                 fontFamily: '"Poppins", "Roboto", sans-serif',
                                                 fontSize: '13px',
                                                 fontWeight: 500,
-                                                color: isActive(subItem.path) ? '#C9A84C' : '#C9A84C'
+                                                color: isActive(subItem.path) ? '#C8A96A' : '#C8A96A'
                                             }
                                         }}
                                     />
@@ -575,7 +569,7 @@ const Header = () => {
                                         fontFamily: '"Poppins", "Roboto", sans-serif',
                                         fontSize: '14px',
                                         fontWeight: 500,
-                                        color: isActive(item.path) ? '#C9A84C' : '#C9A84C'
+                                        color: isActive(item.path) ? '#C8A96A' : '#C8A96A'
                                     }
                                 }}
                             />
@@ -593,11 +587,11 @@ const Header = () => {
                                     fontFamily: '"Poppins", "Roboto", sans-serif',
                                     fontSize: '14px',
                                     fontWeight: 500,
-                                    color: isFranchiseActive() ? '#C9A84C' : '#C9A84C'
+                                    color: isFranchiseActive() ? '#C8A96A' : '#C8A96A'
                                 }
                             }}
                         />
-                        {mobileSubmenu === 'franchise' ? <ExpandLess sx={{ color: '#C9A84C' }} /> : <ExpandMore sx={{ color: '#C9A84C' }} />}
+                        {mobileSubmenu === 'franchise' ? <ExpandLess sx={{ color: '#C8A96A' }} /> : <ExpandMore sx={{ color: '#C8A96A' }} />}
                     </StyledListItemButton>
                     <Collapse in={mobileSubmenu === 'franchise'} timeout="auto" unmountOnExit sx={{ width: '100%' }}>
                         <List component="div" disablePadding>
@@ -614,7 +608,7 @@ const Header = () => {
                                                 fontFamily: '"Poppins", "Roboto", sans-serif',
                                                 fontSize: '13px',
                                                 fontWeight: 500,
-                                                color: isActive(subItem.path) ? '#C9A84C' : '#C9A84C'
+                                                color: isActive(subItem.path) ? '#C8A96A' : '#C8A96A'
                                             }
                                         }}
                                     />
@@ -634,7 +628,7 @@ const Header = () => {
                                         fontFamily: '"Poppins", "Roboto", sans-serif',
                                         fontSize: '14px',
                                         fontWeight: 500,
-                                        color: isActive(item.path) ? '#C9A84C' : '#C9A84C'
+                                        color: isActive(item.path) ? '#C8A96A' : '#C8A96A'
                                     }
                                 }}
                             />
@@ -669,7 +663,7 @@ const Header = () => {
                                 <>
                                     <ListItem disablePadding sx={{ flexDirection: 'column', alignItems: 'flex-start' }}>
                                         <StyledListItemButton onClick={handleMobileAccountToggle} sx={{ width: '100%', justifyContent: 'center' }}>
-                                            <AccountCircleIcon sx={{ mr: 1, color: '#C9A84C' }} />
+                                            <AccountCircleIcon sx={{ mr: 1, color: '#C8A96A' }} />
                                             <ListItemText
                                                 primary={getDisplayName()}
                                                 sx={{
@@ -677,11 +671,11 @@ const Header = () => {
                                                         fontFamily: '"Poppins", "Roboto", sans-serif',
                                                         fontSize: '14px',
                                                         fontWeight: 600,
-                                                        color: '#C9A84C'
+                                                        color: '#C8A96A'
                                                     }
                                                 }}
                                             />
-                                            {mobileSubmenu === 'account' ? <ExpandLess sx={{ color: '#C9A84C' }} /> : <ExpandMore sx={{ color: '#C9A84C' }} />}
+                                            {mobileSubmenu === 'account' ? <ExpandLess sx={{ color: '#C8A96A' }} /> : <ExpandMore sx={{ color: '#C8A96A' }} />}
                                         </StyledListItemButton>
                                         <Collapse in={mobileSubmenu === 'account'} timeout="auto" unmountOnExit sx={{ width: '100%' }}>
                                             <List component="div" disablePadding>
@@ -691,7 +685,7 @@ const Header = () => {
                                                         sx={{ pl: 4 }}
                                                         onClick={() => handleNavigation(subItem.path)}
                                                     >
-                                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, color: '#C9A84C' }}>
+                                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, color: '#C8A96A' }}>
                                                             {subItem.icon}
                                                             <ListItemText
                                                                 primary={subItem.name}
@@ -700,7 +694,7 @@ const Header = () => {
                                                                         fontFamily: '"Poppins", "Roboto", sans-serif',
                                                                         fontSize: '13px',
                                                                         fontWeight: 500,
-                                                                        color: isActive(subItem.path) ? '#C9A84C' : '#C9A84C'
+                                                                        color: isActive(subItem.path) ? '#C8A96A' : '#C8A96A'
                                                                     }
                                                                 }}
                                                             />
@@ -711,7 +705,7 @@ const Header = () => {
                                                     sx={{ pl: 4 }}
                                                     onClick={() => handleNavigation('/my-account')}
                                                 >
-                                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, color: '#C9A84C' }}>
+                                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, color: '#C8A96A' }}>
                                                         <DashboardIcon fontSize="small" />
                                                         <ListItemText
                                                             primary="Dashboard Home"
@@ -720,7 +714,7 @@ const Header = () => {
                                                                     fontFamily: '"Poppins", "Roboto", sans-serif',
                                                                     fontSize: '13px',
                                                                     fontWeight: 500,
-                                                                    color: isActive('/my-account') ? '#C9A84C' : '#C9A84C'
+                                                                    color: isActive('/my-account') ? '#C8A96A' : '#C8A96A'
                                                                 }
                                                             }}
                                                         />
@@ -758,21 +752,21 @@ const Header = () => {
         <Box sx={{ flexGrow: 1 }}>
             <StyledAppBar position="fixed">
                 <Container maxWidth={false} sx={{ px: { xs: 2, lg: 3 } }}>
-                    <Toolbar disableGutters sx={{ justifyContent: 'space-between' }}>
+                    <Toolbar disableGutters sx={{ 
+                        height: '100%',
+                        position: 'relative', 
+                        justifyContent: { xs: 'space-between', lg: 'center' }, 
+                        gap: { lg: 3, xl: 4 } 
+                    }}>
 
-                        {/* LEFT - LOGO */}
-                        <LogoContainer onClick={() => handleNavigation('/')}>
-                            {!logoError && (
-                                <LogoImage src="/logo.png" alt="Sanyukt Parivaar Logo" onError={handleLogoError} />
-                            )}
-                            <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', lineHeight: 1.2 }}>
-                                <LogoMain>Sanyukt Parivaar <span style={{ fontSize: '0.8rem' }}>&</span> Rich Life Pvt.Ltd.</LogoMain>
-                                <LogoTagline>Together We Grow, Together We Prosper</LogoTagline>
-                            </Box>
-                        </LogoContainer>
-
-                        {/* RIGHT - NAVIGATION (DESKTOP) */}
-                        <Box sx={{ display: { xs: 'none', lg: 'flex' }, alignItems: 'center', gap: 1, flexWrap: 'nowrap' }}>
+                        {/* LEFT - NAVIGATION (DESKTOP) */}
+                        <Box sx={{
+                            display: { xs: 'none', lg: 'flex' },
+                            alignItems: 'center',
+                            gap: { lg: 1, xl: 2 },
+                            flexWrap: 'nowrap',
+                            justifyContent: 'flex-start'
+                        }}>
 
                             <NavButton
                                 className={isActive('/') ? 'active' : ''}
@@ -788,13 +782,13 @@ const Header = () => {
                                     onClick={handleCompanyClick}
                                     sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}
                                 >
-                                    Sanyukt Parivaar 
-                                    <ExpandMore 
-                                        sx={{ 
+                                    Sanyukt Parivaar
+                                    <ExpandMore
+                                        sx={{
                                             fontSize: '18px',
                                             transform: openCompanyMenu ? 'rotate(180deg)' : 'rotate(0deg)',
                                             transition: 'transform 0.2s'
-                                        }} 
+                                        }}
                                     />
                                 </NavButton>
 
@@ -868,7 +862,7 @@ const Header = () => {
                                 </Menu>
                             </Box>
 
-                            {menuItems.slice(1).filter(item => item.name !== 'My Cart').map((item) => (
+                            {menuItems.slice(1, -1).map((item) => (
                                 <NavButton
                                     key={item.name}
                                     className={isActive(item.path) ? 'active' : ''}
@@ -877,6 +871,139 @@ const Header = () => {
                                     {item.name}
                                 </NavButton>
                             ))}
+                        </Box>
+
+                        {/* CENTER - LOGO */}
+                        <Box sx={{ 
+                            display: 'flex', 
+                            justifyContent: 'center', 
+                            alignItems: 'center',
+                            position: { xs: 'absolute', lg: 'static' },
+                            left: { xs: '50%', lg: 'auto' },
+                            transform: { xs: 'translateX(-50%)', lg: 'none' }
+                        }}>
+                            <LogoContainer onClick={() => handleNavigation('/')}>
+                                {!logoError && (
+                                    <LogoImage src="/logo.png" alt="Sanyukt Parivaar Logo" onError={handleLogoError} />
+                                )}
+                            </LogoContainer>
+                        </Box>
+
+                        {/* RIGHT - NAVIGATION (DESKTOP) */}
+                        <Box sx={{
+                            display: { xs: 'none', lg: 'flex' },
+                            alignItems: 'center',
+                            gap: { lg: 1, xl: 2 },
+                            flexWrap: 'nowrap',
+                            justifyContent: 'flex-end'
+                        }}>
+                            {/* "My Cart" moved to the right side */}
+                            {menuItems.slice(-1).map((item) => (
+                                <NavButton
+                                    key={item.name}
+                                    className={isActive(item.path) ? 'active' : ''}
+                                    onClick={() => handleNavigation(item.path)}
+                                >
+                                    {item.name}
+                                </NavButton>
+                            ))}
+                            {/* Franchise Dropdown (Desktop) */}
+                            <Box sx={{ position: 'relative' }}>
+                                <NavButton
+                                    className={isFranchiseActive() ? 'active' : ''}
+                                    onClick={handleFranchiseClick}
+                                    sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}
+                                >
+                                    Franchise
+                                    <ExpandMore
+                                        sx={{
+                                            fontSize: '18px',
+                                            transform: openFranchiseMenu ? 'rotate(180deg)' : 'rotate(0deg)',
+                                            transition: 'transform 0.2s'
+                                        }}
+                                    />
+                                </NavButton>
+
+                                <Menu
+                                    anchorEl={anchorElFranchise}
+                                    open={openFranchiseMenu}
+                                    onClose={handleFranchiseClose}
+                                    anchorOrigin={{
+                                        vertical: 'bottom',
+                                        horizontal: 'left',
+                                    }}
+                                    transformOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'left',
+                                    }}
+                                    MenuListProps={{
+                                        sx: {
+                                            padding: '8px',
+                                        }
+                                    }}
+                                    slotProps={{
+                                        paper: {
+                                            elevation: 0,
+                                            sx: {
+                                                mt: 1.5,
+                                                minWidth: '180px',
+                                                boxShadow: '0px 10px 40px rgba(0,0,0,0.6)',
+                                                border: '1px solid rgba(201,168,76,0.2)',
+                                                borderRadius: '12px',
+                                                overflow: 'visible',
+                                                '&:before': {
+                                                    content: '""',
+                                                    display: 'block',
+                                                    position: 'absolute',
+                                                    top: 0,
+                                                    left: 24,
+                                                    width: 10,
+                                                    height: 10,
+                                                    bgcolor: '#1A1A1A',
+                                                    transform: 'translateY(-50%) rotate(45deg)',
+                                                    zIndex: 0,
+                                                    borderTop: '1px solid rgba(201,168,76,0.2)',
+                                                    borderLeft: '1px solid rgba(201,168,76,0.2)',
+                                                },
+                                            }
+                                        }
+                                    }}
+                                    disableScrollLock
+                                >
+                                    {franchiseSubItems.map((item) => (
+                                        <MenuItem
+                                            key={item.name}
+                                            onClick={() => handleFranchiseItemClick(item.path)}
+                                            sx={{
+                                                fontFamily: '"Poppins", "Roboto", sans-serif',
+                                                fontSize: '14px',
+                                                fontWeight: 500,
+                                                color: isActive(item.path) ? '#C9A84C' : '#C9A84C',
+                                                borderRadius: '8px',
+                                                py: 1,
+                                                px: 1.5,
+                                                '&:hover': {
+                                                    backgroundColor: 'rgba(201,168,76,0.1)',
+                                                    color: '#C9A84C',
+                                                }
+                                            }}
+                                        >
+                                            {item.name}
+                                        </MenuItem>
+                                    ))}
+                                </Menu>
+                            </Box>
+
+                            {trailItems.map((item) => (
+                                <NavButton
+                                    key={item.name}
+                                    className={isActive(item.path) ? 'active' : ''}
+                                    onClick={() => handleNavigation(item.path)}
+                                >
+                                    {item.name}
+                                </NavButton>
+                            ))}
+
                             {/* Conditional rendering based on login status and role */}
                             {isLoggedIn ? (
                                 <>
@@ -1052,115 +1179,28 @@ const Header = () => {
                                     </LoginButton>
                                 </>
                             )}
-
-                            {/* Franchise Dropdown (Desktop) */}
-                            <Box sx={{ position: 'relative' }}>
-                                <NavButton
-                                    className={isFranchiseActive() ? 'active' : ''}
-                                    onClick={handleFranchiseClick}
-                                    sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}
-                                >
-                                    Franchise 
-                                    <ExpandMore 
-                                        sx={{ 
-                                            fontSize: '18px',
-                                            transform: openFranchiseMenu ? 'rotate(180deg)' : 'rotate(0deg)',
-                                            transition: 'transform 0.2s'
-                                        }} 
-                                    />
-                                </NavButton>
-
-                                <Menu
-                                    anchorEl={anchorElFranchise}
-                                    open={openFranchiseMenu}
-                                    onClose={handleFranchiseClose}
-                                    anchorOrigin={{
-                                        vertical: 'bottom',
-                                        horizontal: 'left',
-                                    }}
-                                    transformOrigin={{
-                                        vertical: 'top',
-                                        horizontal: 'left',
-                                    }}
-                                    MenuListProps={{
-                                        sx: {
-                                            padding: '8px',
-                                        }
-                                    }}
-                                    slotProps={{
-                                        paper: {
-                                            elevation: 0,
-                                            sx: {
-                                                mt: 1.5,
-                                                minWidth: '180px',
-                                                boxShadow: '0px 10px 40px rgba(0,0,0,0.6)',
-                                                border: '1px solid rgba(201,168,76,0.2)',
-                                                borderRadius: '12px',
-                                                overflow: 'visible',
-                                                '&:before': {
-                                                    content: '""',
-                                                    display: 'block',
-                                                    position: 'absolute',
-                                                    top: 0,
-                                                    left: 24,
-                                                    width: 10,
-                                                    height: 10,
-                                                    bgcolor: '#1A1A1A',
-                                                    transform: 'translateY(-50%) rotate(45deg)',
-                                                    zIndex: 0,
-                                                    borderTop: '1px solid rgba(201,168,76,0.2)',
-                                                    borderLeft: '1px solid rgba(201,168,76,0.2)',
-                                                },
-                                            }
-                                        }
-                                    }}
-                                    disableScrollLock
-                                >
-                                    {franchiseSubItems.map((item) => (
-                                        <MenuItem
-                                            key={item.name}
-                                            onClick={() => handleFranchiseItemClick(item.path)}
-                                            sx={{
-                                                fontFamily: '"Poppins", "Roboto", sans-serif',
-                                                fontSize: '14px',
-                                                fontWeight: 500,
-                                                color: isActive(item.path) ? '#C9A84C' : '#C9A84C',
-                                                borderRadius: '8px',
-                                                py: 1,
-                                                px: 1.5,
-                                                '&:hover': {
-                                                    backgroundColor: 'rgba(201,168,76,0.1)',
-                                                    color: '#C9A84C',
-                                                }
-                                            }}
-                                        >
-                                            {item.name}
-                                        </MenuItem>
-                                    ))}
-                                </Menu>
-                            </Box>
-
-                            {trailItems.map((item) => (
-                                <NavButton
-                                    key={item.name}
-                                    className={isActive(item.path) ? 'active' : ''}
-                                    onClick={() => handleNavigation(item.path)}
-                                >
-                                    {item.name}
-                                </NavButton>
-                            ))}
                         </Box>
 
                         {/* RIGHT - HAMBURGER (MOBILE/TABLET) */}
-                        <Box sx={{ display: { xs: 'flex', lg: 'none' } }}>
+                        <Box sx={{ 
+                            display: { xs: 'flex', lg: 'none' }, 
+                            flex: 1, 
+                            justifyContent: 'flex-end',
+                            alignItems: 'center',
+                            zIndex: 10 
+                        }}>
                             <IconButton
                                 color="inherit"
                                 aria-label="open drawer"
                                 edge="start"
                                 onClick={handleDrawerToggle}
-                                sx={{ color: '#C9A84C' }}
+                                sx={{ 
+                                    color: '#C9A84C',
+                                    p: 1.5, // Increase touch target
+                                    mr: -1 // Adjust margin to edge
+                                }}
                             >
-                                <MenuIcon fontSize="large" />
+                                <MenuIcon sx={{ fontSize: '32px' }} />
                             </IconButton>
                         </Box>
 

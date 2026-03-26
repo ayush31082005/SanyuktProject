@@ -1,179 +1,19 @@
 import { useEffect, useState } from "react";
 import api from "../../api";
-
-// Material-UI imports
-import Container from '@mui/material/Container';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import CircularProgress from '@mui/material/CircularProgress';
-import Alert from '@mui/material/Alert';
-import Snackbar from '@mui/material/Snackbar';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Grid from '@mui/material/Grid';
-import Chip from '@mui/material/Chip';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
-import Fade from '@mui/material/Fade';
-import Grow from '@mui/material/Grow';
-import Slide from '@mui/material/Slide';
-import Zoom from '@mui/material/Zoom';
-import { styled } from '@mui/material/styles';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/material/styles';
-import Divider from '@mui/material/Divider';
-import InputAdornment from '@mui/material/InputAdornment';
-import TextField from '@mui/material/TextField';
-
-// Icons
-import SupportAgentIcon from '@mui/icons-material/SupportAgent';
-import AssignmentIcon from '@mui/icons-material/Assignment';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import PendingIcon from '@mui/icons-material/Pending';
-import ProgressIcon from '@mui/icons-material/Autorenew';
-import RefreshIcon from '@mui/icons-material/Refresh';
-import SearchIcon from '@mui/icons-material/Search';
-import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
-import PersonIcon from '@mui/icons-material/Person';
-import EmailIcon from '@mui/icons-material/Email';
-import PhoneIcon from '@mui/icons-material/Phone';
-import BadgeIcon from '@mui/icons-material/Badge';
-import CategoryIcon from '@mui/icons-material/Category';
-
-// Theme colors
-const themeColors = {
-    green: '#0A7A2F',
-    orange: '#F7931E',
-    white: '#FFFFFF',
-    lightGreen: '#e8f5e9',
-    lightOrange: '#fff3e0',
-    darkGreen: '#065f25',
-    darkOrange: '#e67e22'
-};
-
-// Styled Components
-const AnimatedCard = styled(Card)(({ theme }) => ({
-    transition: 'all 0.3s ease-in-out',
-    height: '100%',
-    position: 'relative',
-    overflow: 'hidden',
-    border: `1px solid ${themeColors.lightGreen}`,
-    '&:hover': {
-        transform: 'translateY(-8px)',
-        boxShadow: `0 12px 30px ${themeColors.green}20`,
-        borderColor: themeColors.green,
-    },
-}));
-
-const StyledChip = styled(Chip)(({ status }) => ({
-    transition: 'all 0.3s ease',
-    fontWeight: 600,
-    ...(status === 'Pending' && {
-        backgroundColor: themeColors.orange,
-        color: themeColors.white,
-        '&:hover': {
-            backgroundColor: themeColors.darkOrange,
-        },
-    }),
-    ...(status === 'In Progress' && {
-        backgroundColor: themeColors.green,
-        color: themeColors.white,
-        '&:hover': {
-            backgroundColor: themeColors.darkGreen,
-        },
-    }),
-    ...(status === 'Resolved' && {
-        backgroundColor: '#4caf50',
-        color: themeColors.white,
-        '&:hover': {
-            backgroundColor: '#388e3c',
-        },
-    }),
-}));
-
-const FullPageContainer = styled(Box)(({ theme }) => ({
-    minHeight: '100vh',
-    width: '100%',
-    background: `linear-gradient(135deg, ${themeColors.white} 0%, ${themeColors.lightGreen} 50%, ${themeColors.lightOrange} 100%)`,
-    position: 'relative',
-    overflow: 'auto',
-    padding: theme.spacing(2),
-    [theme.breakpoints.up('sm')]: {
-        padding: theme.spacing(3),
-    },
-    [theme.breakpoints.up('md')]: {
-        padding: theme.spacing(4),
-    },
-}));
-
-const HeaderPaper = styled(Paper)(({ theme }) => ({
-    padding: theme.spacing(3),
-    marginBottom: theme.spacing(3),
-    background: `linear-gradient(135deg, ${themeColors.green} 0%, ${themeColors.orange} 100%)`,
-    color: themeColors.white,
-    borderRadius: '16px',
-    position: 'relative',
-    overflow: 'hidden',
-    '&::before': {
-        content: '""',
-        position: 'absolute',
-        top: -50,
-        right: -50,
-        width: 200,
-        height: 200,
-        background: 'rgba(255,255,255,0.1)',
-        borderRadius: '50%',
-        animation: 'float 6s ease-in-out infinite',
-    },
-    '&::after': {
-        content: '""',
-        position: 'absolute',
-        bottom: -50,
-        left: -50,
-        width: 150,
-        height: 150,
-        background: 'rgba(255,255,255,0.1)',
-        borderRadius: '50%',
-        animation: 'float 8s ease-in-out infinite reverse',
-    },
-    '@keyframes float': {
-        '0%': { transform: 'translateY(0px) rotate(0deg)' },
-        '50%': { transform: 'translateY(-20px) rotate(10deg)' },
-        '100%': { transform: 'translateY(0px) rotate(0deg)' },
-    },
-}));
-
-const StatsPaper = styled(Paper)(({ theme, bgcolor }) => ({
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    backgroundColor: bgcolor || themeColors.white,
-    borderRadius: '12px',
-    transition: 'all 0.3s ease',
-    border: `1px solid ${themeColors.lightGreen}`,
-    '&:hover': {
-        transform: 'scale(1.05)',
-        boxShadow: `0 8px 20px ${themeColors.green}30`,
-    },
-}));
+import { motion, AnimatePresence } from "framer-motion";
+import { 
+    ShieldAlert, Search, RefreshCw, CheckCircle, Clock, 
+    Activity, LayoutList, Fingerprint, Phone, Mail, 
+    Tag, MessageSquare, Shield, AlertTriangle
+} from "lucide-react";
 
 const AdminGrievance = () => {
-    const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [filteredData, setFilteredData] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('All');
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
-    const [showContent, setShowContent] = useState(false);
 
     const fetchData = async () => {
         setLoading(true);
@@ -192,19 +32,19 @@ const AdminGrievance = () => {
 
             setData(res.data);
             setFilteredData(res.data);
-            setTimeout(() => setShowContent(true), 300);
         } catch (error) {
             console.error("❌ Error fetching grievances:", error);
             console.error("❌ Error response:", error.response);
             console.error("❌ Error message:", error.message);
-            setSnackbar({
-                open: true,
-                message: error.response?.data?.message || 'Error fetching grievances',
-                severity: 'error'
-            });
+            showSnackbar(error.response?.data?.message || 'Error fetching grievances', 'error');
         } finally {
             setLoading(false);
         }
+    };
+
+    const showSnackbar = (message, severity) => {
+        setSnackbar({ open: true, message, severity });
+        setTimeout(() => setSnackbar({ open: false, message: '', severity: 'success' }), 3000);
     };
 
     const updateStatus = async (id, status) => {
@@ -218,20 +58,12 @@ const AdminGrievance = () => {
             });
 
             if (res.data.success) {
-                setSnackbar({
-                    open: true,
-                    message: 'Status updated successfully!',
-                    severity: 'success'
-                });
+                showSnackbar('Status updated successfully!', 'success');
                 fetchData();
             }
         } catch (error) {
             console.error("Error updating status:", error);
-            setSnackbar({
-                open: true,
-                message: error.response?.data?.msg || 'Error updating status',
-                severity: 'error'
-            });
+            showSnackbar(error.response?.data?.msg || 'Error updating status', 'error');
         }
     };
 
@@ -260,22 +92,9 @@ const AdminGrievance = () => {
         setFilteredData(filtered);
     }, [searchTerm, statusFilter, data]);
 
-    const getStatusIcon = (status) => {
-        switch (status) {
-            case 'Pending': return <PendingIcon sx={{ color: themeColors.orange }} />;
-            case 'In Progress': return <ProgressIcon sx={{ color: themeColors.green }} />;
-            case 'Resolved': return <CheckCircleIcon sx={{ color: '#4caf50' }} />;
-            default: return <AssignmentIcon sx={{ color: themeColors.green }} />;
-        }
-    };
-
     const handleRefresh = () => {
         fetchData();
-        setSnackbar({
-            open: true,
-            message: 'Data refreshed!',
-            severity: 'success'
-        });
+        showSnackbar('Data refreshed!', 'success');
     };
 
     const stats = {
@@ -287,466 +106,263 @@ const AdminGrievance = () => {
 
     if (loading) {
         return (
-            <FullPageContainer sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <Zoom in={true} timeout={1000}>
-                    <Box sx={{ textAlign: 'center' }}>
-                        <CircularProgress
-                            size={isMobile ? 50 : 60}
-                            thickness={4}
-                            sx={{
-                                color: themeColors.green,
-                                animation: 'pulse 1.5s ease-in-out infinite',
-                                '@keyframes pulse': {
-                                    '0%': { transform: 'scale(1)' },
-                                    '50%': { transform: 'scale(1.1)' },
-                                    '100%': { transform: 'scale(1)' },
-                                }
-                            }}
-                        />
-                        <Typography
-                            variant={isMobile ? "body1" : "h6"}
-                            sx={{
-                                mt: 2,
-                                color: themeColors.green,
-                                fontWeight: 500,
-                                animation: 'fadeIn 1s ease-in-out',
-                                '@keyframes fadeIn': {
-                                    '0%': { opacity: 0 },
-                                    '100%': { opacity: 1 },
-                                }
-                            }}
-                        >
-                            Loading grievances...
-                        </Typography>
-                    </Box>
-                </Zoom>
-            </FullPageContainer>
+            <div className="min-h-screen bg-[#0D0D0D] flex items-center justify-center font-sans">
+                <div className="text-center">
+                    <RefreshCw className="w-12 h-12 text-[#C8A96A] animate-spin mx-auto mb-4" />
+                    <p className="text-[#F5E6C8]/60 text-sm font-black uppercase tracking-widest animate-pulse">Loading grievances...</p>
+                </div>
+            </div>
         );
     }
 
     return (
-        <FullPageContainer>
-            <Container
-                maxWidth="xl"
-                sx={{
-                    height: '100%',
-                    px: { xs: 1, sm: 2, md: 3 }
-                }}
-            >
+        <div className="min-h-screen bg-[#0D0D0D] font-sans text-[#F5E6C8] selection:bg-[#C8A96A]/30 pb-12 relative overflow-hidden">
+            {/* Elegant Background Elements */}
+            <div className="absolute top-0 right-[-10%] w-[500px] h-[500px] bg-[#C8A96A]/5 rounded-full blur-[120px] pointer-events-none"></div>
+            
+            <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 mt-10 relative z-10">
                 {/* Header Section */}
-                <Slide direction="down" in={showContent} timeout={800}>
-                    <HeaderPaper elevation={3}>
-                        <Box sx={{
-                            display: 'flex',
-                            flexDirection: { xs: 'column', sm: 'row' },
-                            justifyContent: 'space-between',
-                            alignItems: { xs: 'flex-start', sm: 'center' },
-                            gap: 2,
-                            position: 'relative',
-                            zIndex: 1
-                        }}>
-                            <Box sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: 2,
-                                flexWrap: 'wrap'
-                            }}>
-                                <Avatar
-                                    sx={{
-                                        bgcolor: themeColors.white,
-                                        color: themeColors.green,
-                                        width: { xs: 48, sm: 56 },
-                                        height: { xs: 48, sm: 56 },
-                                        animation: 'float 3s ease-in-out infinite',
-                                    }}
-                                >
-                                    <AdminPanelSettingsIcon fontSize={isMobile ? "medium" : "large"} />
-                                </Avatar>
-                                <Box>
-                                    <Typography
-                                        variant={isMobile ? "h5" : "h4"}
-                                        sx={{
-                                            fontWeight: 600,
-                                            fontSize: { xs: '1.5rem', sm: '2rem' }
-                                        }}
-                                    >
-                                        Grievance Management
-                                    </Typography>
-                                    <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                                        Manage and track all user grievances
-                                    </Typography>
-                                </Box>
-                            </Box>
-
-                            <Tooltip title="Refresh">
-                                <IconButton
-                                    onClick={handleRefresh}
-                                    sx={{
-                                        color: themeColors.white,
-                                        bgcolor: 'rgba(255,255,255,0.2)',
-                                        '&:hover': {
-                                            transform: 'rotate(180deg)',
-                                            bgcolor: 'rgba(255,255,255,0.3)',
-                                            transition: 'transform 0.5s ease'
-                                        }
-                                    }}
-                                >
-                                    <RefreshIcon />
-                                </IconButton>
-                            </Tooltip>
-                        </Box>
-
-                        {/* Stats Cards */}
-                        <Box sx={{ mt: 3 }}>
-                            <Grid container spacing={2}>
-                                <Grid item xs={6} sm={3}>
-                                    <Fade in={showContent} timeout={1000}>
-                                        <StatsPaper bgcolor={themeColors.white}>
-                                            <Typography variant="h4" sx={{ color: themeColors.green, fontWeight: 600 }}>
-                                                {stats.total}
-                                            </Typography>
-                                            <Typography variant="body2" sx={{ color: themeColors.green }}>
-                                                Total
-                                            </Typography>
-                                        </StatsPaper>
-                                    </Fade>
-                                </Grid>
-                                <Grid item xs={6} sm={3}>
-                                    <Fade in={showContent} timeout={1200}>
-                                        <StatsPaper bgcolor={themeColors.lightOrange}>
-                                            <Typography variant="h4" sx={{ color: themeColors.orange, fontWeight: 600 }}>
-                                                {stats.pending}
-                                            </Typography>
-                                            <Typography variant="body2" sx={{ color: themeColors.orange }}>
-                                                Pending
-                                            </Typography>
-                                        </StatsPaper>
-                                    </Fade>
-                                </Grid>
-                                <Grid item xs={6} sm={3}>
-                                    <Fade in={showContent} timeout={1400}>
-                                        <StatsPaper bgcolor={themeColors.lightGreen}>
-                                            <Typography variant="h4" sx={{ color: themeColors.green, fontWeight: 600 }}>
-                                                {stats.inProgress}
-                                            </Typography>
-                                            <Typography variant="body2" sx={{ color: themeColors.green }}>
-                                                In Progress
-                                            </Typography>
-                                        </StatsPaper>
-                                    </Fade>
-                                </Grid>
-                                <Grid item xs={6} sm={3}>
-                                    <Fade in={showContent} timeout={1600}>
-                                        <StatsPaper bgcolor={themeColors.white}>
-                                            <Typography variant="h4" sx={{ color: '#4caf50', fontWeight: 600 }}>
-                                                {stats.resolved}
-                                            </Typography>
-                                            <Typography variant="body2" sx={{ color: '#4caf50' }}>
-                                                Resolved
-                                            </Typography>
-                                        </StatsPaper>
-                                    </Fade>
-                                </Grid>
-                            </Grid>
-                        </Box>
-                    </HeaderPaper>
-                </Slide>
-
-                {/* Search and Filter Section */}
-                <Grow in={showContent} timeout={1000}>
-                    <Paper sx={{
-                        p: 2,
-                        mb: 3,
-                        borderRadius: '12px',
-                        backgroundColor: themeColors.white,
-                        border: `1px solid ${themeColors.lightGreen}`,
-                    }}>
-                        <Grid container spacing={2} alignItems="center">
-                            <Grid item xs={12} sm={6} md={4}>
-                                <TextField
-                                    fullWidth
-                                    size="small"
-                                    placeholder="Search by name, ticket, seller ID, mobile, email..."
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                    InputProps={{
-                                        startAdornment: (
-                                            <InputAdornment position="start">
-                                                <SearchIcon sx={{ color: themeColors.green }} />
-                                            </InputAdornment>
-                                        ),
-                                    }}
-                                    sx={{
-                                        '& .MuiOutlinedInput-root': {
-                                            borderRadius: '20px',
-                                            '&:hover fieldset': {
-                                                borderColor: themeColors.green,
-                                            },
-                                            '&.Mui-focused fieldset': {
-                                                borderColor: themeColors.green,
-                                            },
-                                        }
-                                    }}
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6} md={3}>
-                                <FormControl fullWidth size="small">
-                                    <InputLabel sx={{ color: themeColors.green }}>Filter by Status</InputLabel>
-                                    <Select
-                                        value={statusFilter}
-                                        onChange={(e) => setStatusFilter(e.target.value)}
-                                        label="Filter by Status"
-                                        sx={{
-                                            borderRadius: '20px',
-                                            '&:hover .MuiOutlinedInput-notchedOutline': {
-                                                borderColor: themeColors.green,
-                                            },
-                                            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                                borderColor: themeColors.green,
-                                            },
-                                        }}
-                                    >
-                                        <MenuItem value="All">All Status</MenuItem>
-                                        <MenuItem value="Pending">
-                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                                <PendingIcon sx={{ color: themeColors.orange }} />
-                                                <span>Pending</span>
-                                            </Box>
-                                        </MenuItem>
-                                        <MenuItem value="In Progress">
-                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                                <ProgressIcon sx={{ color: themeColors.green }} />
-                                                <span>In Progress</span>
-                                            </Box>
-                                        </MenuItem>
-                                        <MenuItem value="Resolved">
-                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                                <CheckCircleIcon sx={{ color: '#4caf50' }} />
-                                                <span>Resolved</span>
-                                            </Box>
-                                        </MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={12} md={5}>
-                                <Typography variant="body2" align={isMobile ? 'left' : 'right'} sx={{ color: themeColors.green }}>
-                                    Showing {filteredData.length} of {data.length} grievances
-                                </Typography>
-                            </Grid>
-                        </Grid>
-                    </Paper>
-                </Grow>
-
-                {/* Debug Info - Show if no data */}
-                {data.length === 0 && (
-                    <Paper sx={{ p: 3, mb: 3, bgcolor: '#fff3e0', border: '1px solid #f7931e' }}>
-                        <Typography variant="h6" sx={{ color: themeColors.orange, mb: 2 }}>
-                            ⚠️ Debug Information - No Data Found
-                        </Typography>
-                        <Typography variant="body2" sx={{ mb: 1 }}>
-                            1. Check if backend is running on correct port
-                        </Typography>
-                        <Typography variant="body2" sx={{ mb: 1 }}>
-                            2. Check MongoDB connection
-                        </Typography>
-                        <Typography variant="body2" sx={{ mb: 1 }}>
-                            3. Check if any grievances exist in database
-                        </Typography>
-                        <Typography variant="body2" sx={{ mb: 1 }}>
-                            4. API endpoint: /grievance/all
-                        </Typography>
-                        <Button
-                            variant="contained"
-                            onClick={fetchData}
-                            sx={{ mt: 2, bgcolor: themeColors.orange }}
-                        >
-                            Retry Fetch
-                        </Button>
-                    </Paper>
-                )}
-
-                {/* Grievance Cards */}
-                {filteredData.length === 0 ? (
-                    <Fade in={showContent} timeout={800}>
-                        <Paper sx={{
-                            p: 6,
-                            textAlign: 'center',
-                            backgroundColor: themeColors.white,
-                            borderRadius: '16px',
-                            border: `1px solid ${themeColors.lightGreen}`,
-                        }}>
-                            <SupportAgentIcon sx={{ fontSize: 80, color: themeColors.lightGreen, mb: 2 }} />
-                            <Typography variant="h6" sx={{ color: themeColors.green }} gutterBottom>
-                                No grievances found
-                            </Typography>
-                            <Typography variant="body2" sx={{ color: themeColors.orange }}>
-                                {searchTerm || statusFilter !== 'All' ? 'Try adjusting your filters' : 'New grievances will appear here'}
-                            </Typography>
-                        </Paper>
-                    </Fade>
-                ) : (
-                    <Grid container spacing={3}>
-                        {filteredData.map((item, index) => (
-                            <Grid item xs={12} sm={6} md={4} key={item._id}>
-                                <Zoom in={showContent} timeout={600} style={{ transitionDelay: `${index * 100}ms` }}>
-                                    <AnimatedCard>
-                                        <CardContent>
-                                            {/* Header with Name and Ticket */}
-                                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
-                                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                                    <Avatar sx={{ bgcolor: themeColors.lightGreen, color: themeColors.green, width: 32, height: 32 }}>
-                                                        <SupportAgentIcon fontSize="small" />
-                                                    </Avatar>
-                                                    <Box>
-                                                        <Typography variant="subtitle1" sx={{ fontWeight: 600, color: themeColors.green }}>
-                                                            {item.name || 'Anonymous'}
-                                                        </Typography>
-                                                        <Typography variant="caption" sx={{ color: themeColors.orange }}>
-                                                            {item.ticket || 'No ticket'}
-                                                        </Typography>
-                                                    </Box>
-                                                </Box>
-                                                <StyledChip
-                                                    size="small"
-                                                    icon={getStatusIcon(item.status)}
-                                                    label={item.status}
-                                                    status={item.status}
-                                                />
-                                            </Box>
-
-                                            {/* Direct Seller ID */}
-                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                                                <BadgeIcon sx={{ color: themeColors.green, fontSize: 18 }} />
-                                                <Typography variant="body2" sx={{ color: '#666' }}>
-                                                    <strong>Seller ID:</strong> {item.sellerId || 'N/A'}
-                                                </Typography>
-                                            </Box>
-
-                                            {/* Mobile */}
-                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                                                <PhoneIcon sx={{ color: themeColors.green, fontSize: 18 }} />
-                                                <Typography variant="body2" sx={{ color: '#666' }}>
-                                                    <strong>Mobile:</strong> {item.mobile || 'N/A'}
-                                                </Typography>
-                                            </Box>
-
-                                            {/* Email */}
-                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                                                <EmailIcon sx={{ color: themeColors.green, fontSize: 18 }} />
-                                                <Typography variant="body2" sx={{ color: '#666', wordBreak: 'break-all' }}>
-                                                    <strong>Email:</strong> {item.email || 'N/A'}
-                                                </Typography>
-                                            </Box>
-
-                                            {/* Category */}
-                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-                                                <CategoryIcon sx={{ color: themeColors.green, fontSize: 18 }} />
-                                                <Typography variant="body2" sx={{ color: '#666' }}>
-                                                    <strong>Category:</strong> {item.category || 'N/A'}
-                                                </Typography>
-                                            </Box>
-
-                                            {/* Subject */}
-                                            <Typography variant="body2" sx={{ mb: 1, fontWeight: 500, color: themeColors.green }}>
-                                                <strong>Subject:</strong> {item.subject || 'No subject'}
-                                            </Typography>
-
-                                            {/* Message */}
-                                            {item.message && (
-                                                <Typography
-                                                    variant="body2"
-                                                    sx={{
-                                                        mb: 2,
-                                                        color: '#666',
-                                                        display: '-webkit-box',
-                                                        WebkitLineClamp: 2,
-                                                        WebkitBoxOrient: 'vertical',
-                                                        overflow: 'hidden',
-                                                        textOverflow: 'ellipsis'
-                                                    }}
-                                                >
-                                                    <strong>Message:</strong> {item.message}
-                                                </Typography>
-                                            )}
-
-                                            <Divider sx={{ my: 2, borderColor: themeColors.lightGreen }} />
-
-                                            {/* Status Update */}
-                                            <FormControl fullWidth size="small">
-                                                <Select
-                                                    value={item.status}
-                                                    onChange={(e) => updateStatus(item._id, e.target.value)}
-                                                    sx={{
-                                                        borderRadius: '20px',
-                                                        '& .MuiSelect-select': {
-                                                            py: 1,
-                                                        },
-                                                        '&:hover .MuiOutlinedInput-notchedOutline': {
-                                                            borderColor: themeColors.green,
-                                                        },
-                                                    }}
-                                                >
-                                                    <MenuItem value="Pending">
-                                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                                            <PendingIcon fontSize="small" sx={{ color: themeColors.orange }} />
-                                                            <span style={{ color: themeColors.orange }}>Pending</span>
-                                                        </Box>
-                                                    </MenuItem>
-                                                    <MenuItem value="In Progress">
-                                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                                            <ProgressIcon fontSize="small" sx={{ color: themeColors.green }} />
-                                                            <span style={{ color: themeColors.green }}>In Progress</span>
-                                                        </Box>
-                                                    </MenuItem>
-                                                    <MenuItem value="Resolved">
-                                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                                            <CheckCircleIcon fontSize="small" sx={{ color: '#4caf50' }} />
-                                                            <span style={{ color: '#4caf50' }}>Resolved</span>
-                                                        </Box>
-                                                    </MenuItem>
-                                                </Select>
-                                            </FormControl>
-
-                                            {/* Created Date */}
-                                            {item.createdAt && (
-                                                <Typography variant="caption" sx={{ color: themeColors.orange, display: 'block', mt: 1 }}>
-                                                    Created: {new Date(item.createdAt).toLocaleDateString()}
-                                                </Typography>
-                                            )}
-                                        </CardContent>
-                                    </AnimatedCard>
-                                </Zoom>
-                            </Grid>
-                        ))}
-                    </Grid>
-                )}
-
-                {/* Snackbar */}
-                <Snackbar
-                    open={snackbar.open}
-                    autoHideDuration={3000}
-                    onClose={() => setSnackbar({ ...snackbar, open: false })}
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                    TransitionComponent={Slide}
+                <motion.div 
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                    className="luxury-box p-8 mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center shadow-2xl gap-4 border border-[#C8A96A]/30"
                 >
-                    <Alert
-                        onClose={() => setSnackbar({ ...snackbar, open: false })}
-                        severity={snackbar.severity}
-                        sx={{
-                            width: '100%',
-                            backgroundColor: themeColors.white,
-                            color: themeColors.green,
-                            border: `1px solid ${themeColors.green}`,
-                            '& .MuiAlert-icon': {
-                                color: themeColors.green,
-                            },
-                        }}
+                    <div className="flex items-center gap-5">
+                        <div className="w-14 h-14 bg-[#0D0D0D] border border-[#C8A96A]/30 rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(200,169,106,0.15)]">
+                            <Shield className="w-7 h-7 text-[#C8A96A]" strokeWidth={1.5} />
+                        </div>
+                        <div>
+                            <h1 className="text-3xl sm:text-4xl font-serif font-bold text-[#F5E6C8] tracking-tight m-0">
+                                Grievance Management
+                            </h1>
+                            <p className="mt-1 text-[#F5E6C8]/40 text-sm font-medium">
+                                Manage and track all user grievances
+                            </p>
+                        </div>
+                    </div>
+                    <button
+                        onClick={handleRefresh}
+                        className="luxury-button flex items-center gap-3 !py-3 !px-6"
                     >
-                        {snackbar.message}
-                    </Alert>
-                </Snackbar>
-            </Container>
-        </FullPageContainer>
+                        <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                        Refresh
+                    </button>
+                </motion.div>
+
+                {/* Stats Cards */}
+                <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.1 }}
+                    className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mb-8"
+                >
+                    {[
+                        { label: 'Total', value: stats.total, color: 'text-[#C8A96A]', bg: 'bg-[#C8A96A]/10', icon: LayoutList },
+                        { label: 'Pending', value: stats.pending, color: 'text-[#D4AF37]', bg: 'bg-[#D4AF37]/10', icon: Clock },
+                        { label: 'In Progress', value: stats.inProgress, color: 'text-[#F5E6C8]', bg: 'bg-[#F5E6C8]/10', icon: Activity },
+                        { label: 'Resolved', value: stats.resolved, color: 'text-green-500', bg: 'bg-green-500/10', icon: CheckCircle }
+                    ].map((stat, i) => (
+                        <div key={i} className="luxury-box p-6 flex items-center gap-4 group hover:border-[#C8A96A]/60 transition-all duration-500 shadow-xl">
+                            <div className={`p-4 rounded-xl border border-[#C8A96A]/20 transition-colors ${stat.bg} ${stat.color}`}>
+                                <stat.icon className="w-6 h-6" />
+                            </div>
+                            <div>
+                                <div className={`text-3xl font-serif font-bold tracking-tight ${stat.color}`}>{stat.value}</div>
+                                <div className="text-[10px] font-black text-[#F5E6C8]/40 uppercase tracking-widest">{stat.label}</div>
+                            </div>
+                        </div>
+                    ))}
+                </motion.div>
+
+                {/* Search and Filters */}
+                <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.2 }}
+                    className="luxury-box p-5 mb-8 flex flex-col md:flex-row gap-4 items-center justify-between shadow-2xl"
+                >
+                    <div className="w-full md:w-5/12 relative">
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#C8A96A]/40 w-5 h-5" />
+                        <input
+                            type="text"
+                            placeholder="Search by name, ticket, seller ID, mobile, email..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="w-full bg-[#0D0D0D] border border-[#C8A96A]/20 rounded-xl pl-12 pr-4 py-3 text-[#F5E6C8] placeholder:text-[#F5E6C8]/30 focus:border-[#C8A96A] outline-none text-sm transition-colors"
+                        />
+                    </div>
+                    
+                    <div className="w-full md:w-3/12 relative">
+                        <select
+                            value={statusFilter}
+                            onChange={(e) => setStatusFilter(e.target.value)}
+                            className="w-full bg-[#0D0D0D] border border-[#C8A96A]/20 rounded-xl px-4 py-3 text-[#F5E6C8] focus:border-[#C8A96A] outline-none text-sm appearance-none cursor-pointer transition-colors"
+                        >
+                            <option value="All">Filter by Status - All Status</option>
+                            <option value="Pending">Pending</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Resolved">Resolved</option>
+                        </select>
+                        <div className="absolute right-4 top-1/2 -translate-y-1/2 text-[#C8A96A] pointer-events-none text-xs font-black">▼</div>
+                    </div>
+
+                    <div className="w-full md:w-4/12 text-left md:text-right text-sm text-[#F5E6C8]/40 font-black uppercase tracking-widest">
+                        Showing {filteredData.length} of {data.length} grievances
+                    </div>
+                </motion.div>
+
+                {/* Debug Info */}
+                {data.length === 0 && !loading && (
+                    <motion.div 
+                        initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                        className="p-6 mb-8 border border-red-500/30 bg-red-900/10 rounded-2xl shadow-xl"
+                    >
+                        <h3 className="text-red-400 font-bold mb-4 flex items-center gap-2">
+                            <AlertTriangle className="w-5 h-5" />
+                            ⚠️ Debug Information - No Data Found
+                        </h3>
+                        <ul className="text-[#F5E6C8]/70 text-sm space-y-2 mb-6 ml-6 list-none">
+                            <li>1. Check if backend is running on correct port</li>
+                            <li>2. Check MongoDB connection</li>
+                            <li>3. Check if any grievances exist in database</li>
+                            <li>4. API endpoint: /grievance/all</li>
+                        </ul>
+                        <button onClick={fetchData} className="px-6 py-2 bg-red-900/40 hover:bg-red-900/60 text-red-100 rounded-lg text-sm font-bold border border-red-500/30 transition-colors">
+                            Retry Fetch
+                        </button>
+                    </motion.div>
+                )}
+
+                {/* Grievance List */}
+                {filteredData.length === 0 && data.length > 0 ? (
+                    <motion.div 
+                        initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                        className="luxury-box p-16 text-center shadow-2xl"
+                    >
+                        <ShieldAlert className="w-16 h-16 text-[#C8A96A]/20 mx-auto mb-4" />
+                        <h3 className="text-xl font-serif font-bold text-[#F5E6C8] mb-2">No grievances found</h3>
+                        <p className="text-[#F5E6C8]/40 text-sm">{searchTerm || statusFilter !== 'All' ? 'Try adjusting your filters' : 'New grievances will appear here'}</p>
+                    </motion.div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {filteredData.map((item, index) => (
+                            <motion.div
+                                key={item._id}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5, delay: index * 0.05 }}
+                                className="luxury-box group hover:border-[#C8A96A]/50 transition-all duration-300 shadow-2xl overflow-hidden flex flex-col"
+                            >
+                                {/* Card Header */}
+                                <div className="p-5 border-b border-[#C8A96A]/10 bg-[#121212] relative flex justify-between items-start">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 rounded-full bg-[#0D0D0D] border border-[#C8A96A]/20 flex items-center justify-center text-[#C8A96A] text-sm font-serif font-bold group-hover:bg-[#C8A96A] group-hover:text-[#0D0D0D] transition-colors">
+                                            {(item.name || 'A').charAt(0).toUpperCase()}
+                                        </div>
+                                        <div>
+                                            <h3 className="font-bold text-[#F5E6C8] m-0 text-sm tracking-wide">{item.name || 'Anonymous'}</h3>
+                                            <p className="text-[#C8A96A]/80 text-xs font-mono mt-0.5">{item.ticket || 'No ticket'}</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className={`px-2.5 py-1 text-[9px] uppercase tracking-widest border rounded border-[#C8A96A]/30 flex items-center gap-1.5 font-bold ${
+                                        item.status === 'Resolved' ? 'bg-green-500/10 text-green-500 border-green-500/30' :
+                                        item.status === 'In Progress' ? 'bg-[#C8A96A]/10 text-[#C8A96A] border-[#C8A96A]/30' :
+                                        'bg-[#D4AF37]/10 text-[#D4AF37] border-[#D4AF37]/30'
+                                    }`}>
+                                        {item.status === 'Resolved' && <CheckCircle className="w-3 h-3" />}
+                                        {item.status === 'In Progress' && <Activity className="w-3 h-3 animate-pulse" />}
+                                        {item.status === 'Pending' && <Clock className="w-3 h-3" />}
+                                        {item.status}
+                                    </div>
+                                </div>
+
+                                {/* Card Body */}
+                                <div className="p-5 flex-1 bg-[#0D0D0D]">
+                                    <div className="space-y-3">
+                                        <div className="flex items-center gap-3 text-sm">
+                                            <Fingerprint className="w-4 h-4 text-[#C8A96A]/60 shrink-0" />
+                                            <span className="text-[#F5E6C8]/40 w-16 text-xs uppercase tracking-widest font-black">Seller ID:</span>
+                                            <span className="text-[#F5E6C8] font-mono break-all">{item.sellerId || 'N/A'}</span>
+                                        </div>
+                                        <div className="flex items-center gap-3 text-sm">
+                                            <Phone className="w-4 h-4 text-[#C8A96A]/60 shrink-0" />
+                                            <span className="text-[#F5E6C8]/40 w-16 text-xs uppercase tracking-widest font-black">Mobile:</span>
+                                            <span className="text-[#F5E6C8] break-all">{item.mobile || 'N/A'}</span>
+                                        </div>
+                                        <div className="flex items-center gap-3 text-sm">
+                                            <Mail className="w-4 h-4 text-[#C8A96A]/60 shrink-0" />
+                                            <span className="text-[#F5E6C8]/40 w-16 text-xs uppercase tracking-widest font-black">Email:</span>
+                                            <span className="text-[#F5E6C8] break-all text-xs">{item.email || 'N/A'}</span>
+                                        </div>
+                                        <div className="flex items-center gap-3 text-sm">
+                                            <Tag className="w-4 h-4 text-[#C8A96A]/60 shrink-0" />
+                                            <span className="text-[#F5E6C8]/40 w-16 text-xs uppercase tracking-widest font-black">Category:</span>
+                                            <span className={`text-[#F5E6C8] text-xs px-2 py-0.5 rounded bg-[#C8A96A]/10 border border-[#C8A96A]/20`}>{item.category || 'N/A'}</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="h-px bg-[#C8A96A]/10 my-4 w-full"></div>
+
+                                    <div className="mb-2">
+                                        <div className="text-[10px] font-black uppercase tracking-widest text-[#C8A96A] mb-1">Subject:</div>
+                                        <div className="text-[#F5E6C8] font-medium text-sm leading-snug">{item.subject || 'No subject'}</div>
+                                    </div>
+
+                                    {item.message && (
+                                        <div className="mt-3 relative pl-3 border-l-2 border-[#C8A96A]/20">
+                                            <MessageSquare className="w-3 h-3 text-[#C8A96A]/40 absolute -left-[7px] bg-[#0D0D0D] py-0.5" />
+                                            <div className="text-[10px] font-black uppercase tracking-widest text-[#F5E6C8]/40 mb-1">Message:</div>
+                                            <div className="text-[#F5E6C8]/70 text-sm leading-relaxed line-clamp-3 italic">
+                                                "{item.message}"
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Card Footer & Actions */}
+                                <div className="p-4 border-t border-[#C8A96A]/10 bg-[#121212] mt-auto">
+                                    <div className="flex items-center gap-3">
+                                        <select
+                                            value={item.status}
+                                            onChange={(e) => updateStatus(item._id, e.target.value)}
+                                            className="flex-1 bg-[#0D0D0D] border border-[#C8A96A]/30 rounded-lg px-3 py-2 text-[#F5E6C8] focus:border-[#C8A96A] transition-colors outline-none text-xs font-bold uppercase tracking-wider cursor-pointer appearance-none text-center"
+                                        >
+                                            <option value="Pending">⏱ Pending</option>
+                                            <option value="In Progress">⚡ In Progress</option>
+                                            <option value="Resolved">✓ Resolved</option>
+                                        </select>
+                                    </div>
+                                    {item.createdAt && (
+                                        <div className="text-center mt-3 text-[9px] uppercase tracking-[0.2em] text-[#F5E6C8]/30 font-black">
+                                            Created: {new Date(item.createdAt).toLocaleDateString()}
+                                        </div>
+                                    )}
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+                )}
+            </div>
+
+            {/* Custom Snackbar Notification */}
+            <AnimatePresence>
+                {snackbar.open && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 50, scale: 0.9 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 20, scale: 0.9 }}
+                        className={`fixed bottom-6 right-6 z-50 flex items-center gap-3 px-6 py-4 rounded-xl shadow-2xl border ${
+                            snackbar.severity === 'error' ? 'bg-red-900 border-red-500/50 text-red-100' : 'bg-[#121212] border-[#C8A96A]/40 text-[#F5E6C8]'
+                        }`}
+                    >
+                        {snackbar.severity === 'error' ? <AlertTriangle className="w-5 h-5" /> : <CheckCircle className="w-5 h-5 text-[#C8A96A]" />}
+                        <span className="font-medium text-sm">{snackbar.message}</span>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </div>
     );
 };
 

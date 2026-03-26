@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 import api from "../../api";
 import {
     Dialog, DialogTitle, DialogContent, DialogActions,
-    Button, Typography, Grid, Box, Chip, TextField, Divider, Paper
+    Typography, Grid, Box, TextField, Divider, Paper
 } from '@mui/material';
+import { RefreshCw, Trash2, Edit2, ShieldAlert, CheckCircle, User as UserIcon, Lock, Save, X, Activity } from 'lucide-react';
 
 const AdminUsers = () => {
     const navigate = useNavigate();
@@ -28,19 +29,12 @@ const AdminUsers = () => {
 
     // ================= FETCH USERS =================
     const fetchUsers = async () => {
-
         try {
             setLoading(true);
             setError("");
 
-            console.log('Fetching users from: /admin/users');
-
-            // Correct URL: /admin/users (not /api/admin/users because api.js already has /api)
             const response = await api.get("/admin/users");
 
-            console.log('Users response:', response.data);
-
-            // Handle different response structures
             if (response.data.users) {
                 setUsers(response.data.users);
             } else if (Array.isArray(response.data)) {
@@ -52,7 +46,6 @@ const AdminUsers = () => {
             }
         } catch (error) {
             console.error("Fetch error:", error.response?.data || error.message);
-
             if (error.response?.status === 403) {
                 setError("Permission denied. Please log out and log back in to refresh your session.");
             } else if (error.response?.status === 401) {
@@ -75,17 +68,12 @@ const AdminUsers = () => {
     // ================= DELETE USER =================
     const handleDelete = async (id) => {
         if (!window.confirm("Are you sure you want to delete this user?")) return;
-
         try {
             setError("");
-
             await api.delete(`/admin/users/${id}`);
-
-            // Refresh users list
             fetchUsers();
         } catch (error) {
             console.error("Delete error:", error.response?.data || error.message);
-
             if (error.response?.status === 403) {
                 setError("Admin access only. You don't have permission.");
             } else if (error.response?.status === 404) {
@@ -111,20 +99,17 @@ const AdminUsers = () => {
     const handleUpdate = async () => {
         try {
             setError("");
-
             await api.put(`/admin/users/${editingUser}`, formData);
-
             setEditingUser(null);
             fetchUsers();
         } catch (error) {
             console.error("Update error:", error.response?.data || error.message);
-
             if (error.response?.status === 403) {
-                setError("Admin access only. You don't have permission.");
+                setError("Admin access only.");
             } else if (error.response?.status === 404) {
                 setError("User not found.");
             } else {
-                setError("Update failed. Please try again.");
+                setError("Update failed.");
             }
         }
     };
@@ -132,21 +117,13 @@ const AdminUsers = () => {
     // ================= CANCEL EDIT =================
     const handleCancelEdit = () => {
         setEditingUser(null);
-        setFormData({
-            name: "",
-            email: "",
-            role: "",
-            status: ""
-        });
+        setFormData({ name: "", email: "", role: "", status: "" });
     };
 
     // ================= HANDLE INPUT CHANGE =================
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
+        setFormData(prev => ({ ...prev, [name]: value }));
     };
 
     // ================= KYC HANDLERS =================
@@ -193,368 +170,229 @@ const AdminUsers = () => {
         navigate('/login');
     };
 
-    // ================= GET STATUS COLOR =================
-    const getStatusColor = (status) => {
-        switch (status?.toLowerCase()) {
-            case 'active':
-                return '#4CAF50';
-            case 'inactive':
-                return '#f44336';
-            case 'pending':
-                return '#ff9800';
-            default:
-                return '#9e9e9e';
-        }
+    // ================= THEME BADGES =================
+    const getStatusBadge = (status) => {
+        const s = status?.toLowerCase();
+        if (s === 'active') return "bg-[#C8A96A]/10 text-[#C8A96A] border-[#C8A96A]/30";
+        if (s === 'inactive') return "bg-red-900/20 text-red-400 border-red-500/30";
+        if (s === 'pending') return "bg-[#D4AF37]/10 text-[#D4AF37] border-[#D4AF37]/30";
+        return "bg-[#0D0D0D] text-[#F5E6C8]/40 border-[#C8A96A]/20";
     };
 
-    // ================= GET ROLE COLOR =================
-    const getRoleColor = (role) => {
-        switch (role?.toLowerCase()) {
-            case 'admin':
-                return '#9c27b0';
-            case 'premium':
-                return '#2196F3';
-            default:
-                return '#757575';
-        }
+    const getRoleBadge = (role) => {
+        const r = role?.toLowerCase();
+        if (r === 'admin') return "bg-[#C8A96A]/20 text-[#D4AF37] border-[#C8A96A]/50 font-black shadow-[0_0_10px_rgba(200,169,106,0.2)]";
+        if (r === 'premium') return "bg-[#C8A96A]/10 text-[#C8A96A] border-[#C8A96A]/30";
+        return "bg-[#0D0D0D] text-[#F5E6C8]/60 border-[#C8A96A]/20";
     };
 
-    // ================= GET KYC STATUS COLOR =================
-    const getKycStatusColor = (status) => {
-        switch (status) {
-            case 'Verified': return '#4CAF50';
-            case 'Rejected': return '#f44336';
-            case 'Submitted': return '#2196F3';
-            default: return '#757575'; // Pending
-        }
+    const getKycStatusBadge = (status) => {
+        if (status === 'Verified') return "bg-[#C8A96A]/10 text-[#C8A96A] border-[#C8A96A]/30";
+        if (status === 'Rejected') return "bg-red-900/20 text-red-400 border-red-500/30";
+        if (status === 'Submitted') return "bg-[#D4AF37]/10 text-[#D4AF37] border-[#D4AF37]/30";
+        return "bg-[#0D0D0D] text-[#F5E6C8]/40 border-[#C8A96A]/20";
     };
 
-    // Get current user from localStorage
     const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
 
     return (
-        <div style={{
-            minHeight: "100vh",
-            backgroundColor: "#f5f5f5",
-            fontFamily: "Arial, sans-serif"
-        }}>
+        <div className="min-h-screen bg-[#0D0D0D] font-sans text-[#F5E6C8] selection:bg-[#C8A96A]/30 pb-12">
             {/* Header */}
-            <div style={{
-                backgroundColor: "#0A7A2F",
-                color: "white",
-                padding: "20px 40px",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center"
-            }}>
-                <div>
-                    <h1 style={{ margin: 0, fontSize: "24px" }}>Sanyukt Parivar</h1>
-                    <p style={{ margin: "5px 0 0", opacity: 0.9 }}>
-                        Welcome back, {currentUser.name || 'Admin'}
-                    </p>
+            <div className="bg-[#121212] border-b border-[#C8A96A]/30 px-8 py-6 flex justify-between items-center relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-[#C8A96A]/5 rounded-full blur-[100px] pointer-events-none"></div>
+                <div className="relative z-10 flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-[#0D0D0D] border border-[#C8A96A]/30 flex items-center justify-center shadow-gold-900/20">
+                        <Lock className="w-5 h-5 text-[#C8A96A]" strokeWidth={1.5} />
+                    </div>
+                    <div>
+                        <h1 className="m-0 text-2xl font-serif text-[#F5E6C8] tracking-tight">Sanyukt <span className="text-[#C8A96A]">Parivar</span></h1>
+                        <p className="m-0 mt-1 text-[#C8A96A]/60 text-[10px] uppercase font-black tracking-widest">
+                            Logged in as: {currentUser.name || 'Admin'}
+                        </p>
+                    </div>
                 </div>
                 <button
                     onClick={handleLogout}
-                    style={{
-                        padding: "8px 16px",
-                        backgroundColor: "rgba(255,255,255,0.2)",
-                        color: "white",
-                        border: "1px solid white",
-                        borderRadius: "4px",
-                        cursor: "pointer"
-                    }}
+                    className="relative z-10 px-6 py-2 border border-[#C8A96A]/30 text-[#C8A96A] text-[10px] uppercase font-black tracking-widest hover:bg-[#C8A96A] hover:text-[#0D0D0D] transition-all rounded-full"
                 >
                     Logout
                 </button>
             </div>
 
             {/* Main Content */}
-            <div style={{ padding: "40px" }}>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 relative z-10">
                 {/* Dashboard Header */}
-                <div style={{
-                    backgroundColor: "white",
-                    padding: "20px",
-                    borderRadius: "8px",
-                    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-                    marginBottom: "20px",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center"
-                }}>
-                    <div>
-                        <h2 style={{ margin: 0, color: "#333" }}>Admin Users Panel</h2>
-                        <p style={{ margin: "5px 0 0", color: "#666" }}>
-                            Manage all registered users
-                        </p>
+                <div className="luxury-box p-8 mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center shadow-2xl gap-4">
+                    <div className="flex items-center gap-4">
+                        <div className="p-3 bg-[#0D0D0D] rounded-xl border border-[#C8A96A]/20 text-[#C8A96A]">
+                            <UserIcon className="w-6 h-6" />
+                        </div>
+                        <div>
+                            <h2 className="m-0 text-3xl font-serif text-[#F5E6C8] tracking-tight">User <span className="text-[#C8A96A]">Management</span></h2>
+                            <p className="m-0 mt-2 text-[#F5E6C8]/40 text-sm font-medium">
+                                Manage all registered users
+                            </p>
+                        </div>
                     </div>
                     <button
                         onClick={fetchUsers}
                         disabled={loading}
-                        style={{
-                            padding: "10px 20px",
-                            backgroundColor: "#0A7A2F",
-                            color: "white",
-                            border: "none",
-                            borderRadius: "4px",
-                            cursor: loading ? "not-allowed" : "pointer",
-                            opacity: loading ? 0.7 : 1
-                        }}
+                        className="luxury-button flex items-center gap-3 !py-3 !px-6"
                     >
-                        {loading ? "Refreshing..." : "Refresh Users"}
+                        <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                        {loading ? "Loading..." : "Refresh"}
                     </button>
                 </div>
 
                 {/* Error Message */}
                 {error && (
-                    <div style={{
-                        padding: "16px",
-                        backgroundColor: "#ffebee",
-                        color: "#c62828",
-                        border: "1px solid #ffcdd2",
-                        borderRadius: "4px",
-                        marginBottom: "20px"
-                    }}>
-                        <strong>Error:</strong> {error}
+                    <div className="p-5 bg-red-900/20 border border-red-500/30 text-red-400 rounded-2xl mb-8 text-sm font-bold flex items-center gap-3 animate-slide-down">
+                        <ShieldAlert className="w-5 h-5" />
+                        {error}
+                    </div>
+                )}
+
+                {/* Stats */}
+                {!loading && users.length > 0 && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        {[
+                            { label: 'Total Users', value: users.length, icon: Activity },
+                            { label: 'Admins', value: users.filter(u => u.role === 'admin').length, icon: Lock },
+                            { label: 'Active Users', value: users.filter(u => u.status === 'active').length, icon: CheckCircle },
+                            { label: 'Pending KYC', value: users.filter(u => u.status === 'pending').length, icon: RefreshCw }
+                        ].map((stat, i) => (
+                            <div key={i} className="luxury-box p-6 flex items-center gap-5 group hover:border-[#C8A96A]/60 transition-all duration-500">
+                                <div className="p-4 bg-[#0D0D0D] rounded-xl border border-[#C8A96A]/10 text-[#C8A96A] group-hover:bg-[#C8A96A] group-hover:text-[#0D0D0D] transition-colors">
+                                    <stat.icon className="w-6 h-6" />
+                                </div>
+                                <div>
+                                    <div className="text-3xl font-serif font-bold text-[#F5E6C8] tracking-tight">{stat.value}</div>
+                                    <div className="text-[10px] font-black text-[#C8A96A]/60 uppercase tracking-widest">{stat.label}</div>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 )}
 
                 {/* Users Table */}
-                <div style={{
-                    backgroundColor: "white",
-                    borderRadius: "8px",
-                    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-                    overflow: "hidden"
-                }}>
+                <div className="luxury-box overflow-hidden shadow-2xl">
                     {loading ? (
-                        <div style={{ textAlign: "center", padding: "60px" }}>
-                            <div style={{
-                                width: "40px",
-                                height: "40px",
-                                margin: "0 auto 20px",
-                                border: "4px solid #f3f3f3",
-                                borderTop: "4px solid #0A7A2F",
-                                borderRadius: "50%",
-                                animation: "spin 1s linear infinite"
-                            }}></div>
-                            <p style={{ color: "#666" }}>Loading users...</p>
+                        <div className="text-center py-24">
+                            <RefreshCw className="w-10 h-10 text-[#C8A96A] animate-spin mx-auto mb-4" />
+                            <p className="text-[#F5E6C8]/40 text-sm font-black uppercase tracking-widest">Loading users...</p>
                         </div>
                     ) : (
-                        <div style={{ overflowX: "auto" }}>
-                            <table style={{
-                                width: "100%",
-                                borderCollapse: "collapse"
-                            }}>
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left border-collapse">
                                 <thead>
-                                    <tr style={{
-                                        backgroundColor: "#f8f9fa",
-                                        borderBottom: "2px solid #dee2e6"
-                                    }}>
-                                        <th style={{ padding: "15px", textAlign: "left", fontWeight: "600" }}>Name</th>
-                                        <th style={{ padding: "15px", textAlign: "left", fontWeight: "600" }}>Email</th>
-                                        <th style={{ padding: "15px", textAlign: "left", fontWeight: "600" }}>Role</th>
-                                        <th style={{ padding: "15px", textAlign: "left", fontWeight: "600" }}>Status</th>
-                                        <th style={{ padding: "15px", textAlign: "left", fontWeight: "600" }}>KYC Status</th>
-                                        <th style={{ padding: "15px", textAlign: "left", fontWeight: "600" }}>Actions</th>
+                                    <tr className="bg-[#0D0D0D] border-b border-[#C8A96A]/30">
+                                        {['Name', 'Email', 'Role', 'Status', 'KYC', 'Actions'].map((head, i) => (
+                                            <th key={i} className="p-5 text-[10px] font-black text-[#C8A96A] uppercase tracking-[0.2em] whitespace-nowrap">
+                                                {head}
+                                            </th>
+                                        ))}
                                     </tr>
                                 </thead>
-
                                 <tbody>
                                     {users.length === 0 ? (
                                         <tr>
-                                            <td colSpan="5" style={{
-                                                padding: "60px",
-                                                textAlign: "center",
-                                                color: "#666"
-                                            }}>
-                                                No users found
+                                            <td colSpan="6" className="p-16 text-center text-[#F5E6C8]/40 font-medium">
+                                                No users found.
                                             </td>
                                         </tr>
                                     ) : (
                                         users.map((user) => (
-                                            <tr key={user._id} style={{
-                                                borderBottom: "1px solid #dee2e6",
-                                                backgroundColor: editingUser === user._id ? "#f0f7ff" : "white"
-                                            }}>
-                                                <td style={{ padding: "15px" }}>
+                                            <tr key={user._id} className={`border-b border-[#C8A96A]/10 transition-colors ${editingUser === user._id ? 'bg-[#C8A96A]/5' : 'hover:bg-[#C8A96A]/[0.02]'}`}>
+                                                <td className="p-5">
                                                     {editingUser === user._id ? (
                                                         <input
                                                             type="text"
                                                             name="name"
                                                             value={formData.name}
                                                             onChange={handleInputChange}
-                                                            style={{
-                                                                padding: "8px",
-                                                                border: "1px solid #ddd",
-                                                                borderRadius: "4px",
-                                                                width: "100%"
-                                                            }}
+                                                            className="w-full bg-[#0D0D0D] border border-[#C8A96A]/30 rounded-lg px-3 py-2 text-[#F5E6C8] focus:border-[#C8A96A] outline-none text-sm transition-colors"
                                                         />
                                                     ) : (
-                                                        user.name || "N/A"
+                                                        <span className="font-bold text-[#F5E6C8]">{user.name || "Unknown"}</span>
                                                     )}
                                                 </td>
-
-                                                <td style={{ padding: "15px" }}>
+                                                <td className="p-5">
                                                     {editingUser === user._id ? (
                                                         <input
                                                             type="email"
                                                             name="email"
                                                             value={formData.email}
                                                             onChange={handleInputChange}
-                                                            style={{
-                                                                padding: "8px",
-                                                                border: "1px solid #ddd",
-                                                                borderRadius: "4px",
-                                                                width: "100%"
-                                                            }}
+                                                            className="w-full bg-[#0D0D0D] border border-[#C8A96A]/30 rounded-lg px-3 py-2 text-[#F5E6C8] focus:border-[#C8A96A] outline-none text-sm transition-colors"
                                                         />
                                                     ) : (
-                                                        user.email || "N/A"
+                                                        <span className="text-[#F5E6C8]/70 text-sm">{user.email || "N/A"}</span>
                                                     )}
                                                 </td>
-
-                                                <td style={{ padding: "15px" }}>
+                                                <td className="p-5">
                                                     {editingUser === user._id ? (
                                                         <select
                                                             name="role"
                                                             value={formData.role}
                                                             onChange={handleInputChange}
-                                                            style={{
-                                                                padding: "8px",
-                                                                border: "1px solid #ddd",
-                                                                borderRadius: "4px",
-                                                                width: "100%"
-                                                            }}
+                                                            className="w-full bg-[#0D0D0D] border border-[#C8A96A]/30 rounded-lg px-3 py-2 text-[#F5E6C8] focus:border-[#C8A96A] outline-none text-sm appearance-none"
                                                         >
                                                             <option value="user">User</option>
                                                             <option value="premium">Premium</option>
                                                             <option value="admin">Admin</option>
                                                         </select>
                                                     ) : (
-                                                        <span style={{
-                                                            padding: "4px 8px",
-                                                            borderRadius: "4px",
-                                                            backgroundColor: getRoleColor(user.role),
-                                                            color: "white",
-                                                            fontSize: "0.9em"
-                                                        }}>
+                                                        <span className={`px-3 py-1 text-[9px] uppercase tracking-widest border rounded-full ${getRoleBadge(user.role)}`}>
                                                             {user.role || "user"}
                                                         </span>
                                                     )}
                                                 </td>
-
-                                                <td style={{ padding: "15px" }}>
+                                                <td className="p-5">
                                                     {editingUser === user._id ? (
                                                         <select
                                                             name="status"
                                                             value={formData.status}
                                                             onChange={handleInputChange}
-                                                            style={{
-                                                                padding: "8px",
-                                                                border: "1px solid #ddd",
-                                                                borderRadius: "4px",
-                                                                width: "100%"
-                                                            }}
+                                                            className="w-full bg-[#0D0D0D] border border-[#C8A96A]/30 rounded-lg px-3 py-2 text-[#F5E6C8] focus:border-[#C8A96A] outline-none text-sm appearance-none"
                                                         >
                                                             <option value="active">Active</option>
                                                             <option value="inactive">Inactive</option>
                                                             <option value="pending">Pending</option>
                                                         </select>
                                                     ) : (
-                                                        <span style={{
-                                                            padding: "4px 8px",
-                                                            borderRadius: "4px",
-                                                            backgroundColor: getStatusColor(user.status),
-                                                            color: "white",
-                                                            fontSize: "0.9em"
-                                                        }}>
-                                                            {user.status || "active"}
-                                                        </span>
+                                                        <div className="flex items-center gap-2">
+                                                            <div className={`w-1.5 h-1.5 rounded-full ${user.status === 'active' ? 'bg-[#C8A96A] animate-pulse' : 'bg-red-500'}`}></div>
+                                                            <span className={`px-2 py-0.5 text-[9px] uppercase tracking-widest border rounded-full ${getStatusBadge(user.status)}`}>
+                                                                {user.status || "active"}
+                                                            </span>
+                                                        </div>
                                                     )}
                                                 </td>
-
-                                                <td style={{ padding: "15px" }}>
-                                                    <span style={{
-                                                        padding: "4px 8px",
-                                                        borderRadius: "4px",
-                                                        backgroundColor: getKycStatusColor(user.kycStatus),
-                                                        color: "white",
-                                                        fontSize: "0.9em"
-                                                    }}>
+                                                <td className="p-5">
+                                                    <span className={`px-3 py-1 text-[9px] uppercase tracking-widest border rounded-full ${getKycStatusBadge(user.kycStatus)}`}>
                                                         {user.kycStatus || "Pending"}
                                                     </span>
                                                 </td>
-
-                                                <td style={{ padding: "15px" }}>
+                                                <td className="p-5">
                                                     {editingUser === user._id ? (
-                                                        <div style={{ display: "flex", gap: "8px" }}>
-                                                            <button
-                                                                onClick={handleUpdate}
-                                                                style={{
-                                                                    padding: "8px 16px",
-                                                                    backgroundColor: "#4CAF50",
-                                                                    color: "white",
-                                                                    border: "none",
-                                                                    borderRadius: "4px",
-                                                                    cursor: "pointer"
-                                                                }}
-                                                            >
-                                                                Save
+                                                        <div className="flex gap-2">
+                                                            <button onClick={handleUpdate} className="p-2 bg-[#C8A96A]/10 text-[#C8A96A] hover:bg-[#C8A96A] hover:text-[#0D0D0D] rounded-lg transition-colors border border-[#C8A96A]/30" title="Save">
+                                                                <Save className="w-4 h-4" />
                                                             </button>
-                                                            <button
-                                                                onClick={handleCancelEdit}
-                                                                style={{
-                                                                    padding: "8px 16px",
-                                                                    backgroundColor: "#f44336",
-                                                                    color: "white",
-                                                                    border: "none",
-                                                                    borderRadius: "4px",
-                                                                    cursor: "pointer"
-                                                                }}
-                                                            >
-                                                                Cancel
+                                                            <button onClick={handleCancelEdit} className="p-2 bg-red-900/10 text-red-500 hover:bg-red-500 hover:text-white rounded-lg transition-colors border border-red-500/30" title="Cancel">
+                                                                <X className="w-4 h-4" />
                                                             </button>
                                                         </div>
                                                     ) : (
-                                                        <div style={{ display: "flex", gap: "8px" }}>
-                                                            <button
-                                                                onClick={() => handleEditClick(user)}
-                                                                style={{
-                                                                    padding: "8px 16px",
-                                                                    backgroundColor: "#2196F3",
-                                                                    color: "white",
-                                                                    border: "none",
-                                                                    borderRadius: "4px",
-                                                                    cursor: "pointer"
-                                                                }}
-                                                            >
-                                                                Edit
+                                                        <div className="flex gap-3">
+                                                            <button onClick={() => handleEditClick(user)} className="text-[#C8A96A]/60 hover:text-[#C8A96A] transition-colors" title="Edit">
+                                                                <Edit2 className="w-4 h-4" />
                                                             </button>
-                                                            <button
-                                                                onClick={() => handleOpenKyc(user)}
-                                                                style={{
-                                                                    padding: "8px 16px",
-                                                                    backgroundColor: "#ff9800",
-                                                                    color: "white",
-                                                                    border: "none",
-                                                                    borderRadius: "4px",
-                                                                    cursor: "pointer"
-                                                                }}
-                                                            >
-                                                                KYC
+                                                            <button onClick={() => handleOpenKyc(user)} className="text-[#D4AF37]/60 hover:text-[#D4AF37] transition-colors" title="KYC">
+                                                                <Activity className="w-4 h-4" />
                                                             </button>
-                                                            <button
-                                                                onClick={() => handleDelete(user._id)}
-                                                                style={{
-                                                                    padding: "8px 16px",
-                                                                    backgroundColor: "#f44336",
-                                                                    color: "white",
-                                                                    border: "none",
-                                                                    borderRadius: "4px",
-                                                                    cursor: "pointer"
-                                                                }}
-                                                            >
-                                                                Delete
+                                                            <button onClick={() => handleDelete(user._id)} className="text-red-500/60 hover:text-red-400 transition-colors" title="Delete">
+                                                                <Trash2 className="w-4 h-4" />
                                                             </button>
                                                         </div>
                                                     )}
@@ -568,113 +406,112 @@ const AdminUsers = () => {
                     )}
                 </div>
 
-                {/* Stats */}
-                {!loading && users.length > 0 && (
-                    <div style={{
-                        marginTop: "20px",
-                        padding: "20px",
-                        backgroundColor: "white",
-                        borderRadius: "8px",
-                        boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-                        display: "grid",
-                        gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
-                        gap: "15px"
-                    }}>
-                        <div style={{ textAlign: "center" }}>
-                            <div style={{ fontSize: "24px", fontWeight: "bold", color: "#0A7A2F" }}>
-                                {users.length}
-                            </div>
-                            <div style={{ color: "#666", fontSize: "14px" }}>Total Users</div>
-                        </div>
-                        <div style={{ textAlign: "center" }}>
-                            <div style={{ fontSize: "24px", fontWeight: "bold", color: "#9c27b0" }}>
-                                {users.filter(u => u.role === 'admin').length}
-                            </div>
-                            <div style={{ color: "#666", fontSize: "14px" }}>Admins</div>
-                        </div>
-                        <div style={{ textAlign: "center" }}>
-                            <div style={{ fontSize: "24px", fontWeight: "bold", color: "#4CAF50" }}>
-                                {users.filter(u => u.status === 'active').length}
-                            </div>
-                            <div style={{ color: "#666", fontSize: "14px" }}>Active Users</div>
-                        </div>
-                        <div style={{ textAlign: "center" }}>
-                            <div style={{ fontSize: "24px", fontWeight: "bold", color: "#ff9800" }}>
-                                {users.filter(u => u.status === 'pending').length}
-                            </div>
-                            <div style={{ color: "#666", fontSize: "14px" }}>Pending</div>
-                        </div>
-                    </div>
-                )}
-
                 {/* Footer */}
-                <div style={{
-                    marginTop: "20px",
-                    padding: "20px",
-                    backgroundColor: "white",
-                    borderRadius: "8px",
-                    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-                    textAlign: "center",
-                    color: "#666"
-                }}>
-                    <p>© 2024 Sanyukt Parivar. All rights reserved.</p>
+                <div className="mt-12 text-center border-t border-[#C8A96A]/10 pt-8">
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#F5E6C8]/20">
+                        © 2024 Sanyukt Parivar. All rights reserved.
+                    </p>
                 </div>
             </div>
 
-            {/* KYC Dialog */}
-            <Dialog open={kycDialogOpen} onClose={handleCloseKyc} maxWidth="md" fullWidth>
-                <DialogTitle sx={{ bgcolor: '#0A7A2F', color: 'white' }}>KYC Verification for {selectedUserForKyc?.name}</DialogTitle>
-                <DialogContent sx={{ mt: 2 }}>
+            {/* KYC Dialog heavily customized for Dark Theme */}
+            <Dialog 
+                open={kycDialogOpen} 
+                onClose={handleCloseKyc} 
+                maxWidth="md" 
+                fullWidth
+                PaperProps={{
+                    sx: {
+                        backgroundColor: '#121212',
+                        color: '#F5E6C8',
+                        border: '1px solid rgba(200, 169, 106, 0.3)',
+                        borderRadius: '12px',
+                        backgroundImage: 'none',
+                        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.75)'
+                    }
+                }}
+            >
+                <DialogTitle sx={{ 
+                    borderBottom: '1px solid rgba(200, 169, 106, 0.1)', 
+                    pb: 3, pt: 4, px: 4,
+                    display: 'flex', alignItems: 'center', gap: 2
+                }}>
+                    <div className="w-10 h-10 rounded-full bg-[#0D0D0D] border border-[#C8A96A]/30 flex items-center justify-center">
+                        <Activity className="w-5 h-5 text-[#C8A96A]" />
+                    </div>
+                    <div>
+                        <Typography variant="h5" sx={{ fontFamily: 'serif', color: '#F5E6C8', fontWeight: 'bold' }}>
+                            KYC Details
+                        </Typography>
+                        <Typography variant="caption" sx={{ color: 'rgba(200,169,106,0.6)', textTransform: 'uppercase', letterSpacing: '2px', fontWeight: 900, fontSize: '10px' }}>
+                            User: {selectedUserForKyc?.name}
+                        </Typography>
+                    </div>
+                </DialogTitle>
+
+                <DialogContent sx={{ p: 4 }}>
                     {selectedUserForKyc && (
-                        <Grid container spacing={3}>
+                        <Grid container spacing={4}>
                             <Grid item xs={12} sm={6}>
-                                <Typography variant="subtitle2" color="textSecondary">Aadhar Number</Typography>
-                                <Typography variant="body1">{selectedUserForKyc.aadharNumber || 'N/A'}</Typography>
+                                <div className="bg-[#0D0D0D] p-5 rounded-xl border border-[#C8A96A]/10">
+                                    <p className="text-[10px] font-black uppercase tracking-widest text-[#C8A96A]/60 mb-1">Aadhar Number</p>
+                                    <p className="text-[#F5E6C8] font-bold font-mono tracking-wider">{selectedUserForKyc.aadharNumber || 'N/A'}</p>
+                                </div>
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <Typography variant="subtitle2" color="textSecondary">PAN Number</Typography>
-                                <Typography variant="body1">{selectedUserForKyc.panNumber || 'N/A'}</Typography>
+                                <div className="bg-[#0D0D0D] p-5 rounded-xl border border-[#C8A96A]/10">
+                                    <p className="text-[10px] font-black uppercase tracking-widest text-[#C8A96A]/60 mb-1">PAN Number</p>
+                                    <p className="text-[#F5E6C8] font-bold font-mono tracking-wider">{selectedUserForKyc.panNumber || 'N/A'}</p>
+                                </div>
                             </Grid>
 
                             <Grid item xs={12}>
-                                <Divider />
-                                <Typography variant="subtitle1" sx={{ mt: 2, mb: 1, fontWeight: 'bold' }}>Bank Details</Typography>
+                                <div className="flex items-center gap-4 mt-2 mb-2">
+                                    <div className="h-px bg-gradient-to-r from-transparent via-[#C8A96A]/30 to-[#C8A96A]/30 flex-1"></div>
+                                    <span className="text-[#C8A96A] text-[10px] font-black uppercase tracking-widest">Bank Details</span>
+                                    <div className="h-px bg-gradient-to-r from-[#C8A96A]/30 via-[#C8A96A]/30 to-transparent flex-1"></div>
+                                </div>
+                            </Grid>
+                            
+                            <Grid item xs={12} sm={4}>
+                                <Typography variant="subtitle2" sx={{ color: 'rgba(200,169,106,0.6)', textTransform: 'uppercase', fontSize: '9px', fontWeight: 900, letterSpacing: '1px' }}>Account Number</Typography>
+                                <Typography variant="body1" sx={{ color: '#F5E6C8', fontWeight: 500 }}>{selectedUserForKyc.bankDetails?.accountNumber || 'N/A'}</Typography>
                             </Grid>
                             <Grid item xs={12} sm={4}>
-                                <Typography variant="subtitle2" color="textSecondary">Account Number</Typography>
-                                <Typography variant="body1">{selectedUserForKyc.bankDetails?.accountNumber || 'N/A'}</Typography>
+                                <Typography variant="subtitle2" sx={{ color: 'rgba(200,169,106,0.6)', textTransform: 'uppercase', fontSize: '9px', fontWeight: 900, letterSpacing: '1px' }}>IFSC Code</Typography>
+                                <Typography variant="body1" sx={{ color: '#F5E6C8', fontWeight: 500 }}>{selectedUserForKyc.bankDetails?.ifscCode || 'N/A'}</Typography>
                             </Grid>
                             <Grid item xs={12} sm={4}>
-                                <Typography variant="subtitle2" color="textSecondary">IFSC Code</Typography>
-                                <Typography variant="body1">{selectedUserForKyc.bankDetails?.ifscCode || 'N/A'}</Typography>
-                            </Grid>
-                            <Grid item xs={12} sm={4}>
-                                <Typography variant="subtitle2" color="textSecondary">Bank Name</Typography>
-                                <Typography variant="body1">{selectedUserForKyc.bankDetails?.bankName || 'N/A'}</Typography>
+                                <Typography variant="subtitle2" sx={{ color: 'rgba(200,169,106,0.6)', textTransform: 'uppercase', fontSize: '9px', fontWeight: 900, letterSpacing: '1px' }}>Bank Name</Typography>
+                                <Typography variant="body1" sx={{ color: '#F5E6C8', fontWeight: 500 }}>{selectedUserForKyc.bankDetails?.bankName || 'N/A'}</Typography>
                             </Grid>
 
                             <Grid item xs={12}>
-                                <Divider />
-                                <Typography variant="subtitle1" sx={{ mt: 2, mb: 1, fontWeight: 'bold' }}>Documents</Typography>
+                                <div className="flex items-center gap-4 mt-2 mb-2">
+                                    <div className="h-px bg-gradient-to-r from-transparent via-[#C8A96A]/30 to-[#C8A96A]/30 flex-1"></div>
+                                    <span className="text-[#C8A96A] text-[10px] font-black uppercase tracking-widest">KYC Documents</span>
+                                    <div className="h-px bg-gradient-to-r from-[#C8A96A]/30 via-[#C8A96A]/30 to-transparent flex-1"></div>
+                                </div>
                             </Grid>
+
                             {['aadharFront', 'aadharBack', 'panCard', 'passbook'].map((docKey) => (
                                 <Grid item xs={12} sm={6} md={3} key={docKey}>
-                                    <Paper variant="outlined" sx={{ p: 1, textAlign: 'center', height: '120px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                                        <Typography variant="caption" sx={{ mb: 1, display: 'block' }}>
+                                    <div className="bg-[#0D0D0D] p-3 rounded-xl border border-[#C8A96A]/10 text-center h-32 flex flex-col items-center justify-center hover:border-[#C8A96A]/40 transition-colors group">
+                                        <Typography variant="caption" sx={{ mb: 2, display: 'block', color: '#F5E6C8', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '1px' }}>
                                             {docKey.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
                                         </Typography>
                                         {selectedUserForKyc.kycDocuments?.[docKey] ? (
-                                            <a href={selectedUserForKyc.kycDocuments[docKey]} target="_blank" rel="noreferrer">
+                                            <a href={selectedUserForKyc.kycDocuments[docKey]} target="_blank" rel="noreferrer" className="relative overflow-hidden rounded-lg group-hover:shadow-[0_0_15px_rgba(200,169,106,0.3)] transition-all">
                                                 <img
                                                     src={selectedUserForKyc.kycDocuments[docKey]}
                                                     alt={docKey}
-                                                    style={{ maxHeight: '70px', maxWidth: '100%', objectFit: 'contain' }}
+                                                    className="max-h-[60px] max-w-full object-contain filter group-hover:brightness-110 transition-all opacity-80 group-hover:opacity-100"
                                                 />
                                             </a>
                                         ) : (
-                                            <Typography variant="body2" color="textSecondary">Not Uploaded</Typography>
+                                            <Typography variant="body2" sx={{ color: 'rgba(245, 230, 200, 0.2)', fontStyle: 'italic', fontSize: '11px' }}>Not Found</Typography>
                                         )}
-                                    </Paper>
+                                    </div>
                                 </Grid>
                             ))}
 
@@ -682,43 +519,60 @@ const AdminUsers = () => {
                                 <Grid item xs={12}>
                                     <TextField
                                         fullWidth
-                                        label="Reason for Rejection"
+                                        label="Rejection Reason"
                                         multiline
-                                        rows={2}
+                                        rows={3}
                                         value={kycRejectReason}
                                         onChange={(e) => setKycRejectReason(e.target.value)}
                                         required
                                         error={!kycRejectReason.trim()}
-                                        helperText={!kycRejectReason.trim() ? "Rejection reason is required" : ""}
+                                        helperText={!kycRejectReason.trim() ? "Reason is required" : ""}
+                                        sx={{
+                                            mt: 2,
+                                            '& .MuiOutlinedInput-root': {
+                                                color: '#F5E6C8',
+                                                backgroundColor: '#0D0D0D',
+                                                borderRadius: '12px',
+                                                '& fieldset': { borderColor: 'rgba(200, 169, 106, 0.2)' },
+                                                '&:hover fieldset': { borderColor: '#C8A96A' },
+                                                '&.Mui-focused fieldset': { borderColor: '#D4AF37' },
+                                            },
+                                            '& .MuiInputLabel-root': { color: 'rgba(200, 169, 106, 0.6)' },
+                                            '& .MuiInputLabel-root.Mui-focused': { color: '#C8A96A' },
+                                            '& .MuiFormHelperText-root.Mui-error': { color: '#ef4444' }
+                                        }}
                                     />
                                 </Grid>
                             )}
                         </Grid>
                     )}
                 </DialogContent>
-                <DialogActions sx={{ p: 3, borderTop: '1px solid #eee' }}>
-                    <Button onClick={handleCloseKyc} color="inherit">Cancel</Button>
+                
+                <DialogActions sx={{ p: 3, px: 4, borderTop: '1px solid rgba(200, 169, 106, 0.1)', backgroundColor: '#0A0A0A' }}>
+                    <button onClick={handleCloseKyc} className="px-5 py-2 text-[10px] uppercase tracking-widest font-black text-[#F5E6C8]/40 hover:text-[#F5E6C8] transition-colors">
+                        Cancel
+                    </button>
                     {!isRejecting ? (
-                        <>
-                            <Button variant="outlined" color="error" onClick={() => setIsRejecting(true)}>Reject</Button>
-                            <Button variant="contained" color="success" onClick={() => handleUpdateKycStatus('Verified')}>Verify & Approve</Button>
-                        </>
+                        <div className="flex gap-3 ml-auto">
+                            <button onClick={() => setIsRejecting(true)} className="px-5 py-2 rounded-lg border border-red-500/30 text-red-500 text-[10px] uppercase tracking-widest font-black hover:bg-red-500 hover:text-white transition-all">
+                                Reject
+                            </button>
+                            <button onClick={() => handleUpdateKycStatus('Verified')} className="px-5 py-2 rounded-lg bg-[#C8A96A] text-[#0D0D0D] text-[10px] uppercase tracking-widest font-black hover:bg-[#D4AF37] transition-all shadow-[0_0_15px_rgba(200,169,106,0.3)]">
+                                Verify Identity
+                            </button>
+                        </div>
                     ) : (
-                        <>
-                            <Button onClick={() => setIsRejecting(false)}>Back</Button>
-                            <Button variant="contained" color="error" onClick={() => handleUpdateKycStatus('Rejected')}>Confirm Rejection</Button>
-                        </>
+                        <div className="flex gap-3 ml-auto">
+                            <button onClick={() => setIsRejecting(false)} className="px-5 py-2 border border-[#C8A96A]/30 rounded-lg text-[#C8A96A] text-[10px] uppercase tracking-widest font-black hover:bg-[#C8A96A]/10 transition-colors">
+                                Back
+                            </button>
+                            <button onClick={() => handleUpdateKycStatus('Rejected')} className="px-5 py-2 rounded-lg bg-red-600 text-white text-[10px] uppercase tracking-widest font-black hover:bg-red-500 transition-all shadow-[0_0_15px_rgba(239,68,68,0.3)]">
+                                Reject
+                            </button>
+                        </div>
                     )}
                 </DialogActions>
             </Dialog>
-
-            {/* Animation keyframes */}
-            <style jsx>{`
-                @keyframes spin {
-                    0% { transform: rotate(0deg); }
-                    100% { transform: rotate(360deg); }
-                }
-            `}</style>
         </div>
     );
 };

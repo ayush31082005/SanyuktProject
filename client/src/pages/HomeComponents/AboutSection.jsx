@@ -3,36 +3,32 @@ import { Shield } from 'lucide-react';
 
 const AboutSection = ({ aboutImage, teamImages }) => {
     return (
-        <section className="py-12 md:py-16 bg-[#F8FAF5]">
+        <section className="py-2 bg-[#0D0D0D] relative overflow-hidden">
             <div className="container mx-auto px-4">
-                <div className="text-center mb-8">
-                    <h2 className="text-2xl md:text-3xl font-bold text-[#0A7A2F] inline-block relative pb-3">
+                <div className="text-center mb-2">
+                    <h2 className="text-xl md:text-3xl font-serif font-bold text-[#C8A96A] inline-block relative pb-1 tracking-widest uppercase">
                         Who We Are
-                        <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-[#F7931E]"></span>
+                        <span className="absolute bottom-0 left-0 w-full h-[1px] bg-[#C8A96A]/40"></span>
                     </h2>
                 </div>
-                <div className="grid md:grid-cols-2 gap-6 md:gap-8 items-center">
-                    <div className="space-y-3 text-gray-700 leading-relaxed order-2 md:order-1">
-                        <h3 className="text-lg md:text-xl font-semibold text-[#2F7A32] mb-3">
-                            Sanyukt Parivaar & Rich Life Pvt.Ltd.
+                <div className="grid md:grid-cols-2 gap-4 md:gap-8 items-center max-w-5xl mx-auto">
+                    <div className="space-y-3 text-gray-700 order-2 md:order-1 flex flex-col justify-center">
+                        <h3 className="text-lg md:text-2xl font-serif font-bold text-[#F5E6C8] mb-1 leading-tight uppercase tracking-tight">
+                            Sanyukt Parivaar & <br />
+                            <span className="text-[#C8A96A]">Rich Life Pvt.Ltd.</span>
                         </h3>
-                        <p className="text-sm">
-                            Sanyukt Parivaar & Rich Life Pvt.Ltd. was founded with a clear vision  to create financial independence through ethical direct selling. We believe in growing together as one family, where every member gets equal opportunity, proper training, and long-term support.
+                        <p className="text-sm text-[#F5E6C8]/70 font-light leading-relaxed">
+                            Founded with a vision to create financial independence through ethical direct selling. We believe in growing together as one family, where every member gets equal opportunity, proper training, and long-term support.
                         </p>
-                        <p className="text-sm">
+                        <p className="text-sm text-[#F5E6C8]/70 font-light leading-relaxed">
                             Our company focuses on personal development, leadership growth, and community success while promoting reliable lifestyle, wellness, and personal care products.
                         </p>
                     </div>
-                    <div className="relative order-1 md:order-2">
-                        <img src={aboutImage} alt="About Us" className="rounded-lg shadow-xl w-full h-[300px] md:h-[350px] object-cover" />
-                        <div className="absolute -bottom-4 -left-4 md:-bottom-6 md:-left-6 bg-white p-3 md:p-4 rounded-xl shadow-2xl flex items-center gap-3 border border-gray-100 animate-bounce" style={{ animationDuration: '3s' }}>
-                            <div className="bg-green-100 p-2 rounded-full">
-                                <Shield className="w-5 h-5 text-[#0A7A2F]" />
-                            </div>
-                            <div className="flex flex-col pr-2">
-                                <span className="text-xl font-black text-[#0A7A2F] leading-none">100%</span>
-                                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mt-1">Certified</span>
-                            </div>
+                    <div className="relative order-1 md:order-2 luxury-box p-1">
+                        <img src={aboutImage} alt="About Us" className="w-full h-auto max-h-[220px] object-cover" />
+                        <div className="absolute top-2 right-2 bg-[#0D0D0D]/80 border border-[#C8A96A]/40 p-2 px-3 flex flex-col items-center">
+                            <span className="text-lg font-bold text-[#C8A96A] leading-none">100%</span>
+                            <span className="text-[8px] font-bold text-[#F5E6C8]/60 uppercase tracking-widest">Certified</span>
                         </div>
                     </div>
                 </div>

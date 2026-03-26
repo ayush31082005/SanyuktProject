@@ -21,6 +21,8 @@ const AdminNews = () => {
     const [image, setImage] = useState(null);
     const [preview, setPreview] = useState(null);
     const [submitting, setSubmitting] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [editId, setEditId] = useState(null);
 
     useEffect(() => {
         fetchNews();
@@ -29,7 +31,9 @@ const AdminNews = () => {
     const fetchNews = async () => {
         setLoading(true);
         try {
-            const { data } = await api.get("/news");
+            // Add a timestamp to bypass browser cache
+            const { data } = await api.get(`/news?t=${new Date().getTime()}`);
+            console.log("FETCHED NEWS LIST:", data.data);
             if (data.success) {
                 setNewsList(data.data);
             }
@@ -59,7 +63,9 @@ const AdminNews = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!title || !content || !image) {
+        
+        // Image is required only when adding new
+        if (!title || !content || (!image && !isEditing)) {
             toast.error("Please fill all required fields");
             return;
         }
@@ -70,28 +76,48 @@ const AdminNews = () => {
         formData.append("content", content);
         formData.append("category", category);
         formData.append("readTime", readTime);
-        formData.append("image", image);
+        if (image) {
+            formData.append("image", image);
+        }
 
         try {
-            const { data } = await api.post("/news/add", formData);
+            let res;
+            if (isEditing) {
+                res = await api.put(`/news/${editId}`, formData);
+            } else {
+                res = await api.post("/news/add", formData);
+            }
 
-            if (data.success) {
-                toast.success("News added successfully!");
+            if (res.data.success) {
+                console.log("UPDATE SUCCESS. Server returned:", res.data.data);
+                toast.success(isEditing ? "News updated successfully!" : "News added successfully!");
                 setIsAdding(false);
+                setIsEditing(false);
+                setEditId(null);
                 resetForm();
-                fetchNews();
+                await fetchNews();
             }
         } catch (error) {
-            console.error("Error adding news:", error);
-            if (error.response) {
-                console.error("Server Error Data:", error.response.data);
-                toast.error(error.response.data.message || "Failed to add news");
-            } else {
-                toast.error("Failed to add news - network error");
-            }
+            console.error("Error saving news:", error);
+            const msg = error.response?.data?.message || `Failed to ${isEditing ? 'update' : 'add'} news`;
+            toast.error(msg);
         } finally {
             setSubmitting(false);
         }
+    };
+
+    const handleEdit = (news) => {
+        setIsEditing(true);
+        setIsAdding(true);
+        setEditId(news._id);
+        setTitle(news.title);
+        setContent(news.content);
+        setCategory(news.category);
+        setReadTime(news.readTime);
+        const cacheBuster = `?t=${new Date().getTime()}`;
+        setPreview(news.image.startsWith('http') ? news.image : `${import.meta.env.VITE_API_URL?.replace(/\/api\/?$/, "") || "http://localhost:5001"}${news.image}${cacheBuster}`);
+        // Scroll to form
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const handleDelete = async (id) => {
@@ -116,6 +142,8 @@ const AdminNews = () => {
         setReadTime("5 min read");
         setImage(null);
         setPreview(null);
+        setIsEditing(false);
+        setEditId(null);
     };
 
     const formatDate = (dateString) => {
@@ -148,7 +176,14 @@ const AdminNews = () => {
                     <p className="text-gray-500 mt-1">Manage company updates and announcements</p>
                 </div>
                 <button 
-                    onClick={() => setIsAdding(!isAdding)}
+                    onClick={() => {
+                        if (isAdding) {
+                            resetForm();
+                            setIsAdding(false);
+                        } else {
+                            setIsAdding(true);
+                        }
+                    }}
                     className={`flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1 ${
                         isAdding ? 'bg-gray-100 text-gray-600' : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white'
                     }`}
@@ -189,10 +224,10 @@ const AdminNews = () => {
             {/* Form Section */}
             {isAdding && (
                 <div className="bg-white rounded-3xl shadow-xl border border-green-50 overflow-hidden animate-slideUp">
-                    <div className="bg-gradient-to-r from-green-600 to-emerald-700 px-8 py-6">
+                    <div className={`${isEditing ? 'bg-gradient-to-r from-orange-600 to-red-700' : 'bg-gradient-to-r from-green-600 to-emerald-700'} px-8 py-6`}>
                         <h3 className="text-xl font-bold text-white flex items-center gap-3">
-                            <Plus className="w-6 h-6" />
-                            Create New Announcement
+                            {isEditing ? <Edit className="w-6 h-6" /> : <Plus className="w-6 h-6" />}
+                            {isEditing ? 'Edit Announcement' : 'Create New Announcement'}
                         </h3>
                     </div>
                     
@@ -318,8 +353,8 @@ const AdminNews = () => {
                                 disabled={submitting}
                                 className="px-10 py-3 bg-gradient-to-r from-green-600 to-emerald-700 text-white rounded-xl font-bold shadow-lg shadow-green-200 hover:shadow-xl hover:shadow-green-300 transform hover:-translate-y-1 transition-all disabled:opacity-50 disabled:transform-none flex items-center gap-2 font-sans uppercase tracking-wider text-sm"
                             >
-                                {submitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Plus className="w-5 h-5" />}
-                                {submitting ? "Publishing..." : "Publish News"}
+                                {submitting ? <Loader2 className="w-5 h-5 animate-spin" /> : (isEditing ? <Edit className="w-5 h-5" /> : <Plus className="w-5 h-5" />)}
+                                {submitting ? (isEditing ? "Updating..." : "Publishing...") : (isEditing ? "Update News" : "Publish News")}
                             </button>
                         </div>
                     </form>
@@ -339,7 +374,7 @@ const AdminNews = () => {
                                 {/* Card Image */}
                                 <div className="relative h-56 overflow-hidden">
                                     <img 
-                                        src={news.image.startsWith('http') ? news.image : `${import.meta.env.VITE_API_URL?.replace(/\/api\/?$/, "") || "http://localhost:5001"}${news.image}`}
+                                        src={news.image.startsWith('http') ? news.image : `${import.meta.env.VITE_API_URL?.replace(/\/api\/?$/, "") || "http://localhost:5001"}${news.image}?t=${new Date().getTime()}`}
                                         alt={news.title}
                                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                                     />
@@ -350,6 +385,12 @@ const AdminNews = () => {
                                     </div>
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-end p-4">
                                         <div className="flex gap-2">
+                                            <button 
+                                                onClick={() => handleEdit(news)}
+                                                className="p-3 bg-white text-green-600 rounded-xl hover:bg-green-50 shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-all duration-300"
+                                            >
+                                                <Edit className="w-5 h-5" />
+                                            </button>
                                             <button 
                                                 onClick={() => handleDelete(news._id)}
                                                 className="p-3 bg-red-500 text-white rounded-xl hover:bg-red-600 shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-all duration-500"

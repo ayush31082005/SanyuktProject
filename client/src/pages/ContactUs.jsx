@@ -75,248 +75,195 @@ const ContactUs = () => {
     const mapUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3770.116773634476!2d79.296244!3d19.979614!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bd2d8f9b8b8b8b9%3A0x123456789abcdef!2sTukum%2C%20Chandrapur%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1620000000000!5m2!1sen!2sin";
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 p-4 md:p-6 lg:p-8 relative overflow-hidden">
-            {/* Decorative Background Elements */}
-            <div className="absolute inset-0 overflow-hidden">
-                <div className="absolute -top-40 -right-40 w-80 h-80 bg-green-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-                <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-orange-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-yellow-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
+        <div className="min-h-screen bg-[#0D0D0D] font-sans text-[#F5E6C8] selection:bg-[#C8A96A]/30">
+            {/* Elegant Background Elements */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute top-[10%] left-[5%] w-[500px] h-[500px] bg-[#C8A96A]/5 rounded-full blur-[120px] animate-pulse"></div>
+                <div className="absolute bottom-[10%] right-[5%] w-[400px] h-[400px] bg-[#D4AF37]/5 rounded-full blur-[100px] animate-pulse delay-1000"></div>
             </div>
 
-            <div className="max-w-7xl mx-auto relative z-10">
+            <div className="max-w-7xl mx-auto relative z-10 px-4 py-6 md:py-10">
                 {/* Main Heading */}
-                <div className="text-center mb-12 animate-slide-down">
-                    <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-                        Contact Us
+                <div className="text-center mb-6 animate-slide-down">
+                    <div className="inline-block mb-2 px-6 py-1 rounded-full border border-[#C8A96A]/20 bg-[#C8A96A]/5">
+                        <span className="text-[9px] font-black uppercase tracking-[0.4em] text-[#C8A96A]">Seamless Connection</span>
+                    </div>
+                    <h1 className="text-4xl md:text-5xl font-serif font-bold text-[#F5E6C8] mb-3 tracking-tight drop-shadow-2xl uppercase">
+                        Contact <span className="text-[#C8A96A]">US</span>
                     </h1>
-                    <div className="w-24 h-1 bg-gradient-to-r from-[#0A7A2F] to-[#F7931E] mx-auto rounded-full"></div>
+                    <div className="w-16 h-px bg-gradient-to-r from-transparent via-[#C8A96A] to-transparent mx-auto"></div>
                 </div>
 
                 {/* Main Content Grid */}
                 <div className="grid lg:grid-cols-2 gap-8 items-stretch">
                     {/* Left Column - Contact Form */}
-                    <div className="animate-slide-left h-full">
-                        <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-500 hover:shadow-3xl h-full flex flex-col">
+                    {/* Left Column - Contact Form */}
+                    <div className="animate-slide-left">
+                        <div className="luxury-box flex flex-col h-full group transition-all duration-700">
                             {/* Form Header */}
-                            <div className="bg-gradient-to-r from-[#0A7A2F] to-[#2F7A32] px-6 md:px-8 py-6">
-                                <h2 className="text-2xl md:text-3xl font-bold text-white">
+                            <div className="bg-[#121212] p-5 md:p-6 border-b border-[#C8A96A]/30">
+                                <h2 className="text-2xl font-serif font-bold text-[#F5E6C8]">
                                     Get in Touch
                                 </h2>
-                                <p className="text-green-50 mt-2 text-sm">
-                                    We'd love to hear from you
+                                <p className="text-[#C8A96A] mt-1 text-[10px] font-black uppercase tracking-widest italic">
+                                    Your message, our priority.
                                 </p>
                             </div>
 
                             {/* Form Body */}
-                            <form onSubmit={handleSubmit} className="p-6 md:p-8 flex-1 flex flex-col">
-                                {/* Success Message */}
+                            <form onSubmit={handleSubmit} className="p-10 flex-1 flex flex-col gap-8">
                                 {submitSuccess && (
-                                    <div className="mb-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg animate-slide-down flex items-center space-x-2">
+                                    <div className="p-5 bg-[#C8A96A]/10 border border-[#C8A96A]/30 text-[#C8A96A] rounded-2xl animate-slide-down flex items-center space-x-3 text-sm font-bold">
                                         <Send className="h-5 w-5" />
                                         <span>Message sent successfully! We'll get back to you soon.</span>
                                     </div>
                                 )}
 
-                                {/* Error Message */}
                                 {error && (
-                                    <div className="mb-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg animate-slide-down">
-                                        鼓鼓 components/ContactUs.jsx                                        {error}
+                                    <div className="p-5 bg-red-900/20 border border-red-500/30 text-red-400 rounded-2xl animate-slide-down text-sm font-bold">
+                                        {error}
                                     </div>
                                 )}
 
-                                <div className="space-y-6 flex-1 flex flex-col">
-                                    {/* Your Name */}
-                                    <div className="space-y-2 animate-slideUp" style={{ animationDelay: '0.1s' }}>
-                                        <label className="block text-sm font-semibold text-gray-700">
-                                            Your Name <span className="text-red-500">*</span>
-                                        </label>
-                                        <div className="relative group">
+                                <div className="space-y-4 flex-1">
+                                    <div className="grid md:grid-cols-2 gap-4">
+                                        {/* Name */}
+                                        <div className="space-y-1.5">
+                                            <label className="text-[9px] font-black uppercase tracking-widest text-[#C8A96A]">Legal Name</label>
                                             <input
                                                 type="text"
                                                 name="name"
                                                 value={formData.name}
                                                 onChange={handleChange}
-                                                placeholder="Enter your full name"
-                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A7A2F] focus:border-transparent transition-all duration-300 hover:border-[#0A7A2F]"
+                                                placeholder="Enter Full Name"
+                                                className="w-full bg-[#0D0D0D] border border-[#C8A96A]/20 rounded-xl p-3 text-[#F5E6C8] placeholder:text-[#F5E6C8]/20 focus:border-[#C8A96A] outline-none transition-all font-black text-xs"
                                                 required
                                             />
+                                        </div>
+
+                                        {/* Phone */}
+                                        <div className="space-y-1.5">
+                                            <label className="text-[9px] font-black uppercase tracking-widest text-[#C8A96A]">Access Number</label>
+                                            <div className="relative group/input">
+                                                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#C8A96A]/40 group-hover/input:text-[#C8A96A] transition-colors" />
+                                                <input
+                                                    type="tel"
+                                                    name="phone"
+                                                    value={formData.phone}
+                                                    onChange={handleChange}
+                                                    placeholder="Phone (Optional)"
+                                                    className="w-full bg-[#0D0D0D] border border-[#C8A96A]/20 rounded-xl pl-10 pr-3 py-3 text-[#F5E6C8] placeholder:text-[#F5E6C8]/20 focus:border-[#C8A96A] outline-none transition-all font-black text-xs"
+                                                />
+                                            </div>
                                         </div>
                                     </div>
 
                                     {/* Email */}
-                                    <div className="space-y-2 animate-slideUp" style={{ animationDelay: '0.15s' }}>
-                                        <label className="block text-sm font-semibold text-gray-700">
-                                            Email <span className="text-red-500">*</span>
-                                        </label>
-                                        <div className="relative group">
-                                            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-hover:text-[#0A7A2F] transition-colors duration-300" />
+                                    <div className="space-y-1.5">
+                                        <label className="text-[9px] font-black uppercase tracking-widest text-[#C8A96A]">Email ID</label>
+                                        <div className="relative group/input">
+                                            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#C8A96A]/40 group-hover/input:text-[#C8A96A] transition-colors" />
                                             <input
                                                 type="email"
                                                 name="email"
                                                 value={formData.email}
                                                 onChange={handleChange}
-                                                placeholder="Enter your email"
-                                                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A7A2F] focus:border-transparent transition-all duration-300 hover:border-[#0A7A2F]"
+                                                placeholder="Enter Email Address"
+                                                className="w-full bg-[#0D0D0D] border border-[#C8A96A]/20 rounded-xl pl-10 pr-3 py-3 text-[#F5E6C8] placeholder:text-[#F5E6C8]/20 focus:border-[#C8A96A] outline-none transition-all font-black text-xs"
                                                 required
                                             />
                                         </div>
                                     </div>
 
-                                    {/* Phone */}
-                                    <div className="space-y-2 animate-slideUp" style={{ animationDelay: '0.2s' }}>
-                                        <label className="block text-sm font-semibold text-gray-700">
-                                            Phone
-                                        </label>
-                                        <div className="relative group">
-                                            <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 group-hover:text-[#0A7A2F] transition-colors duration-300" />
-                                            <input
-                                                type="tel"
-                                                name="phone"
-                                                value={formData.phone}
-                                                onChange={handleChange}
-                                                placeholder="Enter your phone number"
-                                                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A7A2F] focus:border-transparent transition-all duration-300 hover:border-[#0A7A2F]"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    {/* Your Message */}
-                                    <div className="space-y-2 animate-slideUp" style={{ animationDelay: '0.3s' }}>
-                                        <label className="block text-sm font-semibold text-gray-700">
-                                            Your Message... <span className="text-red-500">*</span>
-                                        </label>
-                                        <div className="relative group">
-                                            <textarea
-                                                name="message"
-                                                value={formData.message}
-                                                onChange={handleChange}
-                                                placeholder="Type your message here..."
-                                                rows="4"
-                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A7A2F] focus:border-transparent transition-all duration-300 hover:border-[#0A7A2F] resize-none"
-                                                required
-                                            />
-                                        </div>
-                                    </div>
-
-                                    {/* Send Message Button */}
-                                    <div className="pt-4 mt-auto animate-slideUp" style={{ animationDelay: '0.4s' }}>
-                                        <button
-                                            type="submit"
-                                            disabled={isSubmitting}
-                                            className="w-full group relative px-8 py-4 bg-gradient-to-r from-[#F7931E] to-[#e07d0b] text-white font-bold rounded-lg overflow-hidden transition-all duration-300 hover:shadow-2xl transform hover:scale-105 active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
-                                        >
-                                            <span className="relative z-10 flex items-center justify-center space-x-2">
-                                                {isSubmitting ? (
-                                                    <>
-                                                        <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                                        </svg>
-                                                        <span>SENDING...</span>
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <span>SEND MESSAGE</span>
-                                                        <Send className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-                                                    </>
-                                                )}
-                                            </span>
-                                            <div className="absolute inset-0 bg-gradient-to-r from-[#e07d0b] to-[#F7931E] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                        </button>
+                                    {/* Message */}
+                                    <div className="space-y-1.5">
+                                        <label className="text-[9px] font-black uppercase tracking-widest text-[#C8A96A]">Inquiry Details</label>
+                                        <textarea
+                                            name="message"
+                                            value={formData.message}
+                                            onChange={handleChange}
+                                            placeholder="Compose your message here..."
+                                            rows="3"
+                                            className="w-full bg-[#0D0D0D] border border-[#C8A96A]/20 rounded-xl p-3 text-[#F5E6C8] placeholder:text-[#F5E6C8]/20 focus:border-[#C8A96A] outline-none transition-all font-black text-xs resize-none"
+                                            required
+                                        />
                                     </div>
                                 </div>
+
+                                {/* Send Button */}
+                                <button
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                    className="luxury-button w-full relative z-10 flex items-center justify-center gap-3 disabled:opacity-50"
+                                >
+                                    {isSubmitting ? 'Transmitting...' : (
+                                        <>
+                                            Relay Message
+                                            <Send className="w-4 h-4" />
+                                        </>
+                                    )}
+                                </button>
                             </form>
                         </div>
                     </div>
 
-                    {/* Right Column - Contact Information with Map */}
-                    <div className="animate-slide-right h-full">
-                        <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-500 hover:shadow-3xl h-full flex flex-col">
+                    {/* Right Column - Contact Information */}
+                    <div className="animate-slide-right">
+                        <div className="luxury-box flex flex-col h-full group transition-all duration-700">
                             {/* Info Header */}
-                            <div className="bg-gradient-to-r from-[#0A7A2F] to-[#2F7A32] px-6 md:px-8 py-6">
-                                <h2 className="text-2xl md:text-3xl font-bold text-white">
+                            <div className="bg-[#121212] p-5 md:p-6 border-b border-[#C8A96A]/30">
+                                <h2 className="text-2xl font-serif font-bold text-[#F5E6C8]">
                                     Contact Information
                                 </h2>
-                                <p className="text-green-50 mt-2 text-sm">
-                                    Get in touch with us
+                                <p className="text-[#C8A96A] mt-1 text-[10px] font-black uppercase tracking-widest italic">
+                                    Our doors are open to your vision.
                                 </p>
                             </div>
 
-                            {/* Info Body with Map */}
-                            <div className="p-6 md:p-8 flex-1 flex flex-col">
-                                <div className="space-y-6 flex-1 flex flex-col">
-                                    {/* Address */}
-                                    <div className="flex items-start space-x-4 animate-slideUp" style={{ animationDelay: '0.1s' }}>
-                                        <div className="flex-shrink-0">
-                                            <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                                                <MapPin className="h-5 w-5 text-green-600" />
+                            <div className="p-5 md:p-6 space-y-6">
+                                {[
+                                    { icon: MapPin, title: 'Head Office', content: 'Sanyukt Parivaar & Rich Life \nBhatiniya, Gopinathpur, Harraiya,\nBasti - 272130, UP', link: null },
+                                    { icon: Phone, title: 'Phone', content: '+91 78803 70057', link: 'tel:+917880370057' },
+                                    { icon: Mail, title: 'Email', content: 'info@sanyuktparivaar.com', link: 'mailto:info@sanyuktparivaar.com' }
+                                ].map((item, i) => (
+                                    <div key={i} className="flex items-start gap-4 group/item">
+                                            <div className="w-10 h-10 bg-[#121212] border border-[#C8A96A]/30 flex items-center justify-center text-[#C8A96A] transition-all duration-500 rounded-sm">
+                                                <item.icon className="w-4 h-4" />
                                             </div>
-                                        </div>
-                                        <div className="flex-1">
-                                            <h3 className="font-semibold text-gray-800 mb-1">Head Office</h3>
-                                            <p className="text-gray-600 text-sm leading-relaxed">
-                                                Sanyukt Parivaar & Rich Life Pvt.Ltd.,<br />
-                                                Bhatiniya, Gopinathpur, Harraiya,<br />
-                                                Basti - 272130, Uttar Pradesh
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    {/* Phone */}
-                                    <div className="flex items-start space-x-4 animate-slideUp" style={{ animationDelay: '0.2s' }}>
-                                        <div className="flex-shrink-0">
-                                            <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                                                <Phone className="h-5 w-5 text-green-600" />
-                                            </div>
-                                        </div>
-                                        <div className="flex-1">
-                                            <h3 className="font-semibold text-gray-800 mb-1">Phone</h3>
-                                            <a href="tel:+917880370057" className="text-gray-600 text-sm hover:text-green-600 transition-colors duration-300">
-                                                +91 78803 70057
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                    {/* Email */}
-                                    <div className="flex items-start space-x-4 animate-slideUp" style={{ animationDelay: '0.3s' }}>
-                                        <div className="flex-shrink-0">
-                                            <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                                                <Mail className="h-5 w-5 text-green-600" />
-                                            </div>
-                                        </div>
-                                        <div className="flex-1">
-                                            <h3 className="font-semibold text-gray-800 mb-1">Email</h3>
-                                            <a href="mailto:info@sanyuktparivaar.com" className="text-gray-600 text-sm hover:text-green-600 transition-colors duration-300">
-                                                info@sanyuktparivaar.com
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                    {/* Google Map */}
-                                    <div className="mt-4 pt-2 animate-slideUp" style={{ animationDelay: '0.4s' }}>
-                                        <div className="bg-gray-100 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]">
-                                            <div className="relative w-full h-48 md:h-56">
-                                                <iframe
-                                                    src={mapUrl}
-                                                    className="absolute top-0 left-0 w-full h-full"
-                                                    style={{ border: 0 }}
-                                                    allowFullScreen
-                                                    loading="lazy"
-                                                    referrerPolicy="no-referrer-when-downgrade"
-                                                    title="Office Location"
-                                                ></iframe>
-                                            </div>
-                                            <div className="bg-green-50 px-4 py-2 text-center">
-                                                <a
-                                                    href="https://maps.google.com/?q=Tukum+Chandrapur+Maharashtra"
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="text-sm text-green-600 hover:text-green-800 font-medium hover:underline transition-colors duration-300"
-                                                >
-                                                    View on Google Maps →
+                                        <div>
+                                            <h4 className="text-lg font-serif font-bold text-[#F5E6C8] mb-2 uppercase tracking-wide group-hover/item:text-[#C8A96A] transition-colors">{item.title}</h4>
+                                            {item.link ? (
+                                                <a href={item.link} className="text-[#F5E6C8]/60 text-sm font-medium hover:text-[#C8A96A] transition-colors whitespace-pre-line ring-0 outline-none">
+                                                    {item.content}
                                                 </a>
-                                            </div>
+                                            ) : (
+                                                <p className="text-[#F5E6C8]/60 text-sm font-medium whitespace-pre-line leading-relaxed">
+                                                    {item.content}
+                                                </p>
+                                            )}
                                         </div>
+                                    </div>
+                                ))}
+
+                                {/* Map Integration */}
+                                <div className="pt-2">
+                                    <div className="relative h-44 overflow-hidden luxury-box group/map">
+                                        <iframe
+                                            src={mapUrl}
+                                            className="absolute inset-0 w-full h-full grayscale opacity-40 group-hover/map:grayscale-0 group-hover/map:opacity-80 transition-all duration-1000"
+                                            style={{ border: 0 }}
+                                            allowFullScreen
+                                            loading="lazy"
+                                            title="Location"
+                                        ></iframe>
+                                        <a
+                                            href="https://maps.google.com/?q=Tukum+Chandrapur+Maharashtra"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="px-3 py-1.5 text-[9px] font-black uppercase tracking-widest bg-[#121212] border border-[#C8A96A]/20 absolute bottom-3 left-1/2 -translate-x-1/2 pointer-events-auto hover:bg-[#C8A96A]/10 transition-all"
+                                        >
+                                            View Domain Map
+                                        </a>
                                     </div>
                                 </div>
                             </div>

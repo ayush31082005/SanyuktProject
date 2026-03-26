@@ -1,9 +1,20 @@
+const path = require('path');
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
 const Transaction = require('../models/Transaction');
 const sendEmail = require('../utils/sendEmail');
 const User = require('../models/User');
 const IncomeHistory = require('../models/IncomeHistory');
+const axios = require('axios');
+const fs = require('fs');
+
+// Debug helper for Inspay
+const logInspayDebug = (data) => {
+    const logPath = path.join(__dirname, '../inspay_debug.log');
+    const timestamp = new Date().toISOString();
+    const entry = `[${timestamp}] ${JSON.stringify(data, null, 2)}\n\n---\n\n`;
+    fs.appendFileSync(logPath, entry);
+};
 
 // Initialize Razorpay lazily to prevent server crash if keys are missing
 let razorpay;
@@ -203,7 +214,18 @@ exports.getUserTransactions = async (req, res) => {
     }
 };
 
-// Helper to credit 5% reward to user
+// Helper to map UI operator IDs to Inspay operator codes as per latest specs
+const mapOperatorToInspay = (opId) => {
+    const mapping = {
+        'airtel': 'AT',
+        'jio': 'RJ',
+        'vi': 'VF',
+        'bsnl': 'BS'
+    };
+    // Return the mapped value or fallback to uppercase if not found
+    return mapping[opId.toLowerCase()] || opId.toUpperCase();
+};
+
 const creditRechargeReward = async (userId, amount, type, rechargeNumber) => {
     try {
         const rewardAmount = amount * 0.05; // 5% reward
@@ -225,5 +247,122 @@ const creditRechargeReward = async (userId, amount, type, rechargeNumber) => {
     } catch (error) {
         console.error("Error crediting recharge reward:", error);
         console.error(error.stack);
+    }
+};
+
+// @desc    Perform recharge using Inspay API (POST with Fallback)
+// @route   POST /api/recharge
+// @access  Protected
+exports.inspayRecharge = async (req, res) => {
+    try {
+        const { mobile, operator: opId, amount } = req.body;
+        const querystring = require('querystring');
+
+        // 1. Validation
+        if (!mobile || !opId || !amount || Number(amount) <= 0) {
+            return res.status(400).json({ success: false, message: "Missing required fields or invalid amount" });
+        }
+
+        if (!/^\d{10}$/.test(mobile)) {
+            return res.status(400).json({ success: false, message: "Mobile number must be exactly 10 digits" });
+        }
+
+        // Use v3 endpoint as it accepts FORM data
+        const apiUrl = "http://www.connect.inspay.in/v3/recharge/api";
+        const token = process.env.INSPAY_TOKEN;
+        const operator = mapOperatorToInspay(opId);
+        // Using exactly 10-digit numeric ID as many Indian APIs have this limit
+        const orderid = Math.floor(1000000000 + Math.random() * 9000000000).toString();
+
+        // 2. Retry Logic Matrix
+        // We try: 
+        // A) username without IP prefix + "number" field (Legacy Successful Pattern)
+        // B) username with IP prefix + "number" field
+        // C) username with IP prefix + "mobile" field
+        
+        const rawUsername = process.env.INSPAY_USERNAME.replace(/^IP/, '');
+        const ipUsername = "IP" + rawUsername;
+        
+        const attempts = [
+            { username: rawUsername, field: 'number' },
+            { username: ipUsername, field: 'number' },
+            { username: ipUsername, field: 'mobile' }
+        ];
+
+        let lastResponse = null;
+        let success = false;
+
+        for (const attempt of attempts) {
+            const payload = {
+                username: attempt.username,
+                token: token,
+                opcode: operator, // v3 uses opcode
+                amount: amount.toString(),
+                orderid: orderid
+            };
+            payload[attempt.field] = mobile;
+
+            console.log(`REQUEST (Attempt ${attempts.indexOf(attempt) + 1}):`, { ...payload, token: 'REDACTED' });
+
+            try {
+                const response = await axios.post(apiUrl, querystring.stringify(payload), {
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    timeout: 20000
+                });
+
+                lastResponse = response.data;
+                console.log(`RESPONSE (Attempt ${attempts.indexOf(attempt) + 1}):`, lastResponse);
+                logInspayDebug({ attempt: attempts.indexOf(attempt) + 1, payload: { ...payload, token: 'REDACTED' }, response: lastResponse });
+
+                // Check if success
+                if (lastResponse && (lastResponse.status === 'Success' || lastResponse.status === 'success' || lastResponse.status === 'Pending')) {
+                    success = true;
+                    break; 
+                }
+                
+                // If maintenance window is reported, we stop retrying as it's a server-side window
+                if (lastResponse && lastResponse.opid && lastResponse.opid.includes('Service unavailable')) {
+                    break;
+                }
+                
+            } catch (error) {
+                console.log(`ERROR (Attempt ${attempts.indexOf(attempt) + 1}):`, error.message);
+                logInspayDebug({ attempt: attempts.indexOf(attempt) + 1, error: error.message });
+                lastResponse = { status: 'Failure', message: error.message };
+            }
+        }
+
+        // 3. Final Handling
+        if (success) {
+            const txid = lastResponse.txid || orderid;
+            
+            await Transaction.create({
+                userId: req.user?._id || null,
+                amount,
+                type: 'recharge',
+                operator: operator,
+                rechargeNumber: mobile,
+                status: lastResponse.status.toLowerCase(),
+                paymentMethod: 'inspay',
+                transactionId: txid
+            });
+
+            if (req.user && (lastResponse.status === 'Success' || lastResponse.status === 'success')) {
+                await creditRechargeReward(req.user._id, amount, 'recharge', mobile);
+            }
+
+            return res.status(200).json({ success: true, data: lastResponse });
+        } else {
+            return res.status(400).json({
+                success: false,
+                message: lastResponse?.message || lastResponse?.opid || "Recharge Failed",
+                error: lastResponse
+            });
+        }
+
+    } catch (error) {
+        console.log("FINAL ERROR:", error.message);
+        logInspayDebug({ finalError: error.message });
+        return res.status(500).json({ success: false, message: "Server Error", error: error.message });
     }
 };

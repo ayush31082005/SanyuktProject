@@ -7,6 +7,14 @@ export default {
     theme: {
         extend: {
             colors: {
+                brand: {
+                    dark: 'var(--color-bg-deep)',
+                    card: 'var(--color-bg-card)',
+                    gold: 'var(--color-gold)',
+                    'gold-bright': 'var(--color-gold-bright)',
+                    cream: 'var(--color-cream)',
+                    brown: 'var(--color-muted-brown)',
+                },
                 primary: {
                     green: '#0A7A2F',
                     secondary: '#2F7A32',
@@ -20,6 +28,10 @@ export default {
                 background: {
                     light: '#F8FAF5',
                 },
+            },
+            fontFamily: {
+                serif: ['"Playfair Display"', 'serif'],
+                sans: ['Inter', 'sans-serif'],
             },
             keyframes: {
                 'fade-in': {

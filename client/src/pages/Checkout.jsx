@@ -3,6 +3,10 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { ChevronLeft, CreditCard, Truck, Shield, MapPin, Phone, Mail, User, Package, IndianRupee } from 'lucide-react';
 import api, { API_URL } from '../api';
 import { Snackbar, Alert, Fade } from '@mui/material';
+import { addressData } from '../data/addressData';
+import { ChevronDown, Search } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useRef } from 'react';
 
 const CheckoutPage = () => {
     const location = useLocation();
@@ -14,6 +18,16 @@ const CheckoutPage = () => {
     const [orderPlaced, setOrderPlaced] = useState(false);
     const [orderDetails, setOrderDetails] = useState(null);
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+    
+    // State for dropdowns
+    const [isStateDropdownOpen, setIsStateDropdownOpen] = useState(false);
+    const [stateSearch, setStateSearch] = useState('');
+    const stateDropdownRef = useRef(null);
+
+    const states = Object.keys(addressData).sort();
+    const filteredStates = states.filter(s =>
+        s.toLowerCase().includes(stateSearch.toLowerCase())
+    );
 
     // Form states
     const [shippingInfo, setShippingInfo] = useState({
@@ -40,6 +54,17 @@ const CheckoutPage = () => {
             setPaymentMethod(availableMethods[0]);
         }
     }, [availableMethods, paymentMethod]);
+
+    // Handle click outside for dropdowns
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (stateDropdownRef.current && !stateDropdownRef.current.contains(event.target)) {
+                setIsStateDropdownOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     // Agar product नहीं है तो redirect
     useEffect(() => {
@@ -138,7 +163,7 @@ const CheckoutPage = () => {
                     contact: shippingInfo.phone,
                 },
                 theme: {
-                    color: "#0A7A2F",
+                    color: "#C8A96A",
                 },
             };
 
@@ -380,14 +405,63 @@ const CheckoutPage = () => {
                                     <label className="block text-sm font-medium text-gray-700 mb-1">
                                         State *
                                     </label>
-                                    <input
-                                        type="text"
-                                        name="state"
-                                        value={shippingInfo.state}
-                                        onChange={handleInputChange}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A7A2F] focus:border-transparent"
-                                        placeholder="State"
-                                    />
+                                    <div className="relative" ref={stateDropdownRef}>
+                                        <div
+                                            onClick={() => setIsStateDropdownOpen(!isStateDropdownOpen)}
+                                            className="w-full px-4 py-2 border border-gray-300 rounded-lg flex items-center justify-between cursor-pointer focus:ring-2 focus:ring-[#0A7A2F] transition-all bg-white"
+                                        >
+                                            <span className={shippingInfo.state ? 'text-gray-800' : 'text-gray-400'}>
+                                                {shippingInfo.state || 'Select State'}
+                                            </span>
+                                            <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform ${isStateDropdownOpen ? 'rotate-180' : ''}`} />
+                                        </div>
+
+                                        <AnimatePresence>
+                                            {isStateDropdownOpen && (
+                                                <motion.div
+                                                    initial={{ opacity: 0, y: -10 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    exit={{ opacity: 0, y: -10 }}
+                                                    className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden"
+                                                >
+                                                    <div className="p-2 bg-gray-50 border-b border-gray-100">
+                                                        <div className="relative">
+                                                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                                                            <input
+                                                                type="text"
+                                                                placeholder="Search state..."
+                                                                value={stateSearch}
+                                                                onChange={(e) => setStateSearch(e.target.value)}
+                                                                onClick={(e) => e.stopPropagation()}
+                                                                className="w-full pl-9 pr-3 py-1.5 text-sm border border-gray-200 rounded-md focus:border-[#0A7A2F] focus:outline-none bg-white"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div className="max-h-60 overflow-y-auto">
+                                                        {filteredStates.length > 0 ? (
+                                                            filteredStates.map((st) => (
+                                                                <div
+                                                                    key={st}
+                                                                    onClick={() => {
+                                                                        setShippingInfo({ ...shippingInfo, state: st });
+                                                                        setIsStateDropdownOpen(false);
+                                                                        setStateSearch('');
+                                                                    }}
+                                                                    className={`px-4 py-2 text-sm cursor-pointer transition-colors hover:bg-green-50 hover:text-[#0A7A2F] ${shippingInfo.state === st ? 'bg-green-50 text-[#0A7A2F] font-bold' : 'text-gray-700'}`}
+                                                                >
+                                                                    {st}
+                                                                </div>
+                                                            ))
+                                                        ) : (
+                                                            <div className="px-4 py-4 text-sm text-gray-500 text-center italic">
+                                                                No states found
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
+                                    </div>
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">

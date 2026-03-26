@@ -692,25 +692,12 @@ export const addressData = {
         "Uttarkashi": {}
     },
     "Uttar Pradesh": {
-        "Agra": {
-            "Agra North": {
-                "Etmadpur": {
-                    "Etmadpur Council": [
-                        "Etmadpur Village",
-                        "Burj Maan Singh"
-                    ],
-                    "Chhalesar Council": [
-                        "Chhalesar",
-                        "Kuberpur"
-                    ]
-                }
-            }
-        },
+        "Agra": {},
         "Aligarh": {},
-        "Allahabad": {},
+        "Prayagraj": {},
         "Ambedkar Nagar": {},
-        "Amethi (Chatrapati Sahuji Mahraj Nagar)": {},
-        "Amroha (J.P. Nagar)": {},
+        "Amethi": {},
+        "Amroha": {},
         "Auraiya": {},
         "Azamgarh": {},
         "Baghpat": {},
@@ -730,7 +717,7 @@ export const addressData = {
         "Deoria": {},
         "Etah": {},
         "Etawah": {},
-        "Faizabad": {},
+        "Ayodhya": {},
         "Farrukhabad": {},
         "Fatehpur": {},
         "Firozabad": {},
@@ -740,7 +727,7 @@ export const addressData = {
         "Gonda": {},
         "Gorakhpur": {},
         "Hamirpur": {},
-        "Hapur (Panchsheel Nagar)": {},
+        "Hapur": {},
         "Hardoi": {},
         "Hathras": {},
         "Jalaun": {},
@@ -749,50 +736,12 @@ export const addressData = {
         "Kannauj": {},
         "Kanpur Dehat": {},
         "Kanpur Nagar": {},
-        "Kanshiram Nagar (Kasganj)": {},
+        "Kasganj": {},
         "Kaushambi": {},
-        "Kushinagar (Padrauna)": {},
-        "Lakhimpur - Kheri": {},
+        "Kushinagar": {},
+        "Lakhimpur Kheri": {},
         "Lalitpur": {},
-        "Lucknow": {
-            "Lucknow Cantt.": {
-                "Sarojini Nagar": {
-                    "Amausi Council": [
-                        "Amausi Village",
-                        "Hariharpur"
-                    ],
-                    "Piparsand Council": [
-                        "Piparsand Village",
-                        "Kila"
-                    ]
-                }
-            },
-            "Lucknow Central": {
-                "Chinhat": {
-                    "Chinhat Council": [
-                        "Chinhat Village",
-                        "Ismailganj",
-                        "Malhour"
-                    ],
-                    "Gosainganj Council": [
-                        "Sarsawan",
-                        "Arjunganj"
-                    ]
-                }
-            },
-            "Lucknow North": {
-                "Bakshi Ka Talab": {
-                    "BKT Council": [
-                        "BKT Village",
-                        "Indaur"
-                    ],
-                    "Itaunja Council": [
-                        "Itaunja",
-                        "Manpur"
-                    ]
-                }
-            }
-        },
+        "Lucknow": {},
         "Maharajganj": {},
         "Mahoba": {},
         "Mainpuri": {},
@@ -804,13 +753,13 @@ export const addressData = {
         "Muzaffarnagar": {},
         "Pilibhit": {},
         "Pratapgarh": {},
-        "RaeBareli": {},
+        "Raebareli": {},
         "Rampur": {},
         "Saharanpur": {},
-        "Sambhal (Bhim Nagar)": {},
+        "Sambhal": {},
         "Sant Kabir Nagar": {},
         "Shahjahanpur": {},
-        "Shamali (Prabuddh Nagar)": {},
+        "Shamli": {},
         "Shravasti": {},
         "Siddharth Nagar": {},
         "Sitapur": {},

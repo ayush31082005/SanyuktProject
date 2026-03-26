@@ -123,7 +123,7 @@ const IdCard = () => {
             </div>
 
             {/* Print Styles */}
-            <style jsx>{`
+            <style>{`
                 @media print {
                     body {
                         background: white;
@@ -136,5 +136,6 @@ const IdCard = () => {
         </div>
     );
 };
+
 
 export default IdCard;

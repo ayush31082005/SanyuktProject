@@ -3,41 +3,39 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 
 const HeroSection = ({ currentSlide, setCurrentSlide, heroSlides, isLoggedIn, userRole, handleNavigation }) => {
+    // Content always LEFT, Image always RIGHT
+
     return (
-        <section className="relative h-[600px] md:h-[750px] overflow-hidden bg-[#0A1A0F]">
+        <section className="relative overflow-hidden bg-[#0D0D0D] flex flex-col">
             <AnimatePresence mode="wait">
                 <motion.div
                     key={currentSlide}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 1.5 }}
-                    className="absolute inset-0"
+                    transition={{ duration: 1 }}
+                    className="flex flex-col h-auto md:flex-1"
                 >
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#0A1A0F]/90 via-[#0A1A0F]/60 to-transparent z-10"></div>
-                    <img
-                        src={heroSlides[currentSlide].image}
-                        alt={`Slide ${currentSlide + 1}`}
-                        className="w-full h-full object-cover scale-105"
-                    />
-                    <div className="absolute inset-0 z-20 flex items-center">
-                        <div className="container mx-auto px-6">
+                    <div className="container mx-auto px-4 sm:px-6 relative z-20 pt-2 pb-1 md:py-4">
+                        <div className="grid md:grid-cols-2 gap-3 md:gap-4 items-start md:items-center w-full">
+                            
+                            {/* Content Side */}
                             <motion.div
-                                initial={{ y: 30, opacity: 0 }}
-                                animate={{ y: 0, opacity: 1 }}
-                                transition={{ delay: 0.5, duration: 0.8 }}
-                                className="max-w-4xl mx-auto text-center"
+                                initial={{ x: -60, opacity: 0 }}
+                                animate={{ x: 0, opacity: 1 }}
+                                transition={{ delay: 0.3, duration: 0.8 }}
+                                className="space-y-2 text-center md:text-left flex flex-col justify-center"
                             >
-                                <h1 className="text-2xl sm:text-4xl md:text-6xl font-extrabold mb-4 leading-tight text-white tracking-tight">
+                                <h1 className="text-xl sm:text-3xl md:text-5xl lg:text-5xl font-serif font-bold leading-tight text-[#F5E6C8] tracking-tight">
                                     {heroSlides[currentSlide].title}
                                 </h1>
-                                <h2 className="text-base sm:text-xl md:text-2xl text-[#F7931E] font-semibold mb-6">
+                                <h2 className="text-[10px] sm:text-base md:text-xl text-[#C8A96A] font-bold uppercase tracking-[0.2em] sm:tracking-[0.4em] mt-1">
                                     {heroSlides[currentSlide].subtitle}
                                 </h2>
-                                <p className="text-sm sm:text-base md:text-xl mb-8 text-gray-300 leading-relaxed max-w-2xl mx-auto font-light">
+                                <p className="text-[10px] sm:text-sm md:text-base text-[#F5E6C8]/60 leading-relaxed font-light max-w-xl mx-auto md:mx-0">
                                     {heroSlides[currentSlide].description}
                                 </p>
-                                <div className="flex flex-wrap justify-center gap-4">
+                                <div className="flex flex-wrap gap-4 pt-2 justify-center md:justify-start">
                                     <motion.button
                                         whileHover={{ scale: 1.05 }}
                                         whileTap={{ scale: 0.95 }}
@@ -48,7 +46,7 @@ const HeroSection = ({ currentSlide, setCurrentSlide, heroSlides, isLoggedIn, us
                                                 handleNavigation('/register');
                                             }
                                         }}
-                                        className="px-8 py-4 bg-[#F7931E] text-white font-bold rounded-full hover:bg-[#e07d0b] transition-all shadow-xl shadow-orange-900/20 flex items-center space-x-3 text-base"
+                                        className="px-8 py-2 bg-[#C8A96A] text-[#0D0D0D] font-bold rounded-sm hover:bg-[#F5E6C8] transition-all duration-300 shadow-lg flex items-center space-x-2 text-xs uppercase tracking-widest"
                                     >
                                         <span>
                                             {isLoggedIn
@@ -56,31 +54,48 @@ const HeroSection = ({ currentSlide, setCurrentSlide, heroSlides, isLoggedIn, us
                                                 : 'Join Now'
                                             }
                                         </span>
-                                        <ArrowRight className="w-5 h-5" />
+                                        <ArrowRight className="w-4 h-4" />
                                     </motion.button>
                                     <motion.button
-                                        whileHover={{ scale: 1.05 }}
-                                        whileTap={{ scale: 0.95 }}
+                                        whileHover={{ backgroundColor: 'rgba(200, 169, 106, 0.1)' }}
+                                        whileTap={{ scale: 0.98 }}
                                         onClick={() => handleNavigation('/contact')}
-                                        className="px-8 py-4 border-2 border-white/30 backdrop-blur-md text-white font-bold rounded-full hover:bg-white hover:text-[#0A7A2F] transition-all text-base"
+                                        className="px-8 py-2 border border-[#C8A96A]/50 text-[#C8A96A] font-bold rounded-sm transition-all duration-300 text-xs uppercase tracking-widest"
                                     >
                                         Contact Us
                                     </motion.button>
                                 </div>
                             </motion.div>
+
+                            {/* Image Side */}
+                            <motion.div
+                                initial={{ x: 60, opacity: 0 }}
+                                animate={{ x: 0, opacity: 1 }}
+                                transition={{ delay: 0.5, duration: 0.8 }}
+                                className="relative flex"
+                            >
+                                <div className="relative rounded-sm overflow-hidden shadow-2xl border border-[#C8A96A]/10 w-full aspect-[4/3] md:aspect-auto md:h-[220px] lg:h-[280px]">
+                                    <img
+                                        src={heroSlides[currentSlide].image}
+                                        alt={`Slide ${currentSlide + 1}`}
+                                        className="w-full h-full object-cover"
+                                    />
+                                    {/* Overlay gradient */}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-[#0D0D0D]/40 via-transparent to-[#0D0D0D]/20"></div>
+                                </div>
+                                {/* Decorative elements */}
+                                <div className="absolute -bottom-4 -right-4 w-24 h-24 border-2 border-[#C8A96A]/20 rounded-sm -z-10"></div>
+                                <div className="absolute -top-4 -left-4 w-16 h-16 border-2 border-[#C8A96A]/10 rounded-sm -z-10"></div>
+                            </motion.div>
+
                         </div>
                     </div>
+
+                    {/* Background subtle gradient */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#0D0D0D] via-[#121212] to-[#0D0D0D] z-0"></div>
                 </motion.div>
             </AnimatePresence>
-            <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-30 flex space-x-3">
-                {heroSlides.map((_, index) => (
-                    <button
-                        key={index}
-                        onClick={() => setCurrentSlide(index)}
-                        className={`w-3 h-3 rounded-full transition-all duration-300 ${index === currentSlide ? 'w-10 bg-[#F7931E]' : 'bg-white/30 hover:bg-white'}`}
-                    />
-                ))}
-            </div>
+
         </section>
     );
 };

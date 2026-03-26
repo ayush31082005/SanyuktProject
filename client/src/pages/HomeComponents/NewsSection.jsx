@@ -15,7 +15,8 @@ const NewsSection = () => {
 
     const fetchNews = async () => {
         try {
-            const { data } = await api.get('/news');
+            const { data } = await api.get(`/news?t=${new Date().getTime()}`);
+
             if (data.success) {
                 setNewsItems(data.data);
             }
@@ -57,21 +58,21 @@ const NewsSection = () => {
 
     if (loading) {
         return (
-            <div className="py-16 md:py-24 bg-[#F8FAF5] flex items-center justify-center">
-                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#0A7A2F]"></div>
+            <div className="py-10 bg-[#121212] flex items-center justify-center">
+                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#C8A96A]"></div>
             </div>
         );
     }
 
     if (!loading && newsItems.length === 0) {
         return (
-            <section className="py-16 md:py-24 bg-[#F8FAF5] text-center" >
+            <section className="py-5 bg-[#121212] text-center" >
                 <div className="container mx-auto px-4">
-                    <h2 className="text-2xl md:text-3xl font-bold text-[#0A7A2F] mb-3">
-                        Latest News & Updates
+                    <h2 className="text-2xl md:text-4xl font-serif font-bold text-[#F5E6C8] mb-3">
+                        Latest News & <span className="text-[#C8A96A]">Updates</span>
                     </h2>
-                    <div className="w-20 h-1 bg-[#F7931E] mx-auto rounded-full mb-6"></div>
-                    <p className="text-gray-500 max-w-2xl mx-auto">
+                    <div className="w-16 h-[1px] bg-[#C8A96A]/40 mx-auto mb-3"></div>
+                    <p className="text-[#F5E6C8]/40 max-w-2xl mx-auto text-lg font-light">
                         No news updates available at the moment. Please check back later or visit the admin panel to add news.
                     </p>
                 </div>
@@ -79,68 +80,60 @@ const NewsSection = () => {
         );
     }
     return (
-        <section className="py-16 md:py-24 bg-[#F8FAF5]" >
-            <div className="container mx-auto px-4">
-                <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-center text-[#0A7A2F] mb-3">
-                    Latest News & Updates
+        <section className="py-4 bg-[#121212] relative overflow-hidden" >
+            <div className="container mx-auto px-4 max-w-6xl">
+                <h2 className="text-xl md:text-3xl font-serif font-bold text-center text-[#F5E6C8] mb-1 uppercase tracking-widest">
+                    Latest News & <span className="text-[#C8A96A]">Updates</span>
                 </h2>
-                <div className="w-20 h-1 bg-[#F7931E] mx-auto rounded-full mb-6"></div>
-                <p className="text-center text-gray-500 mb-12 max-w-2xl mx-auto text-sm md:text-base">
-                    Stay updated with the latest company announcements, seminar schedules, product launches, and success stories from our growing Sanyukt Parivaar family.
+                <div className="w-16 h-[1px] bg-[#C8A96A]/40 mx-auto mb-2"></div>
+                <p className="text-center text-[#F5E6C8]/60 mb-3 max-w-2xl mx-auto text-[10px] md:text-xs font-light tracking-tight uppercase">
+                    Stay updated with the latest company announcements and success stories.
                 </p>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     {newsItems.map((news) => (
                         <div
                             key={news._id}
                             onClick={() => handleNewsClick(news)}
-                            className="group bg-white rounded-3xl shadow-md hover:shadow-2xl transition-all duration-500 overflow-hidden cursor-pointer flex flex-col border border-green-50"
+                            className="luxury-box transition-all duration-500 overflow-hidden cursor-pointer flex flex-col group"
                         >
                             {/* Cover Image */}
-                            <div className="relative h-56 overflow-hidden">
+                            <div className="relative h-24 overflow-hidden p-1">
                                 <img
                                     src={getImageUrl(news.image)}
                                     alt={news.title}
-                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                    className="w-full h-full object-cover"
                                 />
-                                <div className="absolute top-4 left-4">
-                                    <span className="px-3 py-1 bg-white/90 backdrop-blur-md text-[#0A7A2F] text-[10px] font-bold tracking-widest uppercase rounded-lg shadow-sm">
+                                <div className="absolute top-2 left-2">
+                                    <span className="px-2 py-0.5 bg-[#C8A96A] text-[#0D0D0D] text-[7px] font-bold tracking-widest uppercase shadow-lg">
                                         {news.category}
                                     </span>
                                 </div>
                             </div>
 
                             {/* Card Body */}
-                            <div className="p-6 flex flex-col flex-1">
-                                <div className="flex items-center gap-3 mb-4 text-gray-400 text-xs font-medium">
-                                    <div className="flex items-center gap-1">
-                                        <Calendar className="w-3.5 h-3.5" />
-                                        <span>{formatDate(news.createdAt)}</span>
-                                    </div>
-                                    <span className="text-gray-200">•</span>
-                                    <div className="flex items-center gap-1">
-                                        <Clock className="w-3.5 h-3.5" />
-                                        <span>{news.readTime}</span>
-                                    </div>
+                            <div className="p-2.5 flex flex-col flex-1">
+                                <div className="flex items-center gap-2 mb-1.5 text-[#F5E6C8]/40 text-[9px] font-medium uppercase tracking-tight">
+                                    <Calendar className="w-2.5 h-2.5 text-[#C8A96A]" />
+                                    <span>{formatDate(news.createdAt)}</span>
+                                    <span className="text-[#C8A96A] font-bold mx-1">|</span>
+                                    <span>{news.readTime}</span>
                                 </div>
 
-                                <h4 className="font-bold text-gray-900 text-lg mb-4 leading-snug group-hover:text-[#0A7A2F] transition-colors duration-300 line-clamp-2">
+                                <h4 className="font-bold text-[#F5E6C8] text-xs mb-1 leading-snug group-hover:text-[#C8A96A] transition-colors line-clamp-2 uppercase tracking-tight">
                                     {news.title}
                                 </h4>
 
-                                <p className="text-sm text-gray-500 line-clamp-2 mb-6 flex-1">
+                                <p className="text-[10px] text-gray-500 line-clamp-2 mb-2 flex-1 font-light">
                                     {news.content}
                                 </p>
 
-                                <div className="flex items-center justify-between pt-4 border-t border-gray-50">
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-8 h-8 rounded-full bg-[#0A7A2F] text-white flex items-center justify-center font-bold text-[10px]">
+                                <div className="flex items-center justify-between pt-2 border-t border-[#C8A96A]/10">
+                                    <span className="text-[9px] font-bold text-[#C8A96A] uppercase tracking-widest">READ MORE</span>
+                                    <div className="flex items-center gap-1">
+                                        <div className="w-4 h-4 bg-[#C8A96A] text-[#0D0D0D] flex items-center justify-center font-bold text-[7px]">
                                             {news.authorAvatar || (news.author ? news.author[0] : 'A')}
                                         </div>
-                                        <span className="text-xs font-semibold text-gray-700">{news.author || 'Admin'}</span>
-                                    </div>
-                                    <div className="flex items-center gap-1 text-[#0A7A2F] font-bold text-xs group-hover:gap-2 transition-all">
-                                        READ MORE <ArrowRight className="w-3.5 h-3.5" />
                                     </div>
                                 </div>
                             </div>

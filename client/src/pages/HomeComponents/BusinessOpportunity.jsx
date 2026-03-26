@@ -3,36 +3,39 @@ import { Check } from 'lucide-react';
 
 const BusinessOpportunity = ({ businessHighlights, businessImage, handleNavigation }) => {
     return (
-        <section className="py-12 md:py-16 bg-gradient-to-r from-[#0A7A2F] to-[#2F7A32] text-white" >
-            <div className="container mx-auto px-4">
+        <section className="py-4 bg-[#0D0D0D] text-white relative overflow-hidden border-y border-[#C8A96A]/10" >
+            <div className="container mx-auto px-4 max-w-5xl">
                 <div className="grid md:grid-cols-2 gap-6 items-center">
-                    <div className="space-y-3">
-                        <h2 className="text-xl md:text-2xl font-bold">
-                            A Powerful Business Opportunity
+                    <div className="space-y-2 flex flex-col justify-center">
+                        <h2 className="text-xl md:text-3xl font-serif font-bold text-[#F5E6C8] mb-1 leading-tight uppercase tracking-widest">
+                            A Powerful <span className="text-[#C8A96A]">Business Opportunity</span>
                         </h2>
-                        <p className="text-gray-200 text-xs md:text-sm leading-relaxed">
-                            Sanyukt Parivaar & Rich Life Pvt.Ltd. offers a proven MLM business plan that allows individuals to earn through product sales, team building, and leadership development. Whether you are a student, professional, homemaker, or entrepreneur - this opportunity is open to all.
+                        <div className="w-16 h-[1px] bg-[#C8A96A]/40 mb-3"></div>
+                        <p className="text-[#F5E6C8]/70 text-xs font-light leading-relaxed mb-3">
+                            Offers a proven MLM business plan that allows individuals to earn through product sales, team building, and leadership development.
                         </p>
-                        <div className="space-y-1">
+                        <div className="space-y-1.5 mb-2">
                             {businessHighlights.map((highlight, index) => (
                                 <div key={index} className="flex items-center space-x-2">
-                                    <Check className="w-3 h-3 text-[#F7931E] flex-shrink-0" />
-                                    <span className="text-xs">{highlight}</span>
+                                    <div className="w-4 h-4 bg-[#C8A96A]/10 border border-[#C8A96A]/30 flex items-center justify-center flex-shrink-0">
+                                        <Check className="w-2.5 h-2.5 text-[#C8A96A]" />
+                                    </div>
+                                    <span className="text-[11px] text-[#F5E6C8]/90 font-medium uppercase tracking-tight">{highlight}</span>
                                 </div>
                             ))}
                         </div>
                         <button
                             onClick={() => handleNavigation('/opportunity')}
-                            className="inline-block px-4 py-2 bg-[#F7931E] text-white text-xs font-semibold rounded-lg hover:bg-[#e07d0b] transform hover:-translate-y-1 transition-all"
+                            className="luxury-button w-fit"
                         >
                             View Opportunities
                         </button>
                     </div>
-                    <div className="relative">
-                        <img src={businessImage} alt="Business Opportunity" className="rounded-lg shadow-2xl w-full h-48 md:h-64 object-cover" />
-                        <div className="absolute -top-2 -right-2 bg-[#F7931E] p-3 rounded-lg shadow-xl">
-                            <div className="text-base font-bold">Unlimited</div>
-                            <div className="text-xs">Income Potential</div>
+                    <div className="relative luxury-box p-1 h-fit">
+                        <img src={businessImage} alt="Business Opportunity" className="w-full h-auto max-h-[220px] object-cover" />
+                        <div className="absolute -bottom-2 -right-2 bg-[#C8A96A] p-3 px-4 shadow-2xl">
+                            <div className="text-sm font-bold text-[#0D0D0D] uppercase tracking-tighter">Unlimited</div>
+                            <div className="text-[8px] font-bold text-[#0D0D0D]/70 uppercase tracking-widest leading-none">Income Potential</div>
                         </div>
                     </div>
                 </div>

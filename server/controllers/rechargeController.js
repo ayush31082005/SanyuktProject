@@ -12,7 +12,13 @@ const fs = require('fs');
 const logInspayDebug = (data) => {
     const logPath = path.join(__dirname, '../inspay_debug.log');
     const timestamp = new Date().toISOString();
-    const entry = `[${timestamp}] ${JSON.stringify(data, null, 2)}\n\n---\n\n`;
+
+    const safe = { ...data };
+    if (typeof safe.response === 'string' && safe.response.length > 2000) {
+        safe.response = `${safe.response.slice(0, 2000)}...[truncated]`;
+    }
+
+    const entry = `[${timestamp}] ${JSON.stringify(safe, null, 2)}\n\n---\n\n`;
     fs.appendFileSync(logPath, entry);
 };
 
@@ -250,6 +256,38 @@ const creditRechargeReward = async (userId, amount, type, rechargeNumber) => {
     }
 };
 
+const isInspaySuccess = (resp) => {
+    if (!resp) return false;
+    return resp.status === 'Success' || resp.status === 'success' || resp.status === 'Pending';
+};
+
+const isInvalidOrderIdError = (resp) => {
+    const msg = `${resp?.message || ""} ${resp?.opid || ""}`.toLowerCase();
+    return msg.includes('invalid orderid') || msg.includes('invalid order id');
+};
+
+const getOperatorCandidates = (opIdRaw) => {
+    const opId = (opIdRaw || "").toString().toLowerCase();
+    const map = {
+        airtel: ['AT', 'AIRTEL'],
+        jio: ['RJ', 'JIO', 'JO'],
+        vi: ['VF', 'VI'],
+        bsnl: ['BS', 'BSNL']
+    };
+    return map[opId] || [opIdRaw?.toString() || ''];
+};
+
+const normalizeInspayUrl = (url) => {
+    if (!url) return url;
+    // Inspay's www host serves a login page with a JS redirect to non-www,
+    // which breaks API calls. Always prefer non-www.
+    return url.replace('://www.', '://');
+};
+
+const isHtmlResponse = (data) => {
+    return typeof data === 'string' && data.toLowerCase().includes('<html');
+};
+
 // @desc    Perform recharge using Inspay API (POST with Fallback)
 // @route   POST /api/recharge
 // @access  Protected
@@ -267,12 +305,37 @@ exports.inspayRecharge = async (req, res) => {
             return res.status(400).json({ success: false, message: "Mobile number must be exactly 10 digits" });
         }
 
-        // Use v3 endpoint as it accepts FORM data
-        const apiUrl = "http://www.connect.inspay.in/v3/recharge/api";
+        // Inspay endpoints
+        // v3 generally accepts form data and often requires orderid
+        const apiUrlV3 = normalizeInspayUrl(process.env.INSPAY_V3_API_URL || "http://connect.inspay.in/v3/recharge/api");
+        // v2/legacy endpoint sometimes works without orderid (gateway dependent)
+        const apiUrlV2 = normalizeInspayUrl(process.env.INSPAY_API_URL || "https://connect.inspay.in/api/recharge/post");
         const token = process.env.INSPAY_TOKEN;
-        const operator = mapOperatorToInspay(opId);
-        // Using exactly 10-digit numeric ID as many Indian APIs have this limit
-        const orderid = Math.floor(1000000000 + Math.random() * 9000000000).toString();
+        if (!token) {
+            return res.status(503).json({ success: false, message: "Recharge service not configured (missing INSPAY_TOKEN)." });
+        }
+
+        if (!process.env.INSPAY_USERNAME) {
+            return res.status(503).json({ success: false, message: "Recharge service not configured (missing INSPAY_USERNAME)." });
+        }
+
+        const operatorCandidates = Array.from(new Set([
+            ...getOperatorCandidates(opId),
+            mapOperatorToInspay(opId)
+        ].filter(Boolean)));
+
+        const useProxy = process.env.INSPAY_USE_PROXY === 'true';
+        const axiosBaseOptions = {
+            timeout: 20000,
+            ...(useProxy ? {} : { proxy: false })
+        };
+
+        // Inspay tends to reject some numeric-only order IDs; try a few safe formats.
+        const orderIdCandidates = [
+            `ORD${Date.now()}`,
+            Date.now().toString(),
+            Math.floor(1000000000 + Math.random() * 9000000000).toString()
+        ];
 
         // 2. Retry Logic Matrix
         // We try: 
@@ -291,56 +354,196 @@ exports.inspayRecharge = async (req, res) => {
 
         let lastResponse = null;
         let success = false;
+        let usedOrderId = null;
+        let usedEndpoint = null;
+        let usedOperatorCode = null;
 
+        // ---- Try v3 ----
         for (const attempt of attempts) {
-            const payload = {
-                username: attempt.username,
-                token: token,
-                opcode: operator, // v3 uses opcode
-                amount: amount.toString(),
-                orderid: orderid
+            for (const operatorCode of operatorCandidates) {
+                for (const orderid of orderIdCandidates) {
+                    const payload = {
+                        username: attempt.username,
+                        token: token,
+                        // Some Inspay variants use `opcode`, others use `operator` even on v3.
+                        // Send both with the same value to be resilient.
+                        opcode: operatorCode,
+                        operator: operatorCode,
+                        amount: amount.toString(),
+                        orderid: orderid
+                    };
+                    payload[attempt.field] = mobile;
+
+                    console.log(`REQUEST (v3 Attempt ${attempts.indexOf(attempt) + 1}):`, { ...payload, token: 'REDACTED' });
+
+                    try {
+                        const response = await axios.post(apiUrlV3, querystring.stringify(payload), {
+                            ...axiosBaseOptions,
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                            maxRedirects: 0,
+                            validateStatus: () => true
+                        });
+
+                        lastResponse = response.data;
+                        console.log(`RESPONSE (v3 Attempt ${attempts.indexOf(attempt) + 1}):`, lastResponse);
+                        logInspayDebug({
+                            endpoint: 'v3',
+                            attempt: attempts.indexOf(attempt) + 1,
+                            status: response.status,
+                            location: response.headers?.location,
+                            payload: { ...payload, token: 'REDACTED' },
+                            response: lastResponse
+                        });
+
+                        if (isHtmlResponse(lastResponse) || response.status === 301 || response.status === 302) {
+                            lastResponse = {
+                                status: 'Failure',
+                                message:
+                                    'Inspay API returned a login/HTML page (verify token/username have API access; also check HTTP_PROXY/HTTPS_PROXY).'
+                            };
+                            break;
+                        }
+
+                        if (isInspaySuccess(lastResponse)) {
+                            success = true;
+                            usedOrderId = orderid;
+                            usedEndpoint = 'v3';
+                            usedOperatorCode = operatorCode;
+                            break;
+                        }
+
+                        // If the gateway explicitly says orderid is invalid, try a different format (same attempt/operator).
+                        if (isInvalidOrderIdError(lastResponse)) {
+                            continue;
+                        }
+
+                        // If maintenance window is reported, we stop retrying as it's a server-side window
+                        if (lastResponse && lastResponse.opid && lastResponse.opid.includes('Service unavailable')) {
+                            break;
+                        }
+
+                    } catch (error) {
+                        console.log(`ERROR (v3 Attempt ${attempts.indexOf(attempt) + 1}):`, error.message);
+                        logInspayDebug({ endpoint: 'v3', attempt: attempts.indexOf(attempt) + 1, error: error.message });
+                        lastResponse = { status: 'Failure', message: error.message };
+                    }
+                }
+
+                if (success) break;
+            }
+
+            if (success) break;
+        }
+
+        // ---- Fallback to v2/legacy (no orderid) ----
+        if (!success) {
+            const fields = ['mobile', 'number'];
+            const usernames = Array.from(new Set([rawUsername, ipUsername]));
+            const requestHeadersBase = {
+                'Accept': 'application/json,text/plain,*/*',
+                'User-Agent': 'SanyuktProject/1.0'
             };
-            payload[attempt.field] = mobile;
 
-            console.log(`REQUEST (Attempt ${attempts.indexOf(attempt) + 1}):`, { ...payload, token: 'REDACTED' });
+            for (const username of usernames) {
+                for (const operatorCode of operatorCandidates) {
+                    for (const field of fields) {
+                        const payload = {
+                            username,
+                            token,
+                            operator: operatorCode,
+                            amount: amount.toString(),
+                        };
+                        payload[field] = mobile;
 
-            try {
-                const response = await axios.post(apiUrl, querystring.stringify(payload), {
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    timeout: 20000
-                });
+                        console.log(`REQUEST (v2 Fallback):`, { ...payload, token: 'REDACTED' });
 
-                lastResponse = response.data;
-                console.log(`RESPONSE (Attempt ${attempts.indexOf(attempt) + 1}):`, lastResponse);
-                logInspayDebug({ attempt: attempts.indexOf(attempt) + 1, payload: { ...payload, token: 'REDACTED' }, response: lastResponse });
+                        try {
+                            // Try FORM first (most gateways expect form-encoded), then JSON
+                            const formResp = await axios.post(apiUrlV2, querystring.stringify(payload), {
+                        ...axiosBaseOptions,
+                        headers: { ...requestHeadersBase, 'Content-Type': 'application/x-www-form-urlencoded' },
+                        maxRedirects: 0,
+                        validateStatus: () => true
+                    });
 
-                // Check if success
-                if (lastResponse && (lastResponse.status === 'Success' || lastResponse.status === 'success' || lastResponse.status === 'Pending')) {
-                    success = true;
-                    break; 
+                            lastResponse = formResp.data;
+                            logInspayDebug({
+                                endpoint: 'v2',
+                                mode: 'form',
+                                status: formResp.status,
+                                location: formResp.headers?.location,
+                                payload: { ...payload, token: 'REDACTED' },
+                                response: lastResponse
+                            });
+
+                            if (isHtmlResponse(lastResponse) || formResp.status === 301 || formResp.status === 302) {
+                                lastResponse = {
+                                    status: 'Failure',
+                                    message:
+                                        'Inspay API returned a login/HTML page (check INSPAY_API_URL without www, and verify token/username have API access).'
+                                };
+                            } else if (isInspaySuccess(lastResponse)) {
+                                success = true;
+                                usedEndpoint = 'v2';
+                                usedOperatorCode = operatorCode;
+                                break;
+                            }
+
+                            const jsonResp = await axios.post(apiUrlV2, payload, {
+                                ...axiosBaseOptions,
+                                headers: { ...requestHeadersBase, 'Content-Type': 'application/json' },
+                                maxRedirects: 0,
+                                validateStatus: () => true
+                            });
+
+                            lastResponse = jsonResp.data;
+                            logInspayDebug({
+                                endpoint: 'v2',
+                                mode: 'json',
+                                status: jsonResp.status,
+                                location: jsonResp.headers?.location,
+                                payload: { ...payload, token: 'REDACTED' },
+                                response: lastResponse
+                            });
+
+                            if (isHtmlResponse(lastResponse) || jsonResp.status === 301 || jsonResp.status === 302) {
+                                lastResponse = {
+                                    status: 'Failure',
+                                    message:
+                                        'Inspay API returned a login/HTML page (check INSPAY_API_URL without www, and verify token/username have API access).'
+                                };
+                                continue;
+                            }
+
+                            if (isInspaySuccess(lastResponse)) {
+                                success = true;
+                                usedEndpoint = 'v2';
+                                usedOperatorCode = operatorCode;
+                                break;
+                            }
+
+                        } catch (error) {
+                            logInspayDebug({ endpoint: 'v2', error: error.message });
+                            lastResponse = { status: 'Failure', message: error.message };
+                        }
+                    }
+
+                    if (success) break;
                 }
-                
-                // If maintenance window is reported, we stop retrying as it's a server-side window
-                if (lastResponse && lastResponse.opid && lastResponse.opid.includes('Service unavailable')) {
-                    break;
-                }
-                
-            } catch (error) {
-                console.log(`ERROR (Attempt ${attempts.indexOf(attempt) + 1}):`, error.message);
-                logInspayDebug({ attempt: attempts.indexOf(attempt) + 1, error: error.message });
-                lastResponse = { status: 'Failure', message: error.message };
+
+                if (success) break;
             }
         }
 
         // 3. Final Handling
         if (success) {
-            const txid = lastResponse.txid || orderid;
+            const txid = lastResponse.txid || usedOrderId || `TXN_${Date.now()}`;
             
             await Transaction.create({
                 userId: req.user?._id || null,
                 amount,
                 type: 'recharge',
-                operator: operator,
+                operator: usedOperatorCode || operatorCandidates[0] || opId,
                 rechargeNumber: mobile,
                 status: lastResponse.status.toLowerCase(),
                 paymentMethod: 'inspay',
@@ -356,7 +559,17 @@ exports.inspayRecharge = async (req, res) => {
             return res.status(400).json({
                 success: false,
                 message: lastResponse?.message || lastResponse?.opid || "Recharge Failed",
-                error: lastResponse
+                error: lastResponse,
+                ...(process.env.NODE_ENV !== 'production'
+                    ? {
+                        debug: {
+                            v3: apiUrlV3,
+                            v2: apiUrlV2,
+                            operatorCandidates,
+                            triedOrderIds: orderIdCandidates
+                        }
+                    }
+                    : {})
             });
         }
 

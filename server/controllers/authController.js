@@ -401,12 +401,17 @@ exports.updateProfile = async (req, res) => {
 // ================= SUBMIT KYC =================
 exports.submitKyc = async (req, res) => {
     try {
-        const { aadharNumber, panNumber, bankDetails, kycDocuments } = req.body;
+        const { aadharNumber, panNumber, nominee, bankDetails, kycDocuments } = req.body;
+
+        if (!aadharNumber || !panNumber || !bankDetails?.accountNumber || !nominee?.name || !nominee?.relation) {
+            return res.status(400).json({ message: 'Aadhar, PAN, bank details, nominee name and nominee relation are required' });
+        }
 
         const updates = {
             kycStatus: 'Submitted',
             aadharNumber,
             panNumber,
+            nominee,
             bankDetails,
             kycDocuments
         };

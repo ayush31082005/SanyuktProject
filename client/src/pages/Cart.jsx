@@ -63,12 +63,12 @@ const CartPage = () => {
                     {/* Cart Items List */}
                     <div className="lg:col-span-2 space-y-6">
                         {cartItems.map((item) => (
-                            <div key={item._id} className="bg-[#1A1A1A] rounded-3xl border border-[#C8A96A]/10 p-6 sm:p-8 transition-all duration-300 hover:border-[#C8A96A]/30 hover:shadow-[0_0_40px_rgba(200,169,106,0.05)] relative overflow-hidden group">
+                            <div key={item._id} className="bg-[#1A1A1A] rounded-2xl sm:rounded-3xl border border-[#C8A96A]/10 p-4 sm:p-6 transition-all duration-300 hover:border-[#C8A96A]/30 hover:shadow-[0_0_40px_rgba(200,169,106,0.05)] relative overflow-hidden group">
                                 <div className="absolute top-0 right-0 w-32 h-32 bg-[#C8A96A]/5 rounded-bl-[100px] pointer-events-none -mr-10 -mt-10"></div>
                                 
-                                <div className="flex flex-col sm:flex-row gap-6 lg:gap-8 relative z-10">
+                                <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 lg:gap-8 relative z-10">
                                     {/* Item Image */}
-                                    <div className="w-full sm:w-40 h-40 flex-shrink-0 bg-[#0D0D0D] rounded-2xl overflow-hidden border border-[#C8A96A]/20 flex items-center justify-center relative transition-colors">
+                                    <div className="w-full sm:w-40 h-28 sm:h-40 flex-shrink-0 bg-[#0D0D0D] rounded-xl sm:rounded-2xl overflow-hidden border border-[#C8A96A]/20 flex items-center justify-center relative transition-colors">
                                         {item.image ? (
                                             <img
                                                 src={item.image.startsWith('http') ? item.image : `${API_URL}${item.image.startsWith('/uploads') ? item.image : '/uploads/' + item.image}`}
@@ -86,20 +86,20 @@ const CartPage = () => {
 
                                     {/* Item Info */}
                                     <div className="flex-1 min-w-0 flex flex-col justify-center">
-                                        <div className="flex justify-between items-start gap-4 mb-2">
-                                            <h3 className="font-serif font-bold text-xl md:text-2xl text-[#F5E6C8] line-clamp-2 leading-snug group-hover:text-[#C8A96A] transition-colors">
+                                        <div className="flex justify-between items-start gap-3 mb-2">
+                                            <h3 className="font-serif font-bold text-lg sm:text-xl md:text-2xl text-[#F5E6C8] line-clamp-2 leading-snug group-hover:text-[#C8A96A] transition-colors">
                                                 {item.name}
                                             </h3>
                                             <button
                                                 onClick={() => removeFromCart(item._id)}
-                                                className="p-2.5 text-[#F5E6C8]/40 hover:text-[#C8A96A] hover:bg-[#C8A96A]/10 border border-transparent hover:border-[#C8A96A]/20 rounded-xl transition-all flex-shrink-0"
+                                                className="p-2 text-[#F5E6C8]/40 hover:text-[#C8A96A] hover:bg-[#C8A96A]/10 border border-transparent hover:border-[#C8A96A]/20 rounded-xl transition-all flex-shrink-0"
                                                 title="Remove Item"
                                             >
-                                                <Trash2 size={20} />
+                                                <Trash2 size={18} />
                                             </button>
                                         </div>
 
-                                        <p className="text-[#F5E6C8]/50 text-sm line-clamp-2 mb-4 leading-relaxed font-medium">
+                                        <p className="text-[#F5E6C8]/50 text-xs sm:text-sm line-clamp-2 mb-3 leading-relaxed font-medium">
                                             {item.description || "Premium quality health and wellness product. Formulated for maximum results."}
                                         </p>
 
@@ -118,8 +118,8 @@ const CartPage = () => {
                                     </div>
                                 </div>
 
-                                <div className="mt-8 pt-6 border-t border-[#C8A96A]/10 flex flex-col sm:flex-row items-center justify-between gap-6 relative z-10">
-                                    <div className="flex items-center bg-[#0D0D0D] p-1.5 rounded-xl border border-[#C8A96A]/20 h-[52px]">
+                                <div className="mt-5 sm:mt-8 pt-4 sm:pt-6 border-t border-[#C8A96A]/10 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 sm:gap-5 relative z-10">
+                                    <div className="flex items-center justify-center sm:justify-start bg-[#0D0D0D] p-1.5 rounded-xl border border-[#C8A96A]/20 h-[52px] w-full sm:w-auto">
                                         <button
                                             onClick={() => updateQuantity(item._id, (item.cartQuantity || 1) - 1)}
                                             className="w-10 h-full flex items-center justify-center rounded-lg text-[#F5E6C8]/60 hover:text-[#0D0D0D] hover:bg-[#C8A96A] transition-all disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-[#F5E6C8]/60"
@@ -136,16 +136,18 @@ const CartPage = () => {
                                         </button>
                                     </div>
 
-                                    <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-4 md:gap-8 bg-[#0D0D0D] sm:bg-transparent p-4 sm:p-0 rounded-2xl sm:rounded-none">
+                                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between sm:justify-end w-full sm:w-auto gap-3 md:gap-8 bg-[#0D0D0D] sm:bg-transparent p-3 sm:p-0 rounded-2xl sm:rounded-none">
                                         <div className="text-left sm:text-right">
                                             <p className="text-[10px] text-[#C8A96A] font-bold uppercase tracking-[0.2em] mb-1">Item Total</p>
-                                            <p className="text-2xl font-black text-[#F5E6C8] tracking-tight">{formatCurrency((Number(item.price) || 0) * (Number(item.cartQuantity) || 1))}</p>
+                                            <p className="text-xl sm:text-2xl font-black text-[#F5E6C8] tracking-tight">{formatCurrency((Number(item.price) || 0) * (Number(item.cartQuantity) || 1))}</p>
                                         </div>
                                         <button
                                             onClick={() => handleCheckout(item)}
-                                            className="px-6 md:px-8 py-3.5 bg-gradient-to-r from-[#C8A96A] to-[#D4AF37] text-[#0D0D0D] rounded-xl font-black uppercase tracking-wider flex items-center gap-2 hover:shadow-[0_0_20px_rgba(200,169,106,0.3)] transition-all active:scale-95 flex-shrink-0"
+                                            className="w-full sm:w-auto min-w-[136px] px-5 md:px-8 py-3 bg-gradient-to-r from-[#C8A96A] to-[#D4AF37] text-[#0D0D0D] rounded-xl font-black uppercase tracking-[0.14em] text-sm md:text-base flex items-center justify-center gap-2 hover:shadow-[0_0_20px_rgba(200,169,106,0.3)] transition-all active:scale-95 flex-shrink-0 whitespace-nowrap"
                                         >
-                                            Buy Item <ArrowRight className="w-4 h-4" />
+                                            <span className="sm:hidden">Buy Now</span>
+                                            <span className="hidden sm:inline">Buy Item</span>
+                                            <ArrowRight className="w-4 h-4" />
                                         </button>
                                     </div>
                                 </div>

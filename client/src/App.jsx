@@ -6,6 +6,11 @@ import Footer from "./components/Footer";
 import MainRoutes from "./routes/MainRoutes";
 import { Toaster } from 'react-hot-toast';
 
+const PUBLIC_HEADER_OFFSET = {
+  xs: '60px',
+  md: '80px',
+};
+
 const App = () => {
   const location = useLocation();
 
@@ -21,7 +26,7 @@ const App = () => {
     <>
       <Toaster position="top-center" reverseOrder={false} />
       {!isAdminRoute && <Header />}
-      <Box sx={{ pt: !isAdminRoute ? { xs: '80px', md: '110px' } : 0 }}>
+      <Box sx={{ pt: !isAdminRoute ? PUBLIC_HEADER_OFFSET : 0 }}>
         <MainRoutes />
       </Box>
       {!isAdminRoute && !isAccountRoute && <Footer />}

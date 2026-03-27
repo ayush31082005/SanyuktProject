@@ -131,34 +131,15 @@ const Recharge = () => {
             return;
         }
 
-        setIsProcessingPayment(true);
-        const toastId = toast.loading("Processing recharge...");
-
-        try {
-            // Send POST request to /api/recharge as per requirement
-            const { data } = await api.post('/recharge', {
-                mobile: rechargeNumber,
-                operator: operator,
-                amount: Number(amount)
-            });
-
-            if (data.success) {
-                triggerSuccessAlert('Recharge Successful!', amount);
-                toast.success("Recharge Successful!", { id: toastId });
-                
-                // Clear forms based on type
-                if (type === 'mobile') { setMobileNumber(''); setMobileAmount(''); }
-                if (type === 'dth') { setDthNumber(''); setDthAmount(''); }
-                if (type === 'datacard') { setDataCardNumber(''); setDataCardAmount(''); }
-            } else {
-                toast.error(data.message || "Recharge Failed", { id: toastId });
-            }
-        } catch (error) {
-            console.error("Recharge Error:", error);
-            toast.error(error?.response?.data?.message || "Recharge Failed", { id: toastId });
-        } finally {
-            setIsProcessingPayment(false);
+        const numericAmount = Number(amount);
+        if (!Number.isFinite(numericAmount) || numericAmount <= 0) {
+            toast.error("Amount must be greater than 0");
+            return;
         }
+
+        setIsProcessingPayment(false);
+        setPendingRecharge({ operator, rechargeNumber, amount: numericAmount, type });
+        setShowPaymentModal(true);
     };
 
     const handleSelectPayment = async (method) => {
@@ -1136,7 +1117,10 @@ const Recharge = () => {
             {/* Payment Method Modal */}
             <PaymentMethodModal
                 isOpen={showPaymentModal}
-                onClose={() => setShowPaymentModal(false)}
+                onClose={() => {
+                    setShowPaymentModal(false);
+                    setPendingRecharge(null);
+                }}
                 onSelect={handleSelectPayment}
                 amount={pendingRecharge?.amount}
                 walletBalance={walletBalance}

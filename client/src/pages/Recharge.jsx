@@ -210,6 +210,11 @@ const Recharge = () => {
     1,
     Math.ceil(mobilePlans.length / MOBILE_PLANS_PER_PAGE)
   );
+  const validMobilePlanAmounts = new Set(
+    mobilePlans.map((plan) => Number(plan.amount)).filter((amt) => amt > 0)
+  );
+  const isMobileAmountFromFetchedPlans =
+    Number(mobileAmount) > 0 && validMobilePlanAmounts.has(Number(mobileAmount));
   const safeMobilePlansPage = Math.min(mobilePlansPage, mobileTotalPages);
   const paginatedMobilePlans = mobilePlans.slice(
     (safeMobilePlansPage - 1) * MOBILE_PLANS_PER_PAGE,
@@ -300,6 +305,17 @@ const Recharge = () => {
       return;
     }
 
+    if (type === "mobile") {
+      if (mobilePlans.length === 0) {
+        toast.error("No plans fetched. Please fetch and select a valid plan.");
+        return;
+      }
+      if (!isMobileAmountFromFetchedPlans) {
+        toast.error("Please select amount only from available plans.");
+        return;
+      }
+    }
+
     // Set pending recharge and show payment modal
     setPendingRecharge({
       operator,
@@ -313,6 +329,12 @@ const Recharge = () => {
   const handleSelectPayment = async (method) => {
     if (!pendingRecharge) return;
     const { operator, rechargeNumber, amount, type } = pendingRecharge;
+    if (type === "mobile") {
+      if (mobilePlans.length === 0 || !validMobilePlanAmounts.has(Number(amount))) {
+        toast.error("Selected amount is not in fetched plan list.");
+        return;
+      }
+    }
     rechargeDebugLog("handleSelectPayment start", {
       method,
       operator,
@@ -1164,10 +1186,14 @@ const Recharge = () => {
                                 <input
                                   type='number'
                                   value={mobileAmount}
-                                  onChange={(e) =>
-                                    setMobileAmount(e.target.value)
-                                  }
-                                  placeholder='0.00'
+                                  onChange={() => {}}
+                                  onFocus={() => {
+                                    if (mobilePlans.length > 0) {
+                                      toast("Select a plan to set amount");
+                                    }
+                                  }}
+                                  placeholder='Select from fetched plans'
+                                  readOnly
                                   className='w-full pl-10 pr-6 py-4 bg-[#0D0D0D] border border-[#C8A96A]/20 focus:border-[#C8A96A] focus:ring-1 focus:ring-[#C8A96A] text-[#F5E6C8] outline-none transition-all placeholder:text-[#F5E6C8]/20 font-bold text-lg'
                                   required
                                 />

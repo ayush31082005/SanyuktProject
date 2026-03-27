@@ -58,9 +58,32 @@ const NewsSection = () => {
 
     if (loading) {
         return (
-            <div className="py-10 bg-[#121212] flex items-center justify-center">
-                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#C8A96A]"></div>
-            </div>
+            <section className="py-10 md:py-16 bg-[#121212]">
+                <div className="container mx-auto px-4 max-w-6xl">
+                    <div className="h-8 w-64 skeleton-box shimmer mx-auto mb-2" />
+                    <div className="w-16 h-[1px] bg-[#C8A96A]/40 mx-auto mb-6" />
+                    <div className="h-4 w-96 skeleton-box shimmer mx-auto mb-8" />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 md:gap-6">
+                        {[1, 2, 3].map((i) => (
+                            <div key={i} className="luxury-box border-[#C8A96A]/10 bg-[#1A1A1A]/30 flex flex-col h-full">
+                                <div className="h-36 w-full shimmer" />
+                                <div className="p-3.5 space-y-3">
+                                    <div className="h-3 w-1/3 skeleton-box shimmer" />
+                                    <div className="h-5 w-full skeleton-box shimmer" />
+                                    <div className="space-y-1">
+                                        <div className="h-3 w-full skeleton-box shimmer" />
+                                        <div className="h-3 w-2/3 skeleton-box shimmer" />
+                                    </div>
+                                    <div className="pt-3 border-t border-[#C8A96A]/10 flex justify-between items-center">
+                                        <div className="h-4 w-20 skeleton-box shimmer" />
+                                        <div className="h-4 w-4 skeleton-box shimmer" />
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
         );
     }
 

@@ -348,3 +348,30 @@ h1, h2, h3, h4, h5, h6, .font-serif {
   .focus\:ring-green-500:focus { --tw-ring-color: color-mix(in srgb, var(--color-gold) 45%, transparent); }
   .focus\:ring-\[\#0A7A2F\]:focus { --tw-ring-color: color-mix(in srgb, var(--color-gold) 45%, transparent); }
 }
+
+/* -------------------------------------------------------------------------- */
+/* Premium Shimmer & Skeleton Loaders                                         */
+/* -------------------------------------------------------------------------- */
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(200, 169, 106, 0.05) 25%,
+    rgba(200, 169, 106, 0.15) 37%,
+    rgba(200, 169, 106, 0.05) 63%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+.skeleton-box {
+  background-color: rgba(200, 169, 106, 0.05);
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+}

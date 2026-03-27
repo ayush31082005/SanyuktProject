@@ -564,6 +564,7 @@ const HomePage = () => {
 
                 <ProductsCarousel
                     products={products}
+                    loading={loadingProducts}
                     scroll={scroll}
                     carouselRef={carouselRef}
                     calculateDiscount={calculateDiscount}

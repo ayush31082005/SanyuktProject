@@ -16,9 +16,9 @@ const HeroSection = ({ currentSlide, setCurrentSlide, heroSlides, isLoggedIn, us
                     transition={{ duration: 1 }}
                     className="flex flex-col h-auto md:flex-1"
                 >
-                    <div className="container mx-auto px-4 sm:px-6 relative z-20 pt-10 pb-8 md:py-24">
-                        <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-start md:items-center w-full">
-                            
+                    <div className="container mx-auto px-4 sm:px-6 relative z-20 pt-4 pb-1 md:pt-10 md:pb-8 lg:pt-12 lg:pb-10">
+                        <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-start md:items-center w-full">
+
                             {/* Content Side */}
                             <motion.div
                                 initial={{ x: -60, opacity: 0 }}

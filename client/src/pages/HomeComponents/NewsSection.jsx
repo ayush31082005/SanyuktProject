@@ -58,32 +58,9 @@ const NewsSection = () => {
 
     if (loading) {
         return (
-            <section className="py-10 md:py-16 bg-[#121212]">
-                <div className="container mx-auto px-4 max-w-6xl">
-                    <div className="h-8 w-64 skeleton-box shimmer mx-auto mb-2" />
-                    <div className="w-16 h-[1px] bg-[#C8A96A]/40 mx-auto mb-6" />
-                    <div className="h-4 w-full max-w-lg sm:w-96 skeleton-box shimmer mx-auto mb-8" />
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 md:gap-6">
-                        {[1, 2, 3].map((i) => (
-                            <div key={i} className="luxury-box border-[#C8A96A]/10 bg-[#1A1A1A]/30 flex flex-col h-full">
-                                <div className="h-36 w-full shimmer" />
-                                <div className="p-3.5 space-y-3">
-                                    <div className="h-3 w-1/3 skeleton-box shimmer" />
-                                    <div className="h-5 w-full skeleton-box shimmer" />
-                                    <div className="space-y-1">
-                                        <div className="h-3 w-full skeleton-box shimmer" />
-                                        <div className="h-3 w-2/3 skeleton-box shimmer" />
-                                    </div>
-                                    <div className="pt-3 border-t border-[#C8A96A]/10 flex justify-between items-center">
-                                        <div className="h-4 w-20 skeleton-box shimmer" />
-                                        <div className="h-4 w-4 skeleton-box shimmer" />
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
+            <div className="py-10 bg-[#121212] flex items-center justify-center">
+                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#C8A96A]"></div>
+            </div>
         );
     }
 
@@ -103,17 +80,17 @@ const NewsSection = () => {
         );
     }
     return (
-        <section className="py-10 md:py-16 bg-[#121212] relative overflow-hidden" >
+        <section className="pt-2 pb-6 bg-[#121212] relative overflow-hidden" >
             <div className="container mx-auto px-4 max-w-6xl">
-                <h2 className="text-xl md:text-3xl font-serif font-bold text-center text-[#F5E6C8] mb-2 uppercase tracking-widest">
+                <h2 className="text-xl md:text-3xl font-serif font-bold text-center text-[#F5E6C8] mb-1 uppercase tracking-widest">
                     Latest News & <span className="text-[#C8A96A]">Updates</span>
                 </h2>
-                <div className="w-16 h-[1px] bg-[#C8A96A]/40 mx-auto mb-6"></div>
-                <p className="text-center text-[#F5E6C8]/60 mb-8 max-w-2xl mx-auto text-[10px] md:text-xs font-light tracking-tight uppercase">
+                <div className="w-16 h-[1px] bg-[#C8A96A]/40 mx-auto mb-4"></div>
+                <p className="text-center text-[#F5E6C8]/60 mb-5 max-w-2xl mx-auto text-[10px] md:text-xs font-light tracking-tight uppercase">
                     Stay updated with the latest company announcements and success stories.
                 </p>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 md:gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     {newsItems.map((news) => (
                         <div
                             key={news._id}
@@ -121,7 +98,7 @@ const NewsSection = () => {
                             className="luxury-box transition-all duration-500 overflow-hidden cursor-pointer flex flex-col group"
                         >
                             {/* Cover Image */}
-                            <div className="relative h-36 overflow-hidden p-1">
+                            <div className="relative h-24 overflow-hidden p-1">
                                 <img
                                     src={getImageUrl(news.image)}
                                     alt={news.title}

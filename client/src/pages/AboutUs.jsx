@@ -206,27 +206,27 @@ const AboutUsPage = () => {
                     Our Core Principles
                 </h2>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 md:gap-3 max-w-5xl mx-auto">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-5 max-w-6xl mx-auto">
                     {coreValues.map((value, index) => (
                         <div
                             key={index}
-                            className="group luxury-box p-2 md:p-3 transition-all duration-500 shadow-xl"
+                            className="group luxury-box p-4 md:p-5 min-h-[220px] md:min-h-[240px] transition-all duration-500 shadow-xl"
                             style={{ animationDelay: `${index * 100}ms` }}
                         >
                             <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#C8A96A]/5 to-transparent rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700"></div>
 
-                            <div className="relative mb-1">
-                                <div className="w-7 h-7 md:w-9 md:h-9 bg-[#121212] border border-[#C8A96A]/30 rounded-sm flex items-center justify-center mb-1 group-hover:bg-[#C8A96A] group-hover:text-[#0D0D0D] transition-all duration-500 shadow-lg">
-                                    <CheckCircle className="w-3 h-3 md:w-4 md:h-4" />
+                            <div className="relative mb-3">
+                                <div className="w-10 h-10 md:w-11 md:h-11 bg-[#121212] border border-[#C8A96A]/30 rounded-md flex items-center justify-center mb-3 group-hover:bg-[#C8A96A] group-hover:text-[#0D0D0D] transition-all duration-500 shadow-lg">
+                                    <CheckCircle className="w-5 h-5" />
                                 </div>
-                                <h3 className="text-xs md:text-sm font-serif font-bold text-[#F5E6C8] group-hover:text-[#C8A96A] transition-colors">{value.title}</h3>
+                                <h3 className="text-lg md:text-xl font-serif font-bold text-[#F5E6C8] leading-snug group-hover:text-[#C8A96A] transition-colors">{value.title}</h3>
                             </div>
 
-                            <ul className="space-y-1 relative">
+                            <ul className="space-y-2 relative">
                                 {value.traits.map((trait, traitIndex) => (
                                     <li key={traitIndex} className="flex items-center gap-3 text-[#F5E6C8]/60 group/trait">
-                                        <div className="w-1 h-1 bg-[#C8A96A] rounded-full opacity-40 group-hover/trait:opacity-100 group-hover/trait:scale-150 transition-all"></div>
-                                        <span className="text-[10px] md:text-xs font-medium">{trait}</span>
+                                        <div className="w-1.5 h-1.5 bg-[#C8A96A] rounded-full opacity-40 group-hover/trait:opacity-100 group-hover/trait:scale-150 transition-all"></div>
+                                        <span className="text-sm md:text-base font-medium">{trait}</span>
                                     </li>
                                 ))}
                             </ul>

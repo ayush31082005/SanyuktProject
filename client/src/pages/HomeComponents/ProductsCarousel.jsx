@@ -16,10 +16,10 @@ const ProductsCarousel = ({
     handleNavigation 
 }) => {
     return (
-        <section className="py-6 bg-[#121212] relative overflow-hidden" >
+        <section className="py-10 md:py-16 bg-[#121212] relative overflow-hidden" >
             <div className="container mx-auto px-4 relative z-10">
                 {/* Section Header */}
-                <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-4">
+                <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
                     <div className="text-center md:text-left max-w-2xl">
                         <span className="text-[#C8A96A] font-bold text-[10px] tracking-widest uppercase mb-1 block">
                             Discover Quality

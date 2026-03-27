@@ -80,17 +80,17 @@ const NewsSection = () => {
         );
     }
     return (
-        <section className="pt-2 pb-6 bg-[#121212] relative overflow-hidden" >
+        <section className="py-10 md:py-16 bg-[#121212] relative overflow-hidden" >
             <div className="container mx-auto px-4 max-w-6xl">
-                <h2 className="text-xl md:text-3xl font-serif font-bold text-center text-[#F5E6C8] mb-1 uppercase tracking-widest">
+                <h2 className="text-xl md:text-3xl font-serif font-bold text-center text-[#F5E6C8] mb-2 uppercase tracking-widest">
                     Latest News & <span className="text-[#C8A96A]">Updates</span>
                 </h2>
-                <div className="w-16 h-[1px] bg-[#C8A96A]/40 mx-auto mb-4"></div>
-                <p className="text-center text-[#F5E6C8]/60 mb-5 max-w-2xl mx-auto text-[10px] md:text-xs font-light tracking-tight uppercase">
+                <div className="w-16 h-[1px] bg-[#C8A96A]/40 mx-auto mb-6"></div>
+                <p className="text-center text-[#F5E6C8]/60 mb-8 max-w-2xl mx-auto text-[10px] md:text-xs font-light tracking-tight uppercase">
                     Stay updated with the latest company announcements and success stories.
                 </p>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 md:gap-6">
                     {newsItems.map((news) => (
                         <div
                             key={news._id}
@@ -98,7 +98,7 @@ const NewsSection = () => {
                             className="luxury-box transition-all duration-500 overflow-hidden cursor-pointer flex flex-col group"
                         >
                             {/* Cover Image */}
-                            <div className="relative h-24 overflow-hidden p-1">
+                            <div className="relative h-36 overflow-hidden p-1">
                                 <img
                                     src={getImageUrl(news.image)}
                                     alt={news.title}

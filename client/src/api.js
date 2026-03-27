@@ -32,4 +32,30 @@ api.interceptors.request.use((config) => {
     return config;
 });
 
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        const status = error?.response?.status;
+        const message = String(error?.response?.data?.message || "").toLowerCase();
+        const shouldLogout =
+            status === 401 &&
+            (message.includes("token") ||
+                message.includes("not authorized") ||
+                message.includes("expired") ||
+                message.includes("jwt"));
+
+        if (shouldLogout) {
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            window.dispatchEvent(new Event("storage"));
+
+            if (window.location.pathname !== "/login") {
+                window.location.href = "/login?session=expired";
+            }
+        }
+
+        return Promise.reject(error);
+    }
+);
+
 export default api;

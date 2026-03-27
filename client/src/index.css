@@ -61,7 +61,7 @@ h1, h2, h3, h4, h5, h6, .font-serif {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0.75rem 0;
+  margin: 2rem 0;
   color: #C8A96A;
 }
 
@@ -74,8 +74,9 @@ h1, h2, h3, h4, h5, h6, .font-serif {
 }
 
 .luxury-divider span {
-  padding: 0 1rem;
-  font-size: 0.75rem;
+  padding: 0 1.25rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
 }
 
 .gold-gradient {

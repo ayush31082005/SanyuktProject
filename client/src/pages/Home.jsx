@@ -25,7 +25,6 @@ const NewsSection = React.lazy(() => import('./HomeComponents/NewsSection'));
 import ProductDetailsModal from '../components/ProductDetailsModal';
 import PaymentMethodModal from '../components/PaymentMethodModal';
 import BrowsePlansModal from '../components/BrowsePlansModal';
-import { rechargePlans } from '../data/rechargePlans';
 
 // Simple loading fallback
 const SectionLoader = () => (
@@ -525,7 +524,7 @@ const HomePage = () => {
 
                 {/* </RechargeSection> */}
 
-                <div className="w-full flex items-center justify-center gap-2 sm:gap-5 mt-2 mb-2 sm:my-6 px-4 sm:px-5">
+                <div className="w-full flex items-center justify-center gap-2 sm:gap-5 mt-6 mb-4 sm:my-10 px-4 sm:px-5">
                     <div className="hidden sm:block flex-1 max-w-[180px] h-px bg-gradient-to-r from-transparent via-[#b88a44] to-transparent" />
 
                     <span
@@ -549,7 +548,7 @@ const HomePage = () => {
                     whyChoosePoints={whyChoosePoints}
                 />
 
-                <div className="w-full flex items-center justify-center gap-2 sm:gap-5 mt-2 mb-2 sm:my-6 px-4 sm:px-5">
+                <div className="w-full flex items-center justify-center gap-2 sm:gap-5 mt-6 mb-4 sm:my-10 px-4 sm:px-5">
                     <div className="hidden sm:block flex-1 max-w-[180px] h-px bg-gradient-to-r from-transparent via-[#b88a44] to-transparent" />
 
                     <span
@@ -587,7 +586,7 @@ const HomePage = () => {
                 <div className="luxury-divider"><span>SANYUKT PARIVAAR</span></div>
 
                 {/* Mid CTA Strip */}
-                <section className="py-4 px-4">
+                <section className="py-8 md:py-12 px-4">
                     <div className="max-w-5xl mx-auto luxury-box p-4 md:p-6 flex flex-col md:flex-row items-center justify-between gap-4">
                         <h3 className="text-sm md:text-lg font-serif font-bold text-[#F5E6C8] text-center md:text-left uppercase tracking-widest">
                             One of India's Fastest Growing <br /> Direct Selling Companies
@@ -622,7 +621,7 @@ const HomePage = () => {
                 <div className="luxury-divider"><span>OUR VISION</span></div>
 
                 {/* Final Trust Section */}
-                <section className="py-8 bg-[#0D0D0D] relative overflow-hidden" >
+                <section className="py-12 md:py-20 bg-[#0D0D0D] relative overflow-hidden" >
                     <div className="container mx-auto px-4 text-center relative z-10">
                         <h2 className="text-xl md:text-3xl font-serif font-bold mb-2 text-[#C8A96A] uppercase tracking-widest">
                             Together We Grow, <span className="text-[#F5E6C8]">Together We Prosper</span>
@@ -680,7 +679,7 @@ const HomePage = () => {
                 onClose={() => setShowPlansModal(false)}
                 onSelect={(amount) => setAmount(amount)}
                 operator={operator ? operators.find(op => op.id === operator)?.name : ''}
-                plans={operator ? rechargePlans[operator] : []}
+                plans={[]}
             />
         </div>
     );

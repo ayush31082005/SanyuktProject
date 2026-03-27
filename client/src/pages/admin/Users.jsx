@@ -464,6 +464,18 @@ const AdminUsers = () => {
                                     <p className="text-[#F5E6C8] font-bold font-mono tracking-wider">{selectedUserForKyc.panNumber || 'N/A'}</p>
                                 </div>
                             </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <div className="bg-[#0D0D0D] p-5 rounded-xl border border-[#C8A96A]/10">
+                                    <p className="text-[10px] font-black uppercase tracking-widest text-[#C8A96A]/60 mb-1">Nominee Name</p>
+                                    <p className="text-[#F5E6C8] font-bold tracking-wider">{selectedUserForKyc.nominee?.name || 'N/A'}</p>
+                                </div>
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <div className="bg-[#0D0D0D] p-5 rounded-xl border border-[#C8A96A]/10">
+                                    <p className="text-[10px] font-black uppercase tracking-widest text-[#C8A96A]/60 mb-1">Nominee Relation</p>
+                                    <p className="text-[#F5E6C8] font-bold tracking-wider">{selectedUserForKyc.nominee?.relation || 'N/A'}</p>
+                                </div>
+                            </Grid>
 
                             <Grid item xs={12}>
                                 <div className="flex items-center gap-4 mt-2 mb-2">

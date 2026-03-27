@@ -85,8 +85,9 @@ const ProductsCarousel = ({
                                 </div>
                             </div>
                         ))
-                    ) : (
+                    ) : products && products.length > 0 ? (
                         products.map((product) => {
+                            const productId = product._id || product.slug || product.name;
                             const price = product.price || product.dp || 0;
                             const oldPrice = product.oldPrice || product.mrp || 0;
                             const bv = product.bv || 0;
@@ -107,7 +108,7 @@ const ProductsCarousel = ({
 
                             return (
                                 <div
-                                    key={product._id || product.slug}
+                                    key={productId}
                                     className="min-w-[200px] sm:min-w-[220px] md:min-w-[240px] snap-center"
                                 >
                                     <motion.div
@@ -121,14 +122,14 @@ const ProductsCarousel = ({
                                         >
 
 
-                                            {imageUrl && !imageErrors[product._id || product.name] ? (
+                                            {imageUrl && !imageErrors[productId] ? (
                                                 <motion.img
                                                     whileHover={{ scale: 1.15 }}
                                                     transition={{ duration: 0.8, ease: "easeOut" }}
                                                     src={imageUrl}
                                                     alt={product.name}
                                                     className="w-full h-full object-cover"
-                                                    onError={() => handleImageError(product._id || product.name)}
+                                                    onError={() => handleImageError(productId)}
                                                 />
                                             ) : (
                                                 <div className="text-9xl grayscale group-hover:grayscale-0 transition-all duration-700 transform group-hover:scale-110">
@@ -221,6 +222,15 @@ const ProductsCarousel = ({
                                 </div>
                             );
                         })
+                    ) : (
+                        /* Empty State */
+                        <div className="w-full flex flex-col items-center justify-center py-12 text-center flex-shrink-0 min-w-full">
+                            <div className="w-16 h-16 rounded-full bg-[#C8A96A]/5 flex items-center justify-center mb-4 border border-[#C8A96A]/10">
+                                <Star className="w-8 h-8 text-[#C8A96A]/20" />
+                            </div>
+                            <h3 className="text-[#F5E6C8] font-serif text-lg mb-1 uppercase tracking-widest">No Featured Products</h3>
+                            <p className="text-[#F5E6C8]/40 text-xs font-light max-w-xs">Our latest collection is arriving soon. Check back later for updates.</p>
+                        </div>
                     )}
                 </div>
             </div>

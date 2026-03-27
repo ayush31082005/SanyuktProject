@@ -25,7 +25,7 @@ const BusinessOpportunity = ({ businessHighlights, businessImage, handleNavigati
                             ))}
                         </div>
                         <button
-                            onClick={() => handleNavigation('/opportunity')}
+                            onClick={() => handleNavigation('/opportunities')}
                             className="luxury-button w-fit"
                         >
                             View Opportunities

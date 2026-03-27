@@ -62,7 +62,7 @@ const NewsSection = () => {
                 <div className="container mx-auto px-4 max-w-6xl">
                     <div className="h-8 w-64 skeleton-box shimmer mx-auto mb-2" />
                     <div className="w-16 h-[1px] bg-[#C8A96A]/40 mx-auto mb-6" />
-                    <div className="h-4 w-96 skeleton-box shimmer mx-auto mb-8" />
+                    <div className="h-4 w-full max-w-lg sm:w-96 skeleton-box shimmer mx-auto mb-8" />
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 md:gap-6">
                         {[1, 2, 3].map((i) => (
                             <div key={i} className="luxury-box border-[#C8A96A]/10 bg-[#1A1A1A]/30 flex flex-col h-full">

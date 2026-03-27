@@ -632,7 +632,7 @@ const HomePage = () => {
                             We don't just build income - we build people, confidence, and a better future.
                         </p>
                         <button
-                            onClick={() => handleNavigation('/registation')}
+                            onClick={() => handleNavigation('/register')}
                             className="luxury-button px-10 py-3 text-sm"
                         >
                             Join Sanyukt Parivaar Today

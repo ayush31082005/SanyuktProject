@@ -25,7 +25,7 @@ const TrainingSection = ({ supportItems, trainingImage, handleNavigation }) => {
                             ))}
                         </div>
                         <button
-                            onClick={() => handleNavigation('/training')}
+                            onClick={() => handleNavigation('#')}
                             className="luxury-button w-fit"
                         >
                             Learn More

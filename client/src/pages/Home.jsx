@@ -665,8 +665,8 @@ const HomePage = () => {
             {/* Cart Notification */}
             {showCartNotification && (
                 <div className="fixed bottom-8 right-8 z-50 animate-fadeInUp">
-                    <div className="bg-[#C8A96A] text-[#0D0D0D] px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-4 glass-morphism border border-white/20">
-                        <div className="w-8 h-8 rounded-full bg-[#0D0D0D] flex items-center justify-center text-[#C8A96A]">
+                    <div className="bg-[#1A1A1A]/95 backdrop-blur-md text-[#F5E6C8] px-6 py-4 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex items-center gap-4 border border-[#C8A96A]/30">
+                        <div className="w-8 h-8 rounded-full bg-[#C8A96A] flex items-center justify-center text-[#0D0D0D]">
                             <Check className="w-5 h-5" />
                         </div>
                         <span className="font-bold text-sm tracking-tight">{addedToCartProduct} added to cart!</span>

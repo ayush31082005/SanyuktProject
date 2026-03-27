@@ -301,7 +301,7 @@ const ProductsPage = () => {
                             return (
                                 <div
                                     key={product._id}
-                                    className="luxury-box bg-[#1A1A1A] hover:border-[#C8A96A]/60 transition-all duration-500 group animate-slide-up overflow-hidden relative"
+                                    className="luxury-box bg-[#1A1A1A] hover:border-[#C8A96A]/60 transition-all duration-500 group animate-slide-up overflow-hidden relative flex flex-col"
                                     style={{ animationDelay: `${index * 0.05}s` }}
                                 >
                                     {/* Product Image */}
@@ -341,9 +341,9 @@ const ProductsPage = () => {
                                     </div>
 
                                     {/* Product Details */}
-                                    <div className="p-2 md:p-3">
+                                    <div className="p-3 md:p-4 flex flex-col flex-1">
                                         {/* Rating & BV */}
-                                        <div className="flex items-center justify-between mb-1">
+                                        <div className="flex items-center justify-between mb-2">
                                             <div className="flex items-center gap-0.5">
                                                 {[1, 2, 3, 4, 5].map((star) => (
                                                     <Star
@@ -363,33 +363,37 @@ const ProductsPage = () => {
                                         </div>
 
                                         {/* Product Name & Category */}
-                                        <div className="mb-1.5">
-                                            <span className="text-[8px] font-black text-[#C8A96A]/40 uppercase tracking-[0.25em] mb-1 block">
+                                        <div className="mb-2.5">
+                                            <span className="text-[9px] md:text-[10px] font-black text-[#C8A96A]/70 uppercase tracking-[0.22em] mb-1.5 block">
                                                 {product.category === "Beauty and cosmetic home based products" ? "Cosmetics" : (product.category?.split(' ')[0] || "General")}
                                             </span>
-                                            <h3 className="font-serif font-bold text-[#F5E6C8] text-[13px] group-hover:text-[#C8A96A] transition-colors duration-300 leading-tight line-clamp-2 min-h-[2.2rem]">
+                                            <h3 className="font-serif font-bold text-[#F5E6C8] text-[15px] md:text-[17px] group-hover:text-[#C8A96A] transition-colors duration-300 leading-snug line-clamp-2 min-h-[2.8rem]">
                                                 {product.name}
                                             </h3>
                                         </div>
 
+                                        <p className="text-[#F5E6C8]/55 text-[11px] md:text-xs leading-relaxed line-clamp-2 min-h-[2rem] mb-3">
+                                            {product.description || "Premium wellness and lifestyle product from our curated collection."}
+                                        </p>
+
                                         {/* Price Section */}
-                                        <div className="flex items-baseline gap-1.5 md:gap-2 mb-2 md:mb-4">
-                                            <span className="text-base font-black text-[#C8A96A]">
+                                        <div className="flex items-baseline gap-1.5 md:gap-2 mb-3 md:mb-4">
+                                            <span className="text-lg md:text-xl font-black text-[#C8A96A]">
                                                 ₹{formatCurrency(product.price)}
                                             </span>
                                             {product.oldPrice && (
-                                                <span className="text-[10px] text-[#F5E6C8]/20 line-through">
+                                                <span className="text-[11px] text-[#F5E6C8]/25 line-through">
                                                     ₹{formatCurrency(product.oldPrice)}
                                                 </span>
                                             )}
                                         </div>
 
                                         {/* Action Buttons */}
-                                        <div className="grid grid-cols-2 gap-1.5 font-bold">
+                                        <div className="grid grid-cols-2 gap-2 font-bold mt-auto">
                                             {isInCart(product._id) ? (
                                                 <button
                                                     onClick={() => handleRemoveFromCart(product._id, product.name)}
-                                                    className="py-2.5 text-[9px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-1.5 bg-[#2A1A1A] border border-red-900/20 text-red-500 hover:bg-red-950/20"
+                                                    className="py-2.5 text-[10px] font-black uppercase tracking-[0.16em] transition-all flex items-center justify-center gap-1.5 bg-[#2A1A1A] border border-red-900/20 text-red-500 hover:bg-red-950/20"
                                                 >
                                                     <Trash2 className="w-3 h-3" /> Drop
                                                 </button>
@@ -397,7 +401,7 @@ const ProductsPage = () => {
                                                 <button
                                                     onClick={() => handleAddToCart(product)}
                                                     disabled={product.stock === 0}
-                                                    className={`py-2.5 text-[9px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-1.5 border border-[#C8A96A]/20 ${product.stock === 0
+                                                    className={`py-2.5 text-[10px] font-black uppercase tracking-[0.16em] transition-all flex items-center justify-center gap-1.5 border border-[#C8A96A]/20 ${product.stock === 0
                                                         ? 'opacity-20 cursor-not-allowed'
                                                         : 'text-[#C8A96A] hover:bg-[#C8A96A]/10 hover:border-[#C8A96A]'
                                                         }`}
@@ -408,16 +412,16 @@ const ProductsPage = () => {
                                             <button
                                                 onClick={() => buyNow(product)}
                                                 disabled={product.stock === 0}
-                                                className={`py-2.5 text-[9px] font-black uppercase tracking-widest transition-all shadow-xl ${product.stock > 0
+                                                className={`py-2.5 text-[10px] font-black uppercase tracking-[0.16em] transition-all shadow-xl ${product.stock > 0
                                                     ? 'bg-gradient-to-r from-[#C8A96A] to-[#D4AF37] text-[#0D0D0D] hover:shadow-[#C8A96A]/20'
                                                     : 'bg-[#1A1A1A] text-[#C8A96A]/20 cursor-not-allowed border border-[#C8A96A]/5'
                                                     }`}
                                             >
-                                                Acquire
+                                                Buy Now
                                             </button>
                                             <button
                                                 onClick={() => openProductModal(product)}
-                                                className="col-span-2 py-1.5 text-[8px] font-black text-[#C8A96A]/30 hover:text-[#C8A96A] border border-[#C8A96A]/5 hover:border-[#C8A96A]/20 transition-all mt-0.5 uppercase tracking-[0.2em]"
+                                                className="col-span-2 py-2 text-[10px] font-black text-[#F5E6C8]/80 hover:text-[#0D0D0D] bg-[#0D0D0D] hover:bg-[#C8A96A] border border-[#C8A96A]/20 hover:border-[#C8A96A] transition-all mt-0.5 uppercase tracking-[0.18em]"
                                             >
                                                 Details
                                             </button>

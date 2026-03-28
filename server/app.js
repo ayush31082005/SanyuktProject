@@ -15,6 +15,7 @@ const allowedOrigins = [
     "https://sanyuktparivarrichlifefamily.com",
     "https://www.sanyuktparivarrichlifefamily.com",
     "https://sanyuktproject-2o2m.onrender.com",
+    "https://sanyukt-project.vercel.app",
 ];
 
 app.use(cors({

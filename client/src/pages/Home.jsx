@@ -25,6 +25,7 @@ const NewsSection = React.lazy(() => import('./HomeComponents/NewsSection'));
 import ProductDetailsModal from '../components/ProductDetailsModal';
 import PaymentMethodModal from '../components/PaymentMethodModal';
 import BrowsePlansModal from '../components/BrowsePlansModal';
+import { rechargePlans } from '../data/rechargePlans';
 
 // Simple loading fallback
 const SectionLoader = () => (
@@ -524,7 +525,7 @@ const HomePage = () => {
 
                 {/* </RechargeSection> */}
 
-                <div className="w-full flex items-center justify-center gap-2 sm:gap-5 mt-6 mb-4 sm:my-10 px-4 sm:px-5">
+                <div className="w-full flex items-center justify-center gap-2 sm:gap-5 mt-1 mb-1 sm:mt-2 sm:mb-4 px-4 sm:px-5">
                     <div className="hidden sm:block flex-1 max-w-[180px] h-px bg-gradient-to-r from-transparent via-[#b88a44] to-transparent" />
 
                     <span
@@ -548,7 +549,7 @@ const HomePage = () => {
                     whyChoosePoints={whyChoosePoints}
                 />
 
-                <div className="w-full flex items-center justify-center gap-2 sm:gap-5 mt-6 mb-4 sm:my-10 px-4 sm:px-5">
+                <div className="w-full flex items-center justify-center gap-2 sm:gap-5 mt-2 mb-2 sm:my-6 px-4 sm:px-5">
                     <div className="hidden sm:block flex-1 max-w-[180px] h-px bg-gradient-to-r from-transparent via-[#b88a44] to-transparent" />
 
                     <span
@@ -564,7 +565,6 @@ const HomePage = () => {
 
                 <ProductsCarousel
                     products={products}
-                    loading={loadingProducts}
                     scroll={scroll}
                     carouselRef={carouselRef}
                     calculateDiscount={calculateDiscount}
@@ -587,7 +587,7 @@ const HomePage = () => {
                 <div className="luxury-divider"><span>SANYUKT PARIVAAR</span></div>
 
                 {/* Mid CTA Strip */}
-                <section className="py-8 md:py-12 px-4">
+                <section className="py-4 px-4">
                     <div className="max-w-5xl mx-auto luxury-box p-4 md:p-6 flex flex-col md:flex-row items-center justify-between gap-4">
                         <h3 className="text-sm md:text-lg font-serif font-bold text-[#F5E6C8] text-center md:text-left uppercase tracking-widest">
                             One of India's Fastest Growing <br /> Direct Selling Companies
@@ -622,7 +622,7 @@ const HomePage = () => {
                 <div className="luxury-divider"><span>OUR VISION</span></div>
 
                 {/* Final Trust Section */}
-                <section className="py-12 md:py-20 bg-[#0D0D0D] relative overflow-hidden" >
+                <section className="py-8 bg-[#0D0D0D] relative overflow-hidden" >
                     <div className="container mx-auto px-4 text-center relative z-10">
                         <h2 className="text-xl md:text-3xl font-serif font-bold mb-2 text-[#C8A96A] uppercase tracking-widest">
                             Together We Grow, <span className="text-[#F5E6C8]">Together We Prosper</span>
@@ -632,7 +632,7 @@ const HomePage = () => {
                             We don't just build income - we build people, confidence, and a better future.
                         </p>
                         <button
-                            onClick={() => handleNavigation('/register')}
+                            onClick={() => handleNavigation('/registation')}
                             className="luxury-button px-10 py-3 text-sm"
                         >
                             Join Sanyukt Parivaar Today
@@ -665,8 +665,8 @@ const HomePage = () => {
             {/* Cart Notification */}
             {showCartNotification && (
                 <div className="fixed bottom-8 right-8 z-50 animate-fadeInUp">
-                    <div className="bg-[#1A1A1A]/95 backdrop-blur-md text-[#F5E6C8] px-6 py-4 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex items-center gap-4 border border-[#C8A96A]/30">
-                        <div className="w-8 h-8 rounded-full bg-[#C8A96A] flex items-center justify-center text-[#0D0D0D]">
+                    <div className="bg-[#C8A96A] text-[#0D0D0D] px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-4 glass-morphism border border-white/20">
+                        <div className="w-8 h-8 rounded-full bg-[#0D0D0D] flex items-center justify-center text-[#C8A96A]">
                             <Check className="w-5 h-5" />
                         </div>
                         <span className="font-bold text-sm tracking-tight">{addedToCartProduct} added to cart!</span>
@@ -680,7 +680,7 @@ const HomePage = () => {
                 onClose={() => setShowPlansModal(false)}
                 onSelect={(amount) => setAmount(amount)}
                 operator={operator ? operators.find(op => op.id === operator)?.name : ''}
-                plans={[]}
+                plans={operator ? rechargePlans[operator] : []}
             />
         </div>
     );

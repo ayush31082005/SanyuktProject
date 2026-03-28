@@ -21,12 +21,13 @@ const App = () => {
 
   const isAdminRoute = location.pathname.startsWith("/admin");
   const isAccountRoute = location.pathname.startsWith("/my-account");
+  const isFlushHeroRoute = location.pathname === "/recharge";
 
   return (
     <>
       <Toaster position="top-center" reverseOrder={false} />
       {!isAdminRoute && <Header />}
-      <Box sx={{ pt: !isAdminRoute ? PUBLIC_HEADER_OFFSET : 0 }}>
+      <Box sx={{ pt: !isAdminRoute && !isFlushHeroRoute ? PUBLIC_HEADER_OFFSET : 0 }}>
         <MainRoutes />
       </Box>
       {!isAdminRoute && !isAccountRoute && <Footer />}

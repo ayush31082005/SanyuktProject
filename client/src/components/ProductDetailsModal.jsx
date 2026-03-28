@@ -115,38 +115,46 @@ const ProductDetailsModal = ({
                     <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, minHeight: { md: '500px' } }}>
                         {/* Left Column */}
                         <Box sx={{
-                             flex: 0.8,
+                            flex: { xs: 'none', md: 0.95 },
                             bgcolor: '#1A1A1A',
-                            p: { xs: 2, md: 4 },
+                            p: { xs: 2, md: 3 },
                             display: 'flex',
                             flexDirection: 'column',
                             alignItems: 'center',
-                            justifyContent: 'center',
+                            justifyContent: 'flex-start',
                             position: 'relative',
                             borderRight: { md: '1px solid rgba(200,169,106,0.1)' }
                         }}>
                             <Box sx={{
                                 position: 'relative',
                                 width: '100%',
-                                maxWidth: '400px',
+                                maxWidth: { xs: '100%', md: '460px' },
+                                minHeight: { xs: '260px', md: '360px' },
+                                bgcolor: '#111111',
+                                border: '1px solid rgba(200,169,106,0.12)',
+                                borderRadius: '18px',
+                                p: { xs: 2, md: 2.5 },
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                mb: 2
+                                mb: 2.5,
+                                overflow: 'hidden'
                             }}>
                                 {productImage ? (
                                     <img
                                         src={productImage}
                                         alt={product.name}
                                         style={{
+                                            width: '100%',
+                                            height: '100%',
                                             maxWidth: '100%',
-                                            maxHeight: '100%',
+                                            maxHeight: '320px',
                                             objectFit: 'contain',
                                             filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.8))'
                                         }}
                                     />
                                 ) : (
-                                    <div className="w-full h-full flex flex-col items-center justify-center text-[#C8A96A]/10">
+                                    <div className="w-full h-full flex flex-col items-center justify-center text-[#C8A96A]/10 min-h-[240px]">
                                         <Package className="w-24 h-24 mb-4" strokeWidth={1} />
                                         <span className="text-[10px] uppercase font-black tracking-[0.3em]">Institutional Collection</span>
                                     </div>
@@ -159,7 +167,7 @@ const ProductDetailsModal = ({
                                 )}
                             </Box>
 
-                            <Box sx={{ mt: 4, display: 'flex', gap: 3, opacity: 0.3 }}>
+                            <Box sx={{ mt: 1, display: 'flex', gap: { xs: 2, md: 3 }, opacity: 0.5, justifyContent: 'center', flexWrap: 'wrap' }}>
                                 <Box sx={{ textAlign: 'center' }}>
                                     <ShieldCheck className="w-5 h-5 mx-auto mb-1 text-[#C8A96A]" />
                                     <Typography variant="caption" sx={{ fontSize: '8px', fontWeight: '900', textTransform: 'uppercase', tracking: '0.1em' }}>Secure</Typography>
@@ -177,8 +185,8 @@ const ProductDetailsModal = ({
 
                         {/* Right Column */}
                         <Box sx={{
-                            flex: 1.2,
-                            p: { xs: 4, md: 6 },
+                            flex: { xs: 'none', md: 1.05 },
+                            p: { xs: 3, md: 5 },
                             display: 'flex',
                             flexDirection: 'column'
                         }}>

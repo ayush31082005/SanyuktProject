@@ -78,10 +78,10 @@ exports.createGrievance = async (req, res) => {
         }
 
         // Send Email Notification
-        const subject = `Grievance Received - Ticket #${ticket}`;
-        const text = `Dear ${name},\n\nWe have received your grievance regarding "${category || 'General'}". Your ticket ID is ${ticket}.\n\nOur team will review your concern and update you on the status shortly.\n\nThank you for your patience.\nSanyukt Parivaar Team`;
+        const emailSubject = `Grievance Received - Ticket #${ticket}`;
+        const emailText = `Dear ${name},\n\nWe have received your grievance regarding "${category || 'General'}". Your ticket ID is ${ticket}.\n\nOur team will review your concern and update you on the status shortly.\n\nThank you for your patience.\nSanyukt Parivaar Team`;
         
-        sendEmail(cleanEmail, subject, text).catch(err => console.error("Grievance Email Error:", err));
+        sendEmail(cleanEmail, emailSubject, emailText).catch(err => console.error("Grievance Email Error:", err));
 
         res.status(201).json({
             success: true,

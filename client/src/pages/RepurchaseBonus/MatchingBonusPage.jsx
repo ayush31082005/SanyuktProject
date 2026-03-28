@@ -113,7 +113,7 @@ const TransactionDetailModal = ({ isOpen, onClose, transaction, cfg }) => {
                         exit={{ opacity: 0, scale: 0.95, y: 30 }}
                         className="relative w-full max-w-md luxury-box shadow-2xl overflow-hidden"
                     >
-                        <div className={`h-32 bg-gradient-to-br ${cfg.color} p-8 flex items-end justify-between relative`}>
+                        <div className={`min-h-28 bg-gradient-to-br ${cfg.color} px-5 py-6 sm:p-8 flex items-end justify-between relative`}>
                             <div className="absolute top-0 right-0 w-32 h-32 bg-[#C8A96A]/10 blur-2xl rounded-full -mr-12 -mt-12" />
                             <div className="relative z-10">
                                 <p className="text-[#F5E6C8]/60 text-[9px] font-black uppercase tracking-[0.3em] mb-1">Settlement Verified</p>
@@ -123,7 +123,7 @@ const TransactionDetailModal = ({ isOpen, onClose, transaction, cfg }) => {
                                 <X className="w-4 h-4 text-[#C8A96A]" />
                             </button>
                         </div>
-                        <div className="p-8 space-y-6">
+                        <div className="p-5 sm:p-8 space-y-6">
                             <div className="space-y-4">
                                 {details.map((item, idx) => (
                                     <div key={idx} className="flex items-start gap-5 group">
@@ -138,14 +138,14 @@ const TransactionDetailModal = ({ isOpen, onClose, transaction, cfg }) => {
                                 ))}
                             </div>
                             
-                            <div className="pt-6 flex items-center gap-3">
+                            <div className="pt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                                 <div className="flex-1 flex items-center gap-3 px-5 py-3 bg-[#C8A96A]/5 border border-[#C8A96A]/20 rounded-2px">
                                     <CheckCircle className="w-3.5 h-3.5 text-[#C8A96A]" strokeWidth={2.5} />
                                     <span className="text-[9px] font-black text-[#C8A96A] uppercase tracking-[0.2em]">Credited to Vault</span>
                                 </div>
                                 <button
                                     onClick={onClose}
-                                    className="luxury-button h-12 px-8 text-xs"
+                                    className="luxury-button h-12 px-8 text-xs w-full sm:w-auto"
                                 >
                                     Dismiss
                                 </button>
@@ -240,26 +240,26 @@ const MatchingBonusPage = ({ type }) => {
             {/* ── Header Decoration ── */}
             <div className="absolute top-0 left-0 w-full h-[300px] bg-gradient-to-b from-[#C8A96A]/5 to-transparent pointer-events-none" />
 
-            <div className="relative z-10 p-4 md:p-8 max-w-7xl mx-auto">
+            <div className="relative z-10 p-3 sm:p-4 md:p-8 max-w-7xl mx-auto">
                 {/* ── Header ── */}
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-12">
-                    <div className="flex items-center gap-6">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-5 sm:gap-8 mb-8 sm:mb-12">
+                    <div className="flex items-start sm:items-center gap-4 sm:gap-6">
                         <motion.button 
                             whileHover={{ x: -4 }}
                             onClick={() => navigate(-1)}
-                            className="w-12 h-12 rounded-full border border-[#C8A96A]/20 bg-[#C8A96A]/5 flex items-center justify-center text-[#C8A96A] hover:bg-[#C8A96A]/10 transition"
+                            className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border border-[#C8A96A]/20 bg-[#C8A96A]/5 flex items-center justify-center text-[#C8A96A] hover:bg-[#C8A96A]/10 transition shrink-0"
                         >
                             <ArrowLeft className="w-5 h-5" />
                         </motion.button>
-                        <div>
-                            <div className="flex items-center gap-3 mb-1">
-                                <span className="text-2xl filter grayscale opacity-50">{cfg.emoji}</span>
-                                <h1 className="text-3xl md:text-4xl font-serif font-bold text-[#F5E6C8] uppercase tracking-tight leading-none">{cfg.label}</h1>
+                        <div className="min-w-0">
+                            <div className="flex items-center gap-2 sm:gap-3 mb-1">
+                                <span className="text-xl sm:text-2xl filter grayscale opacity-50 shrink-0">{cfg.emoji}</span>
+                                <h1 className="text-[1.65rem] sm:text-3xl md:text-4xl font-serif font-bold text-[#F5E6C8] uppercase tracking-tight leading-none break-words">{cfg.label}</h1>
                             </div>
                             <p className="text-[9px] md:text-xs text-[#C8A96A]/60 font-black uppercase tracking-[0.4em]">{cfg.price} Package · Daily Cap {cfg.capping}</p>
                         </div>
                     </div>
-                    <div className="luxury-box px-6 py-4 flex items-center gap-4 shadow-gold-900/20">
+                    <div className="luxury-box w-full md:w-auto px-4 sm:px-6 py-4 flex items-center gap-4 shadow-gold-900/20">
                         <div className={`p-3 bg-[#0D0D0D] border border-[#C8A96A]/20 rounded-2xl text-[#C8A96A]`}>
                             <Icon className="w-5 h-5" strokeWidth={1.5} />
                         </div>
@@ -273,30 +273,30 @@ const MatchingBonusPage = ({ type }) => {
                 </div>
 
                 {/* ── Main Stats Dashboard ── */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12 text-[#F5E6C8]">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12 text-[#F5E6C8]">
                     {/* Primary Large Card */}
                     <motion.div 
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        className={`md:col-span-2 relative luxury-box p-8 overflow-hidden shadow-gold-900/20 shadow-2xl transition-all duration-700 hover:shadow-gold-900/40`}
+                        className={`md:col-span-2 relative luxury-box p-5 sm:p-8 overflow-hidden shadow-gold-900/20 shadow-2xl transition-all duration-700 hover:shadow-gold-900/40`}
                     >
                         <div className="absolute top-0 right-0 w-64 h-64 bg-[#C8A96A]/5 blur-[80px] rounded-full -mr-16 -mt-16 -z-10" />
                         <div className="relative z-10 h-full flex flex-col justify-between">
-                            <div className="flex justify-between items-start mb-8">
+                            <div className="flex justify-between items-start gap-4 mb-6 sm:mb-8">
                                 <div>
                                     <p className="text-[9px] font-black text-[#C8A96A]/40 uppercase tracking-[0.3em] mb-1">Internal Merit Balance</p>
-                                    <h4 className="text-5xl font-serif font-bold tracking-tighter text-[#F5E6C8]">{personalPV.toLocaleString()} <span className="text-lg text-[#C8A96A]/60 font-sans">PV</span></h4>
+                                    <h4 className="text-4xl sm:text-5xl font-serif font-bold tracking-tighter text-[#F5E6C8]">{personalPV.toLocaleString()} <span className="text-base sm:text-lg text-[#C8A96A]/60 font-sans">PV</span></h4>
                                 </div>
-                                <div className="p-4 bg-[#0D0D0D] border border-[#C8A96A]/20 rounded-2xl shadow-2xl">
+                                <div className="p-3 sm:p-4 bg-[#0D0D0D] border border-[#C8A96A]/20 rounded-2xl shadow-2xl shrink-0">
                                     <Icon className="w-8 h-8 text-[#C8A96A]" strokeWidth={1} />
                                 </div>
                             </div>
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="bg-[#0D0D0D] border border-[#C8A96A]/10 rounded-xl p-5 hover:border-[#C8A96A]/30 transition-colors">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                                <div className="bg-[#0D0D0D] border border-[#C8A96A]/10 rounded-xl p-4 sm:p-5 hover:border-[#C8A96A]/30 transition-colors">
                                     <p className="text-[8px] text-[#C8A96A]/40 uppercase tracking-widest font-black mb-1">Carry Yield</p>
                                     <p className="text-xl font-bold text-[#F5E6C8]">{carryForwardBV.toLocaleString()} <span className="text-[10px] opacity-40 font-medium">BV</span></p>
                                 </div>
-                                <div className="bg-[#0D0D0D] border border-[#C8A96A]/10 rounded-xl p-5 hover:border-[#C8A96A]/30 transition-colors">
+                                <div className="bg-[#0D0D0D] border border-[#C8A96A]/10 rounded-xl p-4 sm:p-5 hover:border-[#C8A96A]/30 transition-colors">
                                     <p className="text-[8px] text-[#C8A96A]/40 uppercase tracking-widest font-black mb-1">Matched Accumulation</p>
                                     <p className="text-xl font-bold text-[#F5E6C8]">{matchedPV.toLocaleString()} <span className="text-[10px] opacity-40 font-medium">PV</span></p>
                                 </div>
@@ -305,7 +305,7 @@ const MatchingBonusPage = ({ type }) => {
                     </motion.div>
 
                     {/* Secondary Stat Cards */}
-                    <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                         <StatCard delay={0.1} label="Cumulative Yield" value={`₹${totalEarned.toLocaleString()}`} icon={TrendingUp} badge="Manifested" />
                         <StatCard delay={0.2} label="Diurnal Output" value={`₹${todayEarned.toLocaleString()}`} icon={Activity} badge="Live" />
                         <StatCard delay={0.3} label="Lunar Cycle Total" value={`₹${thisMonth.toLocaleString()}`} icon={BarChart2} badge="Active" />
@@ -314,14 +314,14 @@ const MatchingBonusPage = ({ type }) => {
                 </div>
 
                 {/* ── Operational Insights ── */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-20">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-8 mb-12 sm:mb-20">
                     
                     {/* Capping Progress */}
                     <motion.div 
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="luxury-box p-8 flex flex-col shadow-gold-900/20 shadow-2xl"
+                        className="luxury-box p-5 sm:p-8 flex flex-col shadow-gold-900/20 shadow-2xl"
                     >
                         <div className="flex items-center gap-4 mb-8">
                             <div className="w-10 h-10 bg-[#0D0D0D] border border-[#C8A96A]/20 rounded-2xl flex items-center justify-center text-[#C8A96A]">
@@ -330,7 +330,7 @@ const MatchingBonusPage = ({ type }) => {
                             <h3 className="text-lg font-serif font-bold text-[#F5E6C8] uppercase tracking-widest">Earning Ceiling</h3>
                         </div>
                         <div className="flex-1 flex flex-col justify-center">
-                            <div className="relative w-40 h-40 mx-auto mb-10">
+                            <div className="relative w-32 h-32 sm:w-40 sm:h-40 mx-auto mb-8 sm:mb-10">
                                 <svg className="w-full h-full rotate-[-90deg]">
                                     <circle cx="80" cy="80" r="72" fill="none" stroke="#C8A96A" strokeOpacity="0.05" strokeWidth="6" />
                                     <motion.circle 
@@ -343,7 +343,7 @@ const MatchingBonusPage = ({ type }) => {
                                     />
                                 </svg>
                                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                    <span className="text-3xl font-serif font-bold text-[#F5E6C8] tracking-tighter">{cappingPct.toFixed(0)}%</span>
+                                    <span className="text-2xl sm:text-3xl font-serif font-bold text-[#F5E6C8] tracking-tighter">{cappingPct.toFixed(0)}%</span>
                                     <span className="text-[8px] font-black text-[#C8A96A]/40 uppercase tracking-[0.3em] mt-1">Utilized</span>
                                 </div>
                             </div>
@@ -369,7 +369,7 @@ const MatchingBonusPage = ({ type }) => {
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="lg:col-span-2 luxury-box p-8 shadow-gold-900/20 shadow-2xl"
+                        className="lg:col-span-2 luxury-box p-5 sm:p-8 shadow-gold-900/20 shadow-2xl"
                     >
                         <div className="flex items-center gap-4 mb-8">
                             <div className="w-10 h-10 bg-[#0D0D0D] border border-[#C8A96A]/20 rounded-2xl flex items-center justify-center text-[#C8A96A]">
@@ -377,7 +377,7 @@ const MatchingBonusPage = ({ type }) => {
                             </div>
                             <h3 className="text-lg font-serif font-bold text-[#F5E6C8] uppercase tracking-widest">Lattice Symmetry</h3>
                         </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-10">
                             {/* Left Leg */}
                             <div className="relative">
                                 <div className="flex justify-between items-end mb-4">
@@ -395,7 +395,7 @@ const MatchingBonusPage = ({ type }) => {
                                         className={`h-full bg-gradient-to-r from-[#C8A96A]/20 to-[#C8A96A] rounded-full`}
                                     />
                                 </div>
-                                <div className="mt-6 p-5 bg-[#0D0D0D] rounded-xl border border-[#C8A96A]/10">
+                                <div className="mt-4 sm:mt-6 p-4 sm:p-5 bg-[#0D0D0D] rounded-xl border border-[#C8A96A]/10">
                                     <p className="text-[8px] font-black text-[#C8A96A]/40 uppercase tracking-[0.2em] mb-1">Strategic Insight</p>
                                     <p className="text-[10px] font-medium text-[#F5E6C8]/60 italic leading-relaxed">
                                         {leftBV < rightBV ? "Cultivate lateral node (L) to maximize binary manifest." : "Lateral performance is optimal. Sustain node integrity."}
@@ -419,7 +419,7 @@ const MatchingBonusPage = ({ type }) => {
                                         className={`h-full bg-gradient-to-r from-[#C8A96A]/20 to-[#C8A96A] rounded-full`}
                                     />
                                 </div>
-                                <div className="mt-6 p-5 bg-[#0D0D0D] rounded-xl border border-[#C8A96A]/10">
+                                <div className="mt-4 sm:mt-6 p-4 sm:p-5 bg-[#0D0D0D] rounded-xl border border-[#C8A96A]/10">
                                     <p className="text-[8px] font-black text-[#C8A96A]/40 uppercase tracking-[0.2em] mb-1">Strategic Insight</p>
                                     <p className="text-[10px] font-medium text-[#F5E6C8]/60 italic leading-relaxed">
                                         {rightBV < leftBV ? "Cultivate lateral node (R) to maximize binary manifest." : "Lateral performance is optimal. Sustain node integrity."}
@@ -427,7 +427,7 @@ const MatchingBonusPage = ({ type }) => {
                                 </div>
                             </div>
                         </div>
-                        <div className="mt-10 pt-8 border-t border-[#C8A96A]/10 flex flex-col sm:flex-row items-center justify-between gap-6">
+                        <div className="mt-8 sm:mt-10 pt-6 sm:pt-8 border-t border-[#C8A96A]/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 sm:gap-6">
                             <div className="flex items-center gap-4">
                                 <div className="w-10 h-10 rounded-xl bg-[#0D0D0D] border border-[#C8A96A]/10 flex items-center justify-center text-[#C8A96A]/40">
                                     <Info className="w-5 h-5" strokeWidth={1.5} />
@@ -449,7 +449,7 @@ const MatchingBonusPage = ({ type }) => {
                     viewport={{ once: true }}
                     className="luxury-box shadow-gold-900/20 shadow-2xl overflow-hidden"
                 >
-                    <div className="px-8 py-6 border-b border-[#C8A96A]/10 flex flex-col sm:flex-row sm:items-center justify-between gap-5 bg-[#121212]">
+                    <div className="px-5 sm:px-8 py-5 sm:py-6 border-b border-[#C8A96A]/10 flex flex-col sm:flex-row sm:items-center justify-between gap-5 bg-[#121212]">
                         <div className="flex items-center gap-4">
                             <div className="w-12 h-12 bg-[#0D0D0D] border border-[#C8A96A]/20 rounded-2xl flex items-center justify-center text-[#C8A96A]">
                                 <Clock className="w-6 h-6" strokeWidth={1} />
@@ -465,7 +465,7 @@ const MatchingBonusPage = ({ type }) => {
                         </div>
                     </div>
 
-                    <div className="overflow-x-auto">
+                    <div className="hidden md:block overflow-x-auto">
                         <table className="w-full min-w-[800px] border-collapse">
                             <thead className="bg-[#121212] border-b border-[#C8A96A]/10">
                                 <tr>
@@ -527,6 +527,58 @@ const MatchingBonusPage = ({ type }) => {
                                 )}
                             </tbody>
                         </table>
+                    </div>
+
+                    <div className="md:hidden px-4 py-4 space-y-3">
+                        {history.length === 0 ? (
+                            <div className="px-4 py-10 text-center">
+                                <div className="w-14 h-14 bg-[#C8A96A]/5 border border-[#C8A96A]/10 rounded-full flex items-center justify-center mx-auto mb-4 text-[#C8A96A]/20">
+                                    <Clock className="w-7 h-7" strokeWidth={1} />
+                                </div>
+                                <p className="text-xs font-serif font-bold text-[#F5E6C8] uppercase tracking-widest mb-1">Chronicles Empty</p>
+                                <p className="text-[9px] text-[#C8A96A]/40 font-black uppercase tracking-[0.2em]">Initiate network expansion to manifest yields.</p>
+                            </div>
+                        ) : (
+                            history.map((row) => (
+                                <button
+                                    key={row._id}
+                                    onClick={() => setSelectedTx(row)}
+                                    className="w-full rounded-2xl border border-[#C8A96A]/10 bg-[#121212] p-4 text-left transition-colors hover:bg-[#C8A96A]/5"
+                                >
+                                    <div className="flex items-start justify-between gap-3">
+                                        <div className="min-w-0">
+                                            <p className="text-[9px] font-black text-[#F5E6C8]/60 tracking-wider">#MB-{row._id.slice(-8).toUpperCase()}</p>
+                                            <p className="mt-1 text-xs font-bold text-[#F5E6C8]">
+                                                {new Date(row.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                                            </p>
+                                            <p className="mt-1 text-[8px] text-[#C8A96A]/40 font-black uppercase tracking-widest">
+                                                {new Date(row.date).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
+                                            </p>
+                                        </div>
+                                        <div className="flex items-center gap-2 px-2.5 py-1 bg-[#C8A96A]/10 text-[#C8A96A] rounded-full border border-[#C8A96A]/30 shrink-0">
+                                            <CheckCircle className="w-2.5 h-2.5" />
+                                            <span className="text-[7px] font-black uppercase tracking-widest">Credited</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-4 grid grid-cols-2 gap-3">
+                                        <div className="rounded-xl border border-[#C8A96A]/10 bg-[#0D0D0D] px-3 py-2.5">
+                                            <p className="text-[8px] font-black uppercase tracking-[0.2em] text-[#C8A96A]/40 mb-1">Matched Volume</p>
+                                            <p className="text-sm font-bold text-[#F5E6C8]">{row.matchedPV} PV</p>
+                                        </div>
+                                        <div className="rounded-xl border border-[#C8A96A]/10 bg-[#0D0D0D] px-3 py-2.5">
+                                            <p className="text-[8px] font-black uppercase tracking-[0.2em] text-[#C8A96A]/40 mb-1">Bonus</p>
+                                            <p className="text-sm font-serif font-bold text-[#C8A96A]">₹{row.bonusAmount.toLocaleString()}</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-4 flex items-center justify-end gap-2 text-[8px] font-black uppercase tracking-widest text-[#C8A96A]/60">
+                                        Inspect
+                                        <ArrowRight className="w-3 h-3" />
+                                    </div>
+                                </button>
+                            ))
+                        )}
                     </div>
                 </motion.div>
             </div>

@@ -75,19 +75,19 @@ const HomePage = () => {
         {
             image: "/hero4.jpeg",
             title: "Welcome to Sanyukt Parivaar & Rich Life Pvt.Ltd.",
-            subtitle: "A Trusted & Fast-Growing Multi-Level Marketing Plateform",
+            subtitle: "A Trusted & Fast-Growing Multi-Level Marketing Platform",
             description: "Sanyukt Parivaar & Rich Life Pvt.Ltd. is a people-driven direct selling organization committed to empowering individuals with sustainable income opportunities. Through our transparent MLM business model and high-quality products, we help ordinary people build extraordinary futures."
         },
         {
             image: "/hero5.jpeg",
             title: "Welcome to Sanyukt Parivaar & Rich Life Pvt.Ltd.",
-            subtitle: "A Trusted & Fast-Growing Multi-Level Marketing Plateform",
+            subtitle: "A Trusted & Fast-Growing Multi-Level Marketing Platform",
             description: "Sanyukt Parivaar & Rich Life Pvt.Ltd. is a people-driven direct selling organization committed to empowering individuals with sustainable income opportunities. Through our transparent MLM business model and high-quality products, we help ordinary people build extraordinary futures."
         },
         {
             image: "/hero4.jpeg",
             title: "Welcome to Sanyukt Parivaar & Rich Life Pvt.Ltd.",
-            subtitle: "A Trusted & Fast-Growing Multi-Level Marketing Plateform",
+            subtitle: "A Trusted & Fast-Growing Multi-Level Marketing Platform",
             description: "Sanyukt Parivaar & Rich Life Pvt.Ltd. is a people-driven direct selling organization committed to empowering individuals with sustainable income opportunities. Through our transparent MLM business model and high-quality products, we help ordinary people build extraordinary futures."
         }
     ];

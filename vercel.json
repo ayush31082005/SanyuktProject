@@ -1,7 +1,7 @@
 {
-  "outputDirectory": "client/public",
+  "outputDirectory": "public",
   "rewrites": [
     { "source": "/api/(.*)", "destination": "server/server.js" },
-    { "source": "/(.*)", "destination": "client/public/index.html" }
+    { "source": "/(.*)", "destination": "public/index.html" }
   ]
 }

@@ -5,7 +5,7 @@
     "scripts": {
         "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
         "start": "cd server && node server.js",
-        "build": "npm run install-all && npm run build-client",
+        "build": "npm run install-all && npm run build-client && mkdir -p public && cp -rv client/public/. public/",
         "build-client": "cd client && npm run build",
         "install-all": "npm install && npm install --prefix server && npm install --prefix client"
     },

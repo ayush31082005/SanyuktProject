@@ -29,16 +29,16 @@ const OurBanker = () => {
     return (
         <div className="min-h-screen bg-[#F8FAFC] p-4 md:p-8 font-sans transition-all duration-500 selection:bg-green-100 selection:text-green-800">
             {/* Header Section */}
-            <div className="max-w-6xl mx-auto mb-6 flex flex-col md:flex-row md:items-end justify-between gap-6 print:hidden">
-                <div className="animate-slideUp">
+            <div className="max-w-6xl mx-auto mb-6 flex flex-col md:flex-row md:items-end justify-between gap-6 print:hidden overflow-hidden">
+                <div className="animate-slideUp min-w-0">
                     <div className="flex items-center gap-2 mb-2">
                         <span className="h-px w-8 bg-green-500"></span>
                         <p className="text-[11px] font-black uppercase tracking-[0.3em] text-green-600">Company Portfolio</p>
                     </div>
-                    <h1 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight">
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 tracking-tight break-words">
                         Our <span className="text-green-600">Banker</span>
                     </h1>
-                    <p className="mt-3 text-slate-500 font-medium max-w-md">Official banking and settlement details for Sanyukt Parivaar & Rich Life Pvt Ltd.</p>
+                    <p className="mt-3 text-slate-500 font-medium max-w-md break-words">Official banking and settlement details for Sanyukt Parivaar & Rich Life Pvt Ltd.</p>
                 </div>
 
                 <button
@@ -59,52 +59,52 @@ const OurBanker = () => {
                         {/* Decorative Background for Card */}
                         <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-green-600/5 rounded-full blur-3xl pointer-events-none group-hover:bg-green-600/10 transition-colors"></div>
 
-                        <div className="relative bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.05)] p-8 md:p-12 overflow-hidden">
-                            <div className="flex items-center justify-between mb-10">
+                        <div className="relative bg-white rounded-[2rem] md:rounded-[2.5rem] border border-slate-100 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.05)] p-5 sm:p-8 md:p-12 overflow-hidden">
+                            <div className="flex items-center justify-between gap-4 mb-8 sm:mb-10">
                                 <div className="w-16 h-16 bg-green-50 rounded-2xl flex items-center justify-center border border-green-100/50 shadow-inner">
                                     <Building2 className="text-green-600 w-8 h-8" />
                                 </div>
-                                <div className="text-right">
+                                <div className="text-right min-w-0">
                                     <ShieldCheck className="text-green-500 w-6 h-6 ml-auto mb-1 opacity-40" />
-                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Verified Multi-City Account</span>
+                                    <span className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] sm:tracking-widest break-words">Verified Multi-City Account</span>
                                 </div>
                             </div>
 
-                            <div className="space-y-8">
+                            <div className="space-y-6 sm:space-y-8 min-w-0">
                                 <div className="group/item cursor-pointer" onClick={() => handleCopy(bankDetails.accountName)}>
-                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 flex justify-between">
+                                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 flex justify-between gap-3">
                                         Account Holder Name
                                         <Copy className="w-3 h-3 opacity-0 group-hover/item:opacity-100 transition-opacity" />
                                     </p>
-                                    <h2 className="text-xl md:text-2xl font-black text-slate-900 group-hover/item:text-green-600 transition-colors uppercase leading-tight">
+                                    <h2 className="text-lg sm:text-xl md:text-2xl font-black text-white group-hover/item:text-green-400 transition-colors uppercase leading-tight break-words">
                                         {bankDetails.accountName}
                                     </h2>
                                 </div>
 
-                                <div className="grid md:grid-cols-2 gap-8">
+                                <div className="grid md:grid-cols-2 gap-6 sm:gap-8 min-w-0">
                                     <div className="group/item cursor-pointer" onClick={() => handleCopy(bankDetails.accountNumber)}>
                                         <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">A/C Number</p>
-                                        <p className="text-2xl font-black font-mono tracking-tight text-slate-800 group-hover/item:text-green-600 transition-colors">
+                                        <p className="text-xl sm:text-2xl font-black font-mono tracking-tight text-white group-hover/item:text-green-400 transition-colors break-all">
                                             {bankDetails.accountNumber}
                                         </p>
                                     </div>
                                     <div className="group/item cursor-pointer" onClick={() => handleCopy(bankDetails.ifsc)}>
                                         <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5">IFSC Code</p>
-                                        <p className="text-2xl font-black font-mono tracking-tight text-slate-800 group-hover/item:text-green-600 transition-colors">
+                                        <p className="text-xl sm:text-2xl font-black font-mono tracking-tight text-white group-hover/item:text-green-400 transition-colors break-all">
                                             {bankDetails.ifsc}
                                         </p>
                                     </div>
                                 </div>
 
-                                <div className="pt-8 border-t border-slate-50 flex items-center justify-between">
-                                    <div>
+                                <div className="pt-6 sm:pt-8 border-t border-slate-50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                                    <div className="min-w-0">
                                         <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{bankDetails.bankName}</p>
-                                        <p className="text-sm font-bold text-slate-700 flex items-center gap-2">
+                                        <p className="text-sm font-bold text-white flex items-center gap-2 break-words">
                                             <Landmark className="w-4 h-4 text-green-600" />
                                             {bankDetails.branch}
                                         </p>
                                     </div>
-                                    <div className="bg-slate-50 px-4 py-2 rounded-xl">
+                                    <div className="bg-slate-50 px-4 py-2 rounded-xl self-stretch sm:self-auto">
                                         <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none">Status: <span className="text-green-600">Active</span></span>
                                     </div>
                                 </div>
@@ -113,7 +113,7 @@ const OurBanker = () => {
                     </div>
 
                     {/* Security Badge */}
-                    <div className="bg-green-600 rounded-[2rem] p-6 text-white shadow-lg shadow-green-900/10 flex items-center gap-6 overflow-hidden relative">
+                    <div className="bg-green-600 rounded-[2rem] p-5 sm:p-6 text-white shadow-lg shadow-green-900/10 flex items-start sm:items-center gap-4 sm:gap-6 overflow-hidden relative">
                         <div className="absolute right-0 top-0 bottom-0 w-24 bg-white/10 -skew-x-12 transform translate-x-8"></div>
                         <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0 animate-pulse">
                             <CreditCard className="w-6 h-6" />
@@ -126,7 +126,7 @@ const OurBanker = () => {
                 </div>
 
                 {/* Right Side: UPI & QR Code */}
-                <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.05)] p-8 md:p-12 animate-slideInRight">
+                <div className="bg-white rounded-[2rem] md:rounded-[2.5rem] border border-slate-100 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.05)] p-5 sm:p-8 md:p-12 animate-slideInRight min-w-0 overflow-hidden">
                     <div className="text-center mb-10">
                         <div className="inline-flex items-center gap-3 py-2 px-6 bg-slate-50 rounded-full border border-slate-100 mb-6">
                             <QrCode className="w-4 h-4 text-green-600" />
@@ -136,7 +136,7 @@ const OurBanker = () => {
                         <p className="text-slate-500 text-sm font-medium">Fastest way to settle your account balance</p>
                     </div>
 
-                    <div className="relative mx-auto w-64 h-64 mb-10 group">
+                    <div className="relative mx-auto w-full max-w-[16rem] aspect-square mb-8 sm:mb-10 group">
                         {/* Decorative Frames for QR */}
                         <div className="absolute inset-0 border-2 border-green-600/20 rounded-3xl animate-ping opacity-25"></div>
                         <div className="absolute -inset-4 border border-slate-100 rounded-[2rem]"></div>
@@ -162,7 +162,7 @@ const OurBanker = () => {
                                 </div>
                                 <div>
                                     <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">VPA / UPI ID</p>
-                                    <p className="text-sm font-black text-slate-800">{bankDetails.upiId}</p>
+                                    <p className="text-sm font-black text-white break-all">{bankDetails.upiId}</p>
                                 </div>
                             </div>
                             <div className="p-2 rounded-lg bg-white shadow-sm border border-slate-100 group-hover:bg-green-600 group-hover:text-white transition-all">
@@ -170,7 +170,7 @@ const OurBanker = () => {
                             </div>
                         </div>
 
-                        <div className="p-6 bg-slate-900 rounded-3xl relative overflow-hidden">
+                        <div className="p-5 sm:p-6 bg-slate-900 rounded-3xl relative overflow-hidden">
                             <div className="absolute bottom-0 right-0 -mb-4 -mr-4 opacity-5">
                                 <Info className="w-32 h-32 text-white" />
                             </div>
@@ -197,7 +197,7 @@ const OurBanker = () => {
                     <p className="text-slate-500 mt-2 font-medium">Follow these simple steps for a hassle-free settlement</p>
                 </div>
 
-                <div className="grid md:grid-cols-3 gap-8">
+                <div className="grid md:grid-cols-3 gap-5 sm:gap-8">
                     {[
                         { step: "01", title: "Scan or Copy", desc: "Scan the QR code or copy the bank details/UPI ID provided above.", icon: Copy },
                         { step: "02", title: "Complete Payment", desc: "Use any UPI app or Net Banking to transfer the desired amount.", icon: CreditCard },
@@ -216,7 +216,7 @@ const OurBanker = () => {
             </div>
 
             {/* ── FAQ SECTION ── */}
-            <div className="max-w-6xl mx-auto mt-10 px-4 md:px-0 grid lg:grid-cols-3 gap-12 items-start">
+            <div className="max-w-6xl mx-auto mt-10 px-4 md:px-0 grid lg:grid-cols-3 gap-8 lg:gap-12 items-start overflow-hidden">
                 <div className="lg:col-span-1 animate-slideInLeft">
                     <div className="sticky top-24">
                         <span className="text-[10px] font-black text-green-600 uppercase tracking-[0.3em] mb-4 block">Help Center</span>

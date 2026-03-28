@@ -189,7 +189,10 @@ exports.login = async (req, res) => {
         // Send Login Notification Email
         const loginSubject = "Login Notification - Sanyukt Parivaar";
         const loginText = `Dear ${user.userName || 'Member'},\n\nYou have successfully logged into your Sanyukt Parivaar account on ${new Date().toLocaleString()}.\n\nIf this was not you, please contact support immediately.\n\nThank you for being part of our family!`;
-        sendEmail(user.email, loginSubject, loginText).catch(err => console.error("Login notification email error:", err));
+        sendEmail(user.email, loginSubject, loginText).catch(err => {
+            console.error("[AUTH] Login notification scan failure:", err.message);
+            console.error("[AUTH] User Email intended:", user.email);
+        });
 
         res.json({
             message: "Login Success",

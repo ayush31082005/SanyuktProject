@@ -21,11 +21,20 @@ const sendEmail = async (to, subject, text) => {
         };
 
         const info = await transporter.sendMail(mailOptions);
-        console.log(`Email SUCCESS: Sent to ${to}. Message ID: ${info.messageId}`);
+        console.log(`[EMAIL] SUCCESS: Sent to ${to}. ID: ${info.messageId}`);
         return info;
     } catch (error) {
-        console.error(`Email FAILURE: Could not send to ${to}.`);
-        console.error("Technical Error Details:", error.message);
+        console.error(`[EMAIL] FAILURE: Could not send to ${to}.`);
+        console.error(`[EMAIL] ERROR: ${error.message}`);
+        console.error(`[EMAIL] STACK: ${error.stack}`);
+        
+        // Detailed check for common errors
+        if (error.message.includes('EAUTH')) {
+            console.error("[EMAIL] Potential Issue: Invalid EMAIL_USER or EMAIL_PASS (App Password).");
+        } else if (error.message.includes('ETIMEDOUT')) {
+            console.error("[EMAIL] Potential Issue: Connection timeout. Check if port 465 is blocked.");
+        }
+        
         throw error;
     }
 };

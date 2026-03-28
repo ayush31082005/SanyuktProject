@@ -4,9 +4,9 @@ import { ArrowRight, Play } from 'lucide-react';
 
 const TrainingSection = ({ supportItems, trainingImage, handleNavigation }) => {
     return (
-        <section className="py-10 md:py-16 bg-[#0D0D0D] relative overflow-hidden" >
+        <section className="py-6 bg-[#0D0D0D] relative overflow-hidden" >
             <div className="container mx-auto px-4 max-w-5xl">
-                <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+                <div className="grid md:grid-cols-2 gap-6 items-center">
                     <div className="space-y-2 order-2 md:order-1 flex flex-col justify-center">
                         <h2 className="text-xl md:text-3xl font-serif font-bold text-[#C8A96A] relative inline-block pb-1 mb-1 tracking-widest uppercase">
                             Training & <span className="text-[#F5E6C8]">Support</span> System
@@ -25,14 +25,14 @@ const TrainingSection = ({ supportItems, trainingImage, handleNavigation }) => {
                             ))}
                         </div>
                         <button
-                            onClick={() => handleNavigation('#')}
+                            onClick={() => handleNavigation('/training')}
                             className="luxury-button w-fit"
                         >
                             Learn More
                         </button>
                     </div>
                     <div className="relative order-1 md:order-2 luxury-box p-1 h-fit">
-                        <img src={trainingImage} alt="Training" className="w-full h-auto max-h-[300px] object-cover" />
+                        <img src={trainingImage} alt="Training" className="w-full h-auto max-h-[220px] object-cover" />
                         <div className="absolute top-2 left-2 bg-[#0D0D0D]/80 border border-[#C8A96A]/40 p-2 px-3 flex items-center gap-2">
                             <Play className="w-4 h-4 text-[#C8A96A]" fill="currentColor" />
                             <div className="text-[10px] font-bold text-[#F5E6C8] uppercase tracking-widest">Leadership</div>

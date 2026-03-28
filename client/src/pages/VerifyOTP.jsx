@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Mail, Phone, ArrowLeft, Clock, RefreshCw } from 'lucide-react';
+import { Mail, ArrowLeft, Clock, RefreshCw } from 'lucide-react';
 import api from '../api';
 
 const VerifyOTP = () => {
@@ -14,11 +14,12 @@ const VerifyOTP = () => {
     const [timer, setTimer] = useState(60);
     const [canResend, setCanResend] = useState(false);
 
-    const { email, mobile } = location.state || {};
+    const email = location.state?.email || localStorage.getItem('registrationEmail') || '';
+    const mobile = location.state?.mobile || localStorage.getItem('registrationMobile') || '';
 
     useEffect(() => {
         if (!email && !mobile) {
-            navigate('/register');
+            navigate('/register', { replace: true });
         }
     }, [email, mobile, navigate]);
 
@@ -132,7 +133,26 @@ const VerifyOTP = () => {
     };
 
     if (!email && !mobile) {
-        return null;
+        return (
+            <div className="min-h-screen bg-[#0D0D0D] font-sans text-[#F5E6C8] flex items-center justify-center p-4">
+                <div className="w-full max-w-md rounded-[2rem] border border-[#C8A96A]/10 bg-[#1A1A1A] p-8 text-center shadow-2xl">
+                    <h2 className="text-2xl font-serif font-bold text-[#F5E6C8]">
+                        Verification details not found
+                    </h2>
+                    <p className="mt-4 text-sm text-[#F5E6C8]/60">
+                        Redirecting you to registration so we can generate a fresh OTP.
+                    </p>
+                    <button
+                        type="button"
+                        onClick={() => navigate('/register', { replace: true })}
+                        className="mt-6 inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-[#C8A96A] to-[#D4AF37] px-6 py-3 text-sm font-black uppercase tracking-[0.2em] text-[#0D0D0D]"
+                    >
+                        Go to Register
+                        <span aria-hidden="true" className="text-base leading-none">&gt;</span>
+                    </button>
+                </div>
+            </div>
+        );
     }
 
     return (
@@ -256,7 +276,12 @@ const VerifyOTP = () => {
                                             <div className="w-1.5 h-1.5 bg-[#0D0D0D] rounded-full animate-bounce delay-200"></div>
                                         </span>
                                     ) : (
-                                        <>Authorize Identity <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" /></>
+                                        <>
+                                            Authorize Identity
+                                            <span aria-hidden="true" className="text-base leading-none group-hover/btn:translate-x-1 transition-transform">
+                                                &gt;
+                                            </span>
+                                        </>
                                     )}
                                 </span>
                             </button>
@@ -278,9 +303,13 @@ const VerifyOTP = () => {
                             <div className="mt-10 pt-8 border-t border-[#C8A96A]/10">
                                 <p className="text-center text-[10px] text-[#F5E6C8]/40 font-black uppercase tracking-widest">
                                     Encountering Friction?{' '}
-                                    <Link to="/contact" className="text-[#C8A96A] hover:text-[#D4AF37] font-black ml-2 underline underline-offset-4">
+                                    <button
+                                        type="button"
+                                        onClick={() => navigate('/contact')}
+                                        className="text-[#C8A96A] hover:text-[#D4AF37] font-black ml-2 underline underline-offset-4"
+                                    >
                                         Summon Support
-                                    </Link>
+                                    </button>
                                 </p>
                             </div>
                         </form>

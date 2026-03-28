@@ -188,6 +188,7 @@ const MyAccount = ({ defaultTab }) => {
     const [kycData, setKycData] = useState({
         aadharNumber: '',
         panNumber: '',
+        nominee: { name: '', relation: '' },
         bankDetails: { accountNumber: '', ifscCode: '', bankName: '', upiId: '' },
         kycDocuments: { aadharFront: '', aadharBack: '', panCard: '', passbook: '' }
     });
@@ -240,8 +241,8 @@ const MyAccount = ({ defaultTab }) => {
     };
 
     const handleKycSubmit = async () => {
-        if (!kycData.aadharNumber || !kycData.panNumber || !kycData.bankDetails.accountNumber) {
-            setSnackbar({ open: true, message: 'Please fill all required KYC fields', severity: 'warning' });
+        if (!kycData.aadharNumber || !kycData.panNumber || !kycData.nominee.name || !kycData.nominee.relation || !kycData.bankDetails.accountNumber) {
+            setSnackbar({ open: true, message: 'Please fill all required KYC fields including nominee details', severity: 'warning' });
             return;
         }
         setKycSubmitting(true);
@@ -310,6 +311,10 @@ const MyAccount = ({ defaultTab }) => {
             setKycData({
                 aadharNumber: parsedUser.aadharNumber || '',
                 panNumber: parsedUser.panNumber || '',
+                nominee: {
+                    name: parsedUser.nominee?.name || '',
+                    relation: parsedUser.nominee?.relation || ''
+                },
                 bankDetails: parsedUser.bankDetails || { accountNumber: '', ifscCode: '', bankName: '', upiId: '' },
                 kycDocuments: parsedUser.kycDocuments || { aadharFront: '', aadharBack: '', panCard: '', passbook: '' }
             });
@@ -381,6 +386,31 @@ const MyAccount = ({ defaultTab }) => {
                     </Grid>
                     <Grid item xs={12} md={6}>
                         <TextField fullWidth label="PAN Number" value={kycData.panNumber} onChange={(e) => setKycData({ ...kycData, panNumber: e.target.value.toUpperCase() })} disabled={kycReadOnly} />
+                    </Grid>
+                </Grid>
+            </Paper>
+
+            <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 1.5, color: '#F5E6C8' }}>Nominee Details</Typography>
+            <Paper variant="outlined" sx={{ borderRadius: '12px', p: 3, mb: 4 }}>
+                <Grid container spacing={3}>
+                    <Grid item xs={12} md={6}>
+                        <TextField
+                            fullWidth
+                            label="Nominee Name"
+                            value={kycData.nominee.name}
+                            onChange={(e) => setKycData({ ...kycData, nominee: { ...kycData.nominee, name: e.target.value } })}
+                            disabled={kycReadOnly}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <TextField
+                            fullWidth
+                            label="Nominee Relation"
+                            placeholder="e.g., Father, Mother, Wife, Brother"
+                            value={kycData.nominee.relation}
+                            onChange={(e) => setKycData({ ...kycData, nominee: { ...kycData.nominee, relation: e.target.value } })}
+                            disabled={kycReadOnly}
+                        />
                     </Grid>
                 </Grid>
             </Paper>

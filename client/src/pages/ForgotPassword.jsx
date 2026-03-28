@@ -80,8 +80,9 @@ const ForgotPassword = () => {
                 setError('Passwords do not match');
                 return;
             }
-            if (newPassword.length < 6) {
-                setError('Password must be at least 6 characters long');
+            const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+            if (!passwordRegex.test(newPassword)) {
+                setError("Password must contain at least one letter, one number, and one special character (@$!%*?&)");
                 return;
             }
 
@@ -132,7 +133,13 @@ const ForgotPassword = () => {
                             </div>
 
                             <h2 className="text-3xl font-serif font-bold text-[#F5E6C8] mb-3 tracking-tight">
-                                {step === 1 ? 'Credential <span className="text-[#C8A96A]">Recovery</span>' : step === 2 ? 'Security <span className="text-[#C8A96A]">Mandate</span>' : 'Access <span className="text-[#C8A96A]">Restoration</span>'}
+                                {step === 1 ? (
+                                    <>Credential <span className="text-[#C8A96A]">Recovery</span></>
+                                ) : step === 2 ? (
+                                    <>Security <span className="text-[#C8A96A]">Mandate</span></>
+                                ) : (
+                                    <>Access <span className="text-[#C8A96A]">Restoration</span></>
+                                )}
                             </h2>
                             <p className="text-[#C8A96A]/60 text-[10px] font-black uppercase tracking-[0.2em]">
                                 {step === 1 && "Initiate identity reclamation via digital mail."}

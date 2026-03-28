@@ -73,6 +73,26 @@ const CheckoutPage = () => {
         }
     }, [product, navigate]);
 
+    // Fetch User Profile to pre-fill form
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const { data } = await api.get('auth/profile');
+                if (data?.user) {
+                    setShippingInfo(prev => ({
+                        ...prev,
+                        fullName: data.user.name || '',
+                        email: data.user.email || '',
+                        phone: data.user.phone || ''
+                    }));
+                }
+            } catch (err) {
+                console.error('Error fetching profile:', err);
+            }
+        };
+        fetchProfile();
+    }, []);
+
     if (!product) return null;
 
     // Calculate totals
@@ -114,10 +134,37 @@ const CheckoutPage = () => {
     };
 
     const handlePlaceOrder = async () => {
-        // Validate form
-        if (!shippingInfo.fullName || !shippingInfo.email || !shippingInfo.phone ||
-            !shippingInfo.address || !shippingInfo.city || !shippingInfo.state || !shippingInfo.pincode) {
-            setSnackbar({ open: true, message: 'Please fill all shipping details', severity: 'warning' });
+        // Validate form fields with regex
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const phoneRegex = /^[0-9]{10}$/;
+        const pincodeRegex = /^[0-9]{6}$/;
+
+        if (!shippingInfo.fullName.trim()) {
+            setSnackbar({ open: true, message: 'Full name is required', severity: 'warning' });
+            return;
+        }
+        if (!emailRegex.test(shippingInfo.email)) {
+            setSnackbar({ open: true, message: 'Please enter a valid email address', severity: 'warning' });
+            return;
+        }
+        if (!phoneRegex.test(shippingInfo.phone)) {
+            setSnackbar({ open: true, message: 'Phone number must be exactly 10 digits', severity: 'warning' });
+            return;
+        }
+        if (shippingInfo.address.length < 10) {
+            setSnackbar({ open: true, message: 'Please provide a complete address (min 10 chars)', severity: 'warning' });
+            return;
+        }
+        if (!shippingInfo.city.trim()) {
+            setSnackbar({ open: true, message: 'City is required', severity: 'warning' });
+            return;
+        }
+        if (!shippingInfo.state) {
+            setSnackbar({ open: true, message: 'Please select a state', severity: 'warning' });
+            return;
+        }
+        if (!pincodeRegex.test(shippingInfo.pincode)) {
+            setSnackbar({ open: true, message: 'Pincode must be exactly 6 digits', severity: 'warning' });
             return;
         }
 
@@ -287,7 +334,7 @@ const CheckoutPage = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 py-8">
+        <div className="min-h-screen bg-gray-50 pt-28 pb-12">
             <div className="max-w-7xl mx-auto px-4">
                 {/* Back Button */}
                 <button
@@ -357,9 +404,14 @@ const CheckoutPage = () => {
                                         type="tel"
                                         name="phone"
                                         value={shippingInfo.phone}
-                                        onChange={handleInputChange}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A7A2F] focus:border-transparent"
-                                        placeholder="Enter your phone number"
+                                        onChange={(e) => {
+                                            const val = e.target.value.replace(/\D/g, '');
+                                            if (val.length <= 10) {
+                                                setShippingInfo({...shippingInfo, phone: val});
+                                            }
+                                        }}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A7A2F] focus:border-transparent font-mono"
+                                        placeholder="Enter 10-digit phone number"
                                     />
                                 </div>
                                 <div>
@@ -471,9 +523,14 @@ const CheckoutPage = () => {
                                         type="text"
                                         name="pincode"
                                         value={shippingInfo.pincode}
-                                        onChange={handleInputChange}
-                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A7A2F] focus:border-transparent"
-                                        placeholder="Pincode"
+                                        onChange={(e) => {
+                                            const val = e.target.value.replace(/\D/g, '');
+                                            if (val.length <= 6) {
+                                                setShippingInfo({...shippingInfo, pincode: val});
+                                            }
+                                        }}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0A7A2F] focus:border-transparent font-mono"
+                                        placeholder="6-digit Pincode"
                                     />
                                 </div>
                             </div>

@@ -130,6 +130,12 @@ const RegistrationForm = () => {
             return false;
         }
 
+        const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+        if (!passwordRegex.test(formData.password)) {
+            setError("Password must be at least 8 characters and contain at least one letter, one number, and one special symbol (@$!%*?&)");
+            return false;
+        }
+
         return true;
     };
 

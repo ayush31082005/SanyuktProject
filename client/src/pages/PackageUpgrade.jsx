@@ -174,7 +174,7 @@ const ConfirmModal = ({ pkg, walletBalance, onConfirm, onRazorpay, onCancel, loa
     const canAfford = walletBalance >= pkg.price;
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md px-4">
+        <div className="fixed inset-0 z-[100] flex items-start justify-center bg-black/90 backdrop-blur-md px-4 pt-28 overflow-y-auto">
             <motion.div
                 initial={{ opacity: 0, scale: 0.95, y: 30 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -464,7 +464,7 @@ const PackageUpgrade = () => {
                 )}
             </AnimatePresence>
 
-            <div className="py-8 px-4 max-w-7xl mx-auto min-h-screen bg-[#0D0D0D] font-sans selection:bg-[#C8A96A]/30">
+            <div className="pt-28 pb-12 px-4 max-w-7xl mx-auto min-h-screen bg-[#0D0D0D] font-sans selection:bg-[#C8A96A]/30">
 
                 {/* ── Success Banner ── */}
                 <AnimatePresence>

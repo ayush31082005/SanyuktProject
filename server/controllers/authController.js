@@ -22,6 +22,11 @@ exports.register = async (req, res) => {
     try {
         const { email, password } = req.body;
 
+        const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+        if (!passwordRegex.test(password)) {
+            return res.status(400).json({ message: "Password must be at least 8 characters and contain at least one letter, one number, and one special symbol" });
+        }
+
         let user = await User.findOne({ email });
 
         if (user && user.isVerified)
@@ -305,6 +310,11 @@ exports.resetPassword = async (req, res) => {
 
         if (user.otp !== otp || user.otpExpire < Date.now()) {
             return res.status(400).json({ message: "Invalid or Expired OTP" });
+        }
+
+        const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+        if (!passwordRegex.test(newPassword)) {
+            return res.status(400).json({ message: "Password must be at least 8 characters and contain at least one letter, one number, and one special symbol" });
         }
 
         const hashedPassword = await bcrypt.hash(newPassword, 10);

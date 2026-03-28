@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Search, Zap, Clock, Database, ChevronRight } from 'lucide-react';
 
-const BrowsePlansModal = ({ 
-    isOpen, 
-    onClose, 
-    onSelect, 
-    operator, 
-    plans = [] 
+const BrowsePlansModal = ({
+    isOpen,
+    onClose,
+    onSelect,
+    operator,
+    plans = []
 }) => {
     const [activeCategory, setActiveCategory] = useState('All');
     const [searchQuery, setSearchQuery] = useState('');
@@ -15,11 +15,11 @@ const BrowsePlansModal = ({
     if (!isOpen) return null;
 
     const categories = ['All', ...new Set(plans.map(p => p.category))];
-    
+
     const filteredPlans = plans.filter(plan => {
         const matchesCategory = activeCategory === 'All' || plan.category === activeCategory;
-        const matchesSearch = plan.amount.toString().includes(searchQuery) || 
-                             plan.description.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesSearch = plan.amount.toString().includes(searchQuery) ||
+            plan.description.toLowerCase().includes(searchQuery.toLowerCase());
         return matchesCategory && matchesSearch;
     });
 
@@ -42,8 +42,8 @@ const BrowsePlansModal = ({
                                 Select a plan to continue
                             </p>
                         </div>
-                        <button 
-                            onClick={onClose} 
+                        <button
+                            onClick={onClose}
                             className="w-10 h-10 rounded-xl bg-[#0D0D0D] border border-[#C8A96A]/20 flex items-center justify-center text-[#C8A96A] hover:bg-[#C8A96A] hover:text-[#0D0D0D] transition-colors"
                         >
                             <X className="w-5 h-5" />
@@ -54,7 +54,7 @@ const BrowsePlansModal = ({
                     <div className="p-6 space-y-4 bg-[#1A1A1A] sticky top-0 z-10 border-b border-[#C8A96A]/10">
                         <div className="relative">
                             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#C8A96A]/50" />
-                            <input 
+                            <input
                                 type="text"
                                 placeholder="Search by amount or description..."
                                 value={searchQuery}
@@ -68,11 +68,10 @@ const BrowsePlansModal = ({
                                 <button
                                     key={cat}
                                     onClick={() => setActiveCategory(cat)}
-                                    className={`px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all whitespace-nowrap border ${
-                                        activeCategory === cat 
-                                            ? 'bg-gradient-to-r from-[#C8A96A] to-[#D4AF37] text-[#0D0D0D] border-[#C8A96A] shadow-lg shadow-gold-900/20' 
+                                    className={`px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all whitespace-nowrap border ${activeCategory === cat
+                                            ? 'bg-gradient-to-r from-[#C8A96A] to-[#D4AF37] text-[#0D0D0D] border-[#C8A96A] shadow-lg shadow-gold-900/20'
                                             : 'bg-[#0D0D0D] text-[#C8A96A] border-[#C8A96A]/20 hover:bg-[#C8A96A]/10'
-                                    }`}
+                                        }`}
                                 >
                                     {cat}
                                 </button>

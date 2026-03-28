@@ -44,6 +44,13 @@ const FranchiseLogin = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+        if (!passwordRegex.test(formData.password)) {
+            setError("Password must contain at least one letter, one number, and one special character (@$!%*?&)");
+            setIsLoading(false);
+            return;
+        }
+
         setIsLoading(true);
         setError("");
 

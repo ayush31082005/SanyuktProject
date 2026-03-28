@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MapPin, Phone, Mail, Send } from 'lucide-react';
 import api from '../api';
 
@@ -14,6 +14,26 @@ const ContactUs = () => {
     const [submitSuccess, setSubmitSuccess] = useState(false);
     const [error, setError] = useState('');
 
+    // Fetch User Profile to pre-fill form
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const { data } = await api.get('/auth/profile');
+                if (data?.user) {
+                    setFormData(prev => ({
+                        ...prev,
+                        name: data.user.name || '',
+                        email: data.user.email || '',
+                        phone: data.user.phone || ''
+                    }));
+                }
+            } catch (err) {
+                console.error('Error fetching profile:', err);
+            }
+        };
+        fetchProfile();
+    }, []);
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -26,6 +46,28 @@ const ContactUs = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        // Strict Validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const phoneRegex = /^[0-9]{10}$/;
+
+        if (formData.name.trim().length < 3) {
+            setError('Legal name must be at least 3 characters');
+            return;
+        }
+        if (!emailRegex.test(formData.email)) {
+            setError('Please enter a valid email address');
+            return;
+        }
+        if (formData.phone && !phoneRegex.test(formData.phone)) {
+            setError('Access number must be exactly 10 digits');
+            return;
+        }
+        if (formData.message.trim().length < 10) {
+            setError('Message details should be at least 10 characters');
+            return;
+        }
+
         setIsSubmitting(true);
         setError('');
 
@@ -150,9 +192,15 @@ const ContactUs = () => {
                                                     type="tel"
                                                     name="phone"
                                                     value={formData.phone}
-                                                    onChange={handleChange}
-                                                    placeholder="Phone (Optional)"
-                                                    className="w-full bg-[#0D0D0D] border border-[#C8A96A]/20 rounded-xl pl-10 pr-3 py-3 text-[#F5E6C8] placeholder:text-[#F5E6C8]/20 focus:border-[#C8A96A] outline-none transition-all font-black text-xs"
+                                                    onChange={(e) => {
+                                                        const val = e.target.value.replace(/\D/g, '');
+                                                        if (val.length <= 10) {
+                                                            setFormData({...formData, phone: val});
+                                                            setError('');
+                                                        }
+                                                    }}
+                                                    placeholder="Enter 10-digit number"
+                                                    className="w-full bg-[#0D0D0D] border border-[#C8A96A]/20 rounded-xl pl-10 pr-3 py-3 text-[#F5E6C8] placeholder:text-[#F5E6C8]/20 focus:border-[#C8A96A] outline-none transition-all font-black text-xs font-mono"
                                                 />
                                             </div>
                                         </div>

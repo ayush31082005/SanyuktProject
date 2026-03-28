@@ -58,54 +58,29 @@ const NewsSection = () => {
 
     if (loading) {
         return (
-            <section className="py-12 bg-[#121212] relative overflow-hidden">
-                <div className="container mx-auto px-4 max-w-6xl">
-                    {/* Header Skeleton */}
-                    <div className="h-6 w-full max-w-lg sm:w-96 skeleton-box shimmer mx-auto mb-2"></div>
-                    <div className="w-16 h-[1px] bg-[#C8A96A]/20 mx-auto mb-8"></div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                        {[...Array(3)].map((_, i) => (
-                            <div key={i} className="luxury-box h-[280px] animate-pulse flex flex-col">
-                                <div className="h-32 bg-[#1A1A1A] skeleton-box shimmer border-b border-[#C8A96A]/10"></div>
-                                <div className="p-4 flex-1">
-                                    <div className="h-3 w-24 bg-[#1A1A1A] skeleton-box shimmer mb-3"></div>
-                                    <div className="h-5 w-full bg-[#1A1A1A] skeleton-box shimmer mb-2"></div>
-                                    <div className="h-5 w-2/3 bg-[#1A1A1A] skeleton-box shimmer mb-4"></div>
-                                    <div className="mt-auto pt-4 border-t border-[#C8A96A]/5 flex justify-between">
-                                        <div className="h-3 w-20 bg-[#1A1A1A] skeleton-box shimmer"></div>
-                                        <div className="h-4 w-4 bg-[#1A1A1A] skeleton-box shimmer"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
+            <div className="py-10 bg-[#121212] flex items-center justify-center">
+                <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#C8A96A]"></div>
+            </div>
         );
     }
 
     if (!loading && newsItems.length === 0) {
         return (
-            <section className="py-12 bg-[#121212] text-center" >
+            <section className="py-10 bg-[#121212] text-center" >
                 <div className="container mx-auto px-4">
-                    <h2 className="text-xl md:text-3xl font-serif font-bold text-[#F5E6C8] mb-1 uppercase tracking-widest">
+                    <h2 className="text-2xl md:text-4xl font-serif font-bold text-[#F5E6C8] mb-3">
                         Latest News & <span className="text-[#C8A96A]">Updates</span>
                     </h2>
-                    <div className="w-16 h-[1px] bg-[#C8A96A]/40 mx-auto mb-6"></div>
-                    <div className="luxury-box p-8 max-w-2xl mx-auto bg-[#1A1A1A]/50">
-                        <div className="w-16 h-16 rounded-full bg-[#C8A96A]/5 flex items-center justify-center mb-4 mx-auto border border-[#C8A96A]/10">
-                            <Clock className="w-8 h-8 text-[#C8A96A]/20" />
-                        </div>
-                        <h3 className="text-[#F5E6C8] font-serif text-lg mb-2 uppercase tracking-widest">No News Discovered</h3>
-                        <p className="text-[#F5E6C8]/40 text-xs font-light max-w-sm mx-auto">Our editors are preparing new updates. Please check back later for the latest news.</p>
-                    </div>
+                    <div className="w-24 h-1 bg-gradient-to-r from-transparent via-[#C8A96A] to-transparent mx-auto mb-8"></div>
+                    <p className="text-[#F5E6C8]/40 max-w-2xl mx-auto text-lg font-light">
+                        No news updates available at the moment. Please check back later or visit the admin panel to add news.
+                    </p>
                 </div>
             </section>
         );
     }
     return (
-        <section className="py-10 md:py-16 bg-[#121212] relative overflow-hidden" >
+        <section className="pt-2 pb-6 bg-[#121212] relative overflow-hidden" >
             <div className="container mx-auto px-4 max-w-6xl">
                 <h2 className="text-xl md:text-3xl font-serif font-bold text-center text-[#F5E6C8] mb-1 uppercase tracking-widest">
                     Latest News & <span className="text-[#C8A96A]">Updates</span>

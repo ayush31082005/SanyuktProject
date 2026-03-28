@@ -4,7 +4,7 @@ import { ArrowRight, Play } from 'lucide-react';
 
 const TrainingSection = ({ supportItems, trainingImage, handleNavigation }) => {
     return (
-        <section className="py-10 md:py-16 bg-[#0D0D0D] relative overflow-hidden" >
+        <section className="py-6 bg-[#0D0D0D] relative overflow-hidden" >
             <div className="container mx-auto px-4 max-w-5xl">
                 <div className="grid md:grid-cols-2 gap-6 items-center">
                     <div className="space-y-2 order-2 md:order-1 flex flex-col justify-center">

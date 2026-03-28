@@ -1,5 +1,6 @@
 const Grievance = require("../models/Grievance");
 const User = require("../models/User");
+const sendEmail = require("../utils/sendEmail");
 
 // ✅ CREATE GRIEVANCE
 exports.createGrievance = async (req, res) => {
@@ -75,6 +76,12 @@ exports.createGrievance = async (req, res) => {
             await user.save();
             console.log("6. ✅ Ticket added to user account. Total:", user.grievances.length);
         }
+
+        // Send Email Notification
+        const subject = `Grievance Received - Ticket #${ticket}`;
+        const text = `Dear ${name},\n\nWe have received your grievance regarding "${category || 'General'}". Your ticket ID is ${ticket}.\n\nOur team will review your concern and update you on the status shortly.\n\nThank you for your patience.\nSanyukt Parivaar Team`;
+        
+        sendEmail(cleanEmail, subject, text).catch(err => console.error("Grievance Email Error:", err));
 
         res.status(201).json({
             success: true,

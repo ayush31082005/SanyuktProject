@@ -111,13 +111,14 @@ exports.createOrder = async (req, res) => {
             const text = `Dear ${req.user.name},
 
 Thank you for your order! Your mission with Sanyukt Parivaar has begun.
-
+ 
 Order ID: #${orderIdShort}
 Product: ${productData.name}
 Quantity: ${quantity}
 Total Amount: ₹${total}
 Payment Method: ${paymentMethod.toUpperCase()}
-
+Registered Contact: ${req.user.mobile || 'N/A'}
+ 
 You can track your order status in your mission hub: ${process.env.FRONTEND_URL || 'http://localhost:5173'}/my-account/orders/${order._id}
 
 Thank you for choosing Sanyukt Parivaar!

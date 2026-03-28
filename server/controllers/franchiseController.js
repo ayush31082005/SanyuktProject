@@ -58,18 +58,19 @@
 
 
 const Franchise = require("../models/Franchise");
+const sendEmail = require("../utils/sendEmail");
 
 // ================= ADD =================
 exports.addFranchise = async (req, res) => {
     try {
-        const { franchiseId, name, mobile, address, password } = req.body;
+        const { franchiseId, name, mobile, email, address, password } = req.body;
 
         // Check if franchise exists
-        const exist = await Franchise.findOne({ franchiseId });
+        const exist = await Franchise.findOne({ $or: [{ franchiseId }, { email }] });
 
         if (exist) {
             return res.status(400).json({
-                message: "Franchise already exists"
+                message: "Franchise or Email already exists"
             });
         }
 
@@ -78,6 +79,7 @@ exports.addFranchise = async (req, res) => {
             franchiseId,
             name,
             mobile,
+            email,
             address,
             password
         });
@@ -163,6 +165,13 @@ exports.franchiseLogin = async (req, res) => {
         }
 
         // login success
+        const loginSubject = "Franchise Login Notification - Sanyukt Parivaar";
+        const loginText = `Dear ${franchise.name},\n\nYou have successfully logged into your Sanyukt Parivaar Franchise account (${franchise.franchiseId}) on ${new Date().toLocaleString()}.\n\nIf this was not you, please contact admin support immediately.\n\nThank you for your service!`;
+        
+        if (franchise.email) {
+            sendEmail(franchise.email, loginSubject, loginText).catch(err => console.error("Franchise email error:", err));
+        }
+
         res.status(200).json({
             success: true,
             message: "Login successful",

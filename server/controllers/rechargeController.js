@@ -529,7 +529,7 @@ exports.verifyPayment = async (req, res) => {
             const user = await User.findById(transaction.userId);
             if (user && user.email) {
                 const subject = `Recharge Successful - Sanyukt Parivaar`;
-                const text = `Dear ${user.userName || user.name || 'Member'},\n\nYour ${transaction.type} recharge of Rs.${transaction.amount} for ${transaction.rechargeNumber} was successful.\n\nTransaction ID: ${transaction.transactionId}\nDate: ${new Date().toLocaleString()}\n\nThank you for choosing Sanyukt Parivaar!`;
+                const text = `Dear ${user.userName || user.name || 'Member'},\n\nYour ${transaction.type} recharge of Rs.${transaction.amount} for ${transaction.rechargeNumber} was successful.\n\nRegistered Phone: ${user.mobile || 'N/A'}\nTransaction ID: ${transaction.transactionId}\nDate: ${new Date().toLocaleString()}\n\nThank you for choosing Sanyukt Parivaar!`;
                 sendEmail(user.email, subject, text).catch(err => console.error('Email error:', err));
 
                 // Credit reward for successful recharges
@@ -615,7 +615,7 @@ exports.walletRecharge = async (req, res) => {
         // Send email notification
         if (user.email) {
             const subject = `Recharge Successful - Sanyukt Parivaar`;
-            const text = `Dear ${user.userName || user.name || 'Member'},\n\nYour ${type} recharge of Rs.${amount} for ${rechargeNumber} was successful using wallet balance.\n\nTransaction ID: ${transaction.transactionId}\nDate: ${new Date().toLocaleString()}\n\nThank you!`;
+            const text = `Dear ${user.userName || user.name || 'Member'},\n\nYour ${type} recharge of Rs.${amount} for ${rechargeNumber} was successful using wallet balance.\n\nRegistered Phone: ${user.mobile || 'N/A'}\nTransaction ID: ${transaction.transactionId}\nDate: ${new Date().toLocaleString()}\n\nThank you for choosing Sanyukt Parivaar!`;
             sendEmail(user.email, subject, text).catch(err => console.error('Email error:', err));
         }
 

@@ -67,7 +67,7 @@ const GrievancePage = () => {
                         description: "Your grievance is being processed"
                     });
                 } catch (err) {
-                    setStatusError("âŒ Ticket not found");
+                    setStatusError("❌ Ticket not found");
                 }
             };
             fetchStatus();
@@ -124,10 +124,10 @@ const GrievancePage = () => {
                 message: formData.message
             });
 
-            // ðŸŽ« Ticket show
+            // 🎟️ Ticket show
             setSnackbar({
                 open: true,
-                message: "ðŸŽ« Your grievance has been submitted! Ticket Number: " + res.data.ticket,
+                message: "🎟️ Your grievance has been submitted! Ticket Number: " + res.data.ticket,
                 severity: 'success'
             });
 
@@ -145,7 +145,7 @@ const GrievancePage = () => {
             });
 
         } catch (err) {
-            setError("âŒ Server error, try again");
+            setError("❌ Server error, try again");
         }
     };
     const handleStatusCheck = async (e) => {

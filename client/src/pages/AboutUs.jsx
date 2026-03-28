@@ -62,7 +62,7 @@ const AboutUsPage = () => {
     ];
 
     return (
-        <div className="min-h-screen bg-[#0D0D0D] font-sans text-[#F5E6C8]">
+        <div className="min-h-screen overflow-x-hidden bg-[#0D0D0D] font-sans text-[#F5E6C8]">
             {/* Hero Banner Section */}
             <header className="relative w-full min-h-[180px] md:min-h-[220px] bg-cover bg-center flex items-center justify-center pt-8 pb-4"
                 style={{ backgroundImage: "url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')" }}>
@@ -109,7 +109,7 @@ const AboutUsPage = () => {
             </section>
 
             {/* ABOUT US - CONTENT + IMAGE */}
-            <section className="py-8 px-4 max-w-7xl mx-auto">
+            <section className="py-8 px-4 max-w-7xl mx-auto overflow-hidden">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
                     {/* Left Content */}
                     <div className="space-y-4 animate-slide-right">
@@ -142,8 +142,8 @@ const AboutUsPage = () => {
                     </div>
 
                     {/* Right Image */}
-                    <div className="relative animate-slide-left">
-                        <div className="absolute -inset-4 border border-[#C8A96A]/20 rounded-[2rem] -rotate-2"></div>
+                    <div className="relative min-w-0 animate-slide-left">
+                        <div className="absolute -inset-2 md:-inset-4 border border-[#C8A96A]/20 rounded-[2rem] -rotate-2"></div>
                         <div className="relative rounded-[2rem] overflow-hidden shadow-2xl shadow-black">
                             <img
                                 src={seminarImage}
@@ -314,9 +314,9 @@ const AboutUsPage = () => {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => navigate('/register')}
-                        className="group relative inline-flex items-center justify-center px-12 py-5 font-bold text-[#0D0D0D] transition-all duration-300 bg-gradient-to-r from-[#C8A96A] to-[#D4AF37] rounded-full hover:shadow-[0_0_40px_rgba(200,169,106,0.4)]"
+                        className="group relative inline-flex w-full max-w-full items-center justify-center px-6 py-4 md:w-auto md:px-12 md:py-5 font-bold text-[#0D0D0D] transition-all duration-300 bg-gradient-to-r from-[#C8A96A] to-[#D4AF37] rounded-full hover:shadow-[0_0_40px_rgba(200,169,106,0.4)]"
                     >
-                        <span className="relative z-10 uppercase tracking-[0.2em] text-sm">Join Sanyukt Parivaar Today</span>
+                        <span className="relative z-10 break-words text-center uppercase tracking-[0.2em] text-xs md:text-sm">Join Sanyukt Parivaar Today</span>
                         <div className="absolute inset-0 rounded-full bg-white opacity-0 group-hover:opacity-20 transition-opacity"></div>
                     </motion.button>
                 </div>

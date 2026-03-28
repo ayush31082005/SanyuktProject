@@ -81,7 +81,7 @@ const OpportunitiesPage = () => {
                     <h1 className="text-4xl md:text-5xl font-serif font-bold text-[#C8A96A] mb-3 animate-slide-up">
                         OPPORTUNITIES
                     </h1>
-                    <div className="flex items-center text-[#F5E6C8]/60 text-[10px] uppercase font-black tracking-widest flex-wrap justify-center">
+                    <div className="flex items-center text-[#F5E6C8]/60 text-xs md:text-sm uppercase font-black tracking-widest flex-wrap justify-center">
                         <Link to="/" className="hover:text-[#C8A96A] transition-colors">Home</Link>
                         <ChevronRight className="w-4 h-4 mx-2 text-[#C8A96A]/40" />
                         <span className="text-[#C8A96A]">OPPORTUNITIES</span>
@@ -95,7 +95,7 @@ const OpportunitiesPage = () => {
                 <div className="mb-4 animate-slide-up">
                     <div className="luxury-box">
                         <div className="bg-[#121212] p-3 text-[#C8A96A] border-b border-[#C8A96A]/30">
-                            <h2 className="text-xl md:text-2xl font-serif font-bold flex items-center gap-2">
+                            <h2 className="text-2xl md:text-3xl font-serif font-bold flex items-center gap-2">
                                 <Award className="w-6 h-6" />
                                 BENEFITS OF DIRECT SELLING
                             </h2>
@@ -109,11 +109,11 @@ const OpportunitiesPage = () => {
                                         style={{ animationDelay: `${index * 100}ms` }}
                                     >
                                         <CheckCircle className="w-5 h-5 text-[#C8A96A] flex-shrink-0 mt-0.5" />
-                                        <p className="text-[#F5E6C8] text-xs font-bold leading-snug">{benefit}</p>
+                                        <p className="text-[#F5E6C8] text-sm md:text-base font-bold leading-snug">{benefit}</p>
                                     </div>
                                 ))}
                             </div>
-                            <p className="text-[9px] uppercase font-black tracking-widest text-[#C8A96A]/40 mt-3">*Terms and conditions apply</p>
+                            <p className="text-[10px] md:text-xs uppercase font-black tracking-widest text-[#C8A96A]/40 mt-3">*Terms and conditions apply</p>
                         </div>
                     </div>
                 </div>
@@ -122,7 +122,7 @@ const OpportunitiesPage = () => {
                 <div className="mb-4 animate-slide-up animation-delay-200">
                     <div className="luxury-box">
                         <div className="bg-[#121212] p-3 text-[#C8A96A] border-b border-[#C8A96A]/30">
-                            <h2 className="text-xl md:text-2xl font-serif font-bold flex items-center gap-2">
+                            <h2 className="text-2xl md:text-3xl font-serif font-bold flex items-center gap-2">
                                 <Heart className="w-6 h-6" />
                                 WHY Sanyukt Parivaar & Rich Life Pvt.Ltd.?
                             </h2>
@@ -136,7 +136,7 @@ const OpportunitiesPage = () => {
                                         style={{ animationDelay: `${index * 100}ms` }}
                                     >
                                         <Star className="w-5 h-5 text-[#C8A96A] flex-shrink-0 mt-0.5" />
-                                        <p className="text-[#F5E6C8] text-xs font-bold leading-snug">{reason}</p>
+                                        <p className="text-[#F5E6C8] text-sm md:text-base font-bold leading-snug">{reason}</p>
                                     </div>
                                 ))}
                             </div>
@@ -148,13 +148,13 @@ const OpportunitiesPage = () => {
                 <div className="mb-4 animate-slide-up animation-delay-400">
                     <div className="luxury-box">
                         <div className="bg-[#121212] p-3 text-[#C8A96A] border-b border-[#C8A96A]/30">
-                            <h2 className="text-xl md:text-2xl font-serif font-bold flex items-center gap-2 w-full">
+                            <h2 className="text-2xl md:text-3xl font-serif font-bold flex items-center gap-2 w-full">
                                 <TrendingUp className="w-6 h-6 flex-shrink-0" />
                                 BEST COMPENSATION PLAN
                             </h2>
                         </div>
                         <div className="p-3">
-                            <h3 className="text-[9px] font-black tracking-widest uppercase text-[#C8A96A] mb-4 flex items-center gap-1.5">
+                            <h3 className="text-[11px] md:text-xs font-black tracking-widest uppercase text-[#C8A96A] mb-4 flex items-center gap-1.5">
                                 <Gift className="w-5 h-5" />
                                 6 Powerful Benefits of Our Compensation Plan
                             </h3>
@@ -174,8 +174,8 @@ const OpportunitiesPage = () => {
                                             {index === 4 && <Award className="w-6 h-6 text-[#C8A96A]" />}
                                             {index === 5 && <BarChart3 className="w-6 h-6 text-[#C8A96A]" />}
                                         </div>
-                                        <h4 className="font-extrabold text-[#C8A96A] tracking-wider mb-1.5 text-xs uppercase">{benefit.title}</h4>
-                                        <p className="text-[11px] text-[#F5E6C8] font-bold leading-relaxed">{benefit.description}</p>
+                                        <h4 className="font-extrabold text-[#C8A96A] tracking-wider mb-1.5 text-sm md:text-base uppercase">{benefit.title}</h4>
+                                        <p className="text-sm md:text-base text-[#F5E6C8] font-bold leading-relaxed">{benefit.description}</p>
                                     </div>
                                 ))}
                             </div>
@@ -197,44 +197,44 @@ const OpportunitiesPage = () => {
                         <div className="w-12 h-12 bg-[#C8A96A]/10 border border-[#C8A96A]/30 flex items-center justify-center mb-3">
                             <Briefcase className="w-6 h-6 text-[#C8A96A]" />
                         </div>
-                        <h3 className="font-extrabold text-[#C8A96A] text-xs uppercase tracking-wider mb-1">Flexible Hours</h3>
-                        <p className="text-[11px] text-[#F5E6C8] font-bold">Work full-time or part-time based on your schedule. Complete freedom to manage your time and achieve work-life balance.</p>
+                        <h3 className="font-extrabold text-[#C8A96A] text-sm md:text-base uppercase tracking-wider mb-1">Flexible Hours</h3>
+                        <p className="text-sm md:text-base text-[#F5E6C8] font-bold">Work full-time or part-time based on your schedule. Complete freedom to manage your time and achieve work-life balance.</p>
                     </div>
 
                     <div className="luxury-box p-3 hover:-translate-y-2 transition-transform duration-300 animation-delay-200">
                         <div className="w-12 h-12 bg-[#C8A96A]/10 border border-[#C8A96A]/30 flex items-center justify-center mb-3">
                             <Globe className="w-6 h-6 text-[#C8A96A]" />
                         </div>
-                        <h3 className="font-extrabold text-[#C8A96A] text-xs uppercase tracking-wider mb-1">Pan-India Expansion</h3>
-                        <p className="text-[11px] text-[#F5E6C8] font-bold">Expand your business across different states, cities, and towns. Build a nationwide network with unlimited growth potential.</p>
+                        <h3 className="font-extrabold text-[#C8A96A] text-sm md:text-base uppercase tracking-wider mb-1">Pan-India Expansion</h3>
+                        <p className="text-sm md:text-base text-[#F5E6C8] font-bold">Expand your business across different states, cities, and towns. Build a nationwide network with unlimited growth potential.</p>
                     </div>
 
                     <div className="luxury-box p-3 hover:-translate-y-2 transition-transform duration-300 animation-delay-400">
                         <div className="w-12 h-12 bg-[#C8A96A]/10 border border-[#C8A96A]/30 flex items-center justify-center mb-3">
                             <Rocket className="w-6 h-6 text-[#C8A96A]" />
                         </div>
-                        <h3 className="font-extrabold text-[#C8A96A] text-xs uppercase tracking-wider mb-1">Rapid Growth</h3>
-                        <p className="text-[11px] text-[#F5E6C8] font-bold">One of the fastest income plans in the industry with accelerated growth opportunities and quick returns on your efforts.</p>
+                        <h3 className="font-extrabold text-[#C8A96A] text-sm md:text-base uppercase tracking-wider mb-1">Rapid Growth</h3>
+                        <p className="text-sm md:text-base text-[#F5E6C8] font-bold">One of the fastest income plans in the industry with accelerated growth opportunities and quick returns on your efforts.</p>
                     </div>
                 </div>
 
                 {/* Success Stats */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-4">
                     <div className="luxury-box p-3 text-center hover:bg-[#1A1A1A] transition-all">
-                        <div className="text-2xl font-serif font-bold text-[#C8A96A] mb-1">10K+</div>
-                        <p className="text-[10px] uppercase font-black tracking-widest text-[#F5E6C8]/50">Active Distributors</p>
+                        <div className="text-3xl md:text-4xl font-serif font-bold text-[#C8A96A] mb-1">10K+</div>
+                        <p className="text-xs md:text-sm uppercase font-black tracking-widest text-[#F5E6C8]/50">Active Distributors</p>
                     </div>
                     <div className="luxury-box p-3 text-center hover:bg-[#1A1A1A] transition-all">
-                        <div className="text-2xl font-serif font-bold text-[#C8A96A] mb-1">500+</div>
-                        <p className="text-[10px] uppercase font-black tracking-widest text-[#F5E6C8]/50">Cities Covered</p>
+                        <div className="text-3xl md:text-4xl font-serif font-bold text-[#C8A96A] mb-1">500+</div>
+                        <p className="text-xs md:text-sm uppercase font-black tracking-widest text-[#F5E6C8]/50">Cities Covered</p>
                     </div>
                     <div className="luxury-box p-3 text-center hover:bg-[#1A1A1A] transition-all">
                         <div className="text-2xl font-serif font-bold text-[#C8A96A] mb-1">₹50Cr+</div>
-                        <p className="text-[10px] uppercase font-black tracking-widest text-[#F5E6C8]/50">Commission Paid</p>
+                        <p className="text-xs md:text-sm uppercase font-black tracking-widest text-[#F5E6C8]/50">Commission Paid</p>
                     </div>
                     <div className="luxury-box p-3 text-center hover:bg-[#1A1A1A] transition-all">
-                        <div className="text-2xl font-serif font-bold text-[#C8A96A] mb-1">15+</div>
-                        <p className="text-[10px] uppercase font-black tracking-widest text-[#F5E6C8]/50">Years of Excellence</p>
+                        <div className="text-3xl md:text-4xl font-serif font-bold text-[#C8A96A] mb-1">15+</div>
+                        <p className="text-xs md:text-sm uppercase font-black tracking-widest text-[#F5E6C8]/50">Years of Excellence</p>
                     </div>
                 </div>
             </section>
@@ -244,17 +244,17 @@ const OpportunitiesPage = () => {
                 <div className="absolute top-0 right-0 w-32 h-32 bg-[#C8A96A]/10 blur-[50px] pointer-events-none"></div>
                 <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#C8A96A]/10 blur-[50px] pointer-events-none"></div>
                 <div className="max-w-4xl mx-auto relative z-10">
-                    <h2 className="text-xl md:text-2xl font-bold text-[#C8A96A] mb-1 font-serif">
+                    <h2 className="text-2xl md:text-3xl font-bold text-[#C8A96A] mb-1 font-serif">
                         Start Your Entrepreneurial Journey Today!
                     </h2>
-                    <p className="text-[#F5E6C8] mb-3 max-w-2xl mx-auto font-black leading-relaxed text-xs">
+                    <p className="text-[#F5E6C8] mb-3 max-w-2xl mx-auto font-black leading-relaxed text-sm md:text-base">
                         Join Sanyukt Parivaar & Rich Life Pvt.Ltd. and unlock unlimited earning potential.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-3 justify-center">
                         <Link to="/register" className="luxury-button flex items-center justify-center">
                             Register Now
                         </Link>
-                        <Link to="/contact" className="px-4 py-2 font-black text-[9px] tracking-[0.3em] uppercase text-[#F5E6C8] border border-[#F5E6C8]/20 hover:border-[#C8A96A] hover:text-[#C8A96A] transition-all flex items-center justify-center bg-transparent relative overflow-hidden group">
+                        <Link to="/contact" className="px-4 py-2 font-black text-[10px] md:text-xs tracking-[0.3em] uppercase text-[#F5E6C8] border border-[#F5E6C8]/20 hover:border-[#C8A96A] hover:text-[#C8A96A] transition-all flex items-center justify-center bg-transparent relative overflow-hidden group">
                            Contact Sales
                            <div className="absolute inset-0 bg-[#C8A96A]/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
                         </Link>

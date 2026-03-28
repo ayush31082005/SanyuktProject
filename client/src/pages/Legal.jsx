@@ -873,7 +873,7 @@ const LegalPage = () => {
                         <Lock className="w-6 h-6 text-[#C8A96A] flex-shrink-0 mt-1" />
                         <div>
                             <h3 className="font-bold text-[#C8A96A] mb-1 tracking-widest uppercase text-[10px] md:text-xs">Legal Disclaimer</h3>
-                            <p className="text-[#F5E6C8]/80 text-sm leading-relaxed">
+                            <p className="text-[#F5E6C8]/80 text-sm leading-relaxed font-semibold">
                                 Sanyukt Parivaar & Rich Life Pvt.Ltd. follows applicable Direct Selling Guidelines.
                                 Income depends on individual effort and performance. No guaranteed earnings.
                             </p>
@@ -943,7 +943,7 @@ const LegalPage = () => {
 
                             {/* Policy Content */}
                             <div className="p-3 md:p-5">
-                                <p className="text-[#F5E6C8]/80 mb-4 leading-relaxed text-xs md:text-sm border-l-2 border-[#C8A96A] pl-3">
+                                <p className="text-[#F5E6C8]/80 mb-4 leading-relaxed text-xs md:text-sm border-l-2 border-[#C8A96A] pl-3 font-semibold">
                                     {policy.content.intro}
                                 </p>
 
@@ -954,7 +954,7 @@ const LegalPage = () => {
                                             <Globe className="w-4 h-4" />
                                             {policy.content.scope.title}
                                         </h3>
-                                        <p className="text-[#F5E6C8]/70 text-[11px] leading-relaxed">
+                                        <p className="text-[#F5E6C8]/75 text-sm md:text-base leading-relaxed font-semibold">
                                             {policy.content.scope.content}
                                         </p>
                                     </div>
@@ -979,7 +979,7 @@ const LegalPage = () => {
                                                             onClick={() => toggleSection(policy.id, `${sectionIdx}-${subIdx}`)}
                                                             className="w-full flex items-center justify-between p-3 bg-[#1A1A1A] hover:bg-[#252525] transition-colors text-left"
                                                         >
-                                                            <span className="font-semibold text-[#F5E6C8]">
+                                                            <span className="font-bold text-[#F5E6C8]">
                                                                 {subSection.title}
                                                             </span>
                                                             {isExpanded ? (
@@ -993,7 +993,7 @@ const LegalPage = () => {
                                                         {isExpanded && (
                                                             <div className="p-4 bg-[#0D0D0D] border-t border-[#C8A96A]/20">
                                                                 {subSection.content && (
-                                                                    <p className="text-[#F5E6C8]/80 mb-4 leading-relaxed">{subSection.content}</p>
+                                                                    <p className="text-[#F5E6C8]/80 mb-4 leading-relaxed font-semibold">{subSection.content}</p>
                                                                 )}
 
                                                                 {subSection.items && (
@@ -1003,7 +1003,7 @@ const LegalPage = () => {
                                                                                 <h5 className="font-bold text-[#C8A96A] mb-1">
                                                                                     {item.subheading}
                                                                                 </h5>
-                                                                                <p className="text-[#F5E6C8]/60 text-sm leading-relaxed">
+                                                                                <p className="text-[#F5E6C8]/70 text-sm leading-relaxed font-semibold">
                                                                                     {item.text}
                                                                                 </p>
                                                                             </div>
@@ -1042,7 +1042,7 @@ const LegalPage = () => {
                         Official Certifications & Documents
                         <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-[2px] bg-[#C8A96A]/60"></span>
                     </h2>
-                    <p className="text-[#F5E6C8]/60 mt-2 max-w-2xl mx-auto">
+                    <p className="text-[#F5E6C8]/70 mt-2 max-w-2xl mx-auto font-semibold">
                         View and download our official company registration and compliance documents.
                     </p>
                 </div>

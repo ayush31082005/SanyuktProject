@@ -838,7 +838,7 @@ const LegalPage = () => {
     ];
 
     return (
-        <div className="bg-[#0D0D0D] font-sans min-h-screen pt-[60px] md:pt-[80px]">
+        <div className="bg-[#0D0D0D] font-sans min-h-screen">
             {/* Hero Banner Section */}
             <header className="relative h-[100px] md:h-[140px] bg-cover bg-center border-b border-[#C8A96A]/20"
                 style={{ backgroundImage: "url('https://images.unsplash.com/photo-1589829545856-d10d557cf95f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')" }}>
@@ -1054,7 +1054,7 @@ const LegalPage = () => {
                         <div className="w-12 h-12 bg-[#0D0D0D] border border-[#C8A96A]/20 rounded-full flex items-center justify-center mb-3 group-hover:bg-[#C8A96A] transition-colors duration-500">
                             <FileText className="w-6 h-6 text-[#C8A96A] group-hover:text-[#0D0D0D] transition-colors duration-500" />
                         </div>
-                        <h3 className="font-serif font-bold text-[#F5E6C8] text-center mb-2 group-hover:text-[#C8A96A] transition-colors duration-500 leading-snug text-sm">Certificate of<br/>Incorporation</h3>
+                        <h3 className="font-serif font-bold text-[#F5E6C8] text-center mb-2 group-hover:text-[#C8A96A] transition-colors duration-500 leading-snug text-sm">Certificate of<br />Incorporation</h3>
                         <span className="text-xs uppercase tracking-widest font-black text-[#C8A96A]/60 mt-auto flex items-center gap-1 group-hover:text-[#C8A96A] transition-colors duration-300">
                             View PDF <ChevronRight className="w-3 h-3" />
                         </span>
@@ -1066,7 +1066,7 @@ const LegalPage = () => {
                         <div className="w-12 h-12 bg-[#0D0D0D] border border-[#C8A96A]/20 rounded-full flex items-center justify-center mb-3 group-hover:bg-[#C8A96A] transition-colors duration-500">
                             <FileText className="w-6 h-6 text-[#C8A96A] group-hover:text-[#0D0D0D] transition-colors duration-500" />
                         </div>
-                        <h3 className="font-serif font-bold text-[#F5E6C8] text-center mb-2 group-hover:text-[#C8A96A] transition-colors duration-500 leading-snug text-sm">Memorandum of<br/>Association</h3>
+                        <h3 className="font-serif font-bold text-[#F5E6C8] text-center mb-2 group-hover:text-[#C8A96A] transition-colors duration-500 leading-snug text-sm">Memorandum of<br />Association</h3>
                         <span className="text-xs uppercase tracking-widest font-black text-[#C8A96A]/60 mt-auto flex items-center gap-1 group-hover:text-[#C8A96A] transition-colors duration-300">
                             View PDF <ChevronRight className="w-3 h-3" />
                         </span>
@@ -1078,7 +1078,7 @@ const LegalPage = () => {
                         <div className="w-12 h-12 bg-[#0D0D0D] border border-[#C8A96A]/20 rounded-full flex items-center justify-center mb-3 group-hover:bg-[#C8A96A] transition-colors duration-500">
                             <FileText className="w-6 h-6 text-[#C8A96A] group-hover:text-[#0D0D0D] transition-colors duration-500" />
                         </div>
-                        <h3 className="font-serif font-bold text-[#F5E6C8] text-center mb-2 group-hover:text-[#C8A96A] transition-colors duration-500 leading-snug text-sm">Articles of<br/>Association</h3>
+                        <h3 className="font-serif font-bold text-[#F5E6C8] text-center mb-2 group-hover:text-[#C8A96A] transition-colors duration-500 leading-snug text-sm">Articles of<br />Association</h3>
                         <span className="text-xs uppercase tracking-widest font-black text-[#C8A96A]/60 mt-auto flex items-center gap-1 group-hover:text-[#C8A96A] transition-colors duration-300">
                             View PDF <ChevronRight className="w-3 h-3" />
                         </span>
@@ -1090,7 +1090,7 @@ const LegalPage = () => {
                         <div className="w-12 h-12 bg-[#0D0D0D] border border-[#C8A96A]/20 rounded-full flex items-center justify-center mb-3 group-hover:bg-[#C8A96A] transition-colors duration-500">
                             <Award className="w-6 h-6 text-[#C8A96A] group-hover:text-[#0D0D0D] transition-colors duration-500" />
                         </div>
-                        <h3 className="font-serif font-bold text-[#F5E6C8] text-center mb-2 group-hover:text-[#C8A96A] transition-colors duration-500 leading-snug text-sm">Udyam Registration<br/>Certificate</h3>
+                        <h3 className="font-serif font-bold text-[#F5E6C8] text-center mb-2 group-hover:text-[#C8A96A] transition-colors duration-500 leading-snug text-sm">Udyam Registration<br />Certificate</h3>
                         <span className="text-xs uppercase tracking-widest font-black text-[#C8A96A]/60 mt-auto flex items-center gap-1 group-hover:text-[#C8A96A] transition-colors duration-300">
                             View PDF <ChevronRight className="w-3 h-3" />
                         </span>
@@ -1102,7 +1102,7 @@ const LegalPage = () => {
                         <div className="w-12 h-12 bg-[#0D0D0D] border border-[#C8A96A]/20 rounded-full flex items-center justify-center mb-3 group-hover:bg-[#C8A96A] transition-colors duration-500">
                             <Shield className="w-6 h-6 text-[#C8A96A] group-hover:text-[#0D0D0D] transition-colors duration-500" />
                         </div>
-                        <h3 className="font-serif font-bold text-[#F5E6C8] text-center mb-2 group-hover:text-[#C8A96A] transition-colors duration-500 leading-snug text-sm">TAN<br/>Certificate</h3>
+                        <h3 className="font-serif font-bold text-[#F5E6C8] text-center mb-2 group-hover:text-[#C8A96A] transition-colors duration-500 leading-snug text-sm">TAN<br />Certificate</h3>
                         <span className="text-xs uppercase tracking-widest font-black text-[#C8A96A]/60 mt-auto flex items-center gap-1 group-hover:text-[#C8A96A] transition-colors duration-300">
                             View PDF <ChevronRight className="w-3 h-3" />
                         </span>

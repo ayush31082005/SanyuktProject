@@ -75,10 +75,16 @@ exports.register = async (req, res) => {
         }
 
         await user.save();
+        console.log(`[AUTH] User saved, sending OTP to ${email}`);
 
-        await sendEmail(email, "Registration OTP", `Your OTP is ${otp}`);
+        sendEmail(email, "Registration OTP", `Your OTP is ${otp}`).catch(err => {
+            console.error("[AUTH] Registration OTP Email Failed:", err.message);
+        });
 
-        res.json({ message: "OTP Sent to Email" });
+        res.json({ 
+            success: true, 
+            message: "OTP Sent to Email. Please check your inbox (and spam folder)." 
+        });
 
     } catch (error) {
         console.error("Registration error:", error);
@@ -227,10 +233,15 @@ exports.forgotPassword = async (req, res) => {
 
         await user.save();
 
-        await sendEmail(normalizedEmail, "Reset Password OTP", `Your OTP is ${otp}`);
+        console.log(`[AUTH] Password reset OTP generated for ${normalizedEmail}`);
+        sendEmail(normalizedEmail, "Reset Password OTP", `Your OTP is ${otp}`).catch(err => {
+            console.error("[AUTH] Forgot Password OTP Email Failed:", err.message);
+        });
 
-        console.log(`[AUTH DEBUG] OTP Sent for Reset: ${normalizedEmail}`);
-        res.json({ message: "OTP Sent for Reset" });
+        res.json({ 
+            success: true, 
+            message: "OTP Sent for Reset. Please check your email." 
+        });
     } catch (error) {
         console.error(`[AUTH ERROR] Forgot password: ${error.message}`, error.stack);
         console.error("Error in forgotPassword:", error);

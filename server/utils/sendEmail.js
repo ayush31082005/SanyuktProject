@@ -13,6 +13,8 @@ const sendEmail = async (to, subject, text) => {
             connectionTimeout: 10000, // 10 seconds timeout
         });
 
+        console.log(`[EMAIL] START: Attempting to send to ${to} with subject: ${subject}`);
+
         const mailOptions = {
             from: `"Sanyukt Parivaar and Rich Life" <${process.env.EMAIL_USER}>`,
             to,

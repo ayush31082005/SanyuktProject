@@ -167,7 +167,7 @@ const UserDashboardLayout = () => {
     if (!userData) return null;
 
     return (
-        <div className="min-h-screen bg-[#0D0D0D] flex">
+        <div className="min-h-screen overflow-x-hidden bg-[#0D0D0D] flex">
             {/* Sidebar */}
             <aside
                 className={`fixed left-0 h-[calc(100vh-60px)] md:h-[calc(100vh-80px)] top-[60px] md:top-[80px] bg-[#1A1A1A] text-white transition-all duration-300 z-50 shadow-none overflow-y-auto no-scrollbar border-r border-white/5
@@ -359,18 +359,18 @@ const UserDashboardLayout = () => {
                 className={`flex-1 flex flex-col transition-all duration-300 min-h-[calc(100vh-80px)] text-white
                     ${sidebarOpen ? 'md:ml-72' : 'md:ml-20'}`}
             >
-                <div className="flex-1 px-4 md:px-8 pb-8 pt-0 animate-fadeIn relative">
+                <div className="flex-1 px-3 sm:px-4 md:px-8 pb-8 pt-0 animate-fadeIn relative overflow-x-hidden">
                     {!sidebarOpen && isMobile && (
-                        <div className="py-5 mb-4 flex items-center space-x-4 text-[#C8A96A] md:hidden">
+                        <div className="py-5 mb-4 flex items-center gap-3 text-[#C8A96A] md:hidden min-w-0">
                             <button
                                 onClick={() => setSidebarOpen(true)}
-                                className="w-14 h-14 flex items-center justify-center bg-[#1A1A1A] shadow-xl shadow-black/40 border border-[#C8A96A]/20 rounded-[2rem] active:scale-95 transition-all text-[#C8A96A]"
+                                className="w-12 h-12 sm:w-14 sm:h-14 shrink-0 flex items-center justify-center bg-[#1A1A1A] shadow-xl shadow-black/40 border border-[#C8A96A]/20 rounded-[1.5rem] sm:rounded-[2rem] active:scale-95 transition-all text-[#C8A96A]"
                             >
-                                <Menu size={28} />
+                                <Menu size={24} />
                             </button>
-                            <div className="flex flex-col leading-none">
-                                <span className="font-black text-2xl tracking-tighter uppercase">Menu</span>
-                                <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">Navigation</span>
+                            <div className="flex min-w-0 flex-col leading-none">
+                                <span className="font-black text-xl sm:text-2xl tracking-tighter uppercase">Menu</span>
+                                <span className="text-[9px] sm:text-[10px] font-black text-white/40 uppercase tracking-widest">Navigation</span>
                             </div>
                         </div>
                     )}

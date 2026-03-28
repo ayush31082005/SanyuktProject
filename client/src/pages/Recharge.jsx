@@ -510,7 +510,7 @@ const Recharge = () => {
     ];
 
     return (
-        <div className='min-h-screen bg-[#0D0D0D] flex flex-col font-sans text-[#F5E6C8] pt-24'>
+        <div className='min-h-screen bg-[#0D0D0D] flex flex-col font-sans text-[#F5E6C8]'>
             {/* ── SUCCESS ALERT BANNER (Responsive) ── */}
             <AnimatePresence>
                 {showSuccessAlert && (
@@ -545,7 +545,7 @@ const Recharge = () => {
             </AnimatePresence>
 
             {/* 1. PAGE BANNER - Responsive */}
-            <section className='relative min-h-[160px] md:min-h-[240px] flex items-center justify-center overflow-hidden bg-[#0D0D0D] py-8 md:py-12'>
+            <section className='relative min-h-[160px] md:min-h-[240px] flex items-center justify-center overflow-hidden bg-[#0D0D0D] pt-[76px] pb-8 md:pt-[96px] md:pb-12'>
                 <div
                     className='absolute inset-0 bg-cover bg-center opacity-100'
                     style={{

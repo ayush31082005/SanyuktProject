@@ -2,7 +2,7 @@ import React from 'react';
 
 const WhyChooseSection = ({ whyChoosePoints }) => {
     return (
-        <section className="py-10 md:py-16 bg-[#121212] relative border-y border-[#C8A96A]/10">
+        <section className="py-6 bg-[#0D0D0D] relative border-y border-[#C8A96A]/10">
             <div className="container mx-auto px-4">
                 <h2 className="text-xl md:text-3xl font-serif font-bold text-center text-[#F5E6C8] mb-1 uppercase tracking-widest">
                     Why Choose <span className="text-[#C8A96A]">Sanyukt Parivaar</span>?

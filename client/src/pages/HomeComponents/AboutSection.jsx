@@ -3,7 +3,7 @@ import { Shield } from 'lucide-react';
 
 const AboutSection = ({ aboutImage, teamImages }) => {
     return (
-        <section className="py-2 bg-[#0D0D0D] relative overflow-hidden">
+        <section className="py-10 md:py-16 bg-[#0D0D0D] relative overflow-hidden">
             <div className="container mx-auto px-4">
                 <div className="text-center mb-2">
                     <h2 className="text-xl md:text-3xl font-serif font-bold text-[#C8A96A] inline-block relative pb-1 tracking-widest uppercase">

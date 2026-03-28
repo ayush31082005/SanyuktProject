@@ -3,7 +3,7 @@ import { Check } from 'lucide-react';
 
 const BusinessOpportunity = ({ businessHighlights, businessImage, handleNavigation }) => {
     return (
-        <section className="py-6 bg-[#0D0D0D] text-white relative overflow-hidden border-y border-[#C8A96A]/10" >
+        <section className="py-10 md:py-16 bg-[#121212] relative overflow-hidden border-y border-[#C8A96A]/10" >
             <div className="container mx-auto px-4 max-w-5xl">
                 <div className="grid md:grid-cols-2 gap-6 items-center">
                     <div className="space-y-2 flex flex-col justify-center">

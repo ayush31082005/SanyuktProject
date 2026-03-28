@@ -16,8 +16,8 @@ const franchiseSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        required: true,
-        unique: true
+        required: false,
+        unique: false // Changed to false to prevent multiple empty strings from colliding if not set
     },
     address: {
         type: String,

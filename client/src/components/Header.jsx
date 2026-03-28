@@ -751,7 +751,7 @@ const Header = () => {
     return (
         <Box sx={{ flexGrow: 1 }}>
             <StyledAppBar position="fixed">
-                <Container maxWidth={false} sx={{ px: { xs: 2, lg: 3 } }}>
+                <Container maxWidth={false} sx={{ px: { xs: 2, sm: 2.5, lg: 3 } }}>
                     <Toolbar disableGutters sx={{
                         height: '100%',
                         position: 'relative',
@@ -763,7 +763,7 @@ const Header = () => {
                         <Box
                             sx={{
                                 display: { xs: 'flex', lg: 'none' },
-                                width: '48px',
+                                width: { xs: '64px', sm: '68px' },
                                 flexShrink: 0,
                             }}
                         />
@@ -1195,11 +1195,12 @@ const Header = () => {
                         {/* RIGHT - HAMBURGER (MOBILE/TABLET) */}
                         <Box sx={{
                             display: { xs: 'flex', lg: 'none' },
-                            width: '48px',
+                            width: { xs: '64px', sm: '68px' },
                             flexShrink: 0,
                             justifyContent: 'flex-end',
                             alignItems: 'center',
-                            zIndex: 10
+                            zIndex: 10,
+                            pr: { xs: 0.75, sm: 1 }
                         }}>
                             <IconButton
                                 color="inherit"
@@ -1209,6 +1210,7 @@ const Header = () => {
                                 sx={{
                                     color: '#C9A84C',
                                     p: 1,
+                                    mr: { xs: 0.5, sm: 0.75 },
                                 }}
                             >
                                 <MenuIcon sx={{ fontSize: { xs: '30px', sm: '32px' } }} />

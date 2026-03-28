@@ -842,20 +842,20 @@ const MyAccount = ({ defaultTab }) => {
 
                             {/* ── Orders ── */}
                             {tabValue === 2 && (
-                                <Box sx={{ bgcolor: '#1A1A1A', borderRadius: '12px', p: 3, boxShadow: '0 2px 12px rgba(0, 0, 0, 0.4)' }}>
-                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3, flexWrap: 'wrap', gap: 2 }}>
-                                        <Typography variant="h4" sx={{ fontWeight: 800, color: '#F5E6C8' }}>Orders</Typography>
-                                        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                                <Box sx={{ bgcolor: '#1A1A1A', borderRadius: { xs: '10px', sm: '12px' }, p: { xs: 1.5, sm: 3 }, boxShadow: '0 2px 12px rgba(0, 0, 0, 0.4)' }}>
+                                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: { xs: 'stretch', sm: 'center' }, mb: 3, flexWrap: 'wrap', gap: 2, flexDirection: { xs: 'column', sm: 'row' } }}>
+                                        <Typography variant="h4" sx={{ fontWeight: 800, color: '#F5E6C8', fontSize: { xs: '2rem', sm: '2.125rem' } }}>Orders</Typography>
+                                        <Box sx={{ display: 'flex', gap: 1.25, alignItems: 'stretch', flexDirection: { xs: 'column', sm: 'row' }, width: { xs: '100%', sm: 'auto' } }}>
                                             <TextField size="small" placeholder="Search order, invoice, email" value={orderSearchQuery} onChange={(e) => setOrderSearchQuery(e.target.value)}
                                                 sx={{ width: { xs: '100%', sm: '320px' }, '& .MuiOutlinedInput-root': { borderRadius: '6px' } }}
                                                 InputProps={{ startAdornment: <InputAdornment position="start"><SearchIcon sx={{ color: 'rgba(200, 169, 106, 0.4)', fontSize: 20 }} /></InputAdornment> }} />
-                                            <Button variant="contained" onClick={() => navigate('/products')} sx={{ bgcolor: '#C8A96A', '&:hover': { bgcolor: '#C8A96A' }, borderRadius: '6px', textTransform: 'none', px: 2.5, py: 1, whiteSpace: 'nowrap', fontWeight: 600, boxShadow: 'none' }}>New sales order</Button>
+                                            <Button variant="contained" onClick={() => navigate('/products')} sx={{ bgcolor: '#C8A96A', '&:hover': { bgcolor: '#C8A96A' }, borderRadius: '6px', textTransform: 'none', px: 2.5, py: 1, whiteSpace: 'nowrap', fontWeight: 600, boxShadow: 'none', width: { xs: '100%', sm: 'auto' } }}>New sales order</Button>
                                         </Box>
                                     </Box>
 
                                     <Box sx={{ borderBottom: 1, borderColor: 'rgba(200, 169, 106, 0.2)', mb: 4 }}>
                                         <Tabs value={orderTab} onChange={(e, v) => setOrderTab(v)} variant="scrollable" scrollButtons="auto"
-                                            sx={{ minHeight: '44px', '& .MuiTab-root': { textTransform: 'none', fontWeight: 700, fontSize: '14px', minWidth: 'auto', px: 3, py: 1, minHeight: '44px', color: 'rgba(200, 169, 106, 0.8)' }, '& .Mui-selected': { color: '#C8A96A !important' }, '& .MuiTabs-indicator': { backgroundColor: '#C8A96A', height: 3, borderRadius: '3px 3px 0 0' } }}>
+                                            sx={{ minHeight: '44px', '& .MuiTab-root': { textTransform: 'none', fontWeight: 700, fontSize: { xs: '12px', sm: '14px' }, minWidth: 'auto', px: { xs: 1.5, sm: 3 }, py: 1, minHeight: '44px', color: 'rgba(200, 169, 106, 0.8)' }, '& .Mui-selected': { color: '#C8A96A !important' }, '& .MuiTabs-indicator': { backgroundColor: '#C8A96A', height: 3, borderRadius: '3px 3px 0 0' } }}>
                                             <Tab label="Active" value="Active" />
                                             <Tab label="All Orders" value="All Orders" />
                                             <Tab label="To Invoice" value="To Invoice" />
@@ -869,12 +869,12 @@ const MyAccount = ({ defaultTab }) => {
                                     ) : (
                                         <Box>
                                             {userOrders.length === 0 && (
-                                                <Paper variant="outlined" sx={{ borderRadius: '12px', p: 4, mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
+                                                <Paper variant="outlined" sx={{ borderRadius: '12px', p: { xs: 2, sm: 4 }, mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: { xs: 'stretch', sm: 'center' }, flexWrap: 'wrap', gap: 2, flexDirection: { xs: 'column', sm: 'row' } }}>
                                                     <Box>
-                                                        <Typography variant="h5" sx={{ fontWeight: 800, color: '#F5E6C8', mb: 1 }}>Create your first order</Typography>
+                                                        <Typography variant="h5" sx={{ fontWeight: 800, color: '#F5E6C8', mb: 1, fontSize: { xs: '1.6rem', sm: '1.5rem' } }}>Create your first order</Typography>
                                                         <Typography variant="body2" sx={{ color: 'rgba(200, 169, 106, 0.8)', maxWidth: '600px', lineHeight: 1.6 }}>Sanyukt Parivaar aggregates orders from all of your different sales channels here.</Typography>
                                                     </Box>
-                                                    <Button variant="outlined" onClick={() => navigate('/products')} sx={{ borderRadius: '6px', textTransform: 'none', borderColor: 'rgba(200, 169, 106, 0.2)', color: '#C8A96A', fontWeight: 600 }}>Create a New Sales order</Button>
+                                                    <Button variant="outlined" onClick={() => navigate('/products')} sx={{ borderRadius: '6px', textTransform: 'none', borderColor: 'rgba(200, 169, 106, 0.2)', color: '#C8A96A', fontWeight: 600, width: { xs: '100%', sm: 'auto' } }}>Create a New Sales order</Button>
                                                 </Paper>
                                             )}
 
@@ -947,34 +947,42 @@ const MyAccount = ({ defaultTab }) => {
                                                             </TableContainer>
                                                         </Box>
                                                         {/* Mobile Cards */}
-                                                        <Box sx={{ display: { xs: 'flex', md: 'none' }, flexDirection: 'column', gap: 2 }}>
+                                                        <Box sx={{ display: { xs: 'flex', md: 'none' }, flexDirection: 'column', gap: 1.5 }}>
                                                             {filteredOrders.map((order, index) => {
                                                                 const s = getOrderStyle(order.status);
                                                                 const productName = order.product?.name || order.items?.[0]?.name || order.items?.[0]?.productId?.name || 'Item';
                                                                 const total = order.totalAmount || order.total || '0';
                                                                 const statusMatch = order.status?.toLowerCase() || 'pending';
                                                                 return (
-                                                                    <Paper key={order._id || index} variant="outlined" sx={{ p: 2, borderRadius: '12px', bgcolor: '#1A1A1A' }}>
-                                                                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1.5 }}>
-                                                                            <Box>
-                                                                                <Typography sx={{ fontWeight: 800, fontSize: '14px', color: '#F5E6C8' }}>#{order._id?.slice(-8).toUpperCase() || index + 1}</Typography>
+                                                                    <Paper key={order._id || index} variant="outlined" sx={{ p: 1.5, borderRadius: '12px', bgcolor: '#1A1A1A', borderColor: 'rgba(200, 169, 106, 0.15)' }}>
+                                                                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1.25, gap: 1, flexWrap: 'wrap' }}>
+                                                                            <Box sx={{ minWidth: 0, flex: 1 }}>
+                                                                                <Typography sx={{ fontWeight: 800, fontSize: '13px', color: '#F5E6C8', wordBreak: 'break-word' }}>#{order._id?.slice(-8).toUpperCase() || index + 1}</Typography>
                                                                                 <Typography sx={{ fontSize: '12px', color: 'rgba(200, 169, 106, 0.8)' }}>{new Date(order.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</Typography>
                                                                             </Box>
-                                                                            <Box sx={{ px: 1, py: 0.25, borderRadius: '4px', bgcolor: s.color, color: s.text, fontWeight: 800, fontSize: '10px', textTransform: 'uppercase' }}>{s.label}</Box>
+                                                                            <Box sx={{ px: 1, py: 0.4, borderRadius: '4px', bgcolor: s.color, color: s.text, fontWeight: 800, fontSize: '9px', textTransform: 'uppercase', flexShrink: 0 }}>{s.label}</Box>
                                                                         </Box>
-                                                                        <Typography sx={{ fontWeight: 600, fontSize: '14px', mb: 1, color: '#F5E6C8' }}>{productName}</Typography>
-                                                                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                                        <Typography sx={{ fontWeight: 600, fontSize: '13px', mb: 1.25, color: '#F5E6C8', lineHeight: 1.45, wordBreak: 'break-word' }}>{productName}</Typography>
+                                                                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: { xs: 'stretch', sm: 'center' }, gap: 1.25, flexDirection: { xs: 'column', sm: 'row' } }}>
                                                                             <Typography sx={{ fontWeight: 800, color: '#C8A96A', fontSize: '15px' }}>₹{parseFloat(total).toFixed(2)}</Typography>
-                                                                            <Box sx={{ display: 'flex', gap: 1 }}>
-                                                                                <Button size="small" variant="text" sx={{ color: '#C8A96A', fontWeight: 700, minWidth: 'auto', p: 0.5 }} onClick={() => navigate(`/order-details/${order._id}`)}>Details</Button>
+                                                                            <Box sx={{ display: 'flex', gap: 1, width: '100%' }}>
+                                                                                <Button size="small" variant="outlined" sx={{ color: '#C8A96A', borderColor: 'rgba(200, 169, 106, 0.3)', fontWeight: 700, flex: 1, py: 0.75, minWidth: 0 }} onClick={() => navigate(`/order-details/${order._id}`)}>Details</Button>
                                                                                 {(statusMatch === 'shipped' || statusMatch === 'delivered') && (
-                                                                                    <Button size="small" variant="text" sx={{ color: '#C8A96A', fontWeight: 700, minWidth: 'auto', p: 0.5 }} onClick={() => window.open(`/api/orders/${order._id}/invoice`, '_blank')}>Invoice</Button>
+                                                                                    <Button size="small" variant="contained" sx={{ bgcolor: '#C8A96A', '&:hover': { bgcolor: '#C8A96A' }, color: '#0D0D0D', fontWeight: 700, boxShadow: 'none', flex: 1, py: 0.75, minWidth: 0 }} onClick={() => window.open(`/api/orders/${order._id}/invoice`, '_blank')}>Invoice</Button>
                                                                                 )}
                                                                             </Box>
                                                                         </Box>
                                                                     </Paper>
                                                                 );
                                                             })}
+                                                            {filteredOrders.length === 0 && (
+                                                                <Paper variant="outlined" sx={{ p: 2.5, borderRadius: '12px', textAlign: 'center', bgcolor: '#1A1A1A', borderColor: 'rgba(200, 169, 106, 0.15)' }}>
+                                                                    <Typography sx={{ color: '#F5E6C8', fontWeight: 700, mb: 0.5 }}>No matching orders found</Typography>
+                                                                    <Typography sx={{ fontSize: '12px', color: 'rgba(200, 169, 106, 0.7)' }}>
+                                                                        Search ya selected order filter ke hisaab se koi result nahi mila.
+                                                                    </Typography>
+                                                                </Paper>
+                                                            )}
                                                         </Box>
                                                     </>
                                                 );

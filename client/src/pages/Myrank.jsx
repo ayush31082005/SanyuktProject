@@ -26,14 +26,14 @@ const RANKS = [
 ];
 
 const StatCard = ({ label, value, icon: Icon, isPoints }) => (
-    <div className="bg-[#1A1A1A] border border-[#C8A96A]/20 rounded-[2rem] p-5 shadow-sm flex flex-col justify-between hover:border-[#C8A96A] hover:bg-[#1A1A1A]/80 transition-all">
+    <div className="min-w-0 bg-[#1A1A1A] border border-[#C8A96A]/20 rounded-[1.5rem] md:rounded-[2rem] p-4 md:p-5 shadow-sm flex flex-col justify-between hover:border-[#C8A96A] hover:bg-[#1A1A1A]/80 transition-all">
         <div className="flex items-center justify-between mb-4">
             <div className={`p-2.5 rounded-xl bg-[#C8A96A]/10 text-[#C8A96A] border border-[#C8A96A]/20 shadow-sm`}>
                 <Icon className="w-5 h-5 md:w-6 md:h-6" />
             </div>
         </div>
         <div>
-            <p className="text-xl md:text-2xl font-black text-[#F5E6C8] tracking-tighter leading-none mb-1 uppercase">
+            <p className="break-words text-lg sm:text-xl md:text-2xl font-black text-[#F5E6C8] tracking-tighter leading-none mb-1 uppercase">
                 {value}{isPoints && <span className="text-[10px] ml-1 text-[#C8A96A]/60 uppercase">PV</span>}
             </p>
             <p className="text-[9px] md:text-[10px] font-bold text-[#C8A96A]/80 uppercase tracking-widest">{label}</p>
@@ -71,24 +71,24 @@ const MyRank = () => {
     );
 
     return (
-        <div className="min-h-screen bg-[#0D0D0D] pb-20 relative overflow-hidden">
+        <div className="min-h-screen bg-[#0D0D0D] pb-20 relative overflow-x-hidden">
             {/* ── Background Blobs ── */}
             <div className="fixed inset-0 pointer-events-none">
                 <div className="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-[#C8A96A]/5 blur-[120px] rounded-full" />
                 <div className="absolute bottom-[10%] left-[-5%] w-[500px] h-[500px] bg-[#C8A96A]/5 blur-[120px] rounded-full" />
             </div>
 
-            <div className="relative z-10 p-4 md:p-8 max-w-5xl mx-auto">
+            <div className="relative z-10 px-3 py-4 sm:px-4 md:p-8 max-w-5xl mx-auto">
                 {/* ── Header ── */}
-                <div className="flex items-center gap-6 mb-8 md:mb-10">
+                <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-6 mb-8 md:mb-10">
                     <button
                         onClick={() => navigate(-1)}
-                        className="w-12 h-12 rounded-2xl bg-[#1A1A1A] flex items-center justify-center border border-[#C8A96A]/20 shadow-lg text-[#C8A96A] hover:bg-[#1A1A1A]/80 hover:border-[#C8A96A]/40 transition-all font-bold"
+                        className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-[#1A1A1A] flex items-center justify-center border border-[#C8A96A]/20 shadow-lg text-[#C8A96A] hover:bg-[#1A1A1A]/80 hover:border-[#C8A96A]/40 transition-all font-bold shrink-0"
                     >
                         <ArrowLeft className="w-5 h-5" />
                     </button>
-                    <div>
-                        <h1 className="text-3xl font-black text-[#F5E6C8] uppercase tracking-tighter leading-none mb-1">My Rank</h1>
+                    <div className="min-w-0">
+                        <h1 className="text-2xl sm:text-3xl font-black text-[#F5E6C8] uppercase tracking-tighter leading-none mb-1">My Rank</h1>
                         <p className="text-[10px] text-[#C8A96A]/60 font-black uppercase tracking-[0.2em]">Lifetime Achievement Journey</p>
                     </div>
                 </div>
@@ -107,10 +107,10 @@ const MyRank = () => {
                                 </div>
                                 <div className="min-w-0">
                                     <p className="text-[10px] md:text-[11px] font-black text-[#C8A96A]/80 uppercase tracking-widest mb-1">Current Achievement</p>
-                                    <h2 className="text-3xl md:text-5xl font-black tracking-tighter uppercase truncate leading-none text-[#F5E6C8]">{currentRankName}</h2>
+                                    <h2 className="break-words text-2xl sm:text-3xl md:text-5xl font-black tracking-tighter uppercase leading-none text-[#F5E6C8]">{currentRankName}</h2>
                                 </div>
                             </div>
-                            <div className="bg-[#0D0D0D] px-6 py-4 rounded-2xl md:rounded-3xl border border-[#C8A96A]/20">
+                            <div className="w-full md:w-auto bg-[#0D0D0D] px-5 py-4 rounded-2xl md:rounded-3xl border border-[#C8A96A]/20">
                                 <p className="text-[10px] md:text-[11px] font-black text-[#C8A96A]/70 uppercase tracking-widest mb-1">Total Matched PV</p>
                                 <p className="text-3xl md:text-4xl font-black tracking-tighter text-[#C8A96A] tabular-nums leading-none">{matchedPV.toLocaleString('en-IN')}</p>
                             </div>
@@ -119,17 +119,17 @@ const MyRank = () => {
                         {/* Progress Bar Area */}
                         {nextRank ? (
                             <div className="bg-[#0D0D0D] p-5 md:p-6 rounded-[1.75rem] md:rounded-[2rem] border border-[#C8A96A]/20">
-                                <div className="flex justify-between items-end mb-4">
+                                <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                                     <div className="min-w-0">
                                         <p className="text-[10px] md:text-[11px] font-black text-[#C8A96A]/80 uppercase tracking-widest mb-2">Next Target: <span style={{color: nextRank.color}}>{nextRank.name}</span></p>
                                         <div className="flex items-center gap-2">
                                             <Zap className="w-4 h-4 text-[#C8A96A]" />
-                                            <p className="text-sm font-bold truncate text-[#F5E6C8]">
+                                            <p className="text-sm font-bold text-[#F5E6C8] break-words">
                                                 <span className="font-black">{(nextRank.matchPV - matchedPV).toLocaleString('en-IN')} PV</span> more to go
                                             </p>
                                         </div>
                                     </div>
-                                    <div className="text-right shrink-0 ml-4">
+                                    <div className="shrink-0 text-left sm:ml-4 sm:text-right">
                                         <p className="text-2xl font-black text-[#C8A96A] tabular-nums leading-none">{(progressPct || 0).toFixed(1)}%</p>
                                         <p className="text-[10px] font-black text-[#C8A96A]/60 uppercase tracking-widest mt-1">Progress</p>
                                     </div>
@@ -148,7 +148,7 @@ const MyRank = () => {
                             </div>
                         )}
 
-                        <div className="mt-6 flex items-center gap-2.5 px-4 py-3 bg-[#0D0D0D] border border-[#C8A96A]/10 rounded-xl w-fit">
+                        <div className="mt-6 flex w-full sm:w-fit items-start sm:items-center gap-2.5 px-4 py-3 bg-[#0D0D0D] border border-[#C8A96A]/10 rounded-xl">
                             <Info className="w-4 h-4 text-[#C8A96A] shrink-0" />
                             <p className="text-[9px] font-black uppercase tracking-[0.05em] leading-tight text-[#F5E6C8]/80">Equal matching PV required on Left & Right legs</p>
                         </div>
@@ -156,7 +156,7 @@ const MyRank = () => {
                 </div>
 
                 {/* ── Stats Row ── */}
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-12">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-12">
                     <StatCard
                         label="Personal PV" isPoints
                         value={personalPV.toLocaleString('en-IN')}
@@ -205,7 +205,7 @@ const MyRank = () => {
                                 return (
                                     <div
                                         key={rank.name}
-                                        className={`flex items-center gap-4 p-5 rounded-[1.75rem] border transition-all duration-300 ${isNext ? 'bg-[#0D0D0D] border-[#C8A96A] shadow-xl' : 'bg-[#1A1A1A] border-[#C8A96A]/10 hover:border-[#C8A96A]/30 hover:bg-[#151515]'}`}
+                                        className={`flex flex-col items-start gap-4 p-4 sm:flex-row sm:items-center sm:p-5 rounded-[1.75rem] border transition-all duration-300 ${isNext ? 'bg-[#0D0D0D] border-[#C8A96A] shadow-xl' : 'bg-[#1A1A1A] border-[#C8A96A]/10 hover:border-[#C8A96A]/30 hover:bg-[#151515]'}`}
                                     >
                                         <div className={`w-12 h-12 md:w-14 md:h-14 shrink-0 rounded-xl md:rounded-2xl flex items-center justify-center border ${isNext ? 'bg-[#C8A96A]/10 border-[#C8A96A]/30 text-[#C8A96A]' : 'bg-[#0D0D0D] border-[#C8A96A]/10 text-[#C8A96A]/40'}`}>
                                             <Lock className="w-4 h-4 md:w-5 md:h-5 " />
@@ -228,9 +228,9 @@ const MyRank = () => {
                                             </div>
                                         </div>
 
-                                        <div className="text-right flex flex-col items-end gap-1">
+                                        <div className="flex w-full flex-col items-start gap-1 sm:w-auto sm:items-end">
                                             <p className="text-[8px] font-black text-[#C8A96A]/60 uppercase tracking-[0.2em]">Benefit</p>
-                                            <div className="px-5 py-2 rounded-xl text-xs font-black tracking-tight uppercase bg-[#0D0D0D] text-[#C8A96A] border border-[#C8A96A]/20">
+                                            <div className="w-full break-words px-4 py-2 rounded-xl text-xs font-black tracking-tight uppercase bg-[#0D0D0D] text-[#C8A96A] border border-[#C8A96A]/20 sm:w-auto sm:px-5">
                                                 {rank.reward}
                                             </div>
                                         </div>

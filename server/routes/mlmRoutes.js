@@ -1,0 +1,56 @@
+const express = require("express");
+const router = express.Router();
+const { protect, adminOnly } = require("../middleware/authMiddleware");
+
+const mlmAdminController = require("../controllers/mlmAdminController");
+const mlmController = require("../controllers/mlmController");
+const mlmNetworkController = require("../controllers/mlmNetworkController");
+
+router.post("/register", mlmNetworkController.register);
+router.get("/validate/:sponsorId", mlmNetworkController.validateSponsor);
+router.get("/tree/:userId", protect, mlmNetworkController.getTree);
+router.get("/directs/:userId", protect, mlmNetworkController.getDirects);
+
+// Admin Routes
+router.get("/admin/users", protect, adminOnly, mlmAdminController.getAllUsers);
+router.post("/admin/update-user-status", protect, adminOnly, mlmAdminController.updateUserStatus);
+router.get("/admin/income-reports", protect, adminOnly, mlmAdminController.getIncomeReports);
+router.get("/admin/binary-tree/:userId", protect, adminOnly, mlmAdminController.getBinaryTree);
+router.get("/admin/system-stats", protect, adminOnly, mlmAdminController.getSystemMLMStats);
+
+// Daily Tasks (Triggered by Admin or Cron)
+router.post("/admin/calculate-binary", protect, adminOnly, async (req, res) => {
+    console.log("DEBUG: HIT /api/mlm/admin/calculate-binary");
+    await mlmController.calculateDailyMatchingBonus();
+    res.json({ message: "Binary matching bonus calculated and distributed" });
+});
+
+router.post("/admin/calculate-profit-sharing", protect, adminOnly, async (req, res) => {
+    const { dailyTurnover } = req.body;
+    await mlmController.distributeProfitSharing(dailyTurnover);
+    res.json({ message: "Profit sharing calculated and distributed" });
+});
+
+router.post("/admin/update-ranks", protect, adminOnly, async (req, res) => {
+    await mlmController.updateAllRanks();
+    res.json({ message: "All user ranks updated successfully" });
+});
+
+// User Routes
+router.get("/get-stats", protect, mlmController.getMLMStats);
+router.get("/get-stats/:userId", protect, adminOnly, mlmController.getMLMStats);
+router.get("/get-directs", protect, mlmAdminController.getDirects);
+router.get("/get-directs/:userId", protect, adminOnly, mlmAdminController.getDirects);
+router.post("/repurchase", protect, async (req, res) =>
+    res.status(410).json({
+        success: false,
+        message: "This endpoint is deprecated. Use /api/repurchase/place for repurchase orders.",
+    })
+);
+router.get("/binary-tree/:userId", protect, mlmAdminController.getBinaryTree); // Accessible by user for their own tree
+
+// Downline Team Lists
+router.get("/get-team-list/:type", protect, mlmAdminController.getTeamList);
+router.get("/get-team-list/:type/:userId", protect, adminOnly, mlmAdminController.getTeamList);
+
+module.exports = router;

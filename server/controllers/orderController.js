@@ -1,0 +1,414 @@
+const Order = require("../models/Order");
+const Product = require("../models/Product");
+const User = require("../models/User");
+const bcrypt = require("bcryptjs");
+const { processOrderMLM } = require("../utils/mlmOrderUtils");
+const { createWalletLedgerEntry, getWalletBalance, normalizeWalletType } = require("../utils/walletLedgerUtils");
+const Razorpay = require("razorpay");
+const crypto = require("crypto");
+const sendEmail = require("../utils/sendEmail");
+
+// Initialize Razorpay lazily to prevent server crash if keys are missing
+let razorpay;
+if (process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET) {
+    razorpay = new Razorpay({
+        key_id: process.env.RAZORPAY_KEY_ID,
+        key_secret: process.env.RAZORPAY_KEY_SECRET
+    });
+}
+console.log("[DEBUG] RAZORPAY_KEY_ID:", process.env.RAZORPAY_KEY_ID);
+console.log("[DEBUG] RAZORPAY_KEY_SECRET:", process.env.RAZORPAY_KEY_SECRET ? "Loaded" : "Missing");
+
+// ================= CREATE ORDER (OLD - Razorpay based) =================
+exports.createOrder = async (req, res) => {
+    try {
+        const {
+            product: productId,
+            quantity,
+            shippingInfo,
+            paymentMethod,
+            subtotal,
+            shipping,
+            tax,
+            discount,
+            total,
+            razorpay_order_id,
+            razorpay_payment_id,
+            razorpay_signature
+        } = req.body;
+        const effectivePaymentMethod = paymentMethod || (razorpay_payment_id ? "online" : "cod");
+        const validMethods = ["cod", "online", "upi", "card"];
+        if (!validMethods.includes(effectivePaymentMethod)) {
+            return res.status(400).json({ message: "Invalid payment method" });
+        }
+        const normalizedSubtotal = Number(subtotal || 0);
+        const normalizedShipping = Number(shipping || 0);
+        const normalizedDiscount = Number(discount || 0);
+        const effectiveTax = 0;
+        const effectiveTotal = Number((normalizedSubtotal + normalizedShipping - normalizedDiscount).toFixed(2));
+
+        // Verify payment if online
+        if (effectivePaymentMethod !== 'cod') {
+            const body = razorpay_order_id + "|" + razorpay_payment_id;
+            const expectedSignature = crypto
+                .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+                .update(body)
+                .digest("hex");
+
+            if (expectedSignature !== razorpay_signature) {
+                return res.status(400).json({ message: "Invalid payment signature" });
+            }
+
+            try {
+                const orderDetails = await razorpay.orders.fetch(razorpay_order_id);
+                const actualPaid = orderDetails.amount / 100;
+                if (Math.abs(actualPaid - effectiveTotal) > 0.01) {
+                    return res.status(400).json({ message: "Payment amount mismatch. Fraudulent request detected." });
+                }
+            } catch (err) {
+                console.error("Failed to fetch razorpay order:", err);
+                return res.status(500).json({ message: "Failed to verify transaction amount." });
+            }
+        }
+
+        const productData = await Product.findById(productId);
+        if (!productData) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+
+        const orderBv = (productData.bv || 0) * (quantity || 1);
+        const orderPv = orderBv / 1000;
+
+        const order = new Order({
+            user: req.user._id,
+            product: productId,
+            quantity,
+            shippingInfo,
+            paymentMethod: effectivePaymentMethod,
+            subtotal: normalizedSubtotal,
+            shipping: normalizedShipping,
+            tax: effectiveTax,
+            discount: normalizedDiscount,
+            total: effectiveTotal,
+            bv: orderBv,
+            pv: orderPv,
+            razorpayOrderId: razorpay_order_id,
+            razorpayPaymentId: razorpay_payment_id,
+            status: effectivePaymentMethod === 'cod' ? 'pending' : 'paid',
+            orderType: 'first',
+            tracking: [{
+                status: effectivePaymentMethod === 'cod' ? 'pending' : 'paid',
+                message: effectivePaymentMethod === 'cod' ? 'Order placed successfully' : 'Payment successful and order placed',
+                timestamp: new Date()
+            }]
+        });
+
+        await order.save();
+
+        if (order.status !== "pending") {
+            await processOrderMLM(req.user._id, orderBv, orderPv, {
+                orderId: order._id,
+                orderType: order.orderType,
+                orderTotal: Number(order.total || effectiveTotal || 0),
+            });
+        }
+
+        try {
+            const userEmail = req.user.email;
+            const orderIdShort = order._id.toString().slice(-8).toUpperCase();
+            const subject = `Order Confirmed: #${orderIdShort} - Sanyukt Parivaar`;
+            const text = `Dear ${req.user.name},\n\nThank you for your order!\n\nOrder ID: #${orderIdShort}\nProduct: ${productData.name}\nQuantity: ${quantity}\nTotal Amount: ₹${effectiveTotal}\nPayment Method: ${effectivePaymentMethod.toUpperCase()}\n\nThank you for choosing Sanyukt Parivaar!`;
+
+            sendEmail(userEmail, subject, text).catch(err =>
+                console.error("❌ Failed to send order success email:", err.message)
+            );
+        } catch (emailErr) {
+            console.error("❌ Email data preparation error:", emailErr.message);
+        }
+
+        res.status(201).json(order);
+    } catch (error) {
+        console.error("Order creation error:", error);
+        res.status(500).json({ message: "Failed to place order" });
+    }
+};
+
+// ================= PLACE FIRST PURCHASE (NEW UI) =================
+// POST /api/orders/first-purchase
+// Body: { cart: [{_id, name, price, bv, quantity}], payFrom, orderTo, shippingAddress, accountPassword, directSellerId }
+exports.placeFirstPurchase = async (req, res) => {
+    try {
+        const { cart, payFrom, orderTo, shippingAddress, accountPassword, directSellerId } = req.body;
+
+        // Validations
+        if (!cart || cart.length === 0)
+            return res.status(400).json({ message: "Cart empty hai, koi product select karo" });
+        if (!payFrom)
+            return res.status(400).json({ message: "Pay From wallet select karo" });
+        if (!shippingAddress || shippingAddress.trim() === '')
+            return res.status(400).json({ message: "Shipping address enter karo" });
+        if (!accountPassword)
+            return res.status(400).json({ message: "Account password enter karo" });
+
+        // Password verify
+        const user = await User.findById(req.user._id);
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        const isMatch = await bcrypt.compare(accountPassword, user.password);
+        if (!isMatch) return res.status(401).json({ message: "Account password galat hai" });
+
+        const isRazorpay = payFrom === "razorpay";
+        const normalizedWalletType = isRazorpay ? "online" : normalizeWalletType(payFrom);
+
+        if (!isRazorpay && !["product-wallet", "e-wallet"].includes(normalizedWalletType)) {
+            return res.status(400).json({ message: "Invalid wallet selected" });
+        }
+
+        const totalAmount = cart.reduce((sum, item) => sum + (Number(item.price || 0) * Number(item.quantity || 0)), 0);
+        const totalBV = cart.reduce((sum, item) => sum + ((Number(item.bv || 0)) * Number(item.quantity || 0)), 0);
+        const totalPV = totalBV / 1000;
+
+        // Razorpay verify logic
+        if (isRazorpay) {
+            const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+            if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+                return res.status(400).json({ message: "Payment details missing" });
+            }
+            const body = razorpay_order_id + "|" + razorpay_payment_id;
+            const expectedSignature = crypto
+                .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+                .update(body)
+                .digest("hex");
+            if (expectedSignature !== razorpay_signature) {
+                return res.status(400).json({ message: "Invalid payment signature" });
+            }
+        } else {
+            const currentWallet = await getWalletBalance(req.user._id, normalizedWalletType);
+            if (currentWallet.balance < totalAmount) {
+                return res.status(400).json({
+                    message: `${normalizedWalletType === "product-wallet" ? "Product wallet" : "E-wallet"} mein insufficient balance. Available: Rs ${currentWallet.balance}, Required: Rs ${totalAmount}`,
+                });
+            }
+        }
+
+        // Har product ke liye alag Order create karo
+        const createdOrders = [];
+        for (const item of cart) {
+            // Product DB mein verify karo (agar _id available hai)
+            let productId = item._id || item.id;
+            let productBV = item.bv || 0;
+
+            if (productId) {
+                const productData = await Product.findById(productId);
+                if (productData) productBV = productData.bv || 0;
+            }
+
+            const order = await Order.create({
+                user: req.user._id,
+                product: productId,
+                quantity: item.quantity,
+                shippingInfo: { address: shippingAddress },
+                paymentMethod: normalizedWalletType,
+                total: item.price * item.quantity,
+                subtotal: item.price * item.quantity,
+                bv: productBV * item.quantity,
+                pv: (productBV * item.quantity) / 1000,
+                orderType: 'first',
+                orderTo: orderTo || 'self',
+                directSellerId: directSellerId || "",
+                status: 'pending',
+                tracking: [{ status: 'pending', message: 'First purchase order placed', timestamp: new Date() }]
+            });
+
+            createdOrders.push(order);
+        }
+
+        let balanceAfter = 0;
+        if (!isRazorpay) {
+            const walletLedger = await createWalletLedgerEntry({
+                userId: req.user._id,
+                walletType: normalizedWalletType,
+                txType: "debit",
+                amount: totalAmount,
+                sourceType: "first-purchase-order",
+                sourceId: createdOrders[0]?._id || null,
+                description: `First purchase order payment (${createdOrders.length} item(s))`,
+                meta: {
+                    orderIds: createdOrders.map((order) => order._id),
+                    orderTo: orderTo || "self",
+                    directSellerId: directSellerId || "",
+                },
+            });
+            balanceAfter = walletLedger.balanceAfter;
+        }
+
+        // MLM income trigger karo (non-blocking)
+        try {
+            await processOrderMLM(req.user._id, totalBV, totalPV, {
+                orderId: createdOrders[0]?._id || null,
+                orderType: "first",
+                orderTotal: Number(totalAmount || 0),
+            });
+        } catch (mlmErr) {
+            console.error("❌ MLM trigger error:", mlmErr.message);
+        }
+
+        // Confirmation email (non-blocking)
+        try {
+            const orderIdShort = createdOrders[0]._id.toString().slice(-8).toUpperCase();
+            const productNames = cart.map(i => `${i.name} x${i.quantity}`).join(', ');
+            const subject = `First Purchase Confirmed: #${orderIdShort} - Sanyukt Parivaar`;
+            const text = `Dear ${user.userName || user.memberId},\n\nAapka first purchase order confirm ho gaya hai!\n\nOrder ID: #${orderIdShort}\nProducts: ${productNames}\nTotal Amount: ₹${totalAmount}\nPayment From: ${payFrom}\n\nThank you for choosing Sanyukt Parivaar!\nEmpowering Lives, Together.`;
+            sendEmail(user.email, subject, text).catch(err =>
+                console.error("❌ Email error:", err.message)
+            );
+        } catch (emailErr) {
+            console.error("❌ Email prep error:", emailErr.message);
+        }
+
+        res.status(201).json({
+            message: "First purchase order successfully placed!",
+            orders: createdOrders,
+            totalAmount,
+            totalBV,
+            walletUsed: normalizedWalletType,
+            balanceAfter: isRazorpay ? undefined : balanceAfter,
+        });
+
+    } catch (error) {
+        console.error("First purchase error:", error);
+        res.status(500).json({ message: "Order place karne mein error aaya" });
+    }
+};
+
+// ================= CREATE RAZORPAY ORDER =================
+exports.createRazorpayOrder = async (req, res) => {
+    try {
+        const { amount } = req.body;
+
+        if (!razorpay) {
+            return res.status(503).json({ message: "Payment service unavailable. Please configure Razorpay keys." });
+        }
+
+        if (!amount || amount <= 0) {
+            return res.status(400).json({ message: "Invalid amount" });
+        }
+
+        const options = {
+            amount: Math.round(amount * 100),
+            currency: "INR",
+            receipt: `receipt_product_${Date.now()}`
+        };
+
+        const razorpayOrder = await razorpay.orders.create(options);
+        res.status(200).json({
+            ...razorpayOrder,
+            key: process.env.RAZORPAY_KEY_ID
+        });
+    } catch (error) {
+        console.error("Razorpay order creation error:", error);
+        res.status(500).json({ message: "Failed to create payment order" });
+    }
+};
+
+// ================= GET LOGGED IN USER ORDERS =================
+exports.myOrders = async (req, res) => {
+    try {
+        const orders = await Order.find({ user: req.user._id })
+            .populate("product", "name image price")
+            .sort("-createdAt");
+
+        res.json(orders);
+    } catch (error) {
+        console.error("Fetch orders error:", error);
+        res.status(500).json({ message: "Failed to fetch orders" });
+    }
+};
+
+// ================= GET SINGLE ORDER =================
+exports.getOrder = async (req, res) => {
+    try {
+        const order = await Order.findById(req.params.id)
+            .populate("product", "name image price")
+            .populate("user", "userName email name");
+
+        if (!order) return res.status(404).json({ message: "Order not found" });
+
+        if (order.user._id.toString() !== req.user._id.toString() && req.user.role !== "admin") {
+            return res.status(403).json({ message: "Not authorized" });
+        }
+
+        res.json(order);
+    } catch (error) {
+        res.status(500).json({ message: "Server error" });
+    }
+};
+
+// ================= ADMIN: GET ALL ORDERS =================
+exports.getAllOrders = async (req, res) => {
+    try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+
+        const [orders, total] = await Promise.all([
+            Order.find()
+                .populate("product", "name image price")
+                .populate("user", "userName email name")
+                .sort("-createdAt")
+                .skip(skip)
+                .limit(limit),
+            Order.countDocuments()
+        ]);
+
+        res.json({
+            success: true,
+            total,
+            totalPages: Math.ceil(total / limit),
+            currentPage: page,
+            limit,
+            count: orders.length,
+            orders
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Server error" });
+    }
+};
+
+// ================= ADMIN: UPDATE STATUS =================
+exports.updateOrderStatus = async (req, res) => {
+    try {
+        const order = await Order.findById(req.params.id);
+        if (!order) return res.status(404).json({ message: "Order not found" });
+
+        order.status = req.body.status;
+        order.tracking.push({
+            status: req.body.status,
+            message: req.body.message || `Order status updated to ${req.body.status}`,
+            timestamp: new Date()
+        });
+
+        await order.save();
+
+        const shouldTriggerBinary =
+            order.orderType === "first" &&
+            order.binaryProcessStatus === "pending" &&
+            ["paid", "processing", "shipped", "reached_store", "out_for_delivery", "delivered"].includes(order.status);
+
+        if (shouldTriggerBinary) {
+            try {
+                await processOrderMLM(order.user, order.bv, order.pv, {
+                    orderId: order._id,
+                    orderType: order.orderType,
+                    orderTotal: Number(order.total || 0),
+                });
+            } catch (mlmErr) {
+                console.error("Order status MLM trigger error:", mlmErr.message);
+            }
+        }
+
+        res.json({ message: "Order status updated", order });
+    } catch (error) {
+        res.status(500).json({ message: "Server error" });
+    }
+};

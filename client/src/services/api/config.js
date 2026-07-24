@@ -1,7 +1,8 @@
-const DEFAULT_API_URL = "https://sanyuktproject-main-3.onrender.com";
+const DEFAULT_API_URL = "https://sanyuktproject-1-4xn0.onrender.com";
 const LOCAL_DEV_API_URL = "http://localhost:5001";
 const LEGACY_API_URL_MAP = {
     "https://sanyuktproject-2o2m.onrender.com": DEFAULT_API_URL,
+    "https://sanyuktproject-main-3.onrender.com": DEFAULT_API_URL,
 };
 
 const rawApiUrl = String(import.meta.env.VITE_API_URL || "").trim();

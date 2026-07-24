@@ -17,6 +17,7 @@ const allowedOrigins = [
     "http://localhost:5001",
     "https://sanyuktparivarrichlifefamily.com",
     "https://www.sanyuktparivarrichlifefamily.com",
+    "https://sanyukt-project-five.vercel.app",
     "https://sanyuktproject-main-3.onrender.com",
     "https://sanyukt-project.vercel.app",
 ];

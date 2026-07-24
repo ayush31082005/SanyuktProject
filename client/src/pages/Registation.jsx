@@ -238,22 +238,12 @@ const RegistrationForm = () => {
 
             if (data) {
                 localStorage.removeItem('registrationDebugOtp');
-
-                if (data?.emailSent === false) {
-                    throw new Error(data?.warning || data?.message || 'OTP email could not be sent. Please try again.');
-                }
-
-                setSuccess(data.message || 'Registration successful! Redirecting to verification...');
-                localStorage.setItem('registrationEmail', formData.email);
-                localStorage.setItem('registrationMobile', formData.mobile);
+                localStorage.removeItem('registrationEmail');
+                localStorage.removeItem('registrationMobile');
+                setSuccess(data.message || 'Registration successful! Redirecting to login...');
 
                 setTimeout(() => {
-                    navigate('/verify-otp', {
-                        state: {
-                            email: formData.email,
-                            mobile: formData.mobile
-                        }
-                    });
+                    navigate('/login');
                 }, 1500);
             }
         } catch (err) {
@@ -563,4 +553,3 @@ const RegistrationForm = () => {
 };
 
 export default RegistrationForm;
-

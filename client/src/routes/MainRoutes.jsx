@@ -31,7 +31,6 @@ import ShipmentDeliveryPolicy from '../footerPages/ShipmentDeliveryPolicy.jsx'
 import OrderPolicy from '../footerPages/OrderPolicy.jsx'
 import TestimonialPolicy from '../footerPages/TestimonialPolicy.jsx'
 import OurBanker from '../footerPages/OurBanker.jsx'
-import VerifyOTP from '../pages/VerifyOTP.jsx'
 import Checkout from '../pages/Checkout.jsx'
 import Cart from '../pages/Cart.jsx'
 import Franchise from '../pages/Franchise.jsx'
@@ -125,7 +124,6 @@ const MainRoutes = () => {
             <Route path='/order-policy' element={<OrderPolicy />} />
             <Route path='/testimonial-policy' element={<TestimonialPolicy />} />
             <Route path='/banker' element={<OurBanker />} />
-            <Route path='/verify-otp' element={<VerifyOTP />} />
             <Route path='/franchise/list' element={<Franchise />} />
             <Route path='/franchise/login' element={<FranchiseLogin />} />
             <Route path='/forgot-password' element={<ForgotPassword />} />

@@ -36,24 +36,18 @@ const handleServiceError = (res, error, fallbackMessage) => {
 // ================= REGISTER =================
 exports.register = async (req, res) => {
     try {
-        const { user, otp } = await registerUserUnderSponsor(req.body);
+        const { user } = await registerUserUnderSponsor(req.body);
 
-        console.log(`[AUTH] User saved, sending OTP to ${user.email}`);
-        logOtpToConsole("register", user.email, otp);
-        try {
-            await sendEmail(user.email, "Registration OTP", `Your OTP is ${otp}`);
-        } catch (err) {
-            console.error("[AUTH] Registration OTP Email Failed:", err.message);
-            return res.status(502).json({
-                success: false,
-                message: `OTP could not be sent: ${err.message}`
-            });
-        }
+        const welcomeSubject = "Welcome to Sanyukt Parivaar";
+        const welcomeText = `Dear ${user.userName || "Member"},\n\nYour registration is complete.\n\nYour Member ID: ${user.memberId}\nRegistered Phone: ${user.mobile}\n\nYou can now log in to your dashboard.\n\nThank you for joining Sanyukt Parivaar!`;
+        sendEmail(user.email, welcomeSubject, welcomeText).catch((err) => {
+            console.error("Welcome Email Error:", err.message);
+        });
 
         return res.json({
             success: true,
-            emailSent: true,
-            message: "OTP sent to email. Please check your inbox (and spam folder)."
+            message: "Registration successful. You can now log in.",
+            memberId: user.memberId
         });
     } catch (error) {
         return handleServiceError(res, error, "Registration error:");

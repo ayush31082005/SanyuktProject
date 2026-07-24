@@ -55,8 +55,6 @@ const normalizeCategory = (value) => {
 
 const normalizeCaste = (value) => String(value || "").trim();
 
-const generateOtp = () => Math.floor(100000 + Math.random() * 900000).toString();
-
 const getChildId = (user, side) => {
     if (!user) return null;
     return user[`${side}ChildId`] || user[side] || null;
@@ -391,10 +389,9 @@ async function registerUserUnderSponsor(payload) {
                 normalizeMemberId(existingUser.sponsorId) &&
                 normalizeMemberId(existingUser.sponsorId) !== sponsor.memberId
             ) {
-                throw createError(409, "A pending registration already exists for this email. Verify or resend OTP for the existing account.");
+                throw createError(409, "A registration already exists for this email with a different sponsor.");
             }
 
-            const otp = generateOtp();
             const hashedPassword = await bcrypt.hash(password, 10);
 
             let user = existingUser;
@@ -425,8 +422,7 @@ async function registerUserUnderSponsor(payload) {
                     bv: 0,
                     pv: 0,
                     dailyCapping: 0,
-                    otp,
-                    otpExpire: Date.now() + 5 * 60 * 1000
+                    isVerified: true
                 });
 
                 await user.save({ session });
@@ -462,8 +458,9 @@ async function registerUserUnderSponsor(payload) {
                     bv: Number(user.bv || 0),
                     pv: Number(user.pv || 0),
                     dailyCapping: Number(user.dailyCapping || 0),
-                    otp,
-                    otpExpire: Date.now() + 5 * 60 * 1000
+                    isVerified: true,
+                    otp: undefined,
+                    otpExpire: undefined
                 });
 
                 if (!user.memberId) {
@@ -480,8 +477,7 @@ async function registerUserUnderSponsor(payload) {
                 placement: {
                     parentId: placement?.parentId || null,
                     position: placement?.position || user.position || null
-                },
-                otp
+                }
             };
         });
 
@@ -722,4 +718,3 @@ module.exports = {
     resolvePlacementForSponsor,
     validateSponsorId
 };
-

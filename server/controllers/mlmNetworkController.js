@@ -1,4 +1,3 @@
-const sendEmail = require("../utils/sendEmail");
 const {
     MlmServiceError,
     findUserByIdentifier,
@@ -42,28 +41,11 @@ const handleError = (res, error, fallbackMessage) => {
 
 exports.register = async (req, res) => {
     try {
-        const { user, sponsor, placement, otp } = await registerUserUnderSponsor(req.body);
-
-        try {
-            await sendEmail(user.email, "Registration OTP", `Your OTP is ${otp}`);
-        } catch (emailError) {
-            console.error("[MLM] Registration OTP email failed:", emailError.message);
-            return res.status(502).json({
-                success: false,
-                message: `User registered and placed successfully, but OTP email could not be sent: ${emailError.message}`,
-                data: {
-                    userId: String(user._id),
-                    memberId: user.memberId,
-                    sponsorId: sponsor?.memberId || user.sponsorId || null,
-                    parentId: placement.parentId ? String(placement.parentId) : null,
-                    position: placement.position
-                }
-            });
-        }
+        const { user, sponsor, placement } = await registerUserUnderSponsor(req.body);
 
         return res.status(201).json({
             success: true,
-            message: "Registration successful. OTP sent to email.",
+            message: "Registration successful. You can now log in.",
             data: {
                 userId: String(user._id),
                 memberId: user.memberId,

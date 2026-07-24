@@ -19,14 +19,22 @@ const run = (args, label) => {
     const result = spawnSync(npmCmd, args, {
         cwd: clientDir,
         stdio: "inherit",
-        shell: false,
+        // Windows requires a shell to execute npm.cmd reliably.
+        shell: process.platform === "win32",
     });
+
+    if (result.error) {
+        console.error(`[build-client] ${label} failed:`, result.error.message);
+        process.exit(1);
+    }
 
     if (result.status !== 0) {
         process.exit(result.status || 1);
     }
 };
 
-run(["install"], "Installing client dependencies");
+// Vite and its React plugin are devDependencies, but they are still required
+// to produce the production bundle. Render may otherwise omit them when
+// NODE_ENV=production.
+run(["install", "--include=dev"], "Installing client dependencies");
 run(["run", "build"], "Building client");
-
